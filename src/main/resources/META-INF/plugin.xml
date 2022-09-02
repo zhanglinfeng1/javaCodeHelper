@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>com.zlf.sql-reverse.plugin</id>
+    <name>Sql Reverse</name>
+    <version>1.0</version>
+    <vendor>zlf</vendor>
+    <description><![CDATA[
+      定制化代码生成器，根据建表SQL一键生成mapper、model、VO、service、controller、feign、网关的代码
+      包括以下功能
+      1.基础增删改查、列表的查询
+    ]]></description>
+    <change-notes><![CDATA[
+      1.0 测试
+    ]]></change-notes>
+    <idea-version since-build="173.0"/>
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 窗体 (IDEA 界面右侧) -->
+        <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="ui.ReadFactory"/>
+    </extensions>
+
+    <actions>
+        <action id="click" class="action.RunAction" text="SqlReverse" description="插件测试">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
