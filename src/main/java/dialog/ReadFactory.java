@@ -1,4 +1,4 @@
-package ui;
+package dialog;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -14,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class ReadFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        SqlToolWindow sqlToolWindow = new SqlToolWindow();
+        //初始化组件
+        ToolWindowDialog dialog = new ToolWindowDialog();
+        //添加到IDEA中
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(sqlToolWindow.getContent(), "", false);
+        Content content = contentFactory.createContent(dialog.getContent(), "", false);
         toolWindow.getContentManager().addContent(content);
     }
 

@@ -16,7 +16,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 窗体 (IDEA 界面右侧) -->
-        <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="ui.ReadFactory"/>
+        <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="dialog.ReadFactory"/>
     </extensions>
 
     <actions>
