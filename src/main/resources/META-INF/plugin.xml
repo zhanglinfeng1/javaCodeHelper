@@ -19,9 +19,4 @@
         <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="dialog.ReadFactory"/>
     </extensions>
 
-    <actions>
-        <action id="click" class="action.RunAction" text="SqlReverse" description="插件测试">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
-    </actions>
 </idea-plugin>
