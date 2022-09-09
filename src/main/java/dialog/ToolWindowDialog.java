@@ -1,9 +1,10 @@
 package dialog;
 
+import com.intellij.openapi.ui.Messages;
+import constant.COMMON_CONSTANT;
 import util.CreateFileUtil;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class ToolWindowDialog extends JDialog {
     private JPanel contentPane;
@@ -16,8 +17,10 @@ public class ToolWindowDialog extends JDialog {
         buttonOK.addActionListener(e -> {
             try {
                 new CreateFileUtil().createFile(textArea.getText());
-            } catch (IOException ex) {
+                Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, "", Messages.getInformationIcon());
+            } catch (Exception ex) {
                 ex.printStackTrace();
+                Messages.showMessageDialog(COMMON_CONSTANT.FAIL, "", Messages.getInformationIcon());
             }
         });
     }

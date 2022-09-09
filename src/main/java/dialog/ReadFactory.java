@@ -5,6 +5,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import constant.COMMON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReadFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        COMMON_CONSTANT.PROJECT_PATH = project.getBasePath();
         //初始化组件
         ToolWindowDialog dialog = new ToolWindowDialog();
         //添加到IDEA中

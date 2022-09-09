@@ -1,5 +1,6 @@
-package vo;
+package pojo;
 
+import util.StringUtil;
 import util.TypeConversionUtil;
 
 import java.util.Arrays;
@@ -11,9 +12,11 @@ import java.util.stream.Collectors;
  * @Date create in 2022/9/8 10:34
  */
 public class ColumnInfo {
+    /** sql原始字段名 */
+    private String sqlColumnName;
     /** 字段名 */
     private String columnName;
-    /** 字段名 */
+    /** 首字母大写的字段名 */
     private String firstUpperColumnName;
     /** 字段类型 */
     private String columnType;
@@ -24,17 +27,20 @@ public class ColumnInfo {
     }
 
     public ColumnInfo(List<String> valueList) {
-        valueList = valueList.stream().filter(s -> null != s && s.trim().length() != 0).map(s -> s.replaceAll("[',`]", "")).collect(Collectors.toList());
-        this.firstUpperColumnName = Arrays.stream(valueList.get(0).split("_")).map(s -> {
-            char[] ch = s.toCharArray();
-            ch[0] = (char) (ch[0] - 32);
-            return new String(ch);
-        }).collect(Collectors.joining());
-        char[] ch = this.firstUpperColumnName.toCharArray();
-        ch[0] = (char) (ch[0] + 32);
-        this.columnName = new String(ch);
+        valueList = valueList.stream().filter(StringUtil::isNotEmpty).map(s -> s.replaceAll("[',`]", "")).collect(Collectors.toList());
+        this.sqlColumnName = valueList.get(0);
+        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
         this.columnType = TypeConversionUtil.conversion(valueList.get(1));
         this.columnComment = valueList.get(valueList.size() - 1);
+    }
+
+    public String getSqlColumnName() {
+        return sqlColumnName;
+    }
+
+    public void setSqlColumnName(String sqlColumnName) {
+        this.sqlColumnName = sqlColumnName;
     }
 
     public String getColumnName() {
