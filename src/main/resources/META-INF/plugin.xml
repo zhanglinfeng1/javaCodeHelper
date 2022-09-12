@@ -9,7 +9,7 @@
       1.基础增删改查、列表的查询
     ]]></description>
     <change-notes><![CDATA[
-      1.0 测试
+      1.0 测试版
     ]]></change-notes>
     <idea-version since-build="173.0"/>
     <depends>com.intellij.modules.platform</depends>
