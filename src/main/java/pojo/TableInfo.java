@@ -16,14 +16,6 @@ import java.util.stream.Collectors;
  * @Date: create in 2022/9/8 10:34
  */
 public class TableInfo {
-    /** 包路径 */
-    private String packagePath;
-    /** 创建者 */
-    private String author;
-    /** 创建时间 */
-    private String dateTime;
-    /** model路径 */
-    private String modelPath;
     /** 表名 */
     private String tableName;
     /** 表备注 */
@@ -37,51 +29,14 @@ public class TableInfo {
     public TableInfo(String createTableSql) {
         List<String> lineList = List.of(createTableSql.split("\\r?\\n"));
         this.tableName = lineList.get(0).split("\\s+")[2];
-        if(this.tableName.contains(".")){
+        if (this.tableName.contains(".")) {
             this.tableName = this.tableName.split("\\.")[1].replaceAll("['`]", "");
         }
-        Matcher m = Pattern.compile("\'(.*?)\'").matcher(lineList.get(lineList.size()-1));
-        if (m.find()){
+        Matcher m = Pattern.compile("'(.*?)'").matcher(lineList.get(lineList.size() - 1));
+        if (m.find()) {
             this.tableComment = m.group(1);
         }
         this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(List.of(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
-        this.packagePath = COMMON_CONSTANT.BATH_PACKAGE;
-        //this.modelPath = this.getFullPath() + this.tableName + ".java";
-        this.modelPath = "C:\\Users\\86187\\Desktop\\" + this.tableName + ".java";
-        this.author = COMMON_CONSTANT.AUTHOR;
-        this.dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
-
-    public String getPackagePath() {
-        return packagePath;
-    }
-
-    public void setPackagePath(String packagePath) {
-        this.packagePath = packagePath;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public String getModelPath() {
-        return modelPath;
-    }
-
-    public void setModelPath(String modelPath) {
-        this.modelPath = modelPath;
     }
 
     public String getTableName() {
@@ -108,11 +63,21 @@ public class TableInfo {
         this.columnList = columnList;
     }
 
-    private String getFullPath() {
-        return COMMON_CONSTANT.PROJECT_PATH + COMMON_CONSTANT.BATH_PATH + COMMON_CONSTANT.BATH_PACKAGE.replaceAll("\\.","\\\\") + "\\";
-    }
-    public Map<String, Object> toMap(){
+    public Map<String, Object> toMap() {
         Gson gs = new Gson();
-        return gs.fromJson(gs.toJson(this),Map.class);
+        Map<String, Object> map = gs.fromJson(gs.toJson(this), Map.class);
+        map.put("author", COMMON_CONSTANT.AUTHOR);
+        map.put("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        map.put("packagePath", COMMON_CONSTANT.PACKAGE_PATH);
+        return map;
+    }
+
+    public String getFilePath(String templateFileName) {
+        switch (templateFileName) {
+            case "Model.java.ftl":
+                return COMMON_CONSTANT.FULL_PATH + this.tableName + ".java";
+            default:
+                return null;
+        }
     }
 }

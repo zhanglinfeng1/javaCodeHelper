@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>com.zlf.sql-reverse.plugin</id>
-    <name>Sql Reverse</name>
+    <name>SqlReverse</name>
     <version>1.0</version>
-    <vendor>zlf</vendor>
+    <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
       定制化代码生成器，根据建表SQL一键生成mapper、model、VO、service、controller、feign、网关的代码
       包括以下功能
@@ -18,5 +18,4 @@
         <!-- 窗体 (IDEA 界面右侧) -->
         <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="dialog.ReadFactory"/>
     </extensions>
-
 </idea-plugin>

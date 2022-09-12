@@ -1,12 +1,18 @@
 package ${packagePath};
 
+<#list columnList as fields>
+    <#if fields.columnType == 'Timestamp'>
+import java.sql.Timestamp;
+        <#break>
+    </#if>
+</#list>
+
 /**
  * ${tableComment}
  * @Author: ${author}
  * @Date: ${dateTime}
 */
 public class ${tableName}{
-
     <#list columnList as fields>
     /** ${fields.columnComment} */
     private ${fields.columnType} ${fields.columnName};
