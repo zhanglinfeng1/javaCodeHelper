@@ -18,13 +18,8 @@ public class ToolWindowDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         buttonOK.addActionListener(e -> {
-            try {
-                new CreateFileUtil().createFile(authorField.getText(),modelNameField.getText(),packagePathField.getText(),textArea.getText());
-                Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, "", Messages.getInformationIcon());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Messages.showMessageDialog(COMMON_CONSTANT.FAIL, "", Messages.getInformationIcon());
-            }
+            new CreateFileUtil().createFile(authorField.getText(),modelNameField.getText(),packagePathField.getText(),textArea.getText());
+            Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, "", Messages.getInformationIcon());
         });
     }
 

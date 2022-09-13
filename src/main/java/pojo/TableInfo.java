@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @Date: create in 2022/9/8 10:34
  */
 public class TableInfo {
-    /** 表名 */
+    /** sql表名 */
     private String sqlTableName;
     /** 表名 */
     private String tableName;
@@ -24,7 +24,7 @@ public class TableInfo {
     private String firstLowerTableName;
     /** 表备注 */
     private String tableComment;
-    /** 字段类型 */
+    /** 字段信息 */
     private List<ColumnInfo> columnList;
 
     public TableInfo() {
@@ -91,21 +91,6 @@ public class TableInfo {
     }
 
     public String getFilePath(String templateFileName) {
-        switch (templateFileName) {
-            case "Model.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + ".java";
-            case "Mapper.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + "Mapper.java";
-            case "Service.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + "Service.java";
-            case "ServiceImpl.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + "ServiceImpl.java";
-            case "VO.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + "VO.java";
-            case "Controller.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + "Controller.java";
-            default:
-                return null;
-        }
+        return COMMON_CONSTANT.FULL_PATH + this.tableName + templateFileName.replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
     }
 }

@@ -50,8 +50,14 @@ public interface ${tableName}Mapper{
 <#assign timeColumn = ["createTime", "updateTime"]>
     @SelectKey(keyColumn = "id", before = false, keyProperty = "obj.id", resultType = String.class, statementType = StatementType.STATEMENT, statement = "SELECT LAST_INSERT_ID() AS id")
     @Insert("INSERT INTO ${sqlTableName} (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
-        "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#if fields.columnName == 'tenantId'><#noparse>#{tenantId}</#noparse><#elseif timeColumn?seq_contains(fields.columnName)>NOW()<#else><#noparse>#{obj.</#noparse>${fields.columnName}<#noparse>}</#noparse></#if></#if></#list>)")
+        "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#if fields.columnName == 'tenantId'><#noparse>#{tenantId}</#noparse><#elseif timeColumn?seq_contains(fields.columnName)>NOW()<#else><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#if></#list>)")
     void insert${tableName}(@Param("tenantId") String tenantId, @Param("obj") ${tableName} obj);
+
+    @Insert("<#noparse><script></#noparse>INSERT INTO ${sqlTableName}(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
+        "<foreach collection = 'list' item='obj' separator=',' > " +
+        " (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#if fields.columnName == 'tenantId'><#noparse>#{tenantId}</#noparse><#elseif timeColumn?seq_contains(fields.columnName)>NOW()<#else><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#if></#list>) " +
+        "</foreach> <#noparse></script></#noparse>")
+    void batchInsert${tableName}(@Param("tenantId") String tenantId, @Param("list") List<${tableName}> list);
 
 <#assign noUpdate = ["id", "visible", "valid", "deleted", "createTime", "updateTime", "tenantId"]>
     @Update("UPDATE ${sqlTableName} SET <#list columnList as fields><#if !noUpdate?seq_contains(fields.columnName)>${fields.sqlColumnName}=<#noparse>#{obj.</#noparse>${fields.columnName}<#noparse>},</#noparse></#if></#list>" +
