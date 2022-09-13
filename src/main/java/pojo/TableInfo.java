@@ -2,9 +2,9 @@ package pojo;
 
 import com.google.gson.Gson;
 import constant.COMMON_CONSTANT;
+import util.StringUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,11 +16,15 @@ import java.util.stream.Collectors;
  * @Date: create in 2022/9/8 10:34
  */
 public class TableInfo {
+    /** sql表名 */
+    private String sqlTableName;
     /** 表名 */
     private String tableName;
+    /** 首字母小写表名 */
+    private String firstLowerTableName;
     /** 表备注 */
     private String tableComment;
-    /** 字段类型 */
+    /** 字段信息 */
     private List<ColumnInfo> columnList;
 
     public TableInfo() {
@@ -28,15 +32,25 @@ public class TableInfo {
 
     public TableInfo(String createTableSql) {
         List<String> lineList = List.of(createTableSql.split("\\r?\\n"));
-        this.tableName = lineList.get(0).split("\\s+")[2];
-        if (this.tableName.contains(".")) {
-            this.tableName = this.tableName.split("\\.")[1].replaceAll("['`]", "");
+        this.sqlTableName = lineList.get(0).split("\\s+")[2];
+        if (this.sqlTableName.contains(".")) {
+            this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll("['`]", "");
         }
+        this.tableName = Arrays.stream(this.sqlTableName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.firstLowerTableName = StringUtil.toLowerCaseFirst(this.tableName);
         Matcher m = Pattern.compile("'(.*?)'").matcher(lineList.get(lineList.size() - 1));
         if (m.find()) {
-            this.tableComment = m.group(1);
+            this.tableComment = m.group(1).replaceAll("表", "");
         }
         this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(List.of(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
+    }
+
+    public String getSqlTableName() {
+        return sqlTableName;
+    }
+
+    public void setSqlTableName(String sqlTableName) {
+        this.sqlTableName = sqlTableName;
     }
 
     public String getTableName() {
@@ -45,6 +59,14 @@ public class TableInfo {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getFirstLowerTableName() {
+        return firstLowerTableName;
+    }
+
+    public void setFirstLowerTableName(String firstLowerTableName) {
+        this.firstLowerTableName = firstLowerTableName;
     }
 
     public String getTableComment() {
@@ -65,19 +87,10 @@ public class TableInfo {
 
     public Map<String, Object> toMap() {
         Gson gs = new Gson();
-        Map<String, Object> map = gs.fromJson(gs.toJson(this), Map.class);
-        map.put("author", COMMON_CONSTANT.AUTHOR);
-        map.put("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        map.put("packagePath", COMMON_CONSTANT.PACKAGE_PATH);
-        return map;
+        return gs.fromJson(gs.toJson(this), Map.class);
     }
 
     public String getFilePath(String templateFileName) {
-        switch (templateFileName) {
-            case "Model.java.ftl":
-                return COMMON_CONSTANT.FULL_PATH + this.tableName + ".java";
-            default:
-                return null;
-        }
+        return COMMON_CONSTANT.FULL_PATH + this.tableName + templateFileName.replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
     }
 }
