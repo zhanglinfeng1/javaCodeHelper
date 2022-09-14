@@ -32,7 +32,7 @@ public class TableInfo {
 
     public TableInfo(String createTableSql) {
         List<String> lineList = List.of(createTableSql.split("\\r?\\n"));
-        this.sqlTableName = lineList.get(0).split("\\s+")[2];
+        this.sqlTableName = lineList.get(0).split(COMMON_CONSTANT.SPACE)[2];
         if (this.sqlTableName.contains(".")) {
             this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll("['`]", "");
         }
@@ -88,9 +88,5 @@ public class TableInfo {
     public Map<String, Object> toMap() {
         Gson gs = new Gson();
         return gs.fromJson(gs.toJson(this), Map.class);
-    }
-
-    public String getFilePath(String templateFileName) {
-        return COMMON_CONSTANT.FULL_PATH + this.tableName + templateFileName.replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
     }
 }
