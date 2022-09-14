@@ -1,15 +1,17 @@
 <idea-plugin>
     <id>com.zlf.sql-reverse.plugin</id>
-    <name>SqlReverse</name>
+    <name>Java Code Helper</name>
     <version>1.0</version>
-    <vendor email="704123055@qq.com">zhanglinfeng</vendor>
+    <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-      定制化代码生成器，根据建表SQL一键生成mapper、model、VO、service、controller
-      包括以下功能</br>
-      1.基础增删改查、列表的查询
+      定制化代码生成插件，根据建表SQL一键生成mapper、model、VO、service、controller<br/>
+      邮箱704123055@qq.com
     ]]></description>
     <change-notes><![CDATA[
-      1.0 测试版
+      1.0.0<br/>
+        <li>基础增删查改</li>
+        <li>列表查询</li>
+        <li>批量新增</li>
     ]]></change-notes>
     <idea-version since-build="173.0"/>
     <depends>com.intellij.modules.platform</depends>
