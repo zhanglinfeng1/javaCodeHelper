@@ -38,36 +38,46 @@ public class ClassConversionAction extends AnAction {
             return;
         }
         PsiClass psiClass = psiJavaFile.getClasses()[0];
+        if (psiClass.getFields().length == 0) {
+            return;
+        }
         WriteCommandAction.runWriteCommandAction(project, () -> {
+            String parametersStr = "Object obj";
+            String objectStr = "obj";
+            PsiMethod deleteMethod = null;
             //获取构造方法
             PsiMethod[] constructorMethods = psiClass.getConstructors();
             if (constructorMethods.length > 0) {
+                outCycle:
                 for (PsiMethod psiMethod : constructorMethods) {
                     //获取方法为空的构造方法
                     if (!psiMethod.getText().contains("this.")) {
                         PsiParameter[] parameterArr = psiMethod.getParameterList().getParameters();
                         for (PsiParameter parameter : parameterArr) {
                             if (TypeUtil.isObject(parameter.getType().getCanonicalText())) {
-                                String parametersStr = Arrays.stream(parameterArr).map(PsiParameter::getText).collect(Collectors.joining(","));
-                                String objectStr = parameter.getText().split(COMMON_CONSTANT.SPACE)[1];
-                                createConstructorMethod(psiClass, project, parametersStr, objectStr, psiMethod);
-                                psiMethod.delete();
-                                return;
+                                parametersStr = Arrays.stream(parameterArr).map(PsiParameter::getText).collect(Collectors.joining(","));
+                                objectStr = parameter.getText().split(COMMON_CONSTANT.SPACE)[1];
+                                deleteMethod = psiMethod;
+                                break outCycle;
                             }
                         }
                     }
                 }
             }
-            createConstructorMethod(psiClass, project, "Object obj", "obj", null);
+            String finalObjectStr = objectStr;
+            PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
+            StringBuilder constructorMethodSb = new StringBuilder("public ").append(psiClass.getName()).append("(").append(parametersStr).append(") {");
+            constructorMethodSb.append(Arrays.stream(psiClass.getFields()).map(f -> "this." + f.getName() + " = " + finalObjectStr + ".get" + StringUtil.toUpperCaseFirst(f.getName()) + "();").collect(Collectors.joining()));
+            constructorMethodSb.append("}");
+            PsiMethod newConstructor = factory.createMethodFromText(constructorMethodSb.toString(), psiClass);
+            if (null != deleteMethod) {
+                psiClass.addAfter(newConstructor, deleteMethod);
+                deleteMethod.delete();
+            } else if (constructorMethods.length > 0) {
+                psiClass.addAfter(newConstructor, psiClass.getConstructors()[0]);
+            } else {
+                psiClass.addBefore(newConstructor, psiClass.getMethods()[0]);
+            }
         });
-    }
-
-    private void createConstructorMethod(PsiClass psiClass, Project project, String parametersStr, String objectStr, PsiMethod afterMethod) {
-        PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
-        StringBuilder constructorMethodSb = new StringBuilder("public ").append(psiClass.getName()).append("(").append(parametersStr).append(") {");
-        constructorMethodSb.append(Arrays.stream(psiClass.getFields()).map(f -> "this." + f.getName() + " = " + objectStr + ".get" + StringUtil.toUpperCaseFirst(f.getName()) + "();").collect(Collectors.joining()));
-        constructorMethodSb.append("}");
-        PsiMethod newConstructor = factory.createMethodFromText(constructorMethodSb.toString(), psiClass);
-        psiClass.addAfter(newConstructor, afterMethod);
     }
 }
