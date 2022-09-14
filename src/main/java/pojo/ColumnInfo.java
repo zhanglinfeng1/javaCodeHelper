@@ -1,7 +1,7 @@
 package pojo;
 
 import util.StringUtil;
-import util.TypeConversionUtil;
+import util.TypeUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ColumnInfo {
         this.sqlColumnName = valueList.get(0);
         this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
-        this.columnType = TypeConversionUtil.conversion(valueList.get(1));
+        this.columnType = TypeUtil.toJavaType(valueList.get(1));
         this.columnComment = valueList.get(valueList.size() - 1);
     }
 
