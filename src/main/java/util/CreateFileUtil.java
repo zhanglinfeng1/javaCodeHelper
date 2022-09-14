@@ -2,14 +2,10 @@ package util;
 
 import constant.COMMON_CONSTANT;
 import factory.TemplateFactory;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import pojo.TableInfo;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Map;
 
 /**
@@ -28,9 +24,6 @@ public class CreateFileUtil {
         dataMap.putAll(COMMON_CONSTANT.pathMap);
         //生成文件
         TemplateFactory templateFactory = TemplateFactory.getInstance();
-        for(Template template : templateFactory.getTemplateList()){
-            String filePath = tableInfo.getFilePath(template.getName());
-            template.process(dataMap, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
-        }
+        templateFactory.create(dataMap,tableInfo.getTableName());
     }
 }

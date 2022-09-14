@@ -3,9 +3,13 @@ package factory;
 import constant.COMMON_CONSTANT;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,4 +50,10 @@ public class TemplateFactory {
         return templateList;
     }
 
+    public void create(Object dataModel,String fileBasicName) throws IOException, TemplateException {
+        for(Template template : templateFactory.getTemplateList()){
+            String filePath = COMMON_CONSTANT.FULL_PATH + fileBasicName + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
+            template.process(dataModel, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
+        }
+    }
 }

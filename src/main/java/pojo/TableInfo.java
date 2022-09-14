@@ -1,7 +1,6 @@
 package pojo;
 
 import com.google.gson.Gson;
-import constant.COMMON_CONSTANT;
 import util.StringUtil;
 
 import java.util.Arrays;
@@ -88,9 +87,5 @@ public class TableInfo {
     public Map<String, Object> toMap() {
         Gson gs = new Gson();
         return gs.fromJson(gs.toJson(this), Map.class);
-    }
-
-    public String getFilePath(String templateFileName) {
-        return COMMON_CONSTANT.FULL_PATH + this.tableName + templateFileName.replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
     }
 }
