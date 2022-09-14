@@ -1,8 +1,8 @@
 <idea-plugin>
-    <id>com.zlf.sql-reverse.plugin</id>
+    <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
     <version>1.0</version>
-    <vendor>zhanglinfeng</vendor>
+    <vendor>zhanginfeng</vendor>
     <description><![CDATA[
       定制化代码生成插件，根据建表SQL一键生成mapper、model、VO、service、controller<br/>
       邮箱704123055@qq.com

@@ -21,7 +21,7 @@ public class TemplateFactory {
     private TemplateFactory() {
     }
 
-    public static TemplateFactory getInstance() {
+    public static TemplateFactory getInstance() throws IOException {
         if (templateFactory == null) {
             synchronized (TemplateFactory.class) {
                 if (templateFactory == null) {
@@ -33,14 +33,9 @@ public class TemplateFactory {
                     Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
                     configuration.setClassLoaderForTemplateLoading(COMMON_CONSTANT.class.getClassLoader(), COMMON_CONSTANT.TEMPLATE_PATH);
                     configuration.setDefaultEncoding(COMMON_CONSTANT.ENCODING);
-                    COMMON_CONSTANT.TEMPLATE_NAME_LIST.forEach(t -> {
-                                try {
-                                    templateFactory.templateList.add(configuration.getTemplate(t));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                    );
+                    for(String templateName : COMMON_CONSTANT.TEMPLATE_NAME_LIST){
+                        templateFactory.templateList.add(configuration.getTemplate(templateName));
+                    }
                 }
             }
         }

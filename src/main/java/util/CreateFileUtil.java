@@ -2,6 +2,7 @@ package util;
 
 import constant.COMMON_CONSTANT;
 import factory.TemplateFactory;
+import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import pojo.TableInfo;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class CreateFileUtil {
 
-    public void createFile(String author, String modelName, String packagePath, String createTableSql) {
+    public void createFile(String author, String modelName, String packagePath, String createTableSql) throws IOException, TemplateException {
         //初始化路径
         COMMON_CONSTANT.init(author, modelName, packagePath);
         //解析Sql
@@ -27,12 +28,9 @@ public class CreateFileUtil {
         dataMap.putAll(COMMON_CONSTANT.pathMap);
         //生成文件
         TemplateFactory templateFactory = TemplateFactory.getInstance();
-        templateFactory.getTemplateList().forEach(t -> {
-            try {
-                t.process(dataMap, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tableInfo.getFilePath(t.getName())))));
-            } catch (TemplateException | IOException e) {
-                e.printStackTrace();
-            }
-        });
+        for(Template template : templateFactory.getTemplateList()){
+            String filePath = tableInfo.getFilePath(template.getName());
+            template.process(dataMap, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
+        }
     }
 }
