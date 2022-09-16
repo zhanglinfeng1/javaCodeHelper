@@ -31,7 +31,7 @@ public class TableInfo {
     }
 
     public TableInfo(String createTableSql) {
-        List<String> lineList = List.of(createTableSql.split("\\r?\\n"));
+        List<String> lineList = Arrays.asList(createTableSql.split("\\r?\\n"));
         this.sqlTableName = lineList.get(0).split(COMMON_CONSTANT.SPACE)[2];
         if (this.sqlTableName.contains(".")) {
             this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll("['`]", "");
@@ -42,7 +42,7 @@ public class TableInfo {
         if (m.find()) {
             this.tableComment = m.group(1).replaceAll("表", "");
         }
-        this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(List.of(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
+        this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(Arrays.asList(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
     }
 
     public String getSqlTableName() {

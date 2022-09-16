@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
       <p>定制化java代码开发插件，邮箱704123055@qq.com</p>
@@ -9,15 +9,16 @@
             <li>一键生成类转换的构造参数，例：Object1 to Object2</li>
     ]]></description>
     <change-notes><![CDATA[
-        <p>1.0.0</p>
-        <ul>
+        <ul>1.0.0
             <li>基础增删查改</li>
             <li>列表查询</li>
             <li>批量新增</li>
         </ul>
-        <p>1.1.0</p>
-        <ul>
+        <ul>1.1.0
             <li>一键生成类转换的构造参数，例：Object1 to Object2</li>
+        </ul>
+        <ul>1.1.1
+            <li>兼容idea版本至2022.2.2</li>
         </ul>
     ]]></change-notes>
     <idea-version since-build="173.0"/>
