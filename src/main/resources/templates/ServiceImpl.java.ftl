@@ -35,7 +35,13 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
     @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
     public void update${tableName}(String tenantId, ${tableName}VO obj) {
         //编辑${tableComment}
-        ${tableName} ${firstLowerTableName} = new ${tableName}(obj);
+        ${tableName} ${firstLowerTableName} = this.get${tableName}(tenantId,obj.getId());
+<#assign noUpdate = ["id", "visible", "valid", "deleted", "createTime", "updateTime", "tenantId", "status"]>
+<#list columnList as fields>
+    <#if !noUpdate?seq_contains(fields.columnName)>
+        ${firstLowerTableName}.set${fields.firstUpperColumnName}(obj.get${fields.firstUpperColumnName}());
+    </#if>
+</#list>
         ${firstLowerTableName}Mapper.update${tableName}(tenantId,${firstLowerTableName});
     }
 
