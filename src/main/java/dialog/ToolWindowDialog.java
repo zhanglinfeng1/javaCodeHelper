@@ -11,7 +11,7 @@ public class ToolWindowDialog extends JDialog {
     private JButton buttonOK;
     private JTextArea textArea;
     private JTextField authorField;
-    private JTextField modelNameField;
+    private JTextField modularNameField;
     private JTextField packagePathField;
 
     public ToolWindowDialog() {
@@ -19,7 +19,7 @@ public class ToolWindowDialog extends JDialog {
         setModal(true);
         buttonOK.addActionListener(e -> {
             try {
-                new CreateFileUtil().createFile(authorField.getText(),modelNameField.getText(),packagePathField.getText(),textArea.getText());
+                new CreateFileUtil().createFile(authorField.getText(), modularNameField.getText(),packagePathField.getText(),textArea.getText());
                 Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, "", Messages.getInformationIcon());
             } catch (Exception ex) {
                 ex.printStackTrace();

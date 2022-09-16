@@ -15,7 +15,14 @@ public interface ${tableName}Service{
 
     void update${tableName}(String tenantId, ${tableName}VO obj);
 
-    ${tableName} get${tableName}(String tenantId, String id);
+<#list columnList as fields>
+    <#if fields.columnName == 'status'>
+    void update${tableName}Status(String tenantId, Integer id, String status);
+
+        <#break>
+    </#if>
+</#list>
+    ${tableName} get${tableName}(String tenantId, Integer id);
 
     int get${tableName}ListCount(String tenantId);
 

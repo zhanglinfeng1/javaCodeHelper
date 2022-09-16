@@ -29,10 +29,9 @@ public class ${tableName}Controller {
     @Resource
     private ${tableName}Service ${firstLowerTableName}Service;
 
-
     @ReplacePlaceHolder
     @RequestMapping(path = {"/v1/${modelName}${sqlTableName}"}, method = {RequestMethod.GET}, produces = {"application/json"})
-    public ${tableName}VO get${tableName}(@RequestHeader("tenant_id") String tenantId, @RequestParam("id") String id) {
+    public ${tableName}VO get${tableName}(@RequestHeader("tenant_id") String tenantId, @RequestParam("id") Integer id) {
         ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Service.get${tableName}(tenantId, id);
         return new ${tableName}VO(${firstLowerTableName});
     }
@@ -49,6 +48,26 @@ public class ${tableName}Controller {
         return new HashMap<>(2);
     }
 
+<#list columnList as fields>
+    <#if fields.columnName == 'status'>
+    @ReplacePlaceHolder
+    @RequestMapping(path = {"/v1/${modelName}${sqlTableName}/status"}, method = {RequestMethod.PUT}, produces = {"application/json"})
+    public Map<String,String> update${tableName}Status(@RequestHeader("tenant_id") String tenantId, @RequestParam("id") Integer id, @RequestParam("status") String status) {
+        ${firstLowerTableName}Service.update${tableName}Status(tenantId, id, status);
+        return new HashMap<>(2);
+    }
+
+    @ReplacePlaceHolder
+    @RequestMapping(path = {"/v1/${modelName}${sqlTableName}/list"}, method = {RequestMethod.GET}, produces = {"application/json"})
+    public StatusCountVO get${tableName}StatusCount(@RequestHeader("tenant_id") String tenantId) {
+        int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(tenantId);
+        StatusCountVO statusCountVO = new StatusCountVO();
+        return statusCountVO;
+    }
+
+        <#break>
+    </#if>
+</#list>
     @ReplacePlaceHolder
     @RequestMapping(path = {"/v1/${modelName}${sqlTableName}/list"}, method = {RequestMethod.GET}, produces = {"application/json"})
     public PageVO<${tableName}VO> get${tableName}List(@RequestHeader("tenant_id") String tenantId, @RequestParam("page") int page, @RequestParam("limit") int limit) {

@@ -1,7 +1,6 @@
 package ${packagePath};
 
 import com.fenzhitech.framework.base.exception.CodeException;
-import com.fenzhitech.framework.base.util.StringUtil;
 import ${packagePath}.${tableName}Mapper;
 import ${packagePath}.${tableName};
 import ${packagePath}.${tableName}Service;
@@ -40,9 +39,20 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
         ${firstLowerTableName}Mapper.update${tableName}(tenantId,${firstLowerTableName});
     }
 
+<#list columnList as fields>
+    <#if fields.columnName == 'status'>
     @Override
-    public ${tableName} get${tableName}(String tenantId, String id) {
-        if(StringUtil.isBlank(id)){
+    @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
+    public void update${tableName}Status(String tenantId, Integer id, String status){
+        ${firstLowerTableName}Mapper.update${tableName}Status(tenantId,id,status);
+    }
+
+        <#break>
+    </#if>
+</#list>
+    @Override
+    public ${tableName} get${tableName}(String tenantId, Integer id) {
+        if(null == id){
             throw new CodeException("ID_NOT_NULL","${tableComment}id不能为空");
         }
         ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Mapper.get${tableName}(tenantId, id);

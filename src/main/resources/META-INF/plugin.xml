@@ -6,7 +6,7 @@
     <description><![CDATA[
       <p>定制化java代码开发插件，邮箱704123055@qq.com</p>
             <li>根据建表SQL(带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
-            <li>一键生成类转换的构造参数，例：Object1 to Object2</li>
+            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
     ]]></description>
     <change-notes><![CDATA[
         <ul>1.0.0
@@ -15,7 +15,7 @@
             <li>批量新增</li>
         </ul>
         <ul>1.1.0
-            <li>一键生成类转换的构造参数，例：Object1 to Object2</li>
+            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
         </ul>
         <ul>1.1.1
             <li>兼容idea版本至2022.2.2</li>
@@ -31,7 +31,7 @@
     </extensions>
 
     <actions>
-        <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion" description="类属性转换">
+        <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion" description="新建构造函数，转换对象字段值">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
         </action>
     </actions>

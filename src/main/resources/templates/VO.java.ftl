@@ -42,6 +42,7 @@ public class ${tableName}VO{
     public ${fields.columnType} get${fields.firstUpperColumnName}(){
         return ${fields.columnName};
     }
+
 <#else></#if>
 </#list>
 }

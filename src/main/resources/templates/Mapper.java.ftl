@@ -59,13 +59,21 @@ public interface ${tableName}Mapper{
         "</foreach> <#noparse></script></#noparse>")
     void batchInsert${tableName}(@Param("tenantId") String tenantId, @Param("list") List<${tableName}> list);
 
-<#assign noUpdate = ["id", "visible", "valid", "deleted", "createTime", "updateTime", "tenantId"]>
+<#assign noUpdate = ["id", "visible", "valid", "deleted", "createTime", "updateTime", "tenantId", "status"]>
     @Update("UPDATE ${sqlTableName} SET <#list columnList as fields><#if !noUpdate?seq_contains(fields.columnName)>${fields.sqlColumnName}=<#noparse>#{obj.</#noparse>${fields.columnName}<#noparse>},</#noparse></#if></#list>" +
             <#noparse>",update_time=NOW() WHERE tenant_id=#{tenantId} AND id=#{obj.id}")</#noparse>
     void update${tableName}(@Param("tenantId") String tenantId, @Param("obj") ${tableName} obj);
 
+<#list columnList as fields>
+    <#if fields.columnName == 'status'>
+    @Update("UPDATE ${sqlTableName} SET <#noparse>status=#{status},update_time=NOW() WHERE tenant_id=#{tenantId} AND id=#{id}")</#noparse>
+    void update${tableName}Status(@Param("tenantId") String tenantId, @Param("id") Integer id, @Param("status") String status);
+
+        <#break>
+    </#if>
+</#list>
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}SQL")
-    ${tableName} get${tableName}(@Param("tenantId") String tenantId, @Param("id") String id);
+    ${tableName} get${tableName}(@Param("tenantId") String tenantId, @Param("id") Integer id);
 
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}ListCountSQL")
     int get${tableName}ListCount(@Param("tenantId") String tenantId);

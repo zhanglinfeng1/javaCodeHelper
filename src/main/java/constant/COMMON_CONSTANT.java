@@ -2,22 +2,15 @@ package constant;
 
 import util.StringUtil;
 
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/9/8 17:52
  */
 public class COMMON_CONSTANT {
-    public static String PROJECT_PATH = "";
-    public static String FULL_PATH = "";
-    public static Map<String,Object> pathMap;
-
     public static final String SUCCESS = "成功";
     public static final String FAIL = "失败";
     public static final String ENCODING = "UTF-8";
@@ -32,20 +25,21 @@ public class COMMON_CONSTANT {
     public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String,Date,Timestamp,BigDecimal".split(","));
     public static final List<String> TEMPLATE_NAME_LIST = Arrays.asList("Model.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl", "Controller.java.ftl");
 
-    public static void init(String author, String modelName, String packagePath){
-        pathMap = new HashMap<>();
-        pathMap.put("author", author);
-        pathMap.put("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        pathMap.put("packagePath", packagePath);
+    public static String PROJECT_PATH = "";
+    public static String FULL_PATH = "";
+    public static String MODULAR_SHORT_NAME = "";
+
+    public static void init(String modularName, String packagePath){
         String fullPath = PROJECT_PATH;
-        if (StringUtil.isNotEmpty(modelName)) {
-            fullPath = fullPath + DOUBLE_BACKSLASH + modelName;
-            String[] modelNameArr = modelName.split("\\.");
-            modelName = modelNameArr[modelNameArr.length - 1] + SLASH;
-        } else {
-            modelName = "";
+        if (StringUtil.isNotEmpty(modularName)) {
+            File file = new File(PROJECT_PATH + DOUBLE_BACKSLASH + "src");
+            if (file.exists()){
+                fullPath = file.getParent();
+            }
+            fullPath = fullPath + DOUBLE_BACKSLASH + modularName;
+            String[] modularNameArr = modularName.split("\\.");
+            MODULAR_SHORT_NAME = modularNameArr[modularNameArr.length - 1] + SLASH;
         }
-        pathMap.put("modelName", modelName);
         FULL_PATH = fullPath + JAVA_FILE_PATH + packagePath.replaceAll("\\.", "\\\\") + DOUBLE_BACKSLASH;
     }
 }

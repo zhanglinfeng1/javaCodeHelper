@@ -6,6 +6,8 @@ import freemarker.template.TemplateException;
 import pojo.TableInfo;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -15,13 +17,16 @@ import java.util.Map;
 
 public class CreateFileUtil {
 
-    public void createFile(String author, String modelName, String packagePath, String createTableSql) throws IOException, TemplateException {
+    public void createFile(String author, String modularName, String packagePath, String createTableSql) throws IOException, TemplateException {
         //初始化路径
-        COMMON_CONSTANT.init(author, modelName, packagePath);
+        COMMON_CONSTANT.init(modularName, packagePath);
         //解析Sql
         TableInfo tableInfo = new TableInfo(createTableSql);
         Map<String, Object> dataMap = tableInfo.toMap();
-        dataMap.putAll(COMMON_CONSTANT.pathMap);
+        dataMap.put("author", author);
+        dataMap.put("dateTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        dataMap.put("packagePath", packagePath);
+        dataMap.put("modelName", COMMON_CONSTANT.MODULAR_SHORT_NAME);
         //生成文件
         TemplateFactory templateFactory = TemplateFactory.getInstance();
         templateFactory.create(dataMap,tableInfo.getTableName());
