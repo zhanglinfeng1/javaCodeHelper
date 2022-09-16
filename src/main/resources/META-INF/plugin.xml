@@ -27,7 +27,6 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- 窗体 (IDEA 界面右侧) -->
         <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/rightTool.png" factoryClass="factory.ReadFactory"/>
     </extensions>
 

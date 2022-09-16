@@ -54,7 +54,7 @@ public class ${tableName}Controller {
     public PageVO<${tableName}VO> get${tableName}List(@RequestHeader("tenant_id") String tenantId, @RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageVO<${tableName}VO> pageVO = new PageVO<>();
         pageVO.setDatas(new ArrayList<>());
-        int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(tenantId;
+        int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(tenantId);
         pageVO.setPage(page);
         pageVO.setTotalCount(totalCount);
         if(totalCount == 0){

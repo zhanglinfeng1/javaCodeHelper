@@ -11,16 +11,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation 'org.freemarker:freemarker:2.3.23'
 }
 
 intellij {
     version = '2021.2.3'
     plugins = ['java']
-}
-
-test {
-    useJUnitPlatform()
 }
