@@ -2,7 +2,7 @@ package dialog;
 
 import com.intellij.openapi.ui.Messages;
 import constant.COMMON_CONSTANT;
-import util.CreateFileUtil;
+import service.CreateFileService;
 
 import javax.swing.*;
 
@@ -19,7 +19,7 @@ public class ToolWindowDialog extends JDialog {
         setModal(true);
         buttonOK.addActionListener(e -> {
             try {
-                new CreateFileUtil().createFile(authorField.getText(), modularNameField.getText(),packagePathField.getText(),textArea.getText());
+                new CreateFileService().createFile(authorField.getText(), modularNameField.getText(),packagePathField.getText(),textArea.getText());
                 Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, "", Messages.getInformationIcon());
             } catch (Exception ex) {
                 ex.printStackTrace();

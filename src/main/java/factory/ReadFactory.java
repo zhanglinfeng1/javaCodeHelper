@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReadFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        COMMON_CONSTANT.PROJECT_PATH = project.getBasePath();
+        COMMON_CONSTANT.FULL_PATH = project.getBasePath();
         //初始化组件
         ToolWindowDialog dialog = new ToolWindowDialog();
         //添加到IDEA中

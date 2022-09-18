@@ -30,4 +30,9 @@ public class StringUtil {
         return new String(ch);
     }
 
+    public static boolean isEnglish(String text) {
+        byte[] bytes = text.getBytes();
+        return bytes.length == text.length();
+    }
+
 }

@@ -1,12 +1,10 @@
 package pojo;
 
-import com.google.gson.Gson;
 import constant.COMMON_CONSTANT;
 import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -85,8 +83,4 @@ public class TableInfo {
         this.columnList = columnList;
     }
 
-    public Map<String, Object> toMap() {
-        Gson gs = new Gson();
-        return gs.fromJson(gs.toJson(this), Map.class);
-    }
 }

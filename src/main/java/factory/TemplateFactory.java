@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class TemplateFactory {
                     }
                     Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
                     configuration.setClassLoaderForTemplateLoading(COMMON_CONSTANT.class.getClassLoader(), COMMON_CONSTANT.TEMPLATE_PATH);
-                    configuration.setDefaultEncoding(COMMON_CONSTANT.ENCODING);
+                    configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
                     for(String templateName : COMMON_CONSTANT.TEMPLATE_NAME_LIST){
                         templateFactory.templateList.add(configuration.getTemplate(templateName));
                     }
@@ -46,12 +47,8 @@ public class TemplateFactory {
         return templateFactory;
     }
 
-    public List<Template> getTemplateList() {
-        return templateList;
-    }
-
     public void create(Object dataModel,String fileBasicName) throws IOException, TemplateException {
-        for(Template template : templateFactory.getTemplateList()){
+        for(Template template : templateFactory.templateList){
             String filePath = COMMON_CONSTANT.FULL_PATH + fileBasicName + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX,"").replaceAll(COMMON_CONSTANT.MODEL,"");
             template.process(dataModel, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
         }
