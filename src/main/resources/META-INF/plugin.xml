@@ -10,20 +10,20 @@
             <li>一键翻译</li>
     ]]></description>
     <change-notes><![CDATA[
-        <ul>1.0.0
-            <li>基础增删查改、列表查询、批量新增</li>
-        </ul>
-        <ul>1.1.0
-            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
-            <li>兼容idea版本至2022.2.2</li>
+        <ul>1.2.1
+            <li>弃用GSON，改用fastjson2</li>
         </ul>
         <ul>1.2.0
             <li>更新图标</li>
             <li>调整菜单位置</li>
             <li>新增翻译功能（联网下可用）</li>
         </ul>
-        <ul>1.2.1
-            <li>弃用GSON，改用fastjson2</li>
+        <ul>1.1.0
+            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
+            <li>兼容idea版本至2022.2.2</li>
+        </ul>
+        <ul>1.0.0
+            <li>基础增删查改、列表查询、批量新增</li>
         </ul>
     ]]></change-notes>
     <idea-version since-build="173.0"/>

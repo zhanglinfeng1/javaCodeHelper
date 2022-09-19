@@ -72,10 +72,11 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="模块名"/>
+          <text value="项目名"/>
+          <toolTipText value=""/>
         </properties>
       </component>
-      <component id="3a81a" class="javax.swing.JTextField" binding="modularNameField">
+      <component id="3a81a" class="javax.swing.JTextField" binding="projectNameField">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
