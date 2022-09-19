@@ -1,6 +1,5 @@
 package action;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -10,6 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import constant.COMMON_CONSTANT;
+import util.JsonUtil;
 import util.StringUtil;
 
 import java.io.BufferedReader;
@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @Author zhanglinfeng
@@ -70,9 +71,10 @@ public class TranslateAction extends AnAction {
         } catch (Exception e) {
             return responseStr.toString();
         }
-        Object[] objArr = new Gson().fromJson(responseStr.toString(), Object[].class);
-        Object[] objArr2 = new Gson().fromJson(objArr[0].toString(), Object[].class);
-        Object[] objArr3 = new Gson().fromJson(objArr2[0].toString(), Object[].class);
-        return objArr3[0].toString();
+        // 将jsonArray转java对象list
+        List<Object> objList = JsonUtil.toList(responseStr.toString(),Object.class);
+        List<Object> objList2 = JsonUtil.toList(objList.get(0).toString(),Object.class);
+        List<Object> objList3 = JsonUtil.toList(objList2.get(0).toString(),Object.class);
+        return objList3.get(0).toString();
     }
 }
