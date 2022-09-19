@@ -19,6 +19,8 @@ public class ToolWindowDialog extends JDialog {
     private JTextField packagePathField;
 
     public ToolWindowDialog() {
+        projectNameField.setForeground(JBColor.GRAY);
+        projectNameField.setText(COMMON_CONSTANT.PROJECT_INPUT_PLACEHOLDER);
         setContentPane(contentPane);
         setModal(true);
         buttonOK.addActionListener(e -> {

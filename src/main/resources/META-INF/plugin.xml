@@ -5,7 +5,7 @@
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
       <p>定制化java代码开发插件，邮箱704123055@qq.com</p>
-            <li>根据建表SQL(带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
+            <li>根据建表SQL(仅支持mysql，带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
             <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
             <li>一键翻译</li>
     ]]></description>
@@ -32,7 +32,7 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Paste SQL" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.ReadFactory"/>
+        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.ReadFactory"/>
     </extensions>
 
     <actions>

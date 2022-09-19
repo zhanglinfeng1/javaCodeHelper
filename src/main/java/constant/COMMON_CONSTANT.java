@@ -20,7 +20,7 @@ public class COMMON_CONSTANT {
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SPACE = "\\s+";
     public static final String SLASH = "/";
-    public static final String PROJECT_INPUT_PLACEHOLDER = "指定项目名，打开多项目时有用，单项目不填";
+    public static final String PROJECT_INPUT_PLACEHOLDER = "打开多项目时指定项目，单项目不填";
     public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int,short,long,byte,float,double,boolean、char,Integer,Short,Long,Byte,Float,Double,Boolean,Character".split(","));
     public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String,Date,Timestamp,BigDecimal".split(","));
 
