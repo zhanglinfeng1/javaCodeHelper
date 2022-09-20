@@ -4,27 +4,23 @@
     <version>1.2.0</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-      <p>定制化java代码开发插件，邮箱704123055@qq.com</p>
-            <li>根据建表SQL(仅支持mysql，带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
-            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
-            <li>一键翻译</li>
+      <p>Customized java code development plug-in，Contact email 704123055@qq.com</p>
+      <p>source code <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
     ]]></description>
     <change-notes><![CDATA[
         <ul>1.1.1
-            <li>弃用GSON，改用fastjson2</li>
-            <li>查询方法支持选择字段</li>
+            <li>Deprecate GSON, use fastjson2 instead</li>
+            <li>The query method supports selecting fields</li>
         </ul>
         <ul>1.1.0
-            <li>新增翻译功能（联网下可用）</li>
-            <li>更新图标</li>
-            <li>调整菜单位置</li>
+            <li>Added translation function (available under the Internet)</li>
         </ul>
         <ul>1.0.1
-            <li>兼容idea版本至2022.2.2</li>
+            <li>Compatible with idea version to 2022.2.2</li>
         </ul>
         <ul>1.0.0
-            <li>基础增删查改、列表查询、批量新增</li>
-            <li>一键生成类转换的构造函数，例：Object1 to Object2</li>
+            <li>Basic addition, deletion and modification, list query, batch addition</li>
+            <li>One-click generation field conversion constructor</li>
         </ul>
     ]]></change-notes>
     <idea-version since-build="173.0"/>
@@ -40,10 +36,10 @@
         <group id="idea.plugins.JavaCodeHelper" text="JavaCodeHelper" popup="true" icon="/icon/boLuo16.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </group>
-        <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion" description="新建构造函数，转换对象字段值">
+        <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion">
             <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="first"/>
         </action>
-        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate" description="翻译">
+        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">
             <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.TranslateAction"/>
         </action>
     </actions>
