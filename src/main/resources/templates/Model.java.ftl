@@ -21,12 +21,10 @@ public class ${tableName}{
     public ${tableName}() {
     }
 
-<#assign useless = ["visible", "valid", "deleted", "tenantId","createTime", "updateTime"]>
     public ${tableName}(${tableName}VO obj) {
 <#list columnList as fields>
-<#if !useless?seq_contains(fields.columnName)>
         this.${fields.columnName} = obj.get${fields.firstUpperColumnName}();
-<#else></#if></#list>
+</#list>
     }
 
 <#list columnList as fields>

@@ -11,20 +11,13 @@ import java.util.List;
 */
 public interface ${tableName}Service{
 
-    void insert${tableName}(String tenantId, ${tableName}VO obj);
+    void insert${tableName}(${tableName}VO obj);
 
-    void update${tableName}(String tenantId, ${tableName}VO obj);
+    void update${tableName}(${tableName}VO obj);
 
-<#list columnList as fields>
-    <#if fields.columnName == 'status'>
-    void update${tableName}Status(String tenantId, Integer id, String status);
+    ${tableName} get${tableName}(Integer id);
 
-        <#break>
-    </#if>
-</#list>
-    ${tableName} get${tableName}(String tenantId, Integer id);
+    int get${tableName}ListCount(<#list queryColumnList as fields>String ${fields.columnName}<#if fields_has_next>, </#if></#list>);
 
-    int get${tableName}ListCount(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>);
-
-    List<${tableName}> get${tableName}List(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>, int offset, int limit);
+    List<${tableName}> get${tableName}List(<#list queryColumnList as fields>String ${fields.columnName}, </#list>int offset, int limit);
 }

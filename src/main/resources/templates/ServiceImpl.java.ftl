@@ -1,6 +1,5 @@
 package ${packagePath};
 
-import com.fenzhitech.framework.base.exception.CodeException;
 import ${packagePath}.${tableName}Mapper;
 import ${packagePath}.${tableName};
 import ${packagePath}.${tableName}Service;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.List;
 
 /**
@@ -25,57 +23,46 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
 
     @Override
     @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
-    public void insert${tableName}(String tenantId, ${tableName}VO obj) {
+    public void insert${tableName}(${tableName}VO obj) {
         //新增${tableComment}
         ${tableName} ${firstLowerTableName} = new ${tableName}(obj);
-        ${firstLowerTableName}Mapper.insert${tableName}(tenantId,${firstLowerTableName});
+        ${firstLowerTableName}Mapper.insert${tableName}(${firstLowerTableName});
     }
 
     @Override
     @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
-    public void update${tableName}(String tenantId, ${tableName}VO obj) {
+    public void update${tableName}(${tableName}VO obj) {
         //编辑${tableComment}
-        ${tableName} ${firstLowerTableName} = this.get${tableName}(tenantId,obj.getId());
-<#assign noUpdate = ["id", "visible", "valid", "deleted", "createTime", "updateTime", "tenantId", "status"]>
+        ${tableName} ${firstLowerTableName} = this.get${tableName}(obj.getId());
+<#assign noUpdate = ["id", "createTime"]>
 <#list columnList as fields>
     <#if !noUpdate?seq_contains(fields.columnName)>
         ${firstLowerTableName}.set${fields.firstUpperColumnName}(obj.get${fields.firstUpperColumnName}());
     </#if>
 </#list>
-        ${firstLowerTableName}Mapper.update${tableName}(tenantId,${firstLowerTableName});
+        ${firstLowerTableName}Mapper.update${tableName}(${firstLowerTableName});
     }
 
-<#list columnList as fields>
-    <#if fields.columnName == 'status'>
     @Override
-    @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
-    public void update${tableName}Status(String tenantId, Integer id, String status){
-        ${firstLowerTableName}Mapper.update${tableName}Status(tenantId,id,status);
-    }
-
-        <#break>
-    </#if>
-</#list>
-    @Override
-    public ${tableName} get${tableName}(String tenantId, Integer id) {
+    public ${tableName} get${tableName}(Integer id) {
         if(null == id){
-            throw new CodeException("ID_NOT_NULL","${tableComment}id不能为空");
+            return new ${tableName}();
         }
-        ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Mapper.get${tableName}(tenantId, id);
+        ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Mapper.get${tableName}(id);
         if(null == ${firstLowerTableName}){
-            throw new CodeException("NOT_EXIST","${tableComment}不存在");
+            return new ${tableName}();
         }
         return ${firstLowerTableName};
     }
 
     @Override
-    public int get${tableName}ListCount(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>) {
-        return ${firstLowerTableName}Mapper.get${tableName}ListCount(tenantId<#list queryColumnList as fields>, ${fields.columnName}</#list>);
+    public int get${tableName}ListCount(<#list queryColumnList as fields>String ${fields.columnName}<#if fields_has_next>, </#if></#list>) {
+        return ${firstLowerTableName}Mapper.get${tableName}ListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);
     }
 
     @Override
-    public List<${tableName}> get${tableName}List(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>, int offset, int limit) {
-        List<${tableName}> list = ${firstLowerTableName}Mapper.get${tableName}List(tenantId<#list queryColumnList as fields>, ${fields.columnName}</#list>, offset, limit);
+    public List<${tableName}> get${tableName}List(<#list queryColumnList as fields>String ${fields.columnName}, </#list>int offset, int limit) {
+        List<${tableName}> list = ${firstLowerTableName}Mapper.get${tableName}List(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit);
         return null == list ? new ArrayList<>() : list;
     }
 }

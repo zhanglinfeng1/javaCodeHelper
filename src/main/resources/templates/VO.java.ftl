@@ -10,17 +10,14 @@ import java.sql.Timestamp;
 </#list>
 
 /**
- * ${tableComment}
+ * ${tableComment}VO
  * @Author: ${author}
  * @Date: ${dateTime}
 */
 public class ${tableName}VO{
-<#assign useless = ["visible", "valid", "deleted", "tenantId"]>
     <#list columnList as fields>
-    <#if !useless?seq_contains(fields.columnName)>
     /** ${fields.columnComment} */
     private ${fields.columnType} ${fields.columnName};
-<#else></#if>
     </#list>
 
     public ${tableName}VO() {
@@ -28,13 +25,11 @@ public class ${tableName}VO{
 
     public ${tableName}VO(${tableName} obj) {
 <#list columnList as fields>
-<#if !useless?seq_contains(fields.columnName)>
         this.${fields.columnName} = obj.get${fields.firstUpperColumnName}();
-<#else></#if></#list>
+</#list>
     }
 
 <#list columnList as fields>
-<#if !useless?seq_contains(fields.columnName)>
     public void set${fields.firstUpperColumnName}(${fields.columnType} ${fields.columnName}){
         this.${fields.columnName} = ${fields.columnName};
     }
@@ -43,7 +38,6 @@ public class ${tableName}VO{
         return ${fields.columnName};
     }
 
-<#else></#if>
 </#list>
 }
 
