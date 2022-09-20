@@ -15,9 +15,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ToolWindowSubDialog extends JDialog {
     private JPanel contentPane;
@@ -31,6 +29,7 @@ public class ToolWindowSubDialog extends JDialog {
     }
 
     public void initColumn() {
+        panel.removeAll();
         TableInfo tableInfo = TemplateFactory.getTableInfo();
         List<ColumnInfo> columnInfoList = tableInfo.getColumnList();
         panel.setLayout(new GridLayout(columnInfoList.size() + 1, 3));
@@ -61,7 +60,6 @@ public class ToolWindowSubDialog extends JDialog {
         Component[] components = panel.getComponents();
         int length = components.length;
         if (length > 3) {
-            TableInfo tableInfo = TemplateFactory.getTableInfo();
             for (int i = 3; i < length; i = i + 3) {
                 JRadioButton jRadioButton = (JRadioButton) components[i + 1];
                 if (jRadioButton.isSelected()) {

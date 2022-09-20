@@ -36,7 +36,7 @@ public class ReadFactory implements ToolWindowFactory {
         dialog.getNextButton().addActionListener(e -> {
             try {
                 String sqlStr = dialog.getTextArea().getText();
-                if (StringUtil.isEmpty(sqlStr)) {
+                if (StringUtil.isEmpty(sqlStr) || COMMON_CONSTANT.TEXT_AREA_PLACEHOLDER.equals(sqlStr)) {
                     throw new Exception("Sql不能为空");
                 }
                 TemplateFactory.init(project.getBasePath(), dialog.getAuthorField().getText(), dialog.getProjectNameField().getText(), dialog.getPackagePathField().getText(), sqlStr);
