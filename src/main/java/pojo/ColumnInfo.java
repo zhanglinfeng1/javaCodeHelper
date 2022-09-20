@@ -22,6 +22,8 @@ public class ColumnInfo {
     private String columnType;
     /** 字段备注 */
     private String columnComment;
+    /** 查询方式 */
+    private String queryType;
 
     public ColumnInfo() {
     }
@@ -33,6 +35,13 @@ public class ColumnInfo {
         this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
         this.columnType = TypeUtil.toJavaType(valueList.get(1));
         this.columnComment = valueList.get(valueList.size() - 1);
+    }
+
+    public ColumnInfo(String sqlColumnName, String queryType) {
+        this.sqlColumnName = sqlColumnName;
+        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
+        this.queryType = queryType;
     }
 
     public String getSqlColumnName() {
@@ -73,5 +82,13 @@ public class ColumnInfo {
 
     public void setColumnComment(String columnComment) {
         this.columnComment = columnComment;
+    }
+
+    public String getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(String queryType) {
+        this.queryType = queryType;
     }
 }

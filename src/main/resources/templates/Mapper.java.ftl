@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.StatementType;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,18 +34,50 @@ public interface ${tableName}Mapper{
         }
 
         public String get${tableName}ListCountSQL(Map<?, ?> params) {
+<#list queryColumnList as fields>
+            String ${fields.columnName} = (String) params.get("${fields.columnName}");
+</#list>
             SQL sql = new SQL();
             sql.SELECT("count(id)");
             sql.FROM("${sqlTableName}");
             <#noparse>sql.WHERE("tenant_id = #{tenantId}");</#noparse>
+<#list queryColumnList as fields>
+            if (StringUtil.isNotBlank(${fields.columnName})){
+<#if fields.queryType == '='>
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
+<#elseif fields.queryType == 'in' ||  fields.queryType == 'not in'>
+                <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
+                String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");
+<#else>
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')");
+</#if>
+            }
+</#list>
             return sql.toString();
         }
 
         public String get${tableName}ListSQL(Map<?, ?> params) {
+<#list queryColumnList as fields>
+            String ${fields.columnName} = (String) params.get("${fields.columnName}");
+</#list>
             SQL sql = new SQL();
             sql.SELECT(this.getColumn());
-            <#noparse>sql.WHERE("tenant_id = #{tenantId}");
-            return sql + " LIMIT #{offset},#{limit}";</#noparse>
+            <#noparse>sql.WHERE("tenant_id = #{tenantId}");</#noparse>
+<#list queryColumnList as fields>
+            if (StringUtil.isNotBlank(${fields.columnName})){
+<#if fields.queryType == '='>
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
+<#elseif fields.queryType == 'in' ||  fields.queryType == 'not in'>
+                <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
+                String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");
+<#else>
+                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')");
+</#if>
+            }
+</#list>
+            <#noparse>return sql + " LIMIT #{offset},#{limit}";</#noparse>
         }
     }
 <#assign noInsert = ["id", "visible", "valid", "deleted"]>
@@ -76,9 +110,9 @@ public interface ${tableName}Mapper{
     ${tableName} get${tableName}(@Param("tenantId") String tenantId, @Param("id") Integer id);
 
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}ListCountSQL")
-    int get${tableName}ListCount(@Param("tenantId") String tenantId);
+    int get${tableName}ListCount(@Param("tenantId") String tenantId<#list queryColumnList as fields>,@Param("${fields.columnName}") String ${fields.columnName}</#list>);
 
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}ListSQL")
-    List<${tableName}> get${tableName}List(@Param("tenantId") String tenantId,@Param("offset") int offset, @Param("limit") int limit);
+    List<${tableName}> get${tableName}List(@Param("tenantId") String tenantId<#list queryColumnList as fields>,@Param("${fields.columnName}") String ${fields.columnName}</#list>, @Param("offset") int offset, @Param("limit") int limit);
 }
 

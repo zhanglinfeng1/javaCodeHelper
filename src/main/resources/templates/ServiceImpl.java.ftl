@@ -69,13 +69,13 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
     }
 
     @Override
-    public int get${tableName}ListCount(String tenantId) {
-        return ${firstLowerTableName}Mapper.get${tableName}ListCount(tenantId);
+    public int get${tableName}ListCount(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>) {
+        return ${firstLowerTableName}Mapper.get${tableName}ListCount(tenantId<#list queryColumnList as fields>, ${fields.columnName}</#list>);
     }
 
     @Override
-    public List<${tableName}> get${tableName}List(String tenantId, int offset, int limit) {
-        List<${tableName}> list = ${firstLowerTableName}Mapper.get${tableName}List(tenantId, offset, limit);
+    public List<${tableName}> get${tableName}List(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>, int offset, int limit) {
+        List<${tableName}> list = ${firstLowerTableName}Mapper.get${tableName}List(tenantId<#list queryColumnList as fields>, ${fields.columnName}</#list>, offset, limit);
         return null == list ? new ArrayList<>() : list;
     }
 }

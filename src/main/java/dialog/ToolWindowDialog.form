@@ -33,15 +33,15 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="e7465" class="javax.swing.JButton" binding="buttonOK">
+          <component id="e7465" class="javax.swing.JButton" binding="nextButton">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <enabled value="true"/>
               <horizontalAlignment value="0"/>
-              <icon value="icon/submit.png"/>
-              <text value="生成代码"/>
+              <icon value="icon/next.png"/>
+              <text value="下一步"/>
             </properties>
           </component>
           <hspacer id="cf306">

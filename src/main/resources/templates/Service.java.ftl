@@ -24,7 +24,7 @@ public interface ${tableName}Service{
 </#list>
     ${tableName} get${tableName}(String tenantId, Integer id);
 
-    int get${tableName}ListCount(String tenantId);
+    int get${tableName}ListCount(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>);
 
-    List<${tableName}> get${tableName}List(String tenantId, int offset,int limit);
+    List<${tableName}> get${tableName}List(String tenantId<#list queryColumnList as fields>, String ${fields.columnName}</#list>, int offset, int limit);
 }

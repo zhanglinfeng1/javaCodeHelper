@@ -24,12 +24,14 @@ public class TableInfo {
     private String tableComment;
     /** 字段信息 */
     private List<ColumnInfo> columnList;
+    /** 用于查询的字段信息 */
+    private List<ColumnInfo> queryColumnList;
 
     public TableInfo() {
     }
 
     public TableInfo(String createTableSql) {
-        List<String> lineList = Arrays.asList(createTableSql.split("\\r?\\n"));
+        List<String> lineList = Arrays.stream(createTableSql.split("\\r?\\n")).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
         this.sqlTableName = lineList.get(0).split(COMMON_CONSTANT.SPACE)[2];
         if (this.sqlTableName.contains(".")) {
             this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll("['`]", "");
@@ -83,4 +85,11 @@ public class TableInfo {
         this.columnList = columnList;
     }
 
+    public List<ColumnInfo> getQueryColumnList() {
+        return queryColumnList;
+    }
+
+    public void setQueryColumnList(List<ColumnInfo> queryColumnList) {
+        this.queryColumnList = queryColumnList;
+    }
 }
