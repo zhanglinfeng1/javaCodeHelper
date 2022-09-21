@@ -83,13 +83,13 @@ public class TemplateFactory {
             dataMap.put("projectName", projectNameArr[projectNameArr.length - 1] + COMMON_CONSTANT.SLASH);
         }
         fullPath = fullPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll("\\.", "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
+    }
+
+    public static void create(List<ColumnInfo> queryColumnList) throws Exception {
         File file = new File(fullPath);
         if (!file.exists()) {
             file.mkdirs();
         }
-    }
-
-    public static void create(List<ColumnInfo> queryColumnList) throws Exception {
         tableInfo.setQueryColumnList(queryColumnList);
         dataMap.putAll(JsonUtil.toMap(tableInfo));
         for (Template template : templateFactory.templateList) {

@@ -39,7 +39,15 @@ public class ReadFactory implements ToolWindowFactory {
                 if (StringUtil.isEmpty(sqlStr) || COMMON_CONSTANT.TEXT_AREA_PLACEHOLDER.equals(sqlStr)) {
                     throw new Exception("Sql不能为空");
                 }
-                TemplateFactory.init(project.getBasePath(), dialog.getAuthorField().getText(), dialog.getProjectNameField().getText(), dialog.getPackagePathField().getText(), sqlStr);
+                String projectName = dialog.getProjectNameField().getText();
+                if (COMMON_CONSTANT.PROJECT_INPUT_PLACEHOLDER.equals(projectName)) {
+                    projectName = COMMON_CONSTANT.BLANK_STRING;
+                }
+                String packagePath = dialog.getPackagePathField().getText();
+                if (COMMON_CONSTANT.PROJECT_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
+                    throw new Exception("包路径不能为空");
+                }
+                TemplateFactory.init(project.getBasePath(), dialog.getAuthorField().getText(), projectName, packagePath, sqlStr);
                 toolWindow.getContentManager().removeContent(content, true);
                 toolWindow.getContentManager().addContent(subContent);
                 subDialog.initColumn();
