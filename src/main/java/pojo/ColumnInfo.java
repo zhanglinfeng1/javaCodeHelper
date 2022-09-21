@@ -1,5 +1,6 @@
 package pojo;
 
+import constant.COMMON_CONSTANT;
 import util.StringUtil;
 import util.TypeUtil;
 
@@ -29,9 +30,9 @@ public class ColumnInfo {
     }
 
     public ColumnInfo(List<String> valueList) {
-        valueList = valueList.stream().filter(StringUtil::isNotEmpty).map(s -> s.replaceAll("[',`]", "")).collect(Collectors.toList());
+        valueList = valueList.stream().filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING)).collect(Collectors.toList());
         this.sqlColumnName = valueList.get(0);
-        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
         this.columnType = TypeUtil.toJavaType(valueList.get(1));
         this.columnComment = valueList.get(valueList.size() - 1);
@@ -39,7 +40,7 @@ public class ColumnInfo {
 
     public ColumnInfo(String sqlColumnName, String queryType) {
         this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
         this.queryType = queryType;
     }

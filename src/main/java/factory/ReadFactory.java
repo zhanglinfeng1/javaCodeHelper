@@ -10,10 +10,7 @@ import constant.COMMON_CONSTANT;
 import dialog.ToolWindowDialog;
 import dialog.ToolWindowSubDialog;
 import org.jetbrains.annotations.NotNull;
-import pojo.ColumnInfo;
 import util.StringUtil;
-
-import java.util.List;
 
 /**
  * @Author: zhanglinfeng
@@ -28,9 +25,9 @@ public class ReadFactory implements ToolWindowFactory {
         //添加到IDEA中
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(dialog.getContent(), COMMON_CONSTANT.BLANK_STRING, false);
-        content.setDisplayName("基础信息");
+        content.setDisplayName(COMMON_CONSTANT.BLANK_STRING);
         Content subContent = contentFactory.createContent(subDialog.getContent(), COMMON_CONSTANT.BLANK_STRING, false);
-        subContent.setDisplayName("设置查询条件");
+        subContent.setDisplayName(COMMON_CONSTANT.BLANK_STRING);
         toolWindow.getContentManager().addContent(content);
         //下一步
         dialog.getNextButton().addActionListener(e -> {
@@ -44,7 +41,7 @@ public class ReadFactory implements ToolWindowFactory {
                     projectName = COMMON_CONSTANT.BLANK_STRING;
                 }
                 String packagePath = dialog.getPackagePathField().getText();
-                if (COMMON_CONSTANT.PROJECT_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
+                if (COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
                     throw new Exception("包路径不能为空");
                 }
                 TemplateFactory.init(project.getBasePath(), dialog.getAuthorField().getText(), projectName, packagePath, sqlStr);
@@ -63,8 +60,7 @@ public class ReadFactory implements ToolWindowFactory {
         //生成代码
         subDialog.getButtonOK().addActionListener(e -> {
             try {
-                List<ColumnInfo> queryColumnList = subDialog.getQueryColumnList();
-                TemplateFactory.create(queryColumnList);
+                TemplateFactory.create(subDialog.getQueryColumnList());
                 subDialog.getQueryColumnList();
                 toolWindow.getContentManager().removeContent(subContent, true);
                 toolWindow.getContentManager().addContent(content);

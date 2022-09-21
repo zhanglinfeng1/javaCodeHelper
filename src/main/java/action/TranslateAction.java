@@ -42,7 +42,7 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(selectedText)) {
             return;
         }
-        selectedText = selectedText.replaceAll("[\r\n/*]", "").trim();
+        selectedText = selectedText.replaceAll("[\r\n/*]", COMMON_CONSTANT.BLANK_STRING).trim();
         String translateResult;
         if (StringUtil.isEnglish(selectedText)) {
             translateResult = translate(selectedText, COMMON_CONSTANT.EN, COMMON_CONSTANT.ZH_CN);
@@ -50,9 +50,7 @@ public class TranslateAction extends AnAction {
             translateResult = translate(selectedText, COMMON_CONSTANT.ZH_CN, COMMON_CONSTANT.EN);
         }
         String finalSelectedText = selectedText;
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText + translateResult);
-        });
+        WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText + translateResult));
     }
 
     private String translate(String text, String sourceLang, String targetLang) {

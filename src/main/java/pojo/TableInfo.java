@@ -14,6 +14,14 @@ import java.util.stream.Collectors;
  * @Date: create in 2022/9/8 10:34
  */
 public class TableInfo {
+    /** 作者 */
+    private String author;
+    /** 时间 */
+    private String dateTime;
+    /** 项目名 */
+    private String projectName;
+    /** 包路径 */
+    private String packagePath;
     /** sql表名 */
     private String sqlTableName;
     /** 表名 */
@@ -34,15 +42,47 @@ public class TableInfo {
         List<String> lineList = Arrays.stream(createTableSql.split("\\r?\\n")).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
         this.sqlTableName = lineList.get(0).split(COMMON_CONSTANT.SPACE)[2];
         if (this.sqlTableName.contains(".")) {
-            this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll("['`]", "");
+            this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING);
         }
-        this.tableName = Arrays.stream(this.sqlTableName.split("_")).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        this.tableName = Arrays.stream(this.sqlTableName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         this.firstLowerTableName = StringUtil.toLowerCaseFirst(this.tableName);
         Matcher m = Pattern.compile("'(.*?)'").matcher(lineList.get(lineList.size() - 1));
         if (m.find()) {
-            this.tableComment = m.group(1).replaceAll("表", "");
+            this.tableComment = m.group(1).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
         }
         this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(Arrays.asList(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getPackagePath() {
+        return packagePath;
+    }
+
+    public void setPackagePath(String packagePath) {
+        this.packagePath = packagePath;
     }
 
     public String getSqlTableName() {

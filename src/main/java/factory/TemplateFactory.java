@@ -12,13 +12,14 @@ import util.StringUtil;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.JarURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.jar.JarEntry;
 
 /**
  * @Author zhanglinfeng
@@ -30,8 +31,6 @@ public class TemplateFactory {
     private List<Template> templateList = new ArrayList<>();
     /** 解析后的表信息 */
     private static TableInfo tableInfo;
-    /** 解析后的表信息 */
-    private static Map<String, Object> dataMap;
     /** 全路径 */
     private static String fullPath;
 
@@ -44,14 +43,16 @@ public class TemplateFactory {
                 if (templateFactory == null) {
                     templateFactory = new TemplateFactory();
                     Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
-                    configuration.setClassLoaderForTemplateLoading(COMMON_CONSTANT.class.getClassLoader(), COMMON_CONSTANT.TEMPLATE_PATH);
+                    ClassLoader classLoader = TemplateFactory.class.getClassLoader();
+                    configuration.setClassLoaderForTemplateLoading(classLoader, COMMON_CONSTANT.TEMPLATE_PATH);
                     configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-                    for (String templateName : COMMON_CONSTANT.TEMPLATE_NAME_LIST) {
-                        try {
-                            templateFactory.templateList.add(configuration.getTemplate(templateName));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            throw new Exception("模板获取失败");
+                    JarURLConnection jarCon = (JarURLConnection) Objects.requireNonNull(classLoader.getResource(COMMON_CONSTANT.TEMPLATE_PATH)).openConnection();
+                    Enumeration<JarEntry> jarEntryArr = jarCon.getJarFile().entries();
+                    while (jarEntryArr.hasMoreElements()) {
+                        JarEntry entry = jarEntryArr.nextElement();
+                        String name = entry.getName();
+                        if (name.startsWith(COMMON_CONSTANT.TEMPLATE_PATH) && name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
+                            templateFactory.templateList.add(configuration.getTemplate(name.replace(COMMON_CONSTANT.TEMPLATE_PATH + COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING)));
                         }
                     }
                 }
@@ -68,21 +69,19 @@ public class TemplateFactory {
             e.printStackTrace();
             throw new Exception("检查建表SQL");
         }
-        dataMap = new HashMap<>();
-        dataMap.put("author", author);
-        dataMap.put("dateTime", DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
-        dataMap.put("packagePath", packagePath);
-        fullPath = basicPath;
+        tableInfo.setAuthor(author);
+        tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
+        tableInfo.setPackagePath(packagePath);
         if (StringUtil.isNotEmpty(projectName)) {
             File file = new File(basicPath + COMMON_CONSTANT.DOUBLE_BACKSLASH + "src");
             if (file.exists()) {
-                fullPath = file.getParent();
+                basicPath = file.getParent();
             }
-            fullPath = fullPath + COMMON_CONSTANT.DOUBLE_BACKSLASH + projectName;
-            String[] projectNameArr = projectName.split("\\.");
-            dataMap.put("projectName", projectNameArr[projectNameArr.length - 1] + COMMON_CONSTANT.SLASH);
+            basicPath = basicPath + COMMON_CONSTANT.DOUBLE_BACKSLASH + projectName;
+            String[] projectNameArr = projectName.split("[.\\-_]");
+            tableInfo.setProjectName(projectNameArr[projectNameArr.length - 1] + COMMON_CONSTANT.SLASH);
         }
-        fullPath = fullPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll("\\.", "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
+        fullPath = basicPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll("\\.", "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
     }
 
     public static void create(List<ColumnInfo> queryColumnList) throws Exception {
@@ -91,11 +90,10 @@ public class TemplateFactory {
             file.mkdirs();
         }
         tableInfo.setQueryColumnList(queryColumnList);
-        dataMap.putAll(JsonUtil.toMap(tableInfo));
         for (Template template : templateFactory.templateList) {
-            String filePath = fullPath + dataMap.get("tableName") + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING).replaceAll(COMMON_CONSTANT.MODEL, COMMON_CONSTANT.BLANK_STRING);
+            String filePath = fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
             try {
-                template.process(dataMap, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
+                template.process(JsonUtil.toMap(tableInfo), new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new Exception("生成文件失败");

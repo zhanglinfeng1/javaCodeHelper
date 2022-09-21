@@ -51,11 +51,11 @@ public class ClassConversionAction extends AnAction {
                 outCycle:
                 for (PsiMethod psiMethod : constructorMethods) {
                     //获取方法为空的构造方法
-                    if (!psiMethod.getText().contains("this.")) {
+                    if (StringUtil.isEmpty(psiMethod.getText())) {
                         PsiParameter[] parameterArr = psiMethod.getParameterList().getParameters();
                         for (PsiParameter parameter : parameterArr) {
                             if (TypeUtil.isObject(parameter.getType().getCanonicalText())) {
-                                parametersStr = Arrays.stream(parameterArr).map(PsiParameter::getText).collect(Collectors.joining(","));
+                                parametersStr = Arrays.stream(parameterArr).map(PsiParameter::getText).collect(Collectors.joining(COMMON_CONSTANT.COMMA));
                                 objectStr = parameter.getText().split(COMMON_CONSTANT.SPACE)[1];
                                 deleteMethod = psiMethod;
                                 break outCycle;

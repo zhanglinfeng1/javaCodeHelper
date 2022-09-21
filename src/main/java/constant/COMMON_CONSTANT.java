@@ -16,15 +16,16 @@ public class COMMON_CONSTANT {
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SPACE = "\\s+";
     public static final String SLASH = "/";
-    public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int,short,long,byte,float,double,boolean、char,Integer,Short,Long,Byte,Float,Double,Boolean,Character".split(","));
-    public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String,Date,Timestamp,BigDecimal".split(","));
+    public static final String COMMA = ",";
+    public static final String UNDERSCORE = "_";
+    public static final String SQL_REPLACE_REGEX = "[',`]";
+    public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int,short,long,byte,float,double,boolean、char,Integer,Short,Long,Byte,Float,Double,Boolean,Character".split(COMMA));
+    public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String,Date,Timestamp,BigDecimal".split(COMMA));
 
     /** FreeMark模板 */
     public static final String JAVA_FILE_PATH = "\\src\\main\\java\\";
-    public static final String MODEL = "Model";
     public static final String TEMPLATE_SUFFIX = ".ftl";
-    public static final String TEMPLATE_PATH = "./templates";
-    public static final List<String> TEMPLATE_NAME_LIST = Arrays.asList("Model.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl", "Controller.java.ftl");
+    public static final String TEMPLATE_PATH = "templates";
 
     /** GUI */
     public static final String PROJECT_INPUT_PLACEHOLDER = "打开多项目时指定项目，单项目不填";
