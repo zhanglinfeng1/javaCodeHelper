@@ -1,16 +1,19 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-        <p>Customized java code development plug-in</p>
+        <p>Customized java code development plug-in，For learning plug-in development, welcome to exchange ideas </p>
             <li>Generate mapper, model, VO, service, and controller codes with one click according to the table SQL (only mysql is supported, with COMMENT)，Support basic addition, deletion and modification, list query, batch addition </li>
             <li>One-click generation field conversion constructor</li>
             <li>One-click translation(available under the Internet)</li>
-        <p><a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <p>Source code warehouse address ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
     ]]></description>
     <change-notes><![CDATA[
+        <ul>1.1.2
+            <li>fix bug</li>
+        </ul>
         <ul>1.1.1
             <li>Deprecate GSON, use fastjson2 instead</li>
             <li>The query method supports selecting fields</li>
