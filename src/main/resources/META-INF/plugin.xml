@@ -4,7 +4,7 @@
     <version>1.1.1</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-        <p>Customized java code development plug-in，Contact email 704123055@qq.com</p>
+        <p>Customized java code development plug-in</p>
             <li>Generate mapper, model, VO, service, and controller codes with one click according to the table SQL (only mysql is supported, with COMMENT)，Support basic addition, deletion and modification, list query, batch addition </li>
             <li>One-click generation field conversion constructor</li>
             <li>One-click translation(available under the Internet)</li>
