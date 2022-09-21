@@ -1,11 +1,14 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.2.0</version>
+    <version>1.1.1</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-      <p>Customized java code development plug-in，Contact email 704123055@qq.com</p>
-      <p>source code <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <p>Customized java code development plug-in，Contact email 704123055@qq.com</p>
+            <li>Generate mapper, model, VO, service, and controller codes with one click according to the table SQL (only mysql is supported, with COMMENT)，Support basic addition, deletion and modification, list query, batch addition </li>
+            <li>One-click generation field conversion constructor</li>
+            <li>One-click translation(available under the Internet)</li>
+        <p><a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
     ]]></description>
     <change-notes><![CDATA[
         <ul>1.1.1

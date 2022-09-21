@@ -1,10 +1,10 @@
 #### idea 插件简介
 
-定制化java代码开发插件
-
-    1.根据建表SQL(仅支持mysql，带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增
-    2.一键生成类转换的构造函数，例：Object1 to Object2
-    3.一键翻译
+<ul>定制化java代码开发插件,QQ:704123055
+    <li>根据建表SQL(仅支持mysql，带上COMMENT)一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增
+    <li>一键生成类转换的构造函数，例：Object1 to Object2
+    <li>一键翻译
+</ul>
 
 #### 版本
 <ul>1.1.1
