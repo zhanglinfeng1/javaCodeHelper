@@ -8,6 +8,7 @@
         <ul>
             <li>Generate mapper, model, VO, service, and controller codes with one click based on the table SQL. </li>
             <ul>
+                <li>Support query, addition, deletion , modification, list query, batch addition</li>
                 <li>Support mysql, oracle, need to bring COMMENT</li>
                 <li>Support to generate ibatis version code</li>
                 <li>Support custom templates</li>
@@ -19,8 +20,9 @@
         <p>定制化java代码开发插件，用于学习插件开发，欢迎交流想法</p>
         <p>源码地址 ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
         <ul>
-            <li>根据建表SQL一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
+            <li>根据建表SQL一键生成mapper、model、VO、service、controller代码</li>
             <ul>
+                <li>支持基础增删查改、列表查询、批量新增</li>
                 <li>支持mysql、oracle，需带上COMMENT</li>
                 <li>支持生成ibatis版代码</li>
                 <li>支持自定义模板</li>
