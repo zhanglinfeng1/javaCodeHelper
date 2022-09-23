@@ -5,6 +5,7 @@
     <ul>
         <li>支持mysql、oracle，需带上COMMENT</li>
         <li>支持生成ibatis版代码</li>
+        <li>支持自定义模板</li>
     </ul>
     <li>一键生成类转换的构造函数</li>
     <li>一键翻译（需联网）</li>
