@@ -1,7 +1,6 @@
 package dialog;
 
 import constant.COMMON_CONSTANT;
-import factory.TemplateFactory;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
 
@@ -11,26 +10,27 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ToolWindowSubDialog extends JDialog {
+public class ToolWindowSecondDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton backButton;
     private JPanel panel;
+    private JTextField customTemplatesPathField;
 
-    public ToolWindowSubDialog() {
+    public ToolWindowSecondDialog() {
         setContentPane(contentPane);
         setModal(true);
     }
 
-    public void initColumn() {
+    public void initColumn(TableInfo tableInfo) {
         panel.removeAll();
-        TableInfo tableInfo = TemplateFactory.getTableInfo();
         List<ColumnInfo> columnInfoList = tableInfo.getColumnList();
         panel.setLayout(new GridLayout(columnInfoList.size() + 1, 3));
         panel.add(new JLabel("字段名"));
@@ -71,5 +71,9 @@ public class ToolWindowSubDialog extends JDialog {
             }
         }
         return queryColumnList;
+    }
+
+    public String getCustomTemplatesPath(){
+        return this.customTemplatesPathField.getText();
     }
 }

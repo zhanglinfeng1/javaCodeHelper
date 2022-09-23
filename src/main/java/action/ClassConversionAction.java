@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
@@ -38,7 +39,8 @@ public class ClassConversionAction extends AnAction {
             return;
         }
         PsiClass psiClass = psiJavaFile.getClasses()[0];
-        if (psiClass.getFields().length == 0) {
+        PsiField[] fieldArr = psiClass.getFields();
+        if (fieldArr.length == 0) {
             return;
         }
         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -51,12 +53,12 @@ public class ClassConversionAction extends AnAction {
                 outCycle:
                 for (PsiMethod psiMethod : constructorMethods) {
                     //获取方法为空的构造方法
-                    if (StringUtil.isEmpty(psiMethod.getText())) {
+                    if (!psiMethod.getText().contains("this.")) {
                         PsiParameter[] parameterArr = psiMethod.getParameterList().getParameters();
                         for (PsiParameter parameter : parameterArr) {
                             if (TypeUtil.isObject(parameter.getType().getCanonicalText())) {
                                 parametersStr = Arrays.stream(parameterArr).map(PsiParameter::getText).collect(Collectors.joining(COMMON_CONSTANT.COMMA));
-                                objectStr = parameter.getText().split(COMMON_CONSTANT.SPACE)[1];
+                                objectStr = parameter.getText().split(COMMON_CONSTANT.SPACE_REGEX)[1];
                                 deleteMethod = psiMethod;
                                 break outCycle;
                             }
@@ -67,16 +69,17 @@ public class ClassConversionAction extends AnAction {
             String finalObjectStr = objectStr;
             PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
             StringBuilder constructorMethodSb = new StringBuilder("public ").append(psiClass.getName()).append("(").append(parametersStr).append(") {");
-            constructorMethodSb.append(Arrays.stream(psiClass.getFields()).map(f -> "this." + f.getName() + " = " + finalObjectStr + ".get" + StringUtil.toUpperCaseFirst(f.getName()) + "();").collect(Collectors.joining()));
-            constructorMethodSb.append("}");
+            constructorMethodSb.append(Arrays.stream(fieldArr).map(f -> "this." + f.getName() + " = " + finalObjectStr + ".get" + StringUtil.toUpperCaseFirst(f.getName()) + "();").collect(Collectors.joining())).append("}");
             PsiMethod newConstructor = factory.createMethodFromText(constructorMethodSb.toString(), psiClass);
             if (null != deleteMethod) {
                 psiClass.addAfter(newConstructor, deleteMethod);
                 deleteMethod.delete();
             } else if (constructorMethods.length > 0) {
-                psiClass.addAfter(newConstructor, psiClass.getConstructors()[0]);
+                psiClass.addAfter(newConstructor, constructorMethods[0]);
             } else {
-                psiClass.addBefore(newConstructor, psiClass.getMethods()[0]);
+                PsiMethod nullConstructor = factory.createMethodFromText("public "+ psiClass.getName() +"() {}", psiClass);
+                psiClass.addAfter(newConstructor, fieldArr[fieldArr.length - 1]);
+                psiClass.addAfter(nullConstructor, fieldArr[fieldArr.length - 1]);
             }
         });
     }

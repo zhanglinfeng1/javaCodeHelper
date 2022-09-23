@@ -1,13 +1,6 @@
 package pojo;
 
-import constant.COMMON_CONSTANT;
-import util.StringUtil;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @Author: zhanglinfeng
@@ -34,24 +27,6 @@ public class TableInfo {
     private List<ColumnInfo> columnList;
     /** 用于查询的字段信息 */
     private List<ColumnInfo> queryColumnList;
-
-    public TableInfo() {
-    }
-
-    public TableInfo(String createTableSql) {
-        List<String> lineList = Arrays.stream(createTableSql.split("\\r?\\n")).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-        this.sqlTableName = lineList.get(0).split(COMMON_CONSTANT.SPACE)[2];
-        if (this.sqlTableName.contains(".")) {
-            this.sqlTableName = this.sqlTableName.split("\\.")[1].replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING);
-        }
-        this.tableName = Arrays.stream(this.sqlTableName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
-        this.firstLowerTableName = StringUtil.toLowerCaseFirst(this.tableName);
-        Matcher m = Pattern.compile("'(.*?)'").matcher(lineList.get(lineList.size() - 1));
-        if (m.find()) {
-            this.tableComment = m.group(1).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
-        }
-        this.columnList = lineList.stream().filter(t -> t.contains("COMMENT") && !t.contains("ENGINE=")).map(t -> new ColumnInfo(Arrays.asList(t.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")))).collect(Collectors.toList());
-    }
 
     public String getAuthor() {
         return author;

@@ -1,16 +1,39 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-        <p>Customized java code development plug-in，For learning plug-in development, welcome to exchange ideas </p>
-            <li>Generate mapper, model, VO, service, and controller codes with one click according to the table SQL (only mysql is supported, with COMMENT)，Support basic addition, deletion and modification, list query, batch addition </li>
-            <li>One-click generation field conversion constructor</li>
-            <li>One-click translation(available under the Internet)</li>
-        <p>Source code warehouse address ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <p>Customized java code development plug-in，For learning plug-in development，welcome to exchange ideas </p>
+        <ul>
+            <li>Generate mapper, model, VO, service, and controller codes with one click based on the table SQL. </li>
+            <ul>
+                <li>Support mysql, oracle, need to bring COMMENT</li>
+                <li>Support to generate ibatis version code</li>
+                <li>Support custom templates</li>
+            </ul>
+            <li>One-click generation of class conversion constructors</li>
+            <li>One-click translation (Internet connection required)</li>
+        </ul>
+        <p>很蛋疼，官方要求必须英文开始</p>
+        <p>定制化java代码开发插件，用于学习插件开发，欢迎交流想法</p>
+        <p>源码地址 ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <ul>
+            <li>根据建表SQL一键生成mapper、model、VO、service、controller代码。支持基础增删查改、列表查询、批量新增</li>
+            <ul>
+                <li>支持mysql、oracle，需带上COMMENT</li>
+                <li>支持生成ibatis版代码</li>
+                <li>支持自定义模板</li>
+            </ul>
+            <li>一键生成类转换的构造函数</li>
+            <li>一键翻译（需联网）</li>
+        </ul>
     ]]></description>
     <change-notes><![CDATA[
+        <ul>1.1.3
+            <li>Support mysql, oracle</li>
+            <li>Support custom templates</li>
+        </ul>
         <ul>1.1.2
             <li>fix bug</li>
         </ul>
@@ -35,7 +58,7 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.ReadFactory"/>
+        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
     </extensions>
 
     <actions>

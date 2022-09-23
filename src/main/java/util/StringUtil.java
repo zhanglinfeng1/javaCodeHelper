@@ -1,5 +1,10 @@
 package util;
 
+import constant.COMMON_CONSTANT;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/9/9 9:51
@@ -35,4 +40,11 @@ public class StringUtil {
         return bytes.length == text.length();
     }
 
+    public static String getFirstValueByRegex(String str, String regex) {
+        Matcher m = Pattern.compile(regex).matcher(str);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return COMMON_CONSTANT.BLANK_STRING;
+    }
 }
