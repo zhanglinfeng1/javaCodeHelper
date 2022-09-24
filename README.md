@@ -23,14 +23,18 @@
 <p>首字母小写表名 ${firstLowerTableName}</p>
 <p>表备注 ${tableComment}</p>
 <p>字段信息 ${columnList}</p>
+<ul>
     <li>sql原始字段名 ${sqlColumnName}</li>
     <li>java规范字段名 ${columnName}</li>
     <li>首字母大写的字段名 ${firstUpperColumnName}</li>
     <li>字段类型 ${columnType}</li>
     <li>字段备注 ${columnComment}</li>
+</ul>
 <p>用于查询的字段信息 ${queryColumnList}</p>
+<ul>
     <li>sql原始字段名 ${sqlColumnName}</li>
     <li>java规范字段名 ${columnName}</li>
     <li>首字母大写的字段名 ${firstUpperColumnName}</li>
     <li>字段类型 ${columnType}</li>
     <li>查询方式 ${queryType}</li>
+</ul>
