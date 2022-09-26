@@ -28,9 +28,7 @@ public class ColumnInfo {
     }
 
     public ColumnInfo(String sqlColumnName, String queryType) {
-        this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
-        this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
+        this.dealColumnName(sqlColumnName);
         this.queryType = queryType;
     }
 

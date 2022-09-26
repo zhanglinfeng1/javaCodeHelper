@@ -68,7 +68,7 @@ public class SqlParseUtil {
         }
         Map<String, ColumnInfo> columnMap = columnList.stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
         for (String line : lineList) {
-            if (line.toUpperCase().contains(COMMON_CONSTANT.COMMENT)) {
+            if (line.toUpperCase().startsWith(COMMON_CONSTANT.COMMENT)) {
                 List<String> valueList = Arrays.stream(line.split(COMMON_CONSTANT.SPACE_REGEX)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
                 String comment = StringUtil.getFirstValueByRegex(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
                 if (COMMON_CONSTANT.TABLE.equalsIgnoreCase(valueList.get(2))) {

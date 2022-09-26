@@ -33,7 +33,7 @@ public class TemplateFactory {
     /** 解析后的表信息 */
     private TableInfo tableInfo;
     /** 全路径 */
-    private static String fullPath;
+    private String fullPath;
 
     private TemplateFactory() {
     }
@@ -77,11 +77,11 @@ public class TemplateFactory {
             String[] projectNameArr = projectName.split("[.\\-_]");
             this.tableInfo.setProjectName(projectNameArr[projectNameArr.length - 1] + COMMON_CONSTANT.SLASH);
         }
-        fullPath = basicPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll("\\.", "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
+        this.fullPath = basicPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll(COMMON_CONSTANT.DOT_REGEX, "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
     }
 
     public void create(List<ColumnInfo> queryColumnList) throws Exception {
-        File file = new File(fullPath);
+        File file = new File(this.fullPath);
         if (!file.exists()) {
             if (!file.mkdirs()){
                 throw new Exception("创建路径失败");
@@ -89,7 +89,7 @@ public class TemplateFactory {
         }
         tableInfo.setQueryColumnList(queryColumnList);
         for (Template template : templateFactory.templateList) {
-            String filePath = fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
+            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
             try {
                 template.process(JsonUtil.toMap(tableInfo), new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {

@@ -43,6 +43,12 @@ public class ${tableName}Controller {
         return new HashMap<>(2);
     }
 
+    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}"}, method = {RequestMethod.DELETE}, produces = {"application/json"})
+    public Map<String,String> delete${tableName}(@RequestParam Integer id) {
+        ${firstLowerTableName}Service.delete${tableName}(id);
+        return new HashMap<>(2);
+    }
+
     @RequestMapping(path = {"/v1/${projectName}${sqlTableName}/list"}, method = {RequestMethod.GET}, produces = {"application/json"})
     public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.sqlColumnName}") String ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageVO<${tableName}VO> pageVO = new PageVO<>();
@@ -51,12 +57,12 @@ public class ${tableName}Controller {
         pageVO.setPage(page);
         pageVO.setTotalCount(totalCount);
         if(totalCount == 0){
-        return pageVO;
+            return pageVO;
         }
         int totalPage = PageUtil.getTotalPage(totalCount, limit);
         pageVO.setTotalPage(totalPage);
         if(page>totalPage){
-        return pageVO;
+            return pageVO;
         }
         int offset = PageUtil.getOffset(limit,page);
         List<${tableName}> dataList = ${firstLowerTableName}Service.get${tableName}List(<#list queryColumnList as fields>, ${fields.columnName}, </#list>offset, limit);

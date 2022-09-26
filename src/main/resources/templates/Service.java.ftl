@@ -15,6 +15,8 @@ public interface ${tableName}Service{
 
     void update${tableName}(${tableName}VO obj);
 
+    void delete${tableName}(Integer id);
+
     ${tableName} get${tableName}(Integer id);
 
     int get${tableName}ListCount(<#list queryColumnList as fields>String ${fields.columnName}<#if fields_has_next>, </#if></#list>);

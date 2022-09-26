@@ -44,6 +44,11 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
     }
 
     @Override
+    public void delete${tableName}(Integer id){
+        ${firstLowerTableName}Mapper.delete${tableName}(id);
+    }
+
+    @Override
     public ${tableName} get${tableName}(Integer id) {
         if(null == id){
             return new ${tableName}();
