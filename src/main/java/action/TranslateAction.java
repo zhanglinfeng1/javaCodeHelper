@@ -49,8 +49,8 @@ public class TranslateAction extends AnAction {
         } else {
             translateResult = translate(selectedText, COMMON_CONSTANT.ZH_CN, COMMON_CONSTANT.EN);
         }
-        String finalSelectedText = selectedText;
-        WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText + translateResult));
+        String finalSelectedText = selectedText + translateResult;
+        WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
     }
 
     private String translate(String text, String sourceLang, String targetLang) {
@@ -70,9 +70,9 @@ public class TranslateAction extends AnAction {
             return responseStr.toString();
         }
         // 将jsonArray转java对象list
-        List<Object> objList = JsonUtil.toList(responseStr.toString(),Object.class);
-        List<Object> objList2 = JsonUtil.toList(objList.get(0).toString(),Object.class);
-        List<Object> objList3 = JsonUtil.toList(objList2.get(0).toString(),Object.class);
+        List<Object> objList = JsonUtil.toList(responseStr.toString(), Object.class);
+        List<Object> objList2 = JsonUtil.toList(objList.get(0).toString(), Object.class);
+        List<Object> objList3 = JsonUtil.toList(objList2.get(0).toString(), Object.class);
         return objList3.get(0).toString();
     }
 }
