@@ -22,7 +22,7 @@
     ]]></description>
     <change-notes><![CDATA[
         <ul>1.2.0
-            <li>Added shortcut jump, feign to module controller</li>
+            <li>Fast jump between feign and service module controller</li>
         </ul>
         <ul>1.1.3
             <li>Support mysql, oracle</li>
