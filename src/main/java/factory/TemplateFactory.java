@@ -7,7 +7,6 @@ import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.DateUtil;
 import util.JsonUtil;
-import util.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -63,21 +62,16 @@ public class TemplateFactory {
         return templateFactory;
     }
 
-    public void init(String basicPath, String projectName, String packagePath, TableInfo tableInfo) throws Exception {
+    public void init(String fullPath, String packagePath, TableInfo tableInfo) throws Exception {
         getInstance();
         this.tableInfo = tableInfo;
         this.tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         this.tableInfo.setPackagePath(packagePath);
-        if (StringUtil.isNotEmpty(projectName)) {
-            File file = new File(basicPath + COMMON_CONSTANT.DOUBLE_BACKSLASH + "src");
-            if (file.exists()) {
-                basicPath = file.getParent();
-            }
-            basicPath = basicPath + COMMON_CONSTANT.DOUBLE_BACKSLASH + projectName;
-            String[] projectNameArr = projectName.split("[.\\-_]");
-            this.tableInfo.setProjectName(projectNameArr[projectNameArr.length - 1] + COMMON_CONSTANT.SLASH);
+        if (fullPath.endsWith(COMMON_CONSTANT.DOUBLE_BACKSLASH)) {
+            this.fullPath = fullPath;
+        } else {
+            this.fullPath = fullPath + COMMON_CONSTANT.DOUBLE_BACKSLASH;
         }
-        this.fullPath = basicPath + COMMON_CONSTANT.JAVA_FILE_PATH + packagePath.replaceAll(COMMON_CONSTANT.DOT_REGEX, "\\\\") + COMMON_CONSTANT.DOUBLE_BACKSLASH;
     }
 
     public void create(List<ColumnInfo> queryColumnList) throws Exception {

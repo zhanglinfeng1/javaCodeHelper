@@ -11,8 +11,6 @@ public class TableInfo {
     private String author;
     /** 时间 */
     private String dateTime;
-    /** 项目名 */
-    private String projectName;
     /** 包路径 */
     private String packagePath;
     /** sql表名 */
@@ -42,14 +40,6 @@ public class TableInfo {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public String getPackagePath() {

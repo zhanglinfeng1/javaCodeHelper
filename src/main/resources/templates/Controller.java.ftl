@@ -25,31 +25,31 @@ public class ${tableName}Controller {
     @Resource
     private ${tableName}Service ${firstLowerTableName}Service;
 
-    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}"}, method = {RequestMethod.GET}, produces = {"application/json"})
+    @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.GET}, produces = {"application/json"})
     public ${tableName}VO get${tableName}(@RequestParam("id") Integer id) {
         ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Service.get${tableName}(id);
         return new ${tableName}VO(${firstLowerTableName});
     }
 
-    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}"}, method = {RequestMethod.POST}, produces = {"application/json"})
+    @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.POST}, produces = {"application/json"})
     public Map<String,String> insert${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
         ${firstLowerTableName}Service.insert(${tableName}(${firstLowerTableName}VO);
         return new HashMap<>(2);
     }
 
-    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}"}, method = {RequestMethod.PUT}, produces = {"application/json"})
+    @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.PUT}, produces = {"application/json"})
     public Map<String,String> update${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
         ${firstLowerTableName}Service.update${tableName}(${firstLowerTableName}VO);
         return new HashMap<>(2);
     }
 
-    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}"}, method = {RequestMethod.DELETE}, produces = {"application/json"})
+    @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.DELETE}, produces = {"application/json"})
     public Map<String,String> delete${tableName}(@RequestParam Integer id) {
         ${firstLowerTableName}Service.delete${tableName}(id);
         return new HashMap<>(2);
     }
 
-    @RequestMapping(path = {"/v1/${projectName}${sqlTableName}/list"}, method = {RequestMethod.GET}, produces = {"application/json"})
+    @RequestMapping(path = {"/v1/${sqlTableName}/list"}, method = {RequestMethod.GET}, produces = {"application/json"})
     public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.sqlColumnName}") String ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageVO<${tableName}VO> pageVO = new PageVO<>();
         pageVO.setDatas(new ArrayList<>());

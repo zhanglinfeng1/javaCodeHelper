@@ -39,7 +39,7 @@ public class SqlFactory implements ToolWindowFactory {
                 TableInfo tableInfo = SqlParseUtil.parse(firstDialog.getDataBaseType(),firstDialog.getSqlStr());
                 tableInfo.setAuthor(firstDialog.getAuthor());
                 //初始化文件路径
-                TemplateFactory.getInstance().init(project.getBasePath(), firstDialog.getProjectName(), firstDialog.getPackagePathField(), tableInfo);
+                TemplateFactory.getInstance().init(firstDialog.getFullPath(), firstDialog.getPackagePathField(), tableInfo);
                 this.display(toolWindow, subContent);
                 secondDialog.initColumn(tableInfo);
             } catch (Exception ex) {

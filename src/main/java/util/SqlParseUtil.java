@@ -38,7 +38,7 @@ public class SqlParseUtil {
     }
 
     private static TableInfo dealMysql(TableInfo tableInfo, List<String> lineList) {
-        String tableComment = StringUtil.getFirstValueByRegex(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
+        String tableComment = StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : lineList) {
             List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING)).collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class SqlParseUtil {
         for (String line : lineList) {
             if (line.toUpperCase().startsWith(COMMON_CONSTANT.COMMENT)) {
                 List<String> valueList = Arrays.stream(line.split(COMMON_CONSTANT.SPACE_REGEX)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-                String comment = StringUtil.getFirstValueByRegex(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
+                String comment = StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX).replaceAll("表", COMMON_CONSTANT.BLANK_STRING);
                 if (COMMON_CONSTANT.TABLE.equalsIgnoreCase(valueList.get(2))) {
                     tableInfo.setTableComment(comment);
                     continue;

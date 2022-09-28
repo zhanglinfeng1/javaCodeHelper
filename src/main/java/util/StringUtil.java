@@ -11,6 +11,13 @@ import java.util.regex.Pattern;
  */
 public class StringUtil {
 
+    public static String toString(Object obj) {
+        if (null == obj) {
+            return COMMON_CONSTANT.BLANK_STRING;
+        }
+        return String.valueOf(obj);
+    }
+
     public static boolean isEmpty(String str) {
         return str == null || str.trim().length() == 0;
     }
@@ -40,7 +47,7 @@ public class StringUtil {
         return bytes.length == text.length();
     }
 
-    public static String getFirstValueByRegex(String str, String regex) {
+    public static String getFirstMatcher(String str, String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
         if (m.find()) {
             return m.group(1);
