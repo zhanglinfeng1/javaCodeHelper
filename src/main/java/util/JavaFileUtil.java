@@ -13,7 +13,6 @@ import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
 import pojo.MappingAnnotation;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -50,18 +49,19 @@ public class JavaFileUtil {
         Optional<PsiAnnotation> annotationOpt = ANNOTATION_CONSTANT.CONTROLLER_LIST.stream().map(psiClass::getAnnotation).filter(Objects::nonNull).findAny();
         if (annotationOpt.isPresent()) {
             //排除网关的controller
-            Optional<PsiField> fieldOpt = Arrays.stream(psiClass.getFields()).filter(f -> {
-                String fieldTypeClassName = f.getType().getCanonicalText();
-                Optional<PsiClass> fieldClassOptional = JavaFileUtil.findClazz(psiClass.getProject(), fieldTypeClassName);
+            for (PsiField psiField : psiClass.getFields()) {
+                String fieldTypeClassName = psiField.getType().getCanonicalText();
+                Optional<PsiClass> fieldClassOptional = findClazz(psiClass.getProject(), fieldTypeClassName);
                 if (fieldClassOptional.isPresent()) {
                     PsiClass fieldClass = fieldClassOptional.get();
-                    return isFeign(fieldClass);
+                    if (isFeign(fieldClass)) {
+                        return false;
+                    }
                 }
-                return false;
-            }).findAny();
-            return fieldOpt.isEmpty();
+            }
+            return true;
         }
-        return false;
+        return true;
     }
 
     public static MappingAnnotation getMappingAnnotation(PsiElement psiElement) {
@@ -135,7 +135,7 @@ public class JavaFileUtil {
 
     public static Optional<PsiClass> findClazz(Project project, String clazzName) {
         String classNameNeedFind = clazzName;
-        if (classNameNeedFind.contains("$")) {
+        if (classNameNeedFind.contains(COMMON_CONSTANT.$)) {
             classNameNeedFind = classNameNeedFind.replace(COMMON_CONSTANT.$, COMMON_CONSTANT.DOT);
         }
         final JavaPsiFacade instance = JavaPsiFacade.getInstance(project);

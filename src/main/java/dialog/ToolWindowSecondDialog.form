@@ -78,7 +78,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="文件夹路径"/>
+        </properties>
       </component>
     </children>
   </grid>

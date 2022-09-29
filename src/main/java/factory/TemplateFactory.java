@@ -97,18 +97,20 @@ public class TemplateFactory {
 
     public void useCustomTemplates(String customTemplatesPath) throws Exception {
         File file = new File(customTemplatesPath);
-        if (file.exists() && file.isDirectory() && null != file.listFiles()) {
+        if (file.exists() && file.isDirectory()) {
             configuration.setDirectoryForTemplateLoading(file);
             templateFactory.templateList.clear();
-            if(null == file.listFiles()){
-                throw new Exception("自定义模板不存在");
-            }
-            for (File subFile : file.listFiles()) {
+            for (File subFile : Objects.requireNonNull(file.listFiles(),"自定义模板不存在")) {
                 String name = subFile.getName();
                 if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
                     templateFactory.templateList.add(configuration.getTemplate(name));
                 }
             }
+            if(templateFactory.templateList.isEmpty()){
+                throw new Exception("自定义模板不存在");
+            }
+        }else {
+            throw new Exception("自定义模板路径错误");
         }
     }
 }

@@ -28,7 +28,7 @@ import java.util.List;
  * @Author zhanglinfeng
  * @Date create in 2022/9/26 18:08
  */
-public class FeignJumpProvider extends RelatedItemLineMarkerProvider {
+public class FastJumpProvider extends RelatedItemLineMarkerProvider {
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
@@ -46,19 +46,18 @@ public class FeignJumpProvider extends RelatedItemLineMarkerProvider {
             if (null == mappingAnnotation) {
                 return;
             }
-            //寻找文件
+            //寻找对应方法
             List<PsiElement> elementList = this.getTargetArr(element.getProject(), mappingAnnotation, fileType);
             if (elementList.isEmpty()) {
                 return;
             }
-            NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(ICON_CONSTANT.BO_LUO_SVG_16).setTargets(elementList).setTooltipText("Jump to module");
+            NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(ICON_CONSTANT.BO_LUO_SVG_16).setTargets(elementList).setTooltipText(COMMON_CONSTANT.BLANK_STRING);
             result.add(builder.createLineMarkerInfo(element));
         }
     }
 
     private List<PsiElement> getTargetArr(Project project, MappingAnnotation mappingAnnotation, String fileType) {
         List<PsiElement> elementList = new ArrayList<>();
-
         VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentRoots();
         for (VirtualFile virtualFile : contentRoots) {
             if (virtualFile.getPath().contains("/src")) {
