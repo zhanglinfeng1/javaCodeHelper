@@ -1,9 +1,7 @@
 package util;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +18,4 @@ public class JsonUtil {
         return JSONObject.parseObject(str, Map.class);
     }
 
-    public static <T> List<T> toList(String str, Class<T> itemClass) {
-        return JSONArray.parseArray(str).toList(itemClass);
-    }
 }

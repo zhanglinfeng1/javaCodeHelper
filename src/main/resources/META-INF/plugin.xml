@@ -20,7 +20,7 @@
     ]]></description>
     <change-notes><![CDATA[
         <ul>1.2.1
-            <li>Cancel translation function</li>
+            <li>There is no stable translation API, and the translation function is temporarily removed</li>
         </ul>
         <ul>1.2.0
             <li>Fast jump between feign and service module controller</li>
@@ -47,14 +47,14 @@
             <li>One-click generation field conversion constructor</li>
         </ul>
     ]]></change-notes>
-    <idea-version since-build="173.0"/>
+    <idea-version since-build="192.6"/>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="provider.FastJumpProvider"/>
-        <!--<toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>-->
+        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
     </extensions>
 
     <actions>
@@ -64,8 +64,8 @@
         <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion">
             <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="first"/>
         </action>
-        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">
-            <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.TranslateAction"/>
-        </action>
+<!--        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">-->
+<!--            <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.TranslateAction"/>-->
+<!--        </action>-->
     </actions>
 </idea-plugin>
