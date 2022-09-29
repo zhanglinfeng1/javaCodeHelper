@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 
@@ -82,10 +83,11 @@ public class TemplateFactory {
             }
         }
         tableInfo.setQueryColumnList(queryColumnList);
+        Map<String,Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateFactory.templateList) {
             String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
             try {
-                template.process(JsonUtil.toMap(tableInfo), new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
+                template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new Exception("生成文件失败");
@@ -93,10 +95,14 @@ public class TemplateFactory {
         }
     }
 
-    public void addCustomTemplates(String customTemplatesPath) throws Exception {
+    public void useCustomTemplates(String customTemplatesPath) throws Exception {
         File file = new File(customTemplatesPath);
         if (file.exists() && file.isDirectory() && null != file.listFiles()) {
             configuration.setDirectoryForTemplateLoading(file);
+            templateFactory.templateList.clear();
+            if(null == file.listFiles()){
+                throw new Exception("自定义模板不存在");
+            }
             for (File subFile : file.listFiles()) {
                 String name = subFile.getName();
                 if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {

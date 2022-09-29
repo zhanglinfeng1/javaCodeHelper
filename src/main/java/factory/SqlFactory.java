@@ -55,7 +55,7 @@ public class SqlFactory implements ToolWindowFactory {
                 //添加自定义模板
                 String customTemplatesPath = secondDialog.getCustomTemplatesPath();
                 if(StringUtil.isNotEmpty(customTemplatesPath)){
-                    TemplateFactory.getInstance().addCustomTemplates(customTemplatesPath);
+                    TemplateFactory.getInstance().useCustomTemplates(customTemplatesPath);
                 }
                 TemplateFactory.getInstance().create(secondDialog.getQueryColumnList());
                 this.display(toolWindow, content);
