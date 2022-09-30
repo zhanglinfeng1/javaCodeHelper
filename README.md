@@ -3,7 +3,6 @@
 <ul>定制化java代码开发插件,用于学习插件开发,欢迎交流想法
     <li>根据建表SQL生成Java代码，支持自定义模板，规则见gitee</li>
     <li>一键生成类转换的构造函数</li>
-    <li>一键翻译（需联网）</li>
     <li>feign、服务模块controller的相互快捷跳转</li>
 </ul>
 

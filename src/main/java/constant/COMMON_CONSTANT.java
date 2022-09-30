@@ -10,14 +10,11 @@ import java.util.List;
 public class COMMON_CONSTANT {
     /** 通用常量 */
     public static final String SUCCESS = "成功";
-    public static final String EN = "en";
-    public static final String ZH_CN = "zh_cn";
     public static final String BLANK_STRING = "";
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
     public static final String COMMA = ",";
     public static final String DOT = ".";
-    public static final String $ = "$";
     public static final String LEFT_BRACE = "{";
     public static final String UNDERSCORE = "_";
     public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int,short,long,byte,float,double,boolean,char,Integer,Short,Long,Byte,Float,Double,Boolean,Character".split(COMMA));
