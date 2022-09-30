@@ -1,24 +1,30 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
         <p>Customized java code development plug-in，For learning plug-in development，welcome to exchange ideas。Source code ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <p>Minimum version 192.6817.14 (2019.2.3)</p>
         <ul>
             <li>Generate Java code based on SQL for table building, support custom templates, see gitee for rules</li>
             <li>One-click generation of class conversion constructors</li>
-            <li>Fast jump between feign and service module controller</li>
+            <li>Fast jump between feign and service module </li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
         <p>定制化java代码开发插件，用于学习插件开发，欢迎交流想法。源码地址 ：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">gitee</a></p>
+        <p>idea最低版本 192.6817.14 (2019.2.3)</p>
         <ul>
             <li>根据建表SQL生成Java代码，支持自定义模板，规则见gitee</li>
             <li>一键生成类转换的构造函数</li>
-            <li>feign、服务模块controller的相互快捷跳转</li>
+            <li>feign、服务模块间的快捷跳转</li>
         </ul>
     ]]></description>
     <change-notes><![CDATA[
+        <ul>1.2.2
+            <li>Speed up the display of jump icons</li>
+            <li>Minimum version 192.6817.14 (2019.2.3)</li>
+        </ul>
         <ul>1.2.1
             <li>There is no stable translation API, and the translation function is temporarily removed</li>
         </ul>
@@ -47,7 +53,7 @@
             <li>One-click generation field conversion constructor</li>
         </ul>
     ]]></change-notes>
-    <idea-version since-build="192.6"/>
+    <idea-version since-build="212.5457.46"/>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>

@@ -69,10 +69,9 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
         for (VirtualFile virtualFile : contentRoots) {
             if (virtualFile.getPath().contains("/src")) {
                 PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
-                if (null == psiDirectory) {
-                    continue;
+                if (null != psiDirectory) {
+                    elementList.addAll(this.dealDirectory(psiDirectory, mappingAnnotation, fileType));
                 }
-                elementList.addAll(this.dealDirectory(psiDirectory, mappingAnnotation, fileType));
             }
         }
         return elementList;
@@ -96,13 +95,13 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 int psiClassCount = psiClassArr.length;
                 //含有内部类跳过
                 if (psiClassCount == 0 || psiClassCount > 1) {
-                    continue;
+                    break;
                 }
                 PsiClass psiClass = psiClassArr[0];
                 PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
                 // 无注解跳过
                 if (psiAnnotationArr.length == 0) {
-                    continue;
+                    break;
                 }
                 if ((JavaFileUtil.isModuleController(psiClass, psiAnnotationArr) && COMMON_CONSTANT.FEIGN.equals(fileType)) || (JavaFileUtil.isFeign(psiAnnotationArr) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
                     for (PsiMethod psiMethod : psiClass.getMethods()) {
@@ -111,7 +110,11 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                             methodList.add(psiMethod);
                         }
                     }
+                }else {
+                    break;
                 }
+            }else {
+                break;
             }
         }
         return methodList;
