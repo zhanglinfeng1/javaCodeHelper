@@ -7,6 +7,7 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -33,21 +34,27 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
         if (element instanceof PsiMethod) {
+            PsiMethod psiMethod = (PsiMethod) element;
+            PsiClass psiClass = (PsiClass) psiMethod.getParent();
+            PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
+            if (psiAnnotationArr.length == 0) {
+                return;
+            }
             String fileType;
-            if (JavaFileUtil.isFeign(element)) {
+            if (JavaFileUtil.isFeign(psiAnnotationArr)) {
                 fileType = COMMON_CONSTANT.FEIGN;
-            } else if (JavaFileUtil.isModuleController(element)) {
+            } else if (JavaFileUtil.isModuleController(psiClass, psiAnnotationArr)) {
                 fileType = COMMON_CONSTANT.CONTROLLER;
             } else {
                 return;
             }
             //获取注解路径
-            MappingAnnotation mappingAnnotation = JavaFileUtil.getMappingAnnotation(element);
+            MappingAnnotation mappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod);
             if (null == mappingAnnotation) {
                 return;
             }
             //寻找对应方法
-            List<PsiElement> elementList = this.getTargetArr(element.getProject(), mappingAnnotation, fileType);
+            List<PsiElement> elementList = this.getTargetArr(psiMethod.getProject(), mappingAnnotation, fileType);
             if (elementList.isEmpty()) {
                 return;
             }
@@ -65,21 +72,19 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 if (null == psiDirectory) {
                     continue;
                 }
-                PsiElement psiElement = this.dealDirectory(psiDirectory, mappingAnnotation, fileType);
-                if (null != psiElement) {
-                    elementList.add(psiElement);
-                }
+                elementList.addAll(this.dealDirectory(psiDirectory, mappingAnnotation, fileType));
             }
         }
         return elementList;
     }
 
-    private PsiMethod dealDirectory(PsiDirectory psiDirectory, MappingAnnotation mappingAnnotation, String fileType) {
+    private List<PsiMethod> dealDirectory(PsiDirectory psiDirectory, MappingAnnotation mappingAnnotation, String fileType) {
+        List<PsiMethod> methodList = new ArrayList<>();
         PsiDirectory[] subdirectories = psiDirectory.getSubdirectories();
         for (PsiDirectory subdirectory : subdirectories) {
-            PsiMethod psiMethod = this.dealDirectory(subdirectory, mappingAnnotation, fileType);
-            if (null != psiMethod) {
-                return psiMethod;
+            List<PsiMethod> subMethodList = this.dealDirectory(subdirectory, mappingAnnotation, fileType);
+            if (!subMethodList.isEmpty()) {
+                methodList.addAll(subMethodList);
             }
         }
         PsiFile[] files = psiDirectory.getFiles();
@@ -87,17 +92,28 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             // 不是 Java 类型的文件直接跳过
             if (file.getFileType() instanceof JavaFileType) {
                 PsiJavaFile psiJavaFile = (PsiJavaFile) file;
-                PsiClass psiClass = psiJavaFile.getClasses()[0];
-                if ((JavaFileUtil.isModuleController(psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType)) || (JavaFileUtil.isFeign(psiClass) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
+                PsiClass[] psiClassArr = psiJavaFile.getClasses();
+                int psiClassCount = psiClassArr.length;
+                //含有内部类跳过
+                if (psiClassCount == 0 || psiClassCount > 1) {
+                    continue;
+                }
+                PsiClass psiClass = psiClassArr[0];
+                PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
+                // 无注解跳过
+                if (psiAnnotationArr.length == 0) {
+                    continue;
+                }
+                if ((JavaFileUtil.isModuleController(psiClass, psiAnnotationArr) && COMMON_CONSTANT.FEIGN.equals(fileType)) || (JavaFileUtil.isFeign(psiAnnotationArr) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
                     for (PsiMethod psiMethod : psiClass.getMethods()) {
                         MappingAnnotation targetMappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod);
                         if (null != targetMappingAnnotation && mappingAnnotation.equals(targetMappingAnnotation)) {
-                            return psiMethod;
+                            methodList.add(psiMethod);
                         }
                     }
                 }
             }
         }
-        return null;
+        return methodList;
     }
 }

@@ -1,18 +1,15 @@
 package util;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiUtil;
 import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
 import pojo.MappingAnnotation;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,50 +19,28 @@ import java.util.Optional;
  */
 public class JavaFileUtil {
 
-    public static boolean isFeign(PsiElement psiElement) {
-        PsiClass psiClass;
-        if (psiElement instanceof PsiMethod) {
-            PsiMethod psiMethod = (PsiMethod) psiElement;
-            psiClass = (PsiClass) psiMethod.getParent();
-        } else if (psiElement instanceof PsiClass) {
-            psiClass = (PsiClass) psiElement;
-        } else {
+    public static boolean isFeign(PsiClass psiClass) {
+        if(null == psiClass){
             return false;
         }
         return psiClass.getAnnotation(ANNOTATION_CONSTANT.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION_CONSTANT.NETFLIX_FEIGN_CLIENT) != null;
     }
 
-    public static boolean isModuleController(PsiElement psiElement) {
-        PsiClass psiClass;
-        if (psiElement instanceof PsiMethod) {
-            PsiMethod psiMethod = (PsiMethod) psiElement;
-            psiClass = (PsiClass) psiMethod.getParent();
-        } else if (psiElement instanceof PsiClass) {
-            psiClass = (PsiClass) psiElement;
-        } else {
-            return false;
-        }
-        //属于controller
-        Optional<PsiAnnotation> annotationOpt = ANNOTATION_CONSTANT.CONTROLLER_LIST.stream().map(psiClass::getAnnotation).filter(Objects::nonNull).findAny();
-        if (annotationOpt.isPresent()) {
-            //排除网关的controller
-            for (PsiField psiField : psiClass.getFields()) {
-                String fieldTypeClassName = psiField.getType().getCanonicalText();
-                Optional<PsiClass> fieldClassOptional = findClazz(psiClass.getProject(), fieldTypeClassName);
-                if (fieldClassOptional.isPresent()) {
-                    PsiClass fieldClass = fieldClassOptional.get();
-                    if (isFeign(fieldClass)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        return true;
+    public static boolean isFeign(PsiAnnotation[] psiAnnotationArr) {
+        return Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION_CONSTANT.FEIGN_LIST.contains(a.getQualifiedName()));
     }
 
-    public static MappingAnnotation getMappingAnnotation(PsiElement psiElement) {
-        PsiMethod psiMethod = (PsiMethod) psiElement;
+    public static boolean isModuleController(PsiClass psiClass, PsiAnnotation[] psiAnnotationArr) {
+        //属于controller
+        boolean isController = Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION_CONSTANT.CONTROLLER_LIST.contains(a.getQualifiedName()));
+        if (isController) {
+            //排除网关
+            return Arrays.stream(psiClass.getFields()).noneMatch(f -> isFeign(PsiUtil.resolveClassInClassTypeOnly(f.getType())));
+        }
+        return false;
+    }
+
+    public static MappingAnnotation getMappingAnnotation(PsiMethod psiMethod) {
         // 获取注解
         Optional<PsiAnnotation> annotationOpt = ANNOTATION_CONSTANT.MAPPING_LIST.stream().map(psiMethod::getAnnotation).filter(Objects::nonNull).findAny();
         if (annotationOpt.isPresent()) {
@@ -133,12 +108,4 @@ public class JavaFileUtil {
         }
     }
 
-    public static Optional<PsiClass> findClazz(Project project, String clazzName) {
-        String classNameNeedFind = clazzName;
-        if (classNameNeedFind.contains(COMMON_CONSTANT.$)) {
-            classNameNeedFind = classNameNeedFind.replace(COMMON_CONSTANT.$, COMMON_CONSTANT.DOT);
-        }
-        final JavaPsiFacade instance = JavaPsiFacade.getInstance(project);
-        return Optional.ofNullable(instance.findClass(classNameNeedFind, GlobalSearchScope.allScope(project)));
-    }
 }
