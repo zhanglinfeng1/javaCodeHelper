@@ -4,7 +4,7 @@
     <version>1.2.2</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-        <p>For learning plug-in development。Minimum version 192.6817.14 (2019.2.3)</p>
+        <p>For learning plug-in development</p>
         <p>Exchange ideas 、 Feed back BUG 、 Raise functional requirements ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>Generate Java code based on SQL for table building, support custom templates, see gitee for rules</li>
@@ -12,7 +12,7 @@
             <li>Fast jump between feign and service module </li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
-        <p>用于学习插件开发。idea最低版本 192.6817.14 (2019.2.3)</p>
+        <p>用于学习插件开发</p>
         <p>交流想法、反馈BUG、提功能需求 ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>根据建表SQL生成Java代码，支持自定义模板，规则见gitee</li>

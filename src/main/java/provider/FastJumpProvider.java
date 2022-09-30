@@ -15,11 +15,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
+import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
 import pojo.MappingAnnotation;
 import util.JavaFileUtil;
+import util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,11 +50,14 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             } else {
                 return;
             }
-            //获取注解路径
-            MappingAnnotation mappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod);
+            //获取方法的注解
+            MappingAnnotation mappingAnnotation = getMappingAnnotation(psiMethod.getAnnotations());
             if (null == mappingAnnotation) {
                 return;
             }
+            //获取类的注解路径
+            String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
             //寻找对应方法
             List<PsiElement> elementList = this.getTargetArr(psiMethod.getProject(), mappingAnnotation, fileType);
             if (elementList.isEmpty()) {
@@ -89,34 +94,61 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
         PsiFile[] files = psiDirectory.getFiles();
         for (PsiFile file : files) {
             // 不是 Java 类型的文件直接跳过
-            if (file.getFileType() instanceof JavaFileType) {
-                PsiJavaFile psiJavaFile = (PsiJavaFile) file;
-                PsiClass[] psiClassArr = psiJavaFile.getClasses();
-                int psiClassCount = psiClassArr.length;
-                //含有内部类跳过
-                if (psiClassCount == 0 || psiClassCount > 1) {
-                    break;
-                }
-                PsiClass psiClass = psiClassArr[0];
-                PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
-                // 无注解跳过
-                if (psiAnnotationArr.length == 0) {
-                    break;
-                }
-                if ((JavaFileUtil.isModuleController(psiClass, psiAnnotationArr) && COMMON_CONSTANT.FEIGN.equals(fileType)) || (JavaFileUtil.isFeign(psiAnnotationArr) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
-                    for (PsiMethod psiMethod : psiClass.getMethods()) {
-                        MappingAnnotation targetMappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod);
-                        if (null != targetMappingAnnotation && mappingAnnotation.equals(targetMappingAnnotation)) {
-                            methodList.add(psiMethod);
-                        }
-                    }
-                }else {
-                    break;
-                }
-            }else {
+            if (!(file.getFileType() instanceof JavaFileType)) {
                 break;
+            }
+            PsiJavaFile psiJavaFile = (PsiJavaFile) file;
+            PsiClass[] psiClassArr = psiJavaFile.getClasses();
+            int psiClassCount = psiClassArr.length;
+            //含有内部类跳过
+            if (psiClassCount == 0 || psiClassCount > 1) {
+                break;
+            }
+            PsiClass psiClass = psiClassArr[0];
+            PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
+            // 无注解跳过
+            if (psiAnnotationArr.length == 0) {
+                break;
+            }
+            //原路径与目标路径文件不匹配
+            if (!(JavaFileUtil.isModuleController(psiClass, psiAnnotationArr) && COMMON_CONSTANT.FEIGN.equals(fileType)) && !(JavaFileUtil.isFeign(psiAnnotationArr) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
+                break;
+            }
+            //类注解
+            String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            for (PsiMethod psiMethod : psiClass.getMethods()) {
+                //获取方法的注解
+                MappingAnnotation targetMappingAnnotation = getMappingAnnotation(psiMethod.getAnnotations());
+                if (null == targetMappingAnnotation) {
+                    break;
+                }
+                targetMappingAnnotation.setUrl(classUrl + targetMappingAnnotation.getUrl());
+                if (mappingAnnotation.equals(targetMappingAnnotation)) {
+                    methodList.add(psiMethod);
+                }
             }
         }
         return methodList;
+    }
+
+    private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
+        PsiAnnotation annotation = null;
+        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
+            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
+                annotation = psiAnnotation;
+                break;
+            }
+        }
+        if (null == annotation) {
+            return null;
+        }
+        //方法注解
+        String methodUrl = JavaFileUtil.getMappingUrl(annotation);
+        if (StringUtil.isEmpty(methodUrl)) {
+            return null;
+        }
+        //请求方式
+        String requestMethod = JavaFileUtil.getMappingMethod(annotation);
+        return new MappingAnnotation(methodUrl, requestMethod);
     }
 }

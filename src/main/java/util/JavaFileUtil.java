@@ -3,15 +3,12 @@ package util;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiUtil;
 import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
-import pojo.MappingAnnotation;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -20,7 +17,7 @@ import java.util.Optional;
 public class JavaFileUtil {
 
     public static boolean isFeign(PsiClass psiClass) {
-        if(null == psiClass){
+        if (null == psiClass) {
             return false;
         }
         return psiClass.getAnnotation(ANNOTATION_CONSTANT.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION_CONSTANT.NETFLIX_FEIGN_CLIENT) != null;
@@ -40,32 +37,6 @@ public class JavaFileUtil {
         return false;
     }
 
-    public static MappingAnnotation getMappingAnnotation(PsiMethod psiMethod) {
-        // 获取注解
-        Optional<PsiAnnotation> annotationOpt = ANNOTATION_CONSTANT.MAPPING_LIST.stream().map(psiMethod::getAnnotation).filter(Objects::nonNull).findAny();
-        if (annotationOpt.isPresent()) {
-            //方法注解
-            PsiAnnotation annotation = annotationOpt.get();
-            String url = getMappingUrl(annotation);
-            if (StringUtil.isEmpty(url)) {
-                return null;
-            }
-            String method = getMappingMethod(annotation);
-            //类注解
-            PsiClass psiClass = (PsiClass) psiMethod.getParent();
-            PsiAnnotation parentAnnotation = psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING);
-            if (null == parentAnnotation) {
-                return new MappingAnnotation(url, method);
-            }
-            String parentUrl = getMappingUrl(parentAnnotation);
-            if (StringUtil.isEmpty(parentUrl)) {
-                return new MappingAnnotation(url, method);
-            }
-            return new MappingAnnotation(parentUrl + url, method);
-        }
-        return null;
-    }
-
     public static String getAnnotationValue(PsiAnnotation annotation, String attributeName) {
         if (null == annotation) {
             return COMMON_CONSTANT.BLANK_STRING;
@@ -82,6 +53,9 @@ public class JavaFileUtil {
     }
 
     public static String getMappingUrl(PsiAnnotation annotation) {
+        if (null == annotation) {
+            return COMMON_CONSTANT.BLANK_STRING;
+        }
         String url = getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
         if (StringUtil.isEmpty(url)) {
             return getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
