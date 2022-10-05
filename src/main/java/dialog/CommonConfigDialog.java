@@ -22,11 +22,6 @@ public class CommonConfigDialog extends JDialog {
     private JPanel panel;
     private final Config config = ServiceManager.getService(ConfigComponent.class).getState();
 
-    public CommonConfigDialog() {
-        appIdTextField.setText(config.getAppId());
-        securityKeyTextField.setText(config.getSecretKey());
-    }
-
     public void reset() {
         appIdTextField.setText(config.getAppId());
         securityKeyTextField.setText(config.getSecretKey());
