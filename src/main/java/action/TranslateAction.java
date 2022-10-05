@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
@@ -37,7 +38,7 @@ public class TranslateAction extends AnAction {
             return;
         }
         //获取配置
-        Config config = ConfigComponent.getInstance().getState();
+        Config config = ServiceManager.getService(ConfigComponent.class).getState();
         String appid = config.getAppId();
         String securityKey = config.getSecretKey();
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {

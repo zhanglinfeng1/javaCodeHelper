@@ -1,6 +1,5 @@
 package component;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -18,15 +17,14 @@ import java.util.Objects;
 @State(name = "CommonConfig", storages = {@Storage("javaCodeHelpConfig.xml")})
 public class ConfigComponent implements PersistentStateComponent<Config> {
 
-    private final Config config = new Config();
-
-    public static ConfigComponent getInstance() {
-        return ApplicationManager.getApplication().getService(ConfigComponent.class);
-    }
+    private Config config;
 
     @Nullable
     @Override
     public Config getState() {
+        if (config == null) {
+            config = new Config();
+        }
         return config;
     }
 
