@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import constant.COMMON_CONSTANT;
 import org.apache.commons.codec.digest.DigestUtils;
 import util.JsonUtil;
+import util.UrlUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -16,8 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class BaiDuTransApi {
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
         try {
             String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?appid=20221003001368411&q=";
-            urlStr = urlStr + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign;
+            urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign;
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
             URL uri = new URL(urlStr);

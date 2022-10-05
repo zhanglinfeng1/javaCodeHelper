@@ -30,7 +30,7 @@ public class JavaFileUtil {
         if (psiAnnotationArr.length == 0) {
             return false;
         }
-        if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum() || psiClass.isRecord()) {
+        if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
         //属于controller
