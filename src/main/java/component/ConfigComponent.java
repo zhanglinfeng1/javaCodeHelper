@@ -22,7 +22,10 @@ public class ConfigComponent implements PersistentStateComponent<Config> {
     @Nullable
     @Override
     public Config getState() {
-        return config == null ? new Config() : config;
+        if (config == null) {
+            config = new Config();
+        }
+        return config;
     }
 
     @Override
