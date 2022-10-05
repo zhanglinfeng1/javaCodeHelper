@@ -26,6 +26,7 @@ import util.StringUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author zhanglinfeng
@@ -38,14 +39,10 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
         if (element instanceof PsiMethod) {
             PsiMethod psiMethod = (PsiMethod) element;
             PsiClass psiClass = (PsiClass) psiMethod.getParent();
-            PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
-            if (psiAnnotationArr.length == 0) {
-                return;
-            }
             String fileType;
-            if (JavaFileUtil.isFeign(psiAnnotationArr)) {
+            if (JavaFileUtil.isFeign(psiClass)) {
                 fileType = COMMON_CONSTANT.FEIGN;
-            } else if (JavaFileUtil.isModuleController(psiClass, psiAnnotationArr)) {
+            } else if (JavaFileUtil.isModuleController(psiClass)) {
                 fileType = COMMON_CONSTANT.CONTROLLER;
             } else {
                 return;
@@ -56,30 +53,26 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 return;
             }
             //获取类的注解路径
-            String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
             mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
             //寻找对应方法
-            List<PsiElement> elementList = this.getTargetArr(psiMethod.getProject(), mappingAnnotation, fileType);
+            List<PsiElement> elementList = new ArrayList<>();
+            Project project = element.getProject();
+            VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentRoots();
+            for (VirtualFile virtualFile : contentRoots) {
+                if (virtualFile.getPath().contains("/src")) {
+                    PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
+                    if (null != psiDirectory) {
+                        elementList.addAll(this.dealDirectory(psiDirectory, mappingAnnotation, fileType));
+                    }
+                }
+            }
             if (elementList.isEmpty()) {
                 return;
             }
             NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(ICON_CONSTANT.BO_LUO_SVG_16).setTargets(elementList).setTooltipText(COMMON_CONSTANT.BLANK_STRING);
             result.add(builder.createLineMarkerInfo(element));
         }
-    }
-
-    private List<PsiElement> getTargetArr(Project project, MappingAnnotation mappingAnnotation, String fileType) {
-        List<PsiElement> elementList = new ArrayList<>();
-        VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentRoots();
-        for (VirtualFile virtualFile : contentRoots) {
-            if (virtualFile.getPath().contains("/src")) {
-                PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
-                if (null != psiDirectory) {
-                    elementList.addAll(this.dealDirectory(psiDirectory, mappingAnnotation, fileType));
-                }
-            }
-        }
-        return elementList;
     }
 
     private List<PsiMethod> dealDirectory(PsiDirectory psiDirectory, MappingAnnotation mappingAnnotation, String fileType) {
@@ -105,17 +98,17 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 break;
             }
             PsiClass psiClass = psiClassArr[0];
-            PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
-            // 无注解跳过
-            if (psiAnnotationArr.length == 0) {
+            // controller 跳feign 。必须是接口类型文件
+            if (COMMON_CONSTANT.CONTROLLER.equals(fileType) && !psiClass.isInterface()) {
                 break;
             }
             //原路径与目标路径文件不匹配
-            if (!(JavaFileUtil.isModuleController(psiClass, psiAnnotationArr) && COMMON_CONSTANT.FEIGN.equals(fileType)) && !(JavaFileUtil.isFeign(psiAnnotationArr) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
+            if (!(JavaFileUtil.isModuleController(psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
+                    && !(JavaFileUtil.isFeign(psiClass) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
                 break;
             }
-            //类注解
-            String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            //类注解路径
+            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
                 //获取方法的注解
                 MappingAnnotation targetMappingAnnotation = getMappingAnnotation(psiMethod.getAnnotations());
@@ -143,12 +136,42 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             return null;
         }
         //方法注解
-        String methodUrl = JavaFileUtil.getMappingUrl(annotation);
+        String methodUrl = this.getMappingUrl(annotation);
         if (StringUtil.isEmpty(methodUrl)) {
             return null;
         }
         //请求方式
-        String requestMethod = JavaFileUtil.getMappingMethod(annotation);
+        String requestMethod = this.getMappingMethod(annotation);
         return new MappingAnnotation(methodUrl, requestMethod);
+    }
+
+    private String getMappingUrl(PsiAnnotation annotation) {
+        if (null == annotation) {
+            return COMMON_CONSTANT.BLANK_STRING;
+        }
+        String url = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
+        if (StringUtil.isEmpty(url)) {
+            return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
+        }
+        return url;
+    }
+
+    private String getMappingMethod(PsiAnnotation annotation) {
+        switch (Objects.requireNonNull(annotation.getQualifiedName())) {
+            case ANNOTATION_CONSTANT.POST_MAPPING:
+                return COMMON_CONSTANT.POST;
+            case ANNOTATION_CONSTANT.PUT_MAPPING:
+                return COMMON_CONSTANT.PUT;
+            case ANNOTATION_CONSTANT.GET_MAPPING:
+                return COMMON_CONSTANT.GET;
+            case ANNOTATION_CONSTANT.DELETE_MAPPING:
+                return COMMON_CONSTANT.DELETE;
+            default:
+                String method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+                if (method.contains(COMMON_CONSTANT.DOT)) {
+                    return method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
+                }
+                return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+        }
     }
 }

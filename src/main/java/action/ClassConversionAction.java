@@ -77,7 +77,7 @@ public class ClassConversionAction extends AnAction {
             } else if (constructorMethods.length > 0) {
                 psiClass.addAfter(newConstructor, constructorMethods[0]);
             } else {
-                PsiMethod nullConstructor = factory.createMethodFromText("public "+ psiClass.getName() +"() {}", psiClass);
+                PsiMethod nullConstructor = factory.createMethodFromText("public " + psiClass.getName() + "() {}", psiClass);
                 psiClass.addAfter(newConstructor, fieldArr[fieldArr.length - 1]);
                 psiClass.addAfter(nullConstructor, fieldArr[fieldArr.length - 1]);
             }

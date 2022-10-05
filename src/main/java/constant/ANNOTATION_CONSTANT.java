@@ -11,7 +11,6 @@ public class ANNOTATION_CONSTANT {
     /** feign注解 */
     public static final String OPEN_FEIGN_CLIENT = "org.springframework.cloud.openfeign.FeignClient";
     public static final String NETFLIX_FEIGN_CLIENT = "org.springframework.cloud.netflix.feign.FeignClient";
-    public static final List<String> FEIGN_LIST = Arrays.asList(OPEN_FEIGN_CLIENT, NETFLIX_FEIGN_CLIENT);
 
     /** mapping注解 */
     public static final String REQUEST_MAPPING = "org.springframework.web.bind.annotation.RequestMapping";

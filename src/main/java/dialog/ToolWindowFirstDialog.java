@@ -27,7 +27,6 @@ public class ToolWindowFirstDialog extends JDialog {
     public ToolWindowFirstDialog() {
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        Arrays.stream(COMMON_CONSTANT.DATA_BASE_TYPE_OPTIONS).forEach(s->dataBaseType.addItem(s));
         setContentPane(contentPane);
         setModal(true);
 

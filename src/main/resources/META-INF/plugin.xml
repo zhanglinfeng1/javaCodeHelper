@@ -1,21 +1,23 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <vendor>zhanglinfeng</vendor>
     <description><![CDATA[
-        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG 、 Raise functional requirements ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
+        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG 、 Raise requirements ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>Generate Java code based on SQL for table building, support custom templates, see gitee for rules</li>
             <li>One-click generation of class conversion constructors</li>
+            <li>One-click translation (Internet connection required)</li>
             <li>Fast jump between feign and service module </li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
-        <p>用于学习插件开发。交流想法、反馈BUG、提功能需求 ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
+        <p>用于学习插件开发。交流想法、反馈BUG、提需求 ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>根据建表SQL生成Java代码，支持自定义模板，规则见gitee</li>
             <li>一键生成类转换的构造函数</li>
-            <li>feign、服务模块间的快捷跳转</li>
+            <li>一键翻译（需联网）</li>
+            <li>feign与服务模块的快捷跳转</li>
         </ul>
     ]]></description>
     <change-notes><![CDATA[
@@ -27,8 +29,13 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- 快捷跳转 -->
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="provider.FastJumpProvider"/>
+        <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
+        <!-- 配置面板 -->
+        <applicationService serviceImplementation="component.ConfigComponent"/>
+        <applicationConfigurable displayName="JavaCodeHelp" instance="component.CommonConfigurable"/>
     </extensions>
 
     <actions>
@@ -38,8 +45,8 @@
         <action id="idea.plugins.ClassConversionAction" class="action.ClassConversionAction" text="ClassConversion">
             <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="first"/>
         </action>
-<!--        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">-->
-<!--            <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.TranslateAction"/>-->
-<!--        </action>-->
+        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">
+            <add-to-group group-id="idea.plugins.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.TranslateAction"/>
+        </action>
     </actions>
 </idea-plugin>
