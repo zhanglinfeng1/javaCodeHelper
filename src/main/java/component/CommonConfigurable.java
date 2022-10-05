@@ -1,6 +1,5 @@
 package component;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import dialog.CommonConfigDialog;
 import org.jetbrains.annotations.Nls;
@@ -15,7 +14,7 @@ import javax.swing.JComponent;
  */
 public class CommonConfigurable implements Configurable {
 
-    private final Config config = ServiceManager.getService(ConfigComponent.class).getState();
+    private final Config config = ConfigComponent.getInstance().getState();
     private final CommonConfigDialog dialog = new CommonConfigDialog();
 
     @Nls(capitalization = Nls.Capitalization.Title)

@@ -1,6 +1,5 @@
 package dialog;
 
-import com.intellij.openapi.components.ServiceManager;
 import component.ConfigComponent;
 import constant.COMMON_CONSTANT;
 import pojo.Config;
@@ -20,7 +19,7 @@ public class CommonConfigDialog extends JDialog {
     private JTextField securityKeyTextField;
     private JComboBox<String> apiComboBox;
     private JPanel panel;
-    private final Config config = ServiceManager.getService(ConfigComponent.class).getState();
+    private final Config config = ConfigComponent.getInstance().getState();
 
     public void reset() {
         appIdTextField.setText(config.getAppId());
