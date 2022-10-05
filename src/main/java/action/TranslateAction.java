@@ -42,7 +42,7 @@ public class TranslateAction extends AnAction {
         String appid = config.getAppId();
         String securityKey = config.getSecretKey();
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
-            Messages.showMessageDialog("请先配置 File>Setting>JavaCodeHelp", COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+            Messages.showMessageDialog("请先配置 File>Setting>Other Settings>JavaCodeHelp", COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
         //获取选择内容
         selectedText = selectedText.replaceAll("[\r\n/*]", COMMON_CONSTANT.BLANK_STRING).trim();
