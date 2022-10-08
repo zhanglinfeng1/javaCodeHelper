@@ -18,4 +18,5 @@ dependencies {
 intellij {
     version = '2021.2.3'
     plugins = ['java']
+    updateSinceUntilBuild = false
 }
