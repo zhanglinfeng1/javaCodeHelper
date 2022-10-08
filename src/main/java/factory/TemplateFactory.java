@@ -44,6 +44,7 @@ public class TemplateFactory {
                 if (templateFactory == null) {
                     templateFactory = new TemplateFactory();
                     templateFactory.templateList = new ArrayList<>();
+                    //加载默认模板
                     ClassLoader classLoader = TemplateFactory.class.getClassLoader();
                     configuration = new Configuration(Configuration.VERSION_2_3_23);
                     configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));

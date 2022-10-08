@@ -27,8 +27,8 @@ public class BaiDuTransApi {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
         try {
-            String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?appid=20221003001368411&q=";
-            urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign;
+            String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
+            urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
             URL uri = new URL(urlStr);
@@ -38,8 +38,7 @@ public class BaiDuTransApi {
             }
             conn.setConnectTimeout(COMMON_CONSTANT.SOCKET_TIMEOUT);
             conn.setRequestMethod(COMMON_CONSTANT.GET);
-            int statusCode = conn.getResponseCode();
-            if (statusCode != HttpURLConnection.HTTP_OK) {
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return COMMON_CONSTANT.BLANK_STRING;
             }
             InputStream is = conn.getInputStream();

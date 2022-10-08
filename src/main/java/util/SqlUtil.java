@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/9/23 11:36
  */
-public class SqlParseUtil {
+public class SqlUtil {
 
     public static TableInfo parse(String dataBaseType, String sqlStr) throws Exception {
         TableInfo tableInfo = new TableInfo();
-        List<String> lineList = Arrays.stream(sqlStr.split("\\r?\\n")).filter(s -> StringUtil.isNotEmpty(s) && s.split(COMMON_CONSTANT.SPACE_REGEX).length > 1).collect(Collectors.toList());
+        List<String> lineList = Arrays.stream(sqlStr.split(COMMON_CONSTANT.WRAP_REGEX)).filter(s -> StringUtil.isNotEmpty(s) && s.split(COMMON_CONSTANT.SPACE_REGEX).length > 1).collect(Collectors.toList());
         String[] sqlTableNameArr = lineList.get(0).split(COMMON_CONSTANT.SPACE_REGEX)[2].split(COMMON_CONSTANT.DOT_REGEX);
         String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING);
         String tableName = Arrays.stream(sqlTableName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
@@ -45,7 +45,7 @@ public class SqlParseUtil {
             if (COMMON_CONSTANT.COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
                 ColumnInfo columnInfo = new ColumnInfo();
                 columnInfo.dealColumnName(valueList.get(0));
-                columnInfo.setColumnType(TypeUtil.toJavaType(valueList.get(1)));
+                columnInfo.setColumnType(SqlUtil.toJavaType(valueList.get(1)));
                 columnInfo.setColumnComment(valueList.get(valueList.size() - 1));
                 columnList.add(columnInfo);
             }
@@ -62,7 +62,7 @@ public class SqlParseUtil {
             if (!COMMON_CONSTANT.COMMENT.equalsIgnoreCase(valueList.get(0)) && !COMMON_CONSTANT.CREATE.equalsIgnoreCase(valueList.get(0))) {
                 ColumnInfo columnInfo = new ColumnInfo();
                 columnInfo.dealColumnName(valueList.get(0));
-                columnInfo.setColumnType(TypeUtil.toJavaType(valueList.get(1)));
+                columnInfo.setColumnType(SqlUtil.toJavaType(valueList.get(1)));
                 columnList.add(columnInfo);
             }
         }
@@ -87,4 +87,16 @@ public class SqlParseUtil {
         return tableInfo;
     }
 
+    public static String toJavaType(String sqlType) {
+        sqlType = sqlType.toLowerCase();
+        if (sqlType.contains("int") || sqlType.contains("integer")) {
+            return "Integer";
+        } else if (sqlType.contains("timestamp") || sqlType.contains("date") || sqlType.contains("datetime") || sqlType.contains("time")) {
+            return "Timestamp";
+        } else if (sqlType.contains("double") || sqlType.contains("float") || sqlType.contains("decimal") || sqlType.contains("number")) {
+            return "Double";
+        } else {
+            return "String";
+        }
+    }
 }

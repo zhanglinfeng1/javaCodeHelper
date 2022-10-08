@@ -2,6 +2,7 @@ package component;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
+import constant.COMMON_CONSTANT;
 import dialog.CommonConfigDialog;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ public class CommonConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "CommonConfig";
+        return COMMON_CONSTANT.JAVA_CODE_HELP;
     }
 
     @Nullable

@@ -92,9 +92,8 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             }
             PsiJavaFile psiJavaFile = (PsiJavaFile) file;
             PsiClass[] psiClassArr = psiJavaFile.getClasses();
-            int psiClassCount = psiClassArr.length;
             //含有内部类跳过
-            if (psiClassCount == 0 || psiClassCount > 1) {
+            if (psiClassArr.length != 1) {
                 break;
             }
             PsiClass psiClass = psiClassArr[0];

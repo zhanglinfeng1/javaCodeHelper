@@ -11,7 +11,7 @@ import dialog.ToolWindowFirstDialog;
 import dialog.ToolWindowSecondDialog;
 import org.jetbrains.annotations.NotNull;
 import pojo.TableInfo;
-import util.SqlParseUtil;
+import util.SqlUtil;
 import util.StringUtil;
 
 /**
@@ -36,7 +36,7 @@ public class SqlFactory implements ToolWindowFactory {
         firstDialog.getNextButton().addActionListener(e -> {
             try {
                 //解析sql
-                TableInfo tableInfo = SqlParseUtil.parse(firstDialog.getDataBaseType(),firstDialog.getSqlStr());
+                TableInfo tableInfo = SqlUtil.parse(firstDialog.getDataBaseType(),firstDialog.getSqlStr());
                 tableInfo.setAuthor(firstDialog.getAuthor());
                 //初始化文件路径
                 TemplateFactory.getInstance().init(firstDialog.getFullPath(), firstDialog.getPackagePathField(), tableInfo);

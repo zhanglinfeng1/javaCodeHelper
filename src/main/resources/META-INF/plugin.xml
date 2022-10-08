@@ -35,7 +35,7 @@
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
         <!-- 配置面板 -->
         <applicationService serviceImplementation="component.ConfigComponent"/>
-        <applicationConfigurable displayName="JavaCodeHelp" instance="component.CommonConfigurable"/>
+        <applicationConfigurable instance="component.CommonConfigurable"/>
     </extensions>
 
     <actions>
