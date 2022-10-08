@@ -18,11 +18,13 @@ public class StringUtil {
         return String.valueOf(obj);
     }
 
-    public static boolean isEmpty(String str) {
+    public static boolean isEmpty(Object obj) {
+        String str = toString(obj);
         return str == null || str.trim().length() == 0;
     }
 
-    public static boolean isNotEmpty(String str) {
+    public static boolean isNotEmpty(Object obj) {
+        String str = toString(obj);
         return !isEmpty(str);
     }
 

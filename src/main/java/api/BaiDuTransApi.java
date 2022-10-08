@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import constant.COMMON_CONSTANT;
 import org.apache.commons.codec.digest.DigestUtils;
 import util.JsonUtil;
+import util.StringUtil;
 import util.UrlUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -11,8 +12,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -23,51 +22,39 @@ import java.util.stream.Collectors;
 
 public class BaiDuTransApi {
 
-    public String trans(String appid, String securityKey, String query, String from, String to) {
+    public String trans(String appid, String securityKey, String query, String from, String to) throws Exception {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
-        try {
-            String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
-            urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
-            URL uri = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
-            if (conn instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
-            }
-            conn.setConnectTimeout(COMMON_CONSTANT.SOCKET_TIMEOUT);
-            conn.setRequestMethod(COMMON_CONSTANT.GET);
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return COMMON_CONSTANT.BLANK_STRING;
-            }
-            InputStream is = conn.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                builder.append(line);
-            }
-            close(br);
-            close(is);
-            conn.disconnect();
-            Map<String, Object> map = JsonUtil.toMap(builder.toString());
-            JSONArray jsonArray = JSONArray.parseArray(map.get("trans_result").toString());
-            return jsonArray.stream().map(l -> JsonUtil.toMap(l.toString()).get("dst").toString()).collect(Collectors.joining(COMMON_CONSTANT.SEMICOLON));
-        } catch (Exception e) {
-            e.printStackTrace();
+        String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
+        urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
+        SSLContext sslcontext = SSLContext.getInstance("TLS");
+        sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
+        URL uri = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
+        if (conn instanceof HttpsURLConnection) {
+            ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
+        }
+        conn.setConnectTimeout(COMMON_CONSTANT.SOCKET_TIMEOUT);
+        conn.setRequestMethod(COMMON_CONSTANT.GET);
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             return COMMON_CONSTANT.BLANK_STRING;
         }
-    }
-
-    private static void close(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        InputStream is = conn.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            builder.append(line);
         }
+        br.close();
+        is.close();
+        conn.disconnect();
+        Map<String, Object> map = JsonUtil.toMap(builder.toString());
+        if (StringUtil.isNotEmpty(map.get("error_code"))) {
+            throw new Exception(StringUtil.toString(map.get("error_msg")));
+        }
+        JSONArray jsonArray = JSONArray.parseArray(map.get("trans_result").toString());
+        return jsonArray.stream().map(l -> JsonUtil.toMap(l.toString()).get("dst").toString()).collect(Collectors.joining(COMMON_CONSTANT.SEMICOLON));
     }
 
     private static final TrustManager myX509TrustManager = new X509TrustManager() {

@@ -53,8 +53,12 @@ public class TranslateAction extends AnAction {
             from = COMMON_CONSTANT.ZH;
             to = COMMON_CONSTANT.EN;
         }
-        if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(config.getApi())) {
-            translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
+        try{
+            if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(config.getApi())) {
+                translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
+            }
+        }catch (Exception e){
+            Messages.showMessageDialog(e.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
         String finalSelectedText = selectedText + translateResult;
         WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
