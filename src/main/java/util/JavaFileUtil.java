@@ -25,7 +25,7 @@ public class JavaFileUtil {
         return psiClass.getAnnotation(ANNOTATION_CONSTANT.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION_CONSTANT.NETFLIX_FEIGN_CLIENT) != null;
     }
 
-    public static boolean isModuleController(PsiClass psiClass) {
+    public static boolean isController(PsiClass psiClass) {
         PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
         if (psiAnnotationArr.length == 0) {
             return false;
@@ -34,8 +34,11 @@ public class JavaFileUtil {
             return false;
         }
         //属于controller
-        boolean isController = Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION_CONSTANT.CONTROLLER_LIST.contains(a.getQualifiedName()));
-        if (isController) {
+        return Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION_CONSTANT.CONTROLLER_LIST.contains(a.getQualifiedName()));
+    }
+
+    public static boolean isModuleController(PsiClass psiClass) {
+        if (isController(psiClass)) {
             //排除网关
             return Arrays.stream(psiClass.getFields()).noneMatch(f -> isFeign(PsiUtil.resolveClassInClassTypeOnly(f.getType())));
         }
