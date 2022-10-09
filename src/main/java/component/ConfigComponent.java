@@ -18,14 +18,11 @@ import java.util.Objects;
 @State(name = COMMON_CONSTANT.JAVA_CODE_HELP, storages = {@Storage("javaCodeHelpConfig.xml")})
 public class ConfigComponent implements PersistentStateComponent<Config> {
 
-    private Config config;
+    private final Config config = new Config();
 
     @Nullable
     @Override
     public Config getState() {
-        if (config == null) {
-            config = new Config();
-        }
         return config;
     }
 

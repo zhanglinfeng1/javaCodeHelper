@@ -7,7 +7,6 @@ import pojo.Config;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -15,7 +14,7 @@ import javax.swing.JTextField;
  * @Author zhanglinfeng
  * @Date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog extends JDialog {
+public class CommonConfigDialog {
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
     private JComboBox<String> apiComboBox;
@@ -40,7 +39,7 @@ public class CommonConfigDialog extends JDialog {
     }
 
     public String getApi() {
-        if (null == apiComboBox.getSelectedItem()){
+        if (null == apiComboBox.getSelectedItem()) {
             return COMMON_CONSTANT.BLANK_STRING;
         }
         return apiComboBox.getSelectedItem().toString();
