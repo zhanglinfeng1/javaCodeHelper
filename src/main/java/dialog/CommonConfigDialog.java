@@ -54,7 +54,7 @@ public class CommonConfigDialog {
         return apiComboBox.getSelectedItem().toString();
     }
 
-    public String getFeignFastJumpType() {
+    public String getFastJumpType() {
         if (modularRadioButton.isSelected()) {
             return COMMON_CONSTANT.MODULAR;
         }

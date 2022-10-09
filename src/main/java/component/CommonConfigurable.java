@@ -43,7 +43,7 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getSecurityKey().equals(commonConfig.getSecretKey())) {
             return true;
         }
-        if (!dialog.getFeignFastJumpType().equals(commonConfig.getFeignFastJumpType())) {
+        if (!dialog.getFastJumpType().equals(commonConfig.getFastJumpType())) {
             return true;
         }
         return false;
@@ -54,7 +54,7 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setApi(dialog.getApi());
         commonConfig.setAppId(dialog.getAppId());
         commonConfig.setSecretKey(dialog.getSecurityKey());
-        commonConfig.setFeignFastJumpType(dialog.getFeignFastJumpType());
+        commonConfig.setFastJumpType(dialog.getFastJumpType());
         ConfigFactory.getInstance().updateCommonConfig(commonConfig);
     }
 
