@@ -18,6 +18,7 @@ import com.intellij.psi.PsiMethod;
 import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
+import factory.ConfigFactory;
 import org.jetbrains.annotations.NotNull;
 import pojo.MappingAnnotation;
 import util.JavaFileUtil;
@@ -34,6 +35,8 @@ import java.util.Objects;
  */
 public class FastJumpProvider extends RelatedItemLineMarkerProvider {
 
+    private final String feignFastJumpType = ConfigFactory.getInstance().getCommonConfig().getFeignFastJumpType();
+
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
         if (element instanceof PsiMethod) {
@@ -42,7 +45,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             String fileType;
             if (JavaFileUtil.isFeign(psiClass)) {
                 fileType = COMMON_CONSTANT.FEIGN;
-            } else if (JavaFileUtil.isModuleController(psiClass)) {
+            } else if (JavaFileUtil.isController(feignFastJumpType, psiClass)) {
                 fileType = COMMON_CONSTANT.CONTROLLER;
             } else {
                 return;
@@ -102,7 +105,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 break;
             }
             //原路径与目标路径文件不匹配
-            if (!(JavaFileUtil.isModuleController(psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
+            if (!(JavaFileUtil.isController(feignFastJumpType, psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
                     && !(JavaFileUtil.isFeign(psiClass) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
                 break;
             }

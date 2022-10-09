@@ -1,12 +1,12 @@
 package component;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import constant.COMMON_CONSTANT;
 import dialog.CommonConfigDialog;
+import factory.ConfigFactory;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-import pojo.Config;
+import pojo.CommonConfig;
 
 import javax.swing.JComponent;
 
@@ -16,7 +16,7 @@ import javax.swing.JComponent;
  */
 public class CommonConfigurable implements Configurable {
 
-    private final Config config = ServiceManager.getService(ConfigComponent.class).getState();
+    private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
     private final CommonConfigDialog dialog = new CommonConfigDialog();
 
     @Nls(capitalization = Nls.Capitalization.Title)
@@ -34,13 +34,16 @@ public class CommonConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getApi().equals(config.getApi())) {
+        if (!dialog.getApi().equals(commonConfig.getApi())) {
             return true;
         }
-        if (!dialog.getAppId().equals(config.getAppId())) {
+        if (!dialog.getAppId().equals(commonConfig.getAppId())) {
             return true;
         }
-        if (!dialog.getSecurityKey().equals(config.getSecretKey())) {
+        if (!dialog.getSecurityKey().equals(commonConfig.getSecretKey())) {
+            return true;
+        }
+        if (!dialog.getFeignFastJumpType().equals(commonConfig.getFeignFastJumpType())) {
             return true;
         }
         return false;
@@ -48,9 +51,11 @@ public class CommonConfigurable implements Configurable {
 
     @Override
     public void apply() {
-        config.setApi(dialog.getApi());
-        config.setAppId(dialog.getAppId());
-        config.setSecretKey(dialog.getSecurityKey());
+        commonConfig.setApi(dialog.getApi());
+        commonConfig.setAppId(dialog.getAppId());
+        commonConfig.setSecretKey(dialog.getSecurityKey());
+        commonConfig.setFeignFastJumpType(dialog.getFeignFastJumpType());
+        ConfigFactory.getInstance().updateCommonConfig(commonConfig);
     }
 
     @Override

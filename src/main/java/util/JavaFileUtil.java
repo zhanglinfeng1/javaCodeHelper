@@ -25,6 +25,17 @@ public class JavaFileUtil {
         return psiClass.getAnnotation(ANNOTATION_CONSTANT.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION_CONSTANT.NETFLIX_FEIGN_CLIENT) != null;
     }
 
+    public static boolean isController(String feignFastJumpType, PsiClass psiClass) {
+        switch (feignFastJumpType) {
+            case COMMON_CONSTANT.MODULAR:
+                return isModuleController(psiClass);
+            case COMMON_CONSTANT.GATEWAY:
+                return isController(psiClass);
+            default:
+                return false;
+        }
+    }
+
     public static boolean isController(PsiClass psiClass) {
         PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
         if (psiAnnotationArr.length == 0) {

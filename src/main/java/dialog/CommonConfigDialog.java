@@ -1,13 +1,13 @@
 package dialog;
 
-import com.intellij.openapi.components.ServiceManager;
-import component.ConfigComponent;
 import constant.COMMON_CONSTANT;
-import pojo.Config;
+import factory.ConfigFactory;
+import pojo.CommonConfig;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
@@ -19,11 +19,20 @@ public class CommonConfigDialog {
     private JTextField securityKeyTextField;
     private JComboBox<String> apiComboBox;
     private JPanel panel;
-    private final Config config = ServiceManager.getService(ConfigComponent.class).getState();
+    private JRadioButton modularRadioButton;
+    private JRadioButton gatewayRadioButton;
 
     public void reset() {
-        appIdTextField.setText(config.getAppId());
-        securityKeyTextField.setText(config.getSecretKey());
+        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+        appIdTextField.setText(commonConfig.getAppId());
+        securityKeyTextField.setText(commonConfig.getSecretKey());
+        if (COMMON_CONSTANT.MODULAR.equals(commonConfig.getFeignFastJumpType())) {
+            modularRadioButton.setSelected(true);
+            gatewayRadioButton.setSelected(false);
+        } else {
+            modularRadioButton.setSelected(false);
+            gatewayRadioButton.setSelected(true);
+        }
     }
 
     public JComponent getComponent() {
@@ -44,4 +53,12 @@ public class CommonConfigDialog {
         }
         return apiComboBox.getSelectedItem().toString();
     }
+
+    public String getFeignFastJumpType() {
+        if (modularRadioButton.isSelected()) {
+            return COMMON_CONSTANT.MODULAR;
+        }
+        return COMMON_CONSTANT.GATEWAY;
+    }
+
 }

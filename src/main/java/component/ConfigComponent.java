@@ -7,7 +7,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import constant.COMMON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pojo.Config;
+import pojo.CommonConfig;
 
 import java.util.Objects;
 
@@ -16,18 +16,18 @@ import java.util.Objects;
  * @Date create in 2022/10/4 8:18
  */
 @State(name = COMMON_CONSTANT.JAVA_CODE_HELP, storages = {@Storage("javaCodeHelpConfig.xml")})
-public class ConfigComponent implements PersistentStateComponent<Config> {
+public class ConfigComponent implements PersistentStateComponent<CommonConfig> {
 
-    private final Config config = new Config();
+    private final CommonConfig commonConfig = new CommonConfig();
 
     @Nullable
     @Override
-    public Config getState() {
-        return config;
+    public CommonConfig getState() {
+        return commonConfig;
     }
 
     @Override
-    public void loadState(@NotNull Config config) {
-        XmlSerializerUtil.copyBean(config, Objects.requireNonNull(getState()));
+    public void loadState(@NotNull CommonConfig commonConfig) {
+        XmlSerializerUtil.copyBean(commonConfig, Objects.requireNonNull(getState()));
     }
 }

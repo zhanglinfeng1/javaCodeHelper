@@ -6,14 +6,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import component.ConfigComponent;
 import constant.COMMON_CONSTANT;
-import pojo.Config;
+import factory.ConfigFactory;
+import pojo.CommonConfig;
 import util.StringUtil;
 
 /**
@@ -38,9 +37,9 @@ public class TranslateAction extends AnAction {
             return;
         }
         //获取配置
-        Config config = ServiceManager.getService(ConfigComponent.class).getState();
-        String appid = config.getAppId();
-        String securityKey = config.getSecretKey();
+        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+        String appid = commonConfig.getAppId();
+        String securityKey = commonConfig.getSecretKey();
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("请先配置 File > Setting > Other Settings > JavaCodeHelp", COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
@@ -53,11 +52,11 @@ public class TranslateAction extends AnAction {
             from = COMMON_CONSTANT.ZH;
             to = COMMON_CONSTANT.EN;
         }
-        try{
-            if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(config.getApi())) {
+        try {
+            if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
                 translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Messages.showMessageDialog(e.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
         String finalSelectedText = selectedText + translateResult;
