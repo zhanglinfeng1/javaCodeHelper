@@ -26,7 +26,7 @@ public class CommonConfigDialog {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(commonConfig.getAppId());
         securityKeyTextField.setText(commonConfig.getSecretKey());
-        if (COMMON_CONSTANT.MODULAR.equals(commonConfig.getFeignFastJumpType())) {
+        if (COMMON_CONSTANT.MODULAR.equals(commonConfig.getFastJumpType())) {
             modularRadioButton.setSelected(true);
             gatewayRadioButton.setSelected(false);
         } else {

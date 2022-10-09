@@ -35,7 +35,7 @@ import java.util.Objects;
  */
 public class FastJumpProvider extends RelatedItemLineMarkerProvider {
 
-    private final String feignFastJumpType = ConfigFactory.getInstance().getCommonConfig().getFeignFastJumpType();
+    private final String fastJumpType = ConfigFactory.getInstance().getCommonConfig().getFastJumpType();
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
@@ -45,7 +45,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             String fileType;
             if (JavaFileUtil.isFeign(psiClass)) {
                 fileType = COMMON_CONSTANT.FEIGN;
-            } else if (JavaFileUtil.isController(feignFastJumpType, psiClass)) {
+            } else if (JavaFileUtil.isController(fastJumpType, psiClass)) {
                 fileType = COMMON_CONSTANT.CONTROLLER;
             } else {
                 return;
@@ -105,7 +105,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 break;
             }
             //原路径与目标路径文件不匹配
-            if (!(JavaFileUtil.isController(feignFastJumpType, psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
+            if (!(JavaFileUtil.isController(fastJumpType, psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
                     && !(JavaFileUtil.isFeign(psiClass) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {
                 break;
             }

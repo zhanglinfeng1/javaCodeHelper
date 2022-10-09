@@ -10,10 +10,10 @@ public class CommonConfig {
     private String api;
     private String appId;
     private String secretKey;
-    private String feignFastJumpType;
+    private String fastJumpType;
 
     public CommonConfig() {
-        this.feignFastJumpType = COMMON_CONSTANT.MODULAR;
+        this.fastJumpType = COMMON_CONSTANT.MODULAR;
     }
 
     public String getApi() {
@@ -40,11 +40,11 @@ public class CommonConfig {
         this.secretKey = secretKey;
     }
 
-    public String getFeignFastJumpType() {
-        return feignFastJumpType;
+    public String getFastJumpType() {
+        return fastJumpType;
     }
 
-    public void setFeignFastJumpType(String feignFastJumpType) {
-        this.feignFastJumpType = feignFastJumpType;
+    public void setFastJumpType(String fastJumpType) {
+        this.fastJumpType = fastJumpType;
     }
 }
