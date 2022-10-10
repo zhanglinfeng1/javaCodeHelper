@@ -1,8 +1,9 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <vendor>zhanglinfeng</vendor>
+    <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG 、 Raise requirements ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
@@ -23,7 +24,7 @@
     <change-notes><![CDATA[
         <p>Details of changes in historical versions : <a href="https://gitee.com/zlfzh/idea-plug/blob/master/README.md#%E7%89%88%E6%9C%AC%E6%94%B9%E5%8A%A8" target="_blank">gitee</a>
     ]]></change-notes>
-    <idea-version since-build="182.5107.41" until-build="223.*"/>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>
@@ -33,12 +34,14 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="provider.FastJumpProvider"/>
         <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
-        <!-- 配置面板 -->
+        <!-- 配置持久化 -->
         <applicationService serviceImplementation="component.ConfigComponent"/>
+        <!-- 配置面板 -->
         <applicationConfigurable instance="component.CommonConfigurable"/>
     </extensions>
 
     <actions>
+        <!-- 右击菜单 -->
         <group id="idea.plugins.JavaCodeHelper" text="JavaCodeHelper" popup="true" icon="/icon/boLuo16.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </group>

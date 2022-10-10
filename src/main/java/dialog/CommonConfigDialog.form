@@ -98,7 +98,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="跳转范围"/>
+              <text value="feign跳转"/>
             </properties>
           </component>
           <component id="fdbf6" class="javax.swing.JRadioButton" binding="modularRadioButton">
@@ -107,7 +107,8 @@
             </constraints>
             <properties>
               <selected value="false"/>
-              <text value="feign与模块"/>
+              <text value="不包含网关"/>
+              <toolTipText value="controller中没有调用feign"/>
             </properties>
           </component>
           <component id="654ee" class="javax.swing.JRadioButton" binding="gatewayRadioButton">
@@ -115,7 +116,8 @@
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="feign与模块、网关"/>
+              <text value="包含网关"/>
+              <toolTipText value="controller中调用feign即被定义为网关"/>
             </properties>
           </component>
           <hspacer id="690d6">

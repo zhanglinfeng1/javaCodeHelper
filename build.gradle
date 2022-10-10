@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.example'
-version '1.2.4'
+version '1.2.5'
 
 repositories {
     mavenCentral()
@@ -12,7 +12,6 @@ repositories {
 
 dependencies {
     implementation 'org.freemarker:freemarker:2.3.23'
-    implementation 'com.alibaba.fastjson2:fastjson2:2.0.8'
 }
 
 intellij {

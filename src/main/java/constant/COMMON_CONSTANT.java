@@ -11,8 +11,6 @@ public class COMMON_CONSTANT {
     /** 通用常量 */
     public static final String BAIDU_TRANSLATE = "百度翻译";
     public static final String SUCCESS = "成功";
-    public static final String MODULAR = "modular";
-    public static final String GATEWAY = "gateway";
     public static final String EN = "en";
     public static final String ZH = "zh";
     public static final int SOCKET_TIMEOUT = 3000;
@@ -62,4 +60,8 @@ public class COMMON_CONSTANT {
 
     /** 配置页菜单名 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
+
+    /** 跳转类型 */
+    public static final String MODULAR = "modular";
+    public static final String GATEWAY = "gateway";
 }

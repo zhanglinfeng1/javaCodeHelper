@@ -94,7 +94,7 @@ public interface ${tableName}Mapper{
             <#noparse>" WHERE id=#{obj.id}")</#noparse>
     void update${tableName}(@Param("obj") ${tableName} obj);
 
-    @Delete("delete from ${sqlTableName} WHERE id=#{id}")
+    @Delete("delete from ${sqlTableName} WHERE id=<#noparse>#{id}</#noparse>")
     void delete${tableName}(@Param("id") Integer id);
 
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}SQL")

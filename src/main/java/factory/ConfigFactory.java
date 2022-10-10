@@ -12,6 +12,10 @@ public class ConfigFactory {
     private static volatile ConfigFactory configFactory;
     private CommonConfig commonConfig;
 
+    private ConfigFactory(){
+
+    }
+
     public static ConfigFactory getInstance() {
         if (configFactory == null) {
             synchronized (ConfigFactory.class) {
