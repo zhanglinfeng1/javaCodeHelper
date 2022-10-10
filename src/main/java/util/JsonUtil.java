@@ -1,6 +1,6 @@
 package util;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.util.Map;
 
@@ -11,11 +11,11 @@ import java.util.Map;
 public class JsonUtil {
 
     public static Map<String, Object> toMap(Object obj) {
-        return toMap(new Gson().toJson(obj));
+        return toMap(JSONObject.toJSONString(obj));
     }
 
     public static Map<String, Object> toMap(String str) {
-        return new Gson().fromJson(str, Map.class);
+        return JSONObject.parseObject(str, Map.class);
     }
 
 }
