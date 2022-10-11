@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @Author: ${author}
  * @Date: ${dateTime}
-*/
+ */
 @Service
 public class ${tableName}ServiceImpl implements ${tableName}Service{
     @Resource

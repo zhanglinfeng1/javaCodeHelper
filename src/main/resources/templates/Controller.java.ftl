@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
-* @Author: ${author}
-* @Date: ${dateTime}
-*/
+ * @Author: ${author}
+ * @Date: ${dateTime}
+ */
 @RestController
 public class ${tableName}Controller {
     @Resource

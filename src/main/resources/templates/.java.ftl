@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * ${tableComment}
  * @Author: ${author}
  * @Date: ${dateTime}
-*/
+ */
 public class ${tableName}{
     <#list columnList as fields>
     /** ${fields.columnComment} */

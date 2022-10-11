@@ -1,6 +1,7 @@
 package ${packagePath};
 
 import ${packagePath}.${tableName};
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
@@ -104,6 +105,6 @@ public interface ${tableName}Mapper{
     int get${tableName}ListCount(<#list queryColumnList as fields>@Param("${fields.columnName}") String ${fields.columnName}<#if fields_has_next>, </#if></#list>);
 
     @SelectProvider(type = ${tableName}MapperProvider.class, method = "get${tableName}ListSQL")
-    List<${tableName}> get${tableName}List(<#list queryColumnList as fields>,@Param("${fields.columnName}") String ${fields.columnName}, </#list>@Param("offset") int offset, @Param("limit") int limit);
+    List<${tableName}> get${tableName}List(<#list queryColumnList as fields>@Param("${fields.columnName}") String ${fields.columnName}, </#list>@Param("offset") int offset, @Param("limit") int limit);
 }
 

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * ${tableComment}VO
  * @Author: ${author}
  * @Date: ${dateTime}
-*/
+ */
 public class ${tableName}VO{
     <#list columnList as fields>
     /** ${fields.columnComment} */
