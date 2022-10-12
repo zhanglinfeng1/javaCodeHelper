@@ -21,9 +21,10 @@ public class ANNOTATION_CONSTANT {
     public static final List<String> MAPPING_LIST = Arrays.asList(REQUEST_MAPPING, POST_MAPPING, GET_MAPPING, PUT_MAPPING, DELETE_MAPPING);
 
     /** controller注解 */
-    public static final String CONTROLLER = "org.springframework.web.bind.annotation.Controller";
+    public static final String CONTROLLER_1 = "org.springframework.web.bind.annotation.Controller";
+    public static final String CONTROLLER_2 = "org.springframework.stereotype.Controller";
     public static final String REST_CONTROLLER = "org.springframework.web.bind.annotation.RestController";
-    public static final List<String> CONTROLLER_LIST = Arrays.asList(CONTROLLER, REST_CONTROLLER);
+    public static final List<String> CONTROLLER_LIST = Arrays.asList(CONTROLLER_1, CONTROLLER_2, REST_CONTROLLER);
 
     /** 注解常用属性 */
     public static final String VALUE = "value";

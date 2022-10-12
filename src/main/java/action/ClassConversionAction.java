@@ -22,6 +22,10 @@ import util.TypeUtil;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/9/14 17:18
+ */
 public class ClassConversionAction extends AnAction {
 
     @Override
@@ -66,11 +70,13 @@ public class ClassConversionAction extends AnAction {
                     }
                 }
             }
+            //创建方法
             String finalObjectStr = objectStr;
             PsiElementFactory factory = JavaPsiFacade.getInstance(project).getElementFactory();
             StringBuilder constructorMethodSb = new StringBuilder("public ").append(psiClass.getName()).append("(").append(parametersStr).append(") {");
             constructorMethodSb.append(Arrays.stream(fieldArr).map(f -> "this." + f.getName() + " = " + finalObjectStr + ".get" + StringUtil.toUpperCaseFirst(f.getName()) + "();").collect(Collectors.joining())).append("}");
             PsiMethod newConstructor = factory.createMethodFromText(constructorMethodSb.toString(), psiClass);
+            //添加方法
             if (null != deleteMethod) {
                 psiClass.addAfter(newConstructor, deleteMethod);
                 deleteMethod.delete();

@@ -120,6 +120,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 targetMappingAnnotation.setUrl(classUrl + targetMappingAnnotation.getUrl());
                 if (mappingAnnotation.equals(targetMappingAnnotation)) {
                     methodList.add(psiMethod);
+                    return methodList;
                 }
             }
         }

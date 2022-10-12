@@ -20,6 +20,10 @@ import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/10/05 10:34
+ */
 public class BaiDuTransApi {
 
     public String trans(String appid, String securityKey, String query, String from, String to) throws Exception {
