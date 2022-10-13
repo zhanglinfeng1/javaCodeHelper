@@ -82,7 +82,7 @@ public class ToolWindowFirstDialog extends JDialog {
     public String getFullPath() throws Exception {
         String fullPath = fullPathField.getText();
         if (COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPath) || StringUtil.isEmpty(fullPath)) {
-            throw new Exception("FULL PATH is not null");
+            throw new Exception("Full path is not null");
         }
         return fullPathField.getText();
     }
