@@ -25,9 +25,11 @@ import util.JavaFileUtil;
 import util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -128,16 +130,11 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     }
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
-        PsiAnnotation annotation = null;
-        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
-            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
-                annotation = psiAnnotation;
-                break;
-            }
-        }
-        if (null == annotation) {
+        Optional<PsiAnnotation> psiAnnotationOptional = Arrays.stream(psiAnnotationArr).filter(a->ANNOTATION_CONSTANT.MAPPING_LIST.contains(a.getQualifiedName())).findAny();
+        if(psiAnnotationOptional.isEmpty()){
             return null;
         }
+        PsiAnnotation annotation = psiAnnotationOptional.get();
         //方法注解
         String methodUrl = this.getMappingUrl(annotation);
         if (StringUtil.isEmpty(methodUrl)) {
@@ -174,7 +171,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 if (method.contains(COMMON_CONSTANT.DOT)) {
                     return method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
                 }
-                return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+                return method;
         }
     }
 }

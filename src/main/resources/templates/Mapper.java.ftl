@@ -40,11 +40,13 @@ public interface ${tableName}Mapper{
             SQL sql = new SQL();
             sql.SELECT("count(id)");
             sql.FROM("${sqlTableName}");
+<#assign inList = ["in","not in"]>
+<#assign eqList = ["=",">", ">=", "<", "<="]>
 <#list queryColumnList as fields>
             if (!StringUtils.isEmpty(${fields.columnName})){
-<#if fields.queryType == '='>
+<#if eqList?seq_contains(fields.queryType)>
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
-<#elseif fields.queryType == 'in' ||  fields.queryType == 'not in'>
+<#elseif inList?seq_contains(fields.queryType)>
                 <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
                 String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");
@@ -62,11 +64,13 @@ public interface ${tableName}Mapper{
 </#list>
             SQL sql = new SQL();
             sql.SELECT(this.getColumn());
+<#assign inList = ["in","not in"]>
+<#assign eqList = ["=",">", ">=", "<", "<="]>
 <#list queryColumnList as fields>
             if (!StringUtils.isEmpty(${fields.columnName})){
-<#if fields.queryType == '='>
+<#if eqList?seq_contains(fields.queryType)>
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
-<#elseif fields.queryType == 'in' ||  fields.queryType == 'not in'>
+<#elseif inList?seq_contains(fields.queryType)>
                 <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
                 String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");

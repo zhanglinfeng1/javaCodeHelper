@@ -43,7 +43,7 @@ public class COMMON_CONSTANT {
     public static final String TABLE = "TABLE";
     public static final String COMMENT = "COMMENT";
     public static final String CREATE = "CREATE";
-    public static final String[] SELECT_OPTIONS = {"=", "in", "not in", "like"};
+    public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
 
     /** GUI */
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "例：com.zlf.service.impl";
