@@ -63,8 +63,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             //寻找对应方法
             List<PsiElement> elementList = new ArrayList<>();
             Project project = element.getProject();
-            VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentRoots();
-            for (VirtualFile virtualFile : contentRoots) {
+            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentRoots()) {
                 if (virtualFile.getPath().contains("/src")) {
                     PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
                     if (null != psiDirectory) {
@@ -82,8 +81,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
 
     private List<PsiMethod> dealDirectory(PsiDirectory psiDirectory, MappingAnnotation mappingAnnotation, String fileType) {
         List<PsiMethod> methodList = new ArrayList<>();
-        PsiDirectory[] subdirectories = psiDirectory.getSubdirectories();
-        for (PsiDirectory subdirectory : subdirectories) {
+        for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
             List<PsiMethod> subMethodList = this.dealDirectory(subdirectory, mappingAnnotation, fileType);
             if (!subMethodList.isEmpty()) {
                 methodList.addAll(subMethodList);

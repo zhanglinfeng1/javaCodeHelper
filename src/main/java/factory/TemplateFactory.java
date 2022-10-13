@@ -80,7 +80,7 @@ public class TemplateFactory {
         File file = new File(this.fullPath);
         if (!file.exists()) {
             if (!file.mkdirs()){
-                throw new Exception("创建路径失败");
+                throw new Exception("Failed to create path");
             }
         }
         tableInfo.setQueryColumnList(queryColumnList);
@@ -90,28 +90,29 @@ public class TemplateFactory {
             try {
                 template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new Exception("生成文件失败");
+                throw new Exception("Failed to generate file");
             }
         }
     }
 
     public void useCustomTemplates(String customTemplatesPath) throws Exception {
         File file = new File(customTemplatesPath);
-        if (file.exists() && file.isDirectory()) {
-            configuration.setDirectoryForTemplateLoading(file);
-            templateFactory.templateList.clear();
-            for (File subFile : Objects.requireNonNull(file.listFiles(),"自定义模板不存在")) {
-                String name = subFile.getName();
-                if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
-                    templateFactory.templateList.add(configuration.getTemplate(name));
-                }
+        if(!file.exists()){
+            throw new Exception("Custom template path error");
+        }
+        if(!file.isDirectory()){
+            throw new Exception("Non folder path");
+        }
+        configuration.setDirectoryForTemplateLoading(file);
+        templateFactory.templateList.clear();
+        for (File subFile : Objects.requireNonNull(file.listFiles(),"The custom template does not exist")) {
+            String name = subFile.getName();
+            if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
+                templateFactory.templateList.add(configuration.getTemplate(name));
             }
-            if(templateFactory.templateList.isEmpty()){
-                throw new Exception("自定义模板不存在");
-            }
-        }else {
-            throw new Exception("自定义模板路径错误");
+        }
+        if(templateFactory.templateList.isEmpty()){
+            throw new Exception("The custom template does not exist");
         }
     }
 }

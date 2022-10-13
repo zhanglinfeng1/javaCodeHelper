@@ -46,7 +46,9 @@ public class COMMON_CONSTANT {
     public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
 
     /** GUI */
-    public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "例：com.zlf.service.impl";
+    public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\javaCodeHelperFile";
+    public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
+    public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "C:\\zlf\\CustomTemplate";
 
     /** 请求方式 */
     public static final String POST = "POST";

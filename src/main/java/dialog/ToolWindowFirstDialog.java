@@ -12,7 +12,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ToolWindowFirstDialog extends JDialog {
@@ -25,11 +24,30 @@ public class ToolWindowFirstDialog extends JDialog {
     private JComboBox<String> dataBaseType;
 
     public ToolWindowFirstDialog() {
+        fullPathField.setForeground(JBColor.GRAY);
+        fullPathField.setText(COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER);
         setContentPane(contentPane);
         setModal(true);
 
+        fullPathField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPathField.getText())) {
+                    fullPathField.setText(COMMON_CONSTANT.BLANK_STRING);
+                    fullPathField.setForeground(JBColor.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (StringUtil.isEmpty(fullPathField.getText())) {
+                    fullPathField.setForeground(JBColor.GRAY);
+                    fullPathField.setText(COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER);
+                }
+            }
+        });
         packagePathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -61,14 +79,18 @@ public class ToolWindowFirstDialog extends JDialog {
         return authorField.getText();
     }
 
-    public String getFullPath() {
+    public String getFullPath() throws Exception {
+        String fullPath = fullPathField.getText();
+        if (COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPath) || StringUtil.isEmpty(fullPath)) {
+            throw new Exception("FULL PATH is not null");
+        }
         return fullPathField.getText();
     }
 
     public String getPackagePathField() throws Exception {
         String packagePath = packagePathField.getText();
         if (COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
-            throw new Exception("包路径不能为空");
+            throw new Exception("Package is not null");
         }
         return packagePath;
     }
@@ -76,7 +98,7 @@ public class ToolWindowFirstDialog extends JDialog {
     public String getSqlStr() throws Exception {
         String sqlStr = textArea.getText();
         if (StringUtil.isEmpty(sqlStr)) {
-            throw new Exception("Sql不能为空");
+            throw new Exception("Sql is not null");
         }
         return sqlStr;
     }

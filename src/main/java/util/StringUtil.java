@@ -24,8 +24,7 @@ public class StringUtil {
     }
 
     public static boolean isNotEmpty(Object obj) {
-        String str = toString(obj);
-        return !isEmpty(str);
+        return !isEmpty(toString(obj));
     }
 
     public static String toLowerCaseFirst(String str) {
@@ -45,8 +44,7 @@ public class StringUtil {
     }
 
     public static boolean isEnglish(String text) {
-        byte[] bytes = text.getBytes();
-        return bytes.length == text.length();
+        return text.getBytes().length == text.length();
     }
 
     public static String getFirstMatcher(String str, String regex) {

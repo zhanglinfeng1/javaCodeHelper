@@ -33,7 +33,7 @@ public class SqlUtil {
             case COMMON_CONSTANT.ORACLE:
                 return dealOracle(tableInfo, lineList);
             default:
-                throw new Exception("数据库类型不存在");
+                throw new Exception("Database not exist");
         }
     }
 
