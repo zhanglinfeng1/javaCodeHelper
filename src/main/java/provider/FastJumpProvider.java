@@ -137,11 +137,13 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     }
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
-        Optional<PsiAnnotation> psiAnnotationOptional = Arrays.stream(psiAnnotationArr).filter(a -> ANNOTATION_CONSTANT.MAPPING_LIST.contains(a.getQualifiedName())).findAny();
-        if (psiAnnotationOptional.isEmpty()) {
-            return null;
+        PsiAnnotation annotation = null;
+        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
+            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
+                annotation = psiAnnotation;
+                break;
+            }
         }
-        PsiAnnotation annotation = psiAnnotationOptional.get();
         //方法注解
         String methodUrl = this.getMappingUrl(annotation);
         if (StringUtil.isEmpty(methodUrl)) {
