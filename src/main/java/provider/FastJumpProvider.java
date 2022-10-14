@@ -38,6 +38,8 @@ import java.util.Optional;
 public class FastJumpProvider extends RelatedItemLineMarkerProvider {
 
     private final String fastJumpType = ConfigFactory.getInstance().getCommonConfig().getFastJumpType();
+    private final String controllerFolderName = ConfigFactory.getInstance().getCommonConfig().getControllerFolderName();
+    private final String feignFolderName = ConfigFactory.getInstance().getCommonConfig().getFeignFolderName();
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
@@ -87,6 +89,13 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 methodList.addAll(subMethodList);
             }
         }
+        //只处理符合的文件夹名下的文件
+        if (COMMON_CONSTANT.CONTROLLER.equals(fileType) && StringUtil.isNotEmpty(feignFolderName) && !psiDirectory.getName().contains(feignFolderName)) {
+            return methodList;
+        }
+        if (COMMON_CONSTANT.FEIGN.equals(fileType) && StringUtil.isNotEmpty(controllerFolderName) && !psiDirectory.getName().contains(controllerFolderName)) {
+            return methodList;
+        }
         PsiFile[] files = psiDirectory.getFiles();
         for (PsiFile file : files) {
             // 不是 Java 类型的文件直接跳过
@@ -128,8 +137,8 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     }
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
-        Optional<PsiAnnotation> psiAnnotationOptional = Arrays.stream(psiAnnotationArr).filter(a->ANNOTATION_CONSTANT.MAPPING_LIST.contains(a.getQualifiedName())).findAny();
-        if(psiAnnotationOptional.isEmpty()){
+        Optional<PsiAnnotation> psiAnnotationOptional = Arrays.stream(psiAnnotationArr).filter(a -> ANNOTATION_CONSTANT.MAPPING_LIST.contains(a.getQualifiedName())).findAny();
+        if (psiAnnotationOptional.isEmpty()) {
             return null;
         }
         PsiAnnotation annotation = psiAnnotationOptional.get();

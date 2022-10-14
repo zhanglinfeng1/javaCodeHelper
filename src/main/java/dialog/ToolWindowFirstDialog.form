@@ -47,7 +47,7 @@
         </constraints>
         <properties>
           <text value="Full Path"/>
-          <toolTipText value=""/>
+          <toolTipText value="文件存放的全路径"/>
         </properties>
       </component>
       <component id="3a81a" class="javax.swing.JTextField" binding="fullPathField">
@@ -64,6 +64,7 @@
         </constraints>
         <properties>
           <text value="Package"/>
+          <toolTipText value="包路径"/>
         </properties>
       </component>
       <component id="9bcf1" class="javax.swing.JTextField" binding="packagePathField">

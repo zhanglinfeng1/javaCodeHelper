@@ -1,8 +1,8 @@
 package api;
 
-import com.alibaba.fastjson2.JSONArray;
 import constant.COMMON_CONSTANT;
 import org.apache.commons.codec.digest.DigestUtils;
+import pojo.TransResult;
 import util.JsonUtil;
 import util.StringUtil;
 import util.UrlUtil;
@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -57,8 +58,8 @@ public class BaiDuTransApi {
         if (StringUtil.isNotEmpty(map.get("error_code"))) {
             throw new Exception(StringUtil.toString(map.get("error_msg")));
         }
-        JSONArray jsonArray = JSONArray.parseArray(map.get("trans_result").toString());
-        return jsonArray.stream().map(l -> JsonUtil.toMap(l.toString()).get("dst").toString()).collect(Collectors.joining(COMMON_CONSTANT.SEMICOLON));
+        List<TransResult> list = JsonUtil.toList(map.get("trans_result").toString(), TransResult.class);
+        return list.stream().map(TransResult::getDst).collect(Collectors.joining(COMMON_CONSTANT.SEMICOLON));
     }
 
     private static final TrustManager myX509TrustManager = new X509TrustManager() {

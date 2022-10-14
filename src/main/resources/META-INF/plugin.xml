@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[

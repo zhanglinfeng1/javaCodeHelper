@@ -15,7 +15,7 @@ public class StringUtil {
         if (null == obj) {
             return COMMON_CONSTANT.BLANK_STRING;
         }
-        return String.valueOf(obj);
+        return obj.toString();
     }
 
     public static boolean isEmpty(Object obj) {

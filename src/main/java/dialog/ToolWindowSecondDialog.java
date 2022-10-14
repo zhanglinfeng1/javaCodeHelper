@@ -65,8 +65,6 @@ public class ToolWindowSecondDialog extends JDialog {
             panel.add(new JRadioButton());
             panel.add(new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS));
         }
-
-
     }
 
     public JButton getButtonOK() {

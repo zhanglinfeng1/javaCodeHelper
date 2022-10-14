@@ -21,11 +21,15 @@ public class CommonConfigDialog {
     private JPanel panel;
     private JRadioButton modularRadioButton;
     private JRadioButton gatewayRadioButton;
+    private JTextField controllerFolderNameTextField;
+    private JTextField feignFolderNameTextField;
 
     public void reset() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(commonConfig.getAppId());
         securityKeyTextField.setText(commonConfig.getSecretKey());
+        controllerFolderNameTextField.setText(commonConfig.getControllerFolderName());
+        feignFolderNameTextField.setText(commonConfig.getFeignFolderName());
         if (COMMON_CONSTANT.MODULAR.equals(commonConfig.getFastJumpType())) {
             modularRadioButton.setSelected(true);
             gatewayRadioButton.setSelected(false);
@@ -59,6 +63,14 @@ public class CommonConfigDialog {
             return COMMON_CONSTANT.MODULAR;
         }
         return COMMON_CONSTANT.GATEWAY;
+    }
+
+    public String getControllerFolderName() {
+        return controllerFolderNameTextField.getText();
+    }
+
+    public String getFeignFolderName() {
+        return feignFolderNameTextField.getText();
     }
 
 }

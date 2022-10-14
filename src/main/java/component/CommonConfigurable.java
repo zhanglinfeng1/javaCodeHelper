@@ -46,6 +46,12 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getFastJumpType().equals(commonConfig.getFastJumpType())) {
             return true;
         }
+        if (!dialog.getControllerFolderName().equals(commonConfig.getControllerFolderName())) {
+            return true;
+        }
+        if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
+            return true;
+        }
         return false;
     }
 
@@ -55,6 +61,8 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setAppId(dialog.getAppId());
         commonConfig.setSecretKey(dialog.getSecurityKey());
         commonConfig.setFastJumpType(dialog.getFastJumpType());
+        commonConfig.setControllerFolderName(dialog.getControllerFolderName());
+        commonConfig.setFeignFolderName(dialog.getFeignFolderName());
         ConfigFactory.getInstance().updateCommonConfig(commonConfig);
     }
 

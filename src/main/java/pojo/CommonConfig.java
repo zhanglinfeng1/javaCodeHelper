@@ -11,6 +11,8 @@ public class CommonConfig {
     private String appId;
     private String secretKey;
     private String fastJumpType;
+    private String controllerFolderName;
+    private String feignFolderName;
 
     public CommonConfig() {
         this.fastJumpType = COMMON_CONSTANT.MODULAR;
@@ -46,5 +48,21 @@ public class CommonConfig {
 
     public void setFastJumpType(String fastJumpType) {
         this.fastJumpType = fastJumpType;
+    }
+
+    public String getControllerFolderName() {
+        return controllerFolderName;
+    }
+
+    public void setControllerFolderName(String controllerFolderName) {
+        this.controllerFolderName = controllerFolderName;
+    }
+
+    public String getFeignFolderName() {
+        return feignFolderName;
+    }
+
+    public void setFeignFolderName(String feignFolderName) {
+        this.feignFolderName = feignFolderName;
     }
 }
