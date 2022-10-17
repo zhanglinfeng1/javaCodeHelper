@@ -44,7 +44,7 @@
 
     <actions>
         <!-- 右击菜单 翻译 -->
-        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate">
+        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate" icon="/icon/boLuo16.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </action>
     </actions>
