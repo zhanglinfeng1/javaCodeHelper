@@ -10,7 +10,7 @@ public class COMMON_CONSTANT {
     public static final String SUCCESS = "成功";
     public static final String EN = "en";
     public static final String ZH = "zh";
-    public static final int SOCKET_TIMEOUT = 3000;
+    public static final int SOCKET_TIMEOUT = 2000;
     public static final String BLANK_STRING = "";
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
@@ -28,6 +28,7 @@ public class COMMON_CONSTANT {
     public static final String DOT_REGEX = "\\.";
     public static final String DOUBLE_QUOTES_REGEX = "\"";
     public static final String WRAP_REGEX = "[\n\r/*]";
+    public static final String PARENTHESES_REGEX = "<(.*?)>";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";

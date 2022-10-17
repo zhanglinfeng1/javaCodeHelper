@@ -6,8 +6,10 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.util.PsiUtil;
 import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
+import pojo.MappingAnnotation;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @Author zhanglinfeng
@@ -71,4 +73,51 @@ public class JavaFileUtil {
         return attributeValue.replaceAll(COMMON_CONSTANT.DOUBLE_QUOTES_REGEX, COMMON_CONSTANT.BLANK_STRING);
     }
 
+    public static MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
+        PsiAnnotation annotation = null;
+        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
+            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
+                annotation = psiAnnotation;
+                break;
+            }
+        }
+        //方法注解
+        String methodUrl = getMappingUrl(annotation);
+        if (StringUtil.isEmpty(methodUrl)) {
+            return null;
+        }
+        //请求方式
+        String requestMethod = getMappingMethod(annotation);
+        return new MappingAnnotation(methodUrl, requestMethod);
+    }
+
+    public static String getMappingUrl(PsiAnnotation annotation) {
+        if (null == annotation) {
+            return COMMON_CONSTANT.BLANK_STRING;
+        }
+        String url = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
+        if (StringUtil.isEmpty(url)) {
+            return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
+        }
+        return url;
+    }
+
+    public static String getMappingMethod(PsiAnnotation annotation) {
+        switch (Objects.requireNonNull(annotation.getQualifiedName())) {
+            case ANNOTATION_CONSTANT.POST_MAPPING:
+                return COMMON_CONSTANT.POST;
+            case ANNOTATION_CONSTANT.PUT_MAPPING:
+                return COMMON_CONSTANT.PUT;
+            case ANNOTATION_CONSTANT.GET_MAPPING:
+                return COMMON_CONSTANT.GET;
+            case ANNOTATION_CONSTANT.DELETE_MAPPING:
+                return COMMON_CONSTANT.DELETE;
+            default:
+                String method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+                if (method.contains(COMMON_CONSTANT.DOT)) {
+                    return method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
+                }
+                return method;
+        }
+    }
 }

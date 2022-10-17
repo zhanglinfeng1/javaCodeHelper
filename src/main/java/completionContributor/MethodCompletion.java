@@ -34,20 +34,20 @@ public class MethodCompletion extends BasicCompletion {
         }
         String fillStr = " = new ";
         if (returnTypeFullName.startsWith(TYPE_CONSTANT.LIST)) {
-            String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, "<(.*?)>").trim();
+            String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
             if (match(paradigmName)) {
-                String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + "List";
+                String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.LIST;
                 str = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + fillStr;
                 list.add(LookupElementBuilder.create(str + "ArrayList<>();").withPresentableText("new ArrayList"));
                 list.add(LookupElementBuilder.create(str + "LinkedList<>();").withPresentableText("new LinkedList"));
             }
         } else if (returnTypeFullName.startsWith(TYPE_CONSTANT.MAP)) {
-            String[] arr = StringUtil.getFirstMatcher(returnTypeFullName, "<(.*?)>").split(COMMON_CONSTANT.COMMA);
+            String[] arr = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).split(COMMON_CONSTANT.COMMA);
             if (arr.length == 2) {
                 String keyType = arr[0].trim();
                 String valueType = arr[1].trim();
                 if (match(keyType) && match(valueType)) {
-                    String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + "Map";
+                    String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.MAP;
                     list.add(LookupElementBuilder.create(returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + fillStr + "HashMap<>();").withPresentableText("new HashMap"));
                 }
             }

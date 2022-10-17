@@ -31,7 +31,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="provider.FastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.FastJumpProvider"/>
         <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
         <!-- 配置持久化 -->
