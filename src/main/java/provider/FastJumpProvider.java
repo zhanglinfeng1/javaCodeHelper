@@ -25,11 +25,9 @@ import util.JavaFileUtil;
 import util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -109,10 +107,6 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
                 break;
             }
             PsiClass psiClass = psiClassArr[0];
-            // controller 跳feign 。必须是接口类型文件
-            if (COMMON_CONSTANT.CONTROLLER.equals(fileType) && !psiClass.isInterface()) {
-                break;
-            }
             //原路径与目标路径文件不匹配
             if (!(JavaFileUtil.isController(fastJumpType, psiClass) && COMMON_CONSTANT.FEIGN.equals(fileType))
                     && !(JavaFileUtil.isFeign(psiClass) && COMMON_CONSTANT.CONTROLLER.equals(fileType))) {

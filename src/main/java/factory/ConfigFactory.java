@@ -1,7 +1,7 @@
 package factory;
 
 import com.intellij.openapi.components.ServiceManager;
-import component.ConfigComponent;
+import config.ConfigComponent;
 import pojo.CommonConfig;
 
 /**

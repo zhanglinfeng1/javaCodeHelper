@@ -1,0 +1,62 @@
+package completionContributor;
+
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiType;
+import constant.COMMON_CONSTANT;
+import constant.TYPE_CONSTANT;
+import util.StringUtil;
+import util.TypeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/10/16 19:16
+ */
+public class MethodCompletion extends BasicCompletion {
+    private String returnTypeFullName;
+
+    public MethodCompletion(PsiMethod currentMethod) {
+        super(currentMethod);
+        PsiType psiType = currentMethod.getReturnType();
+        if (null != psiType) {
+            returnTypeFullName = psiType.getPresentableText();
+        }
+    }
+
+    @Override
+    public List<LookupElementBuilder> getLookupElement() {
+        List<LookupElementBuilder> list = new ArrayList<>();
+        if (StringUtil.isEmpty(returnTypeFullName)) {
+            return list;
+        }
+        String fillStr = " = new ";
+        if (returnTypeFullName.startsWith(TYPE_CONSTANT.LIST)) {
+            String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, "<(.*?)>").trim();
+            if (match(paradigmName)) {
+                String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + "List";
+                str = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + fillStr;
+                list.add(LookupElementBuilder.create(str + "ArrayList<>();").withPresentableText("new ArrayList"));
+                list.add(LookupElementBuilder.create(str + "LinkedList<>();").withPresentableText("new LinkedList"));
+            }
+        } else if (returnTypeFullName.startsWith(TYPE_CONSTANT.MAP)) {
+            String[] arr = StringUtil.getFirstMatcher(returnTypeFullName, "<(.*?)>").split(COMMON_CONSTANT.COMMA);
+            if (arr.length == 2) {
+                String keyType = arr[0].trim();
+                String valueType = arr[1].trim();
+                if (match(keyType) && match(valueType)) {
+                    String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + "Map";
+                    list.add(LookupElementBuilder.create(returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + fillStr + "HashMap<>();").withPresentableText("new HashMap"));
+                }
+            }
+        }
+        return list;
+    }
+
+    private boolean match(String val) {
+        return !"?".equals(val) && !"T".equals(val) && StringUtil.isNotEmpty(val);
+    }
+
+}

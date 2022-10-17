@@ -1,4 +1,4 @@
-package component;
+package config;
 
 import com.intellij.openapi.options.Configurable;
 import constant.COMMON_CONSTANT;

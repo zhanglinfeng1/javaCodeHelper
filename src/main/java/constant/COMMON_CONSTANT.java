@@ -1,8 +1,5 @@
 package constant;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/9/8 17:52
@@ -22,8 +19,7 @@ public class COMMON_CONSTANT {
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String UNDERSCORE = "_";
-    public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
-    public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String", "Date", "Timestamp", "BigDecimal");
+    public static final String SPACE = " ";
 
     /** 正则 */
     public static final String SQL_REPLACE_REGEX = "[',`]";

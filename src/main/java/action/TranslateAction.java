@@ -32,6 +32,7 @@ public class TranslateAction extends AnAction {
             return;
         }
         SelectionModel selectionModel = editor.getSelectionModel();
+        //获取选择内容
         String selectedText = selectionModel.getSelectedText();
         if (StringUtil.isEmpty(selectedText)) {
             return;
@@ -43,21 +44,22 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
-        //获取选择内容
-        selectedText = selectedText.replaceAll(COMMON_CONSTANT.WRAP_REGEX, COMMON_CONSTANT.BLANK_STRING).trim();
-        String translateResult = COMMON_CONSTANT.BLANK_STRING;
         String from = COMMON_CONSTANT.EN;
         String to = COMMON_CONSTANT.ZH;
         if (!StringUtil.isEnglish(selectedText)) {
             from = COMMON_CONSTANT.ZH;
             to = COMMON_CONSTANT.EN;
         }
+        String translateResult = COMMON_CONSTANT.BLANK_STRING;
         try {
             if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
                 translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
             }
         } catch (Exception e) {
             Messages.showMessageDialog(e.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+        }
+        if (StringUtil.isEmpty(translateResult)) {
+            return;
         }
         String finalSelectedText = selectedText + translateResult;
         WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
