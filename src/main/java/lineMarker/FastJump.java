@@ -45,8 +45,8 @@ public class FastJump {
             return;
         }
         Project project = psiMethod.getProject();
-        for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentRoots()) {
-            if (virtualFile.getPath().contains("/src")) {
+        for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+            if (!virtualFile.getPath().contains("/resources")) {
                 PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
                 if (null != psiDirectory) {
                     dealDirectory(psiDirectory);
@@ -67,7 +67,7 @@ public class FastJump {
         for (PsiFile file : files) {
             // 不是 Java 类型的文件直接跳过
             if (!(file.getFileType() instanceof JavaFileType)) {
-                continue;
+                break;
             }
             PsiJavaFile psiJavaFile = (PsiJavaFile) file;
             PsiClass[] psiClassArr = psiJavaFile.getClasses();
