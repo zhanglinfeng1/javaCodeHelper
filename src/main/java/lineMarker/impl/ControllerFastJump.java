@@ -1,7 +1,8 @@
-package lineMarker;
+package lineMarker.impl;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import lineMarker.FastJump;
 import util.JavaFileUtil;
 
 /**

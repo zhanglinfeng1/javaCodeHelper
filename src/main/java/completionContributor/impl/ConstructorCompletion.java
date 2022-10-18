@@ -1,4 +1,4 @@
-package completionContributor;
+package completionContributor.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
@@ -7,6 +7,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.util.PsiUtil;
+import completionContributor.BasicCompletion;
 import constant.COMMON_CONSTANT;
 import util.StringUtil;
 
@@ -59,6 +60,7 @@ public class ConstructorCompletion extends BasicCompletion {
                     continue;
                 }
                 PsiField[] parameterClassFieldArr = parameterClass.getFields();
+                //构造方法的参数为对象类型，处理对象的变量
                 for (PsiField field : parameterClassFieldArr) {
                     if (existFieldNameList.contains(field.getName())) {
                         continue;
@@ -70,6 +72,7 @@ public class ConstructorCompletion extends BasicCompletion {
                 }
             }
         }
+        // TODO 代码格式
         String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining("\n"));
         List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         if (StringUtil.isNotEmpty(str)) {

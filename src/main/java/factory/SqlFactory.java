@@ -9,9 +9,10 @@ import com.intellij.ui.content.ContentFactory;
 import constant.COMMON_CONSTANT;
 import dialog.ToolWindowFirstDialog;
 import dialog.ToolWindowSecondDialog;
+import factory.impl.MysqlParse;
+import factory.impl.OracleParse;
 import org.jetbrains.annotations.NotNull;
 import pojo.TableInfo;
-import util.SqlUtil;
 import util.StringUtil;
 
 /**
@@ -36,7 +37,19 @@ public class SqlFactory implements ToolWindowFactory {
         firstDialog.getNextButton().addActionListener(e -> {
             try {
                 //解析sql
-                TableInfo tableInfo = SqlUtil.parse(firstDialog.getDataBaseType(),firstDialog.getSqlStr());
+                SqlParse sqlParse;
+                String sqlStr = firstDialog.getSqlStr();
+                switch (firstDialog.getDataBaseType()) {
+                    case COMMON_CONSTANT.MYSQL:
+                        sqlParse = new MysqlParse(sqlStr);
+                        break;
+                    case COMMON_CONSTANT.ORACLE:
+                        sqlParse = new OracleParse(sqlStr);
+                        break;
+                    default:
+                        throw new Exception("Database not exist");
+                }
+                TableInfo tableInfo = sqlParse.getTableInfo();
                 tableInfo.setAuthor(firstDialog.getAuthor());
                 //初始化文件路径
                 TemplateFactory.getInstance().init(firstDialog.getFullPath(), firstDialog.getPackagePathField(), tableInfo);
@@ -53,7 +66,7 @@ public class SqlFactory implements ToolWindowFactory {
             try {
                 //添加自定义模板
                 String customTemplatesPath = secondDialog.getCustomTemplatesPath();
-                if(StringUtil.isNotEmpty(customTemplatesPath)){
+                if (StringUtil.isNotEmpty(customTemplatesPath)) {
                     TemplateFactory.getInstance().useCustomTemplates(customTemplatesPath);
                 }
                 TemplateFactory.getInstance().create(secondDialog.getQueryColumnList());
@@ -65,9 +78,9 @@ public class SqlFactory implements ToolWindowFactory {
         });
     }
 
-    private void display(ToolWindow toolWindow,Content content){
+    private void display(ToolWindow toolWindow, Content content) {
         Content selectContent = toolWindow.getContentManager().getSelectedContent();
-        if(null != selectContent){
+        if (null != selectContent) {
             toolWindow.getContentManager().removeContent(selectContent, true);
         }
         toolWindow.getContentManager().addContent(content);

@@ -1,8 +1,9 @@
-package completionContributor;
+package completionContributor.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiType;
+import completionContributor.BasicCompletion;
 import constant.COMMON_CONSTANT;
 import constant.TYPE_CONSTANT;
 import util.StringUtil;

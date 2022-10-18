@@ -4,6 +4,7 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
@@ -11,12 +12,14 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import constant.ANNOTATION_CONSTANT;
+import constant.COMMON_CONSTANT;
 import pojo.MappingAnnotation;
 import util.JavaFileUtil;
 import util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author zhanglinfeng
@@ -29,17 +32,17 @@ public class FastJump {
     private final String filterFolderName;
     private final String psiMethodReturnType;
 
-    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName,String fastJumpType) {
+    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
         this.filterFolderName = filterFolderName;
         this.fastJumpType = fastJumpType;
         this.psiMethodReturnType = psiMethod.getReturnType().getPresentableText();
         //获取方法的注解
-        mappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod.getAnnotations());
+        mappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
         if (null == mappingAnnotation) {
             return;
         }
         //获取类的注解路径
-        String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+        String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
         mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
         if (StringUtil.isEmpty(mappingAnnotation.getUrl())) {
             return;
@@ -79,14 +82,14 @@ public class FastJump {
                 continue;
             }
             //类注解路径
-            String classUrl = JavaFileUtil.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
                 //返回类型不一致
-                if(!psiMethodReturnType.equals(psiMethod.getReturnType().getPresentableText())){
+                if (!psiMethodReturnType.equals(psiMethod.getReturnType().getPresentableText())) {
                     continue;
                 }
                 //获取方法的注解
-                MappingAnnotation targetMappingAnnotation = JavaFileUtil.getMappingAnnotation(psiMethod.getAnnotations());
+                MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
                 if (null == targetMappingAnnotation) {
                     continue;
                 }
@@ -106,4 +109,51 @@ public class FastJump {
         return methodList;
     }
 
+    private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
+        PsiAnnotation annotation = null;
+        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
+            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
+                annotation = psiAnnotation;
+                break;
+            }
+        }
+        //方法注解
+        String methodUrl = getMappingUrl(annotation);
+        if (StringUtil.isEmpty(methodUrl)) {
+            return null;
+        }
+        //请求方式
+        String requestMethod = getMappingMethod(annotation);
+        return new MappingAnnotation(methodUrl, requestMethod);
+    }
+
+    private String getMappingUrl(PsiAnnotation annotation) {
+        if (null == annotation) {
+            return COMMON_CONSTANT.BLANK_STRING;
+        }
+        String url = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
+        if (StringUtil.isEmpty(url)) {
+            return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
+        }
+        return url;
+    }
+
+    private String getMappingMethod(PsiAnnotation annotation) {
+        switch (Objects.requireNonNull(annotation.getQualifiedName())) {
+            case ANNOTATION_CONSTANT.POST_MAPPING:
+                return COMMON_CONSTANT.POST;
+            case ANNOTATION_CONSTANT.PUT_MAPPING:
+                return COMMON_CONSTANT.PUT;
+            case ANNOTATION_CONSTANT.GET_MAPPING:
+                return COMMON_CONSTANT.GET;
+            case ANNOTATION_CONSTANT.DELETE_MAPPING:
+                return COMMON_CONSTANT.DELETE;
+            default:
+                String method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+                if (method.contains(COMMON_CONSTANT.DOT)) {
+                    return method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
+                }
+                return method;
+        }
+    }
 }

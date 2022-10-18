@@ -20,6 +20,7 @@ import util.StringUtil;
  * @Date create in 2022/9/17 19:18
  */
 public class TranslateAction extends AnAction {
+
     @Override
     public void actionPerformed(AnActionEvent event) {
         //获取当前的编辑器对象
@@ -37,7 +38,7 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(selectedText)) {
             return;
         }
-        //获取配置
+        //获取翻译配置
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         String appid = commonConfig.getAppId();
         String securityKey = commonConfig.getSecretKey();
@@ -51,6 +52,7 @@ public class TranslateAction extends AnAction {
             to = COMMON_CONSTANT.EN;
         }
         String translateResult = COMMON_CONSTANT.BLANK_STRING;
+        //请求翻译API
         try {
             if (COMMON_CONSTANT.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
                 translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
@@ -61,6 +63,7 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(translateResult)) {
             return;
         }
+        //TODO 替换选中内容,代码格式
         String finalSelectedText = selectedText + translateResult;
         WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
     }

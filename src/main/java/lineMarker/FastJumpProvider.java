@@ -9,6 +9,8 @@ import com.intellij.psi.PsiMethod;
 import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
 import factory.ConfigFactory;
+import lineMarker.impl.ControllerFastJump;
+import lineMarker.impl.FeignFastJump;
 import org.jetbrains.annotations.NotNull;
 import util.JavaFileUtil;
 
