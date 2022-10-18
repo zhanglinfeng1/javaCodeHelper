@@ -13,6 +13,7 @@ import completionContributor.impl.MethodCompletion;
 import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
+import util.StringUtil;
 
 import java.util.List;
 
@@ -28,8 +29,11 @@ public class CodeCompletionContributor extends CompletionContributor {
             return;
         }
         PsiElement psiElement = parameters.getOriginalPosition();
+        if(null == psiElement){
+            return;
+        }
         //当前光标前的字符串
-        if (COMMON_CONSTANT.DOT.equals(psiElement.getText())) {
+        if (StringUtil.isEmpty(psiElement.getText().trim())) {
             return;
         }
         //当前光标所在的方法
