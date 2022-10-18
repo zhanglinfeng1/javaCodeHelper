@@ -25,7 +25,7 @@ import java.util.Objects;
  * @Author zhanglinfeng
  * @Date create in 2022/10/17 16:34
  */
-public class FastJump {
+public abstract class FastJump {
     public final String fastJumpType;
     public List<PsiMethod> methodList = new ArrayList<>();
     private final MappingAnnotation mappingAnnotation;
@@ -101,13 +101,9 @@ public class FastJump {
         }
     }
 
-    public boolean checkClass(PsiClass psiClass) {
-        return true;
-    }
+    public abstract boolean checkClass(PsiClass psiClass);
 
-    public List<PsiMethod> getMethodList() {
-        return methodList;
-    }
+    public abstract List<PsiMethod> getMethodList();
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
         PsiAnnotation annotation = null;

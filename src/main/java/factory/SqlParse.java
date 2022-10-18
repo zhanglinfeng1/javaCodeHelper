@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/10/18 9:54
  */
-public class SqlParse {
+public abstract class SqlParse {
     public TableInfo tableInfo = new TableInfo();
     public List<String> lineList;
 
@@ -27,9 +27,7 @@ public class SqlParse {
         tableInfo.setFirstLowerTableName(firstLowerTableName);
     }
 
-    public TableInfo getTableInfo() {
-        return tableInfo;
-    }
+    public abstract TableInfo getTableInfo();
 
     public String toJavaType(String sqlType) {
         sqlType = sqlType.toLowerCase();

@@ -27,14 +27,14 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
             return;
         }
-        //当前光标所在的方法
-        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
-        if (null == currentMethod) {
+        PsiElement psiElement = parameters.getOriginalPosition();
+        //当前光标前的字符串
+        if (COMMON_CONSTANT.DOT.equals(psiElement.getText())) {
             return;
         }
-        //当前光标前的字符串
-        PsiElement psiElement = parameters.getOriginalPosition();
-        if (COMMON_CONSTANT.DOT.equals(psiElement.getText())) {
+        //当前光标所在的方法
+        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+        if (null == currentMethod) {
             return;
         }
         List<LookupElementBuilder> elementList;
