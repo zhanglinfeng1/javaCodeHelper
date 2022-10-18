@@ -103,7 +103,9 @@ public abstract class FastJump {
 
     public abstract boolean checkClass(PsiClass psiClass);
 
-    public abstract List<PsiMethod> getMethodList();
+    public List<PsiMethod> getMethodList() {
+        return methodList;
+    }
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
         PsiAnnotation annotation = null;
