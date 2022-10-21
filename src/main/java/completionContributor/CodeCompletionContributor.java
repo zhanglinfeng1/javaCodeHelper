@@ -10,7 +10,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import completionContributor.impl.ConstructorCompletion;
 import completionContributor.impl.MethodCompletion;
-import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
 import util.StringUtil;
