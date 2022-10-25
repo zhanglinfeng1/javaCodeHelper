@@ -39,6 +39,13 @@ public class CommonConfigDialog {
             modularRadioButton.setSelected(false);
             gatewayRadioButton.setSelected(true);
         }
+        if(commonConfig.isJudgeReturnType()){
+            judgeRadioButton.setSelected(true);
+            noJudgeRadioButton.setSelected(false);
+        }else {
+            judgeRadioButton.setSelected(false);
+            noJudgeRadioButton.setSelected(true);
+        }
     }
 
     public JComponent getComponent() {
