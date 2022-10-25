@@ -31,10 +31,12 @@ public abstract class FastJump {
     private final MappingAnnotation mappingAnnotation;
     private final String filterFolderName;
     private final String psiMethodReturnType;
+    private final boolean judgeReturnType;
 
-    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
+    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType, boolean judgeReturnType) {
         this.filterFolderName = filterFolderName;
         this.fastJumpType = fastJumpType;
+        this.judgeReturnType = judgeReturnType;
         this.psiMethodReturnType = psiMethod.getReturnType().getPresentableText();
         //获取方法的注解
         mappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
@@ -85,7 +87,7 @@ public abstract class FastJump {
             String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
                 //返回类型不一致
-                if (!psiMethodReturnType.equals(psiMethod.getReturnType().getPresentableText())) {
+                if (judgeReturnType && !psiMethodReturnType.equals(psiMethod.getReturnType().getPresentableText())) {
                     continue;
                 }
                 //获取方法的注解

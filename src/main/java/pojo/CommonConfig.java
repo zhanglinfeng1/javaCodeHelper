@@ -13,6 +13,8 @@ public class CommonConfig {
     private String fastJumpType;
     private String controllerFolderName;
     private String feignFolderName;
+    private boolean judgeReturnType;
+
 
     public CommonConfig() {
         this.fastJumpType = COMMON_CONSTANT.MODULAR;
@@ -64,5 +66,13 @@ public class CommonConfig {
 
     public void setFeignFolderName(String feignFolderName) {
         this.feignFolderName = feignFolderName;
+    }
+
+    public boolean isJudgeReturnType() {
+        return judgeReturnType;
+    }
+
+    public void setJudgeReturnType(boolean judgeReturnType) {
+        this.judgeReturnType = judgeReturnType;
     }
 }

@@ -11,8 +11,8 @@ import util.JavaFileUtil;
  */
 public class ControllerFastJump extends FastJump {
 
-    public ControllerFastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
-        super(psiClass, psiMethod, filterFolderName, fastJumpType);
+    public ControllerFastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType, boolean judgeReturnType) {
+        super(psiClass, psiMethod, filterFolderName, fastJumpType, judgeReturnType);
     }
 
     @Override
