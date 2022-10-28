@@ -11,8 +11,8 @@ import util.JavaFileUtil;
  */
 public class FeignFastJump extends FastJump {
 
-    public FeignFastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType, boolean judgeReturnType) {
-        super(psiClass, psiMethod, filterFolderName, fastJumpType, judgeReturnType);
+    public FeignFastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
+        super(psiClass, psiMethod, filterFolderName, fastJumpType);
     }
 
     @Override

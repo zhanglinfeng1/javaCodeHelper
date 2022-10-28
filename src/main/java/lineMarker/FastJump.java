@@ -30,14 +30,10 @@ public abstract class FastJump {
     public List<PsiMethod> methodList = new ArrayList<>();
     private final MappingAnnotation mappingAnnotation;
     private final String filterFolderName;
-    private final String psiMethodReturnType;
-    private final boolean judgeReturnType;
 
-    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType, boolean judgeReturnType) {
+    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
         this.filterFolderName = filterFolderName;
         this.fastJumpType = fastJumpType;
-        this.judgeReturnType = judgeReturnType;
-        this.psiMethodReturnType = psiMethod.getReturnType().getPresentableText();
         //获取方法的注解
         mappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
         if (null == mappingAnnotation) {
@@ -46,9 +42,6 @@ public abstract class FastJump {
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
         mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
-        if (StringUtil.isEmpty(mappingAnnotation.getUrl())) {
-            return;
-        }
         Project project = psiMethod.getProject();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if (!virtualFile.getPath().contains("/resources")) {
@@ -86,10 +79,6 @@ public abstract class FastJump {
             //类注解路径
             String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
-                //返回类型不一致
-                if (judgeReturnType && !psiMethodReturnType.equals(psiMethod.getReturnType().getPresentableText())) {
-                    continue;
-                }
                 //获取方法的注解
                 MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
                 if (null == targetMappingAnnotation) {

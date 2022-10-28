@@ -23,8 +23,6 @@ public class CommonConfigDialog {
     private JRadioButton gatewayRadioButton;
     private JTextField controllerFolderNameTextField;
     private JTextField feignFolderNameTextField;
-    private JRadioButton judgeRadioButton;
-    private JRadioButton noJudgeRadioButton;
 
     public void reset() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
@@ -38,13 +36,6 @@ public class CommonConfigDialog {
         } else {
             modularRadioButton.setSelected(false);
             gatewayRadioButton.setSelected(true);
-        }
-        if(commonConfig.isJudgeReturnType()){
-            judgeRadioButton.setSelected(true);
-            noJudgeRadioButton.setSelected(false);
-        }else {
-            judgeRadioButton.setSelected(false);
-            noJudgeRadioButton.setSelected(true);
         }
     }
 
@@ -80,10 +71,6 @@ public class CommonConfigDialog {
 
     public String getFeignFolderName() {
         return feignFolderNameTextField.getText();
-    }
-
-    public boolean isJudgeReturnType(){
-        return judgeRadioButton.isSelected();
     }
 
 }

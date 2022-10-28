@@ -26,7 +26,6 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     private final String fastJumpType = ConfigFactory.getInstance().getCommonConfig().getFastJumpType();
     private final String controllerFolderName = ConfigFactory.getInstance().getCommonConfig().getControllerFolderName();
     private final String feignFolderName = ConfigFactory.getInstance().getCommonConfig().getFeignFolderName();
-    private final boolean judgeReturnType = ConfigFactory.getInstance().getCommonConfig().isJudgeReturnType();
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
@@ -35,9 +34,9 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             PsiClass psiClass = (PsiClass) psiMethod.getParent();
             FastJump fastJump;
             if (JavaFileUtil.isFeign(psiClass)) {
-                fastJump = new FeignFastJump(psiClass, psiMethod, controllerFolderName, fastJumpType, judgeReturnType);
+                fastJump = new FeignFastJump(psiClass, psiMethod, controllerFolderName, fastJumpType);
             } else if (JavaFileUtil.isController(fastJumpType, psiClass)) {
-                fastJump = new ControllerFastJump(psiClass, psiMethod, feignFolderName, fastJumpType, judgeReturnType);
+                fastJump = new ControllerFastJump(psiClass, psiMethod, feignFolderName, fastJumpType);
             } else {
                 return;
             }
