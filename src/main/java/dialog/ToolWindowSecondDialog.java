@@ -1,32 +1,33 @@
 package dialog;
 
 import com.intellij.ui.JBColor;
+import com.intellij.ui.table.JBTable;
 import constant.COMMON_CONSTANT;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.StringUtil;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import java.awt.Component;
-import java.awt.GridLayout;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ToolWindowSecondDialog extends JDialog {
+    private String[] columnArr;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton backButton;
-    private JPanel panel;
     private JTextField customTemplatesPathField;
+    private JBTable columnTable;
+    private JButton addButton;
+    private JButton deleteButton;
 
     public ToolWindowSecondDialog() {
         setContentPane(contentPane);
@@ -49,22 +50,38 @@ public class ToolWindowSecondDialog extends JDialog {
                 }
             }
         });
+        addButton.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
+            Object[] row = {columnArr[0], "", COMMON_CONSTANT.SELECT_OPTIONS[0]};
+            model.insertRow(model.getRowCount(), row);
+            JComboBox<String> columnComboBox = new JComboBox<>(columnArr);
+            columnComboBox.setSelectedIndex(0);
+            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(columnComboBox));
+            columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
+            JComboBox<String> selectOptionsComboBox = new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS);
+            selectOptionsComboBox.setSelectedIndex(0);
+            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS)));
+        });
+
+        deleteButton.addActionListener(e -> {
+            int rowNum = columnTable.getSelectedRow();
+            if (rowNum >= 0) {
+                DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
+                model.removeRow(rowNum);
+            }
+        });
     }
 
     public void initColumn(TableInfo tableInfo) {
         customTemplatesPathField.setForeground(JBColor.GRAY);
         customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-        panel.removeAll();
         List<ColumnInfo> columnInfoList = tableInfo.getColumnList();
-        panel.setLayout(new GridLayout(columnInfoList.size() + 1, 3));
-        panel.add(new JLabel("Column name"));
-        panel.add(new JLabel("Use or not"));
-        panel.add(new JLabel("Query type"));
-        for (ColumnInfo columnInfo : columnInfoList) {
-            panel.add(new JLabel(columnInfo.getSqlColumnName()));
-            panel.add(new JRadioButton());
-            panel.add(new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS));
+        int columnCount = columnInfoList.size();
+        columnArr = new String[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            columnArr[i] = columnInfoList.get(i).getSqlColumnName();
         }
+        columnTable.setModel(new DefaultTableModel(null, COMMON_CONSTANT.QUERY_COLUMN_TABLE_HEADER));
     }
 
     public JButton getButtonOK() {
@@ -81,23 +98,18 @@ public class ToolWindowSecondDialog extends JDialog {
 
     public List<ColumnInfo> getQueryColumnList() {
         List<ColumnInfo> queryColumnList = new ArrayList<>();
-        Component[] components = panel.getComponents();
-        int length = components.length;
-        if (length > 3) {
-            for (int i = 3; i < length; i = i + 3) {
-                JRadioButton jRadioButton = (JRadioButton) components[i + 1];
-                if (jRadioButton.isSelected()) {
-                    JLabel jLabel = (JLabel) components[i];
-                    JComboBox jComboBox = (JComboBox) components[i + 2];
-                    String sqlColumnName = jLabel.getText();
-                    queryColumnList.add(new ColumnInfo(sqlColumnName, Objects.requireNonNull(jComboBox.getSelectedItem()).toString()));
-                }
+        DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
+        int rowCount = model.getRowCount();
+        if (rowCount > 0) {
+            for (int i = 0; i < rowCount; i++) {
+                queryColumnList.add(new ColumnInfo(model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2)));
             }
         }
         return queryColumnList;
     }
 
-    public String getCustomTemplatesPath(){
+    public String getCustomTemplatesPath() {
         return this.customTemplatesPathField.getText();
     }
+
 }

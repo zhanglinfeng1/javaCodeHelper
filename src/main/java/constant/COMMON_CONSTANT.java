@@ -40,6 +40,7 @@ public class COMMON_CONSTANT {
     public static final String TABLE = "TABLE";
     public static final String COMMENT = "COMMENT";
     public static final String CREATE = "CREATE";
+    public static final String[] QUERY_COLUMN_TABLE_HEADER = {"字段名", "别名", "查询方式"};
     public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
 
     /** GUI */

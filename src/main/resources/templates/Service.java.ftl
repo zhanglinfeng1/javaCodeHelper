@@ -9,7 +9,7 @@ import java.util.List;
  * @Author: ${author}
  * @Date: ${dateTime}
  */
-public interface ${tableName}Service{
+public interface ${tableName}Service {
 
     void insert${tableName}(${tableName}VO obj);
 

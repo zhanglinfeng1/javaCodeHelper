@@ -56,6 +56,7 @@ public class SqlFactory implements ToolWindowFactory {
                 this.display(toolWindow, subContent);
                 secondDialog.initColumn(tableInfo);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
             }
         });

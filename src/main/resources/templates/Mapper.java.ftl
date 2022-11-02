@@ -18,12 +18,12 @@ import java.util.Map;
 /**
  * @Author: ${author}
  * @Date: ${dateTime}
-*/
-public interface ${tableName}Mapper{
+ */
+public interface ${tableName}Mapper {
     class ${tableName}MapperProvider {
         public String getColumn() {
             return "<#list columnList as fields><#if fields_index gt 0>,</#if>${fields.sqlColumnName}<#if fields.sqlColumnName ? contains('_')> ${fields.columnName}</#if></#list>" +
-            " from ${sqlTableName}";
+                    " from ${sqlTableName}";
         }
 
         public String get${tableName}SQL(Map<?, ?> params) {
@@ -43,7 +43,7 @@ public interface ${tableName}Mapper{
 <#assign inList = ["in","not in"]>
 <#assign eqList = ["=",">", ">=", "<", "<="]>
 <#list queryColumnList as fields>
-            if (!StringUtils.isEmpty(${fields.columnName})){
+            if (!StringUtils.isEmpty(${fields.columnName})) {
 <#if eqList?seq_contains(fields.queryType)>
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
 <#elseif inList?seq_contains(fields.queryType)>
@@ -67,7 +67,7 @@ public interface ${tableName}Mapper{
 <#assign inList = ["in","not in"]>
 <#assign eqList = ["=",">", ">=", "<", "<="]>
 <#list queryColumnList as fields>
-            if (!StringUtils.isEmpty(${fields.columnName})){
+            if (!StringUtils.isEmpty(${fields.columnName})) {
 <#if eqList?seq_contains(fields.queryType)>
                 sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
 <#elseif inList?seq_contains(fields.queryType)>
@@ -82,16 +82,17 @@ public interface ${tableName}Mapper{
             <#noparse>return sql + " LIMIT #{offset},#{limit}";</#noparse>
         }
     }
+
 <#assign noInsert = ["id"]>
     @SelectKey(keyColumn = "id", before = false, keyProperty = "obj.id", resultType = String.class, statementType = StatementType.STATEMENT, statement = "SELECT LAST_INSERT_ID() AS id")
     @Insert("INSERT INTO ${sqlTableName} (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
-        "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#list>)")
+            "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#list>)")
     void insert${tableName}(@Param("obj") ${tableName} obj);
 
     @Insert("<#noparse><script></#noparse>INSERT INTO ${sqlTableName}(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
-        "<foreach collection = 'list' item='obj' separator=',' > " +
-        " (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#noparse>#{obj.</#noparse>${fields.columnName}}<#if fields_has_next>,</#if></#if></#list>) " +
-        "</foreach> <#noparse></script></#noparse>")
+            "<foreach collection = 'list' item='obj' separator=',' > " +
+            " (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#noparse>#{obj.</#noparse>${fields.columnName}}<#if fields_has_next>,</#if></#if></#list>) " +
+            "</foreach> <#noparse></script></#noparse>")
     void batchInsert${tableName}(@Param("list") List<${tableName}> list);
 
 <#assign noUpdate = ["id"]>

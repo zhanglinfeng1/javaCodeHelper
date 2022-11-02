@@ -27,9 +27,10 @@ public class ColumnInfo {
     public ColumnInfo() {
     }
 
-    public ColumnInfo(String sqlColumnName, String queryType) {
-        this.dealColumnName(sqlColumnName);
-        this.queryType = queryType;
+    public ColumnInfo(Object sqlColumnName, Object columnName, Object queryType) {
+        this.sqlColumnName = StringUtil.toString(sqlColumnName);
+        this.columnName = StringUtil.toString(columnName);
+        this.queryType = StringUtil.toString(queryType);
     }
 
     public String getSqlColumnName() {

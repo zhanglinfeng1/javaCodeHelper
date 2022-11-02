@@ -32,19 +32,19 @@ public class ${tableName}Controller {
     }
 
     @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.POST}, produces = {"application/json"})
-    public Map<String,String> insert${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
-        ${firstLowerTableName}Service.insert(${tableName}(${firstLowerTableName}VO);
+    public Map<String, String> insert${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
+        ${firstLowerTableName}Service.insert${tableName}(${firstLowerTableName}VO);
         return new HashMap<>(2);
     }
 
     @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.PUT}, produces = {"application/json"})
-    public Map<String,String> update${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
+    public Map<String, String> update${tableName}(@RequestBody ${tableName}VO ${firstLowerTableName}VO) {
         ${firstLowerTableName}Service.update${tableName}(${firstLowerTableName}VO);
         return new HashMap<>(2);
     }
 
     @RequestMapping(path = {"/v1/${sqlTableName}"}, method = {RequestMethod.DELETE}, produces = {"application/json"})
-    public Map<String,String> delete${tableName}(@RequestParam Integer id) {
+    public Map<String, String> delete${tableName}(@RequestParam Integer id) {
         ${firstLowerTableName}Service.delete${tableName}(id);
         return new HashMap<>(2);
     }
@@ -56,15 +56,15 @@ public class ${tableName}Controller {
         int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);
         pageVO.setPage(page);
         pageVO.setTotalCount(totalCount);
-        if(totalCount == 0){
+        if (totalCount == 0) {
             return pageVO;
         }
         int totalPage = PageUtil.getTotalPage(totalCount, limit);
         pageVO.setTotalPage(totalPage);
-        if(page>totalPage){
+        if (page > totalPage) {
             return pageVO;
         }
-        int offset = PageUtil.getOffset(limit,page);
+        int offset = PageUtil.getOffset(limit, page);
         List<${tableName}> dataList = ${firstLowerTableName}Service.get${tableName}List(<#list queryColumnList as fields>, ${fields.columnName}, </#list>offset, limit);
         pageVO.setDatas(dataList.stream().map(${tableName}VO::new).collect(Collectors.toList()));
         return pageVO;

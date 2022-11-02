@@ -17,12 +17,12 @@ import java.util.List;
  * @Date: ${dateTime}
  */
 @Service
-public class ${tableName}ServiceImpl implements ${tableName}Service{
+public class ${tableName}ServiceImpl implements ${tableName}Service {
     @Resource
     private ${tableName}Mapper ${firstLowerTableName}Mapper;
 
     @Override
-    @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void insert${tableName}(${tableName}VO obj) {
         //新增${tableComment}
         ${tableName} ${firstLowerTableName} = new ${tableName}(obj);
@@ -30,7 +30,7 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
     }
 
     @Override
-    @Transactional(rollbackFor=Exception.class, propagation= Propagation.REQUIRED)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void update${tableName}(${tableName}VO obj) {
         //编辑${tableComment}
         ${tableName} ${firstLowerTableName} = this.get${tableName}(obj.getId());
@@ -44,17 +44,17 @@ public class ${tableName}ServiceImpl implements ${tableName}Service{
     }
 
     @Override
-    public void delete${tableName}(Integer id){
+    public void delete${tableName}(Integer id) {
         ${firstLowerTableName}Mapper.delete${tableName}(id);
     }
 
     @Override
     public ${tableName} get${tableName}(Integer id) {
-        if(null == id){
+        if (null == id) {
             return new ${tableName}();
         }
         ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Mapper.get${tableName}(id);
-        if(null == ${firstLowerTableName}){
+        if (null == ${firstLowerTableName}) {
             return new ${tableName}();
         }
         return ${firstLowerTableName};

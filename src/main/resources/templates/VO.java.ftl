@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 
 /**
  * ${tableComment}VO
+ *
  * @Author: ${author}
  * @Date: ${dateTime}
  */
@@ -30,11 +31,11 @@ public class ${tableName}VO{
     }
 
 <#list columnList as fields>
-    public void set${fields.firstUpperColumnName}(${fields.columnType} ${fields.columnName}){
+    public void set${fields.firstUpperColumnName}(${fields.columnType} ${fields.columnName}) {
         this.${fields.columnName} = ${fields.columnName};
     }
 
-    public ${fields.columnType} get${fields.firstUpperColumnName}(){
+    public ${fields.columnType} get${fields.firstUpperColumnName}() {
         return ${fields.columnName};
     }
 

@@ -102,7 +102,7 @@
           <enabled value="true"/>
           <horizontalAlignment value="0"/>
           <icon value="icon/next.png"/>
-          <text value="Next"/>
+          <text value=""/>
         </properties>
       </component>
       <hspacer id="1516">
