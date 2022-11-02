@@ -20,6 +20,7 @@ public class COMMON_CONSTANT {
     public static final String LEFT_BRACE = "{";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     /** 正则 */
     public static final String SQL_REPLACE_REGEX = "[',`]";

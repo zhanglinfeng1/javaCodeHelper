@@ -73,7 +73,7 @@ public class ConstructorCompletion extends BasicCompletion {
             }
         }
         // TODO 代码格式
-        String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining("\n"));
+        String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.LINE_SEPARATOR));
         List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         if (StringUtil.isNotEmpty(str)) {
             lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor"));

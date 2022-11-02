@@ -42,6 +42,7 @@ public class MethodCompletion extends BasicCompletion {
             if (match(paradigmName)) {
                 String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.LIST;
                 String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + eqStr;
+                //TODO 判断类是否已导入
                 list.addAll(TYPE_CONSTANT.LIST_TYPE_LIST.stream().map(s -> LookupElementBuilder.create(finalStr + s + endStr).withPresentableText(newStr + s)).collect(Collectors.toList()));
             }
         } else if (returnTypeFullName.startsWith(TYPE_CONSTANT.MAP)) {
@@ -52,6 +53,7 @@ public class MethodCompletion extends BasicCompletion {
                 if (match(keyType) && match(valueType)) {
                     String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.MAP;
                     String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + eqStr;
+                    //TODO 判断类是否已导入
                     list.addAll(TYPE_CONSTANT.MAP_TYPE_LIST.stream().map(s -> LookupElementBuilder.create(finalStr + s + endStr).withPresentableText(newStr + s)).collect(Collectors.toList()));
                 }
             }

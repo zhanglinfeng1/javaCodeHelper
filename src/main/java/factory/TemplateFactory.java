@@ -28,8 +28,10 @@ import java.util.jar.JarEntry;
 public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
     private static Configuration configuration;
-    /** 模板文件 */
-    private List<Template> templateList;
+    /** 默认模板文件 */
+    private final List<Template> defaultTemplateList = new ArrayList<>();
+    /** 自定义模板文件 */
+    private final List<Template> customTemplateList = new ArrayList<>();
     /** 解析后的表信息 */
     private TableInfo tableInfo;
     /** 全路径 */
@@ -43,7 +45,6 @@ public class TemplateFactory {
             synchronized (TemplateFactory.class) {
                 if (templateFactory == null) {
                     templateFactory = new TemplateFactory();
-                    templateFactory.templateList = new ArrayList<>();
                     //加载默认模板
                     ClassLoader classLoader = TemplateFactory.class.getClassLoader();
                     configuration = new Configuration(Configuration.VERSION_2_3_23);
@@ -55,7 +56,7 @@ public class TemplateFactory {
                         JarEntry entry = jarEntryArr.nextElement();
                         String name = entry.getName();
                         if (name.startsWith(COMMON_CONSTANT.TEMPLATE_PATH) && name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
-                            templateFactory.templateList.add(configuration.getTemplate(name.replace(COMMON_CONSTANT.TEMPLATE_PATH + COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING)));
+                            templateFactory.defaultTemplateList.add(configuration.getTemplate(name.replace(COMMON_CONSTANT.TEMPLATE_PATH + COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING)));
                         }
                     }
                 }
@@ -85,7 +86,11 @@ public class TemplateFactory {
         }
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String,Object> map = JsonUtil.toMap(tableInfo);
-        for (Template template : templateFactory.templateList) {
+        List<Template> templateList = templateFactory.defaultTemplateList;
+        if(!templateFactory.customTemplateList.isEmpty()){
+            templateList = templateFactory.customTemplateList;
+        }
+        for (Template template : templateList) {
             String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
             try {
                 template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
@@ -104,15 +109,19 @@ public class TemplateFactory {
             throw new Exception("Non folder path");
         }
         configuration.setDirectoryForTemplateLoading(file);
-        templateFactory.templateList.clear();
+        templateFactory.customTemplateList.clear();
         for (File subFile : Objects.requireNonNull(file.listFiles(),"The custom template does not exist")) {
             String name = subFile.getName();
             if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
-                templateFactory.templateList.add(configuration.getTemplate(name));
+                templateFactory.customTemplateList.add(configuration.getTemplate(name));
             }
         }
-        if(templateFactory.templateList.isEmpty()){
+        if(templateFactory.customTemplateList.isEmpty()){
             throw new Exception("The custom template does not exist");
         }
+    }
+
+    public List<Template> getDefaultTemplateList() {
+        return defaultTemplateList;
     }
 }

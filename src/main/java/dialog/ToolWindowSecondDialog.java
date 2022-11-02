@@ -1,8 +1,13 @@
 package dialog;
 
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import constant.COMMON_CONSTANT;
+import factory.TemplateFactory;
+import freemarker.template.Template;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.StringUtil;
@@ -16,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +34,7 @@ public class ToolWindowSecondDialog extends JDialog {
     private JBTable columnTable;
     private JButton addButton;
     private JButton deleteButton;
+    private JButton downloadButton;
 
     public ToolWindowSecondDialog() {
         setContentPane(contentPane);
@@ -68,6 +75,24 @@ public class ToolWindowSecondDialog extends JDialog {
             if (rowNum >= 0) {
                 DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
                 model.removeRow(rowNum);
+            }
+        });
+
+        downloadButton.addActionListener(e -> {
+            VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
+            if (virtualFile != null) {
+                String path = virtualFile.getPath();
+                try {
+                    List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
+                    for (Template template : defaultTemplateList) {
+                        FileWriter file = new FileWriter(path + COMMON_CONSTANT.DOUBLE_BACKSLASH + template.getName(), true);
+                        file.append(template.getRootTreeNode().toString());
+                        file.flush();
+                        file.close();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
