@@ -55,10 +55,6 @@ public class COMMON_CONSTANT {
     public static final String GET = "GET";
     public static final String DELETE = "DELETE";
 
-    /** 注解类型 */
-    public static final String FEIGN = "FEIGN";
-    public static final String CONTROLLER = "CONTROLLER";
-
     /** 配置页菜单名 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
 

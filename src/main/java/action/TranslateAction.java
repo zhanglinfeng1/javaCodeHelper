@@ -45,11 +45,11 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
         }
-        String from = COMMON_CONSTANT.EN;
-        String to = COMMON_CONSTANT.ZH;
-        if (!StringUtil.isEnglish(selectedText)) {
-            from = COMMON_CONSTANT.ZH;
-            to = COMMON_CONSTANT.EN;
+        String from = COMMON_CONSTANT.ZH;
+        String to = COMMON_CONSTANT.EN;
+        if (StringUtil.isEnglish(selectedText)) {
+            from = COMMON_CONSTANT.EN;
+            to = COMMON_CONSTANT.ZH;
         }
         String translateResult = COMMON_CONSTANT.BLANK_STRING;
         //请求翻译API

@@ -2,6 +2,7 @@ package dialog;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
@@ -153,7 +154,7 @@ public class ToolWindowSecondDialog extends JDialog {
                         file.close();
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
                 }
             }
         });

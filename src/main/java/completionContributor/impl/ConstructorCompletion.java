@@ -39,9 +39,13 @@ public class ConstructorCompletion extends BasicCompletion {
         //构造方法所在类的变量
         PsiField[] currentMethodClassFieldArr = psiClass.getFields();
         PsiParameter[] currentMethodParameterArr = currentMethod.getParameterList().getParameters();
+        String thisStr = "this.";
+        String eqStr = " = ";
+        String getStr = ".get";
+        String endStr = "();";
         for (PsiField methodClassField : currentMethodClassFieldArr) {
             String fieldName = methodClassField.getName();
-            if (currentMethodBodyStr.contains("this." + fieldName)) {
+            if (currentMethodBodyStr.contains(thisStr + fieldName)) {
                 existFieldNameList.add(fieldName);
                 continue;
             }
@@ -51,7 +55,7 @@ public class ConstructorCompletion extends BasicCompletion {
                     continue;
                 }
                 if (parameter.getName().equals(fieldName)) {
-                    list.add("this." + fieldName + " = " + fieldName + COMMON_CONSTANT.SEMICOLON);
+                    list.add(thisStr + fieldName + eqStr + fieldName + COMMON_CONSTANT.SEMICOLON);
                     existFieldNameList.add(fieldName);
                     continue;
                 }
@@ -66,7 +70,7 @@ public class ConstructorCompletion extends BasicCompletion {
                         continue;
                     }
                     if (field.getName().equals(fieldName)) {
-                        list.add("this." + fieldName + " = " + parameter.getName() + ".get" + StringUtil.toUpperCaseFirst(fieldName) + "();");
+                        list.add(thisStr + fieldName + eqStr + parameter.getName() + getStr + StringUtil.toUpperCaseFirst(fieldName) + endStr);
                         existFieldNameList.add(fieldName);
                     }
                 }
