@@ -26,6 +26,7 @@ public class SqlFactory implements ToolWindowFactory {
         ToolWindowFirstDialog firstDialog = new ToolWindowFirstDialog();
         ToolWindowSecondDialog secondDialog = new ToolWindowSecondDialog();
         //添加到IDEA中
+        //TODO ContentFactory.SERVICE.getInstance() 计划删除
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(firstDialog.getContent(), COMMON_CONSTANT.BLANK_STRING, false);
         content.setDisplayName(COMMON_CONSTANT.BLANK_STRING);

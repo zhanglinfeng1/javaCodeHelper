@@ -21,6 +21,7 @@ public class ConfigFactory {
             synchronized (ConfigFactory.class) {
                 if (configFactory == null) {
                     configFactory = new ConfigFactory();
+                    //TODO 寻找替换方法
                     configFactory.commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
                 }
             }
