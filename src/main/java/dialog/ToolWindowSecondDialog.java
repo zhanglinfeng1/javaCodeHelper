@@ -6,6 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import constant.COMMON_CONSTANT;
+import constant.ICON_CONSTANT;
 import factory.TemplateFactory;
 import freemarker.template.Template;
 import pojo.ColumnInfo;
@@ -21,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,35 @@ public class ToolWindowSecondDialog extends JDialog {
                 }
             }
         });
+
+        addButton.setContentAreaFilled(false);
+        addButton.setBorderPainted(false);
+        addButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                addButton.setIcon(ICON_CONSTANT.ADD2_PNG);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                addButton.setIcon(ICON_CONSTANT.ADD_PNG);
+            }
+        });
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
             Object[] row = {columnArr[0], "", COMMON_CONSTANT.SELECT_OPTIONS[0]};
@@ -68,6 +100,35 @@ public class ToolWindowSecondDialog extends JDialog {
             JComboBox<String> selectOptionsComboBox = new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS);
             selectOptionsComboBox.setSelectedIndex(0);
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS)));
+        });
+
+        deleteButton.setContentAreaFilled(false);
+        deleteButton.setBorderPainted(false);
+        deleteButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                deleteButton.setIcon(ICON_CONSTANT.DELETE2_PNG);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                deleteButton.setIcon(ICON_CONSTANT.DELETE_PNG);
+            }
         });
 
         deleteButton.addActionListener(e -> {
