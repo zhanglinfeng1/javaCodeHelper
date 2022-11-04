@@ -6,6 +6,7 @@ import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
 import completionContributor.BasicCompletion;
 import constant.COMMON_CONSTANT;
@@ -76,11 +77,14 @@ public class ConstructorCompletion extends BasicCompletion {
                 }
             }
         }
-        // TODO 代码格式
-        String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.LINE_SEPARATOR));
+
+        String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
         List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         if (StringUtil.isNotEmpty(str)) {
-            lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor"));
+            lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {
+                CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(currentMethod.getProject());
+                codeStyleManager.reformat(currentMethod);
+            }));
         }
         return lookupElementBuilderList;
     }
