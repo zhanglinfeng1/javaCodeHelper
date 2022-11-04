@@ -42,25 +42,11 @@ public class MethodCompletion extends BasicCompletion {
         if (StringUtil.isEmpty(returnTypeFullName)) {
             return list;
         }
-        String eqStr = " = new ";
-        String newStr = "new ";
-        String endStr = "<>();";
-        //TODO 优化类导入
-        PsiClass psiClass = currentMethod.getContainingClass();
-        PsiJavaFile javaFile = (PsiJavaFile) psiClass.getContainingFile();
-        Project returnClassProject = returnClass.getProject();
-        JavaPsiFacade instance = JavaPsiFacade.getInstance(returnClassProject);
         if (returnTypeFullName.startsWith(TYPE_CONSTANT.LIST)) {
             String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
             if (match(paradigmName)) {
                 String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.LIST;
-                String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + eqStr;
-                list.addAll(TYPE_CONSTANT.LIST_TYPE_LIST.stream().map(s -> LookupElementBuilder.create(finalStr + s + endStr).withPresentableText(newStr + s).withInsertHandler((context, item) -> {
-                    PsiClass importClass = instance.findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
-                    if(null != importClass){
-                        javaFile.importClass(importClass);
-                    }
-                })).collect(Collectors.toList()));
+                return lookupElementBuilderList(TYPE_CONSTANT.LIST_TYPE_LIST, str);
             }
         } else if (returnTypeFullName.startsWith(TYPE_CONSTANT.MAP)) {
             String[] arr = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).split(COMMON_CONSTANT.COMMA);
@@ -69,13 +55,7 @@ public class MethodCompletion extends BasicCompletion {
                 String valueType = arr[1].trim();
                 if (match(keyType) && match(valueType)) {
                     String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.MAP;
-                    String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + eqStr;
-                    list.addAll(TYPE_CONSTANT.MAP_TYPE_LIST.stream().map(s -> LookupElementBuilder.create(finalStr + s + endStr).withPresentableText(newStr + s).withInsertHandler((context, item) -> {
-                        PsiClass importClass = instance.findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
-                        if(null != importClass){
-                            javaFile.importClass(importClass);
-                        }
-                    })).collect(Collectors.toList()));
+                    return lookupElementBuilderList(TYPE_CONSTANT.MAP_TYPE_LIST, str);
                 }
             }
         }
@@ -86,4 +66,18 @@ public class MethodCompletion extends BasicCompletion {
         return !"?".equals(val) && !"T".equals(val) && StringUtil.isNotEmpty(val);
     }
 
+    private List<LookupElementBuilder> lookupElementBuilderList(List<String> typeList, String str) {
+        //TODO 优化类导入
+        PsiClass psiClass = currentMethod.getContainingClass();
+        PsiJavaFile javaFile = (PsiJavaFile) psiClass.getContainingFile();
+        Project returnClassProject = returnClass.getProject();
+        JavaPsiFacade instance = JavaPsiFacade.getInstance(returnClassProject);
+        String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + " = new ";
+        return typeList.stream().map(s -> LookupElementBuilder.create(finalStr + s + "<>();").withPresentableText("new " + s).withInsertHandler((context, item) -> {
+            PsiClass importClass = instance.findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
+            if (null != importClass) {
+                javaFile.importClass(importClass);
+            }
+        })).collect(Collectors.toList());
+    }
 }
