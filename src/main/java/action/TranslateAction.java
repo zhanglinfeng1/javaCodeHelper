@@ -63,8 +63,7 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(translateResult)) {
             return;
         }
-        //TODO 替换选中内容,代码格式
-        String finalSelectedText = selectedText + translateResult;
+        String finalSelectedText = selectedText + " " + translateResult;
         WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
     }
 
