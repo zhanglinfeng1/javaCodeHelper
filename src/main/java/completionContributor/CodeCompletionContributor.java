@@ -40,14 +40,13 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (null == currentMethod) {
             return;
         }
-        List<LookupElementBuilder> elementList;
         BasicCompletion basicCompletion;
         if (currentMethod.isConstructor()) {
             basicCompletion = new ConstructorCompletion(currentMethod);
         } else {
             basicCompletion = new MethodCompletion(currentMethod);
         }
-        elementList = basicCompletion.getLookupElement();
+        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement();
         if (elementList.isEmpty()) {
             return;
         }

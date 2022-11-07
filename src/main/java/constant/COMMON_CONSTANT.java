@@ -49,10 +49,7 @@ public class COMMON_CONSTANT {
     public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "C:\\zlf\\CustomTemplate";
 
     /** 请求方式 */
-    public static final String POST = "POST";
-    public static final String PUT = "PUT";
     public static final String GET = "GET";
-    public static final String DELETE = "DELETE";
 
     /** 配置页菜单名 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";

@@ -7,13 +7,18 @@ import constant.COMMON_CONSTANT;
  * @Date create in 2022/10/5 9:03
  */
 public class CommonConfig {
+    /** 翻译api */
     private String api;
+    /** 翻译api appId */
     private String appId;
+    /** 翻译api secretKey */
     private String secretKey;
+    /** 快捷跳转方式 */
     private String fastJumpType;
+    /** controller所在文件夹名 */
     private String controllerFolderName;
+    /** feign所在文件夹名 */
     private String feignFolderName;
-
 
     public CommonConfig() {
         this.fastJumpType = COMMON_CONSTANT.MODULAR;

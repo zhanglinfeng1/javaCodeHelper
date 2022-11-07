@@ -29,8 +29,7 @@ public class OracleParse extends SqlParse {
         for (String line : lineList) {
             List<String> valueList = Arrays.stream(line.split(COMMON_CONSTANT.SPACE_REGEX)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
             if (!COMMON_CONSTANT.COMMENT.equalsIgnoreCase(valueList.get(0)) && !COMMON_CONSTANT.CREATE.equalsIgnoreCase(valueList.get(0))) {
-                ColumnInfo columnInfo = new ColumnInfo();
-                columnInfo.dealColumnName(valueList.get(0));
+                ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));
                 columnList.add(columnInfo);
             }

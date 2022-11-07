@@ -1,7 +1,9 @@
 package constant;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author zhanglinfeng
@@ -19,6 +21,12 @@ public class ANNOTATION_CONSTANT {
     public static final String PUT_MAPPING = "org.springframework.web.bind.annotation.PutMapping";
     public static final String DELETE_MAPPING = "org.springframework.web.bind.annotation.DeleteMapping";
     public static final List<String> MAPPING_LIST = Arrays.asList(REQUEST_MAPPING, POST_MAPPING, GET_MAPPING, PUT_MAPPING, DELETE_MAPPING);
+    public static final Map<String, String> MAPPING_METHOD_MAP = new HashMap<>() {{
+        put(POST_MAPPING, "POST");
+        put(GET_MAPPING, "GET");
+        put(PUT_MAPPING, "PUT");
+        put(DELETE_MAPPING, "DELETE");
+    }};
 
     /** controller注解 */
     public static final String CONTROLLER_1 = "org.springframework.web.bind.annotation.Controller";
@@ -30,6 +38,5 @@ public class ANNOTATION_CONSTANT {
     public static final String VALUE = "value";
     public static final String PATH = "path";
     public static final String METHOD = "method";
-
 
 }

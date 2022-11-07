@@ -38,9 +38,8 @@ public class MethodCompletion extends BasicCompletion {
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
-        List<LookupElementBuilder> list = new ArrayList<>();
         if (StringUtil.isEmpty(returnTypeFullName)) {
-            return list;
+            return new ArrayList<>();
         }
         if (returnTypeFullName.startsWith(TYPE_CONSTANT.LIST)) {
             String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
@@ -59,7 +58,7 @@ public class MethodCompletion extends BasicCompletion {
                 }
             }
         }
-        return list;
+        return new ArrayList<>();
     }
 
     private boolean match(String val) {

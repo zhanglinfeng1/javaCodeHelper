@@ -27,6 +27,12 @@ public class ColumnInfo {
     public ColumnInfo() {
     }
 
+    public ColumnInfo(String sqlColumnName) {
+        this.sqlColumnName = sqlColumnName;
+        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
+        this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
+    }
+
     public ColumnInfo(Object sqlColumnName, Object columnName, Object queryType) {
         this.sqlColumnName = StringUtil.toString(sqlColumnName);
         this.columnName = StringUtil.toString(columnName);
@@ -81,9 +87,4 @@ public class ColumnInfo {
         this.queryType = queryType;
     }
 
-    public void dealColumnName(String sqlColumnName) {
-        this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
-        this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
-    }
 }

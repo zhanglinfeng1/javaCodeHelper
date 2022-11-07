@@ -128,21 +128,13 @@ public abstract class FastJump {
     }
 
     private String getMappingMethod(PsiAnnotation annotation) {
-        switch (Objects.requireNonNull(annotation.getQualifiedName())) {
-            case ANNOTATION_CONSTANT.POST_MAPPING:
-                return COMMON_CONSTANT.POST;
-            case ANNOTATION_CONSTANT.PUT_MAPPING:
-                return COMMON_CONSTANT.PUT;
-            case ANNOTATION_CONSTANT.GET_MAPPING:
-                return COMMON_CONSTANT.GET;
-            case ANNOTATION_CONSTANT.DELETE_MAPPING:
-                return COMMON_CONSTANT.DELETE;
-            default:
-                String method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
-                if (method.contains(COMMON_CONSTANT.DOT)) {
-                    return method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
-                }
-                return method;
+        String method = ANNOTATION_CONSTANT.MAPPING_METHOD_MAP.get(Objects.requireNonNull(annotation.getQualifiedName()));
+        if (StringUtil.isEmpty(method)) {
+            method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+            if (method.contains(COMMON_CONSTANT.DOT)) {
+                method = method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
+            }
         }
+        return method;
     }
 }

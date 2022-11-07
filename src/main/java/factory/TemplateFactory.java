@@ -80,14 +80,14 @@ public class TemplateFactory {
     public void create(List<ColumnInfo> queryColumnList) throws Exception {
         File file = new File(this.fullPath);
         if (!file.exists()) {
-            if (!file.mkdirs()){
+            if (!file.mkdirs()) {
                 throw new Exception("Failed to create path");
             }
         }
         tableInfo.setQueryColumnList(queryColumnList);
-        Map<String,Object> map = JsonUtil.toMap(tableInfo);
+        Map<String, Object> map = JsonUtil.toMap(tableInfo);
         List<Template> templateList = templateFactory.defaultTemplateList;
-        if(!templateFactory.customTemplateList.isEmpty()){
+        if (!templateFactory.customTemplateList.isEmpty()) {
             templateList = templateFactory.customTemplateList;
         }
         for (Template template : templateList) {
@@ -102,21 +102,21 @@ public class TemplateFactory {
 
     public void useCustomTemplates(String customTemplatesPath) throws Exception {
         File file = new File(customTemplatesPath);
-        if(!file.exists()){
+        if (!file.exists()) {
             throw new Exception("Custom template path error");
         }
-        if(!file.isDirectory()){
+        if (!file.isDirectory()) {
             throw new Exception("Non folder path");
         }
         configuration.setDirectoryForTemplateLoading(file);
         templateFactory.customTemplateList.clear();
-        for (File subFile : Objects.requireNonNull(file.listFiles(),"The custom template does not exist")) {
+        for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
             String name = subFile.getName();
             if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
                 templateFactory.customTemplateList.add(configuration.getTemplate(name));
             }
         }
-        if(templateFactory.customTemplateList.isEmpty()){
+        if (templateFactory.customTemplateList.isEmpty()) {
             throw new Exception("The custom template does not exist");
         }
     }

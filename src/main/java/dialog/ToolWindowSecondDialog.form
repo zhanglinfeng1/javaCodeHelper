@@ -47,7 +47,7 @@
         </constraints>
         <properties>
           <text value="自定义模板所在文件夹路径"/>
-          <toolTipText value="自定义模板的文件夹路径"/>
+          <toolTipText value=""/>
         </properties>
       </component>
       <component id="3059d" class="javax.swing.JTextField" binding="customTemplatesPathField">
