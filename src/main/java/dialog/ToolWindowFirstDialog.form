@@ -83,6 +83,7 @@
           <model>
             <item value="mysql"/>
             <item value="oracle"/>
+            <item value="postgresql"/>
           </model>
         </properties>
       </component>

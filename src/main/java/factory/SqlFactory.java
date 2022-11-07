@@ -11,6 +11,7 @@ import dialog.ToolWindowFirstDialog;
 import dialog.ToolWindowSecondDialog;
 import factory.impl.MysqlParse;
 import factory.impl.OracleParse;
+import factory.impl.PostgresqlParse;
 import org.jetbrains.annotations.NotNull;
 import pojo.TableInfo;
 import util.StringUtil;
@@ -46,6 +47,9 @@ public class SqlFactory implements ToolWindowFactory {
                         break;
                     case COMMON_CONSTANT.ORACLE:
                         sqlParse = new OracleParse(sqlStr);
+                        break;
+                    case COMMON_CONSTANT.POSTGRESQL:
+                        sqlParse = new PostgresqlParse(sqlStr);
                         break;
                     default:
                         throw new Exception("Database not exist");

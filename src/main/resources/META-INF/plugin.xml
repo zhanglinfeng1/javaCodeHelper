@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.3.3</version>
+    <version>1.3.4</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[
@@ -9,7 +9,7 @@
         <ul>
             <li>Code intelligent completion</li>
             <li>Fast jump between feign and service module </li>
-            <li>Generate Java code based on SQL for table building, support custom templates, see gitee for rules</li>
+            <li>Generate Java code based on SQL for table building. It is recommended to use a user-defined template</li>
             <li>One-click translation (Internet connection required)</li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
@@ -17,7 +17,7 @@
         <ul>
             <li>代码智能补全</li>
             <li>feign与服务模块的快捷跳转</li>
-            <li>根据建表SQL生成Java代码，支持自定义模板，规则见gitee</li>
+            <li>根据建表SQL生成Java代码，建议使用自定义模板</li>
             <li>一键翻译（需联网）</li>
         </ul>
     ]]></description>

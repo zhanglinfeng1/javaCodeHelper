@@ -1,6 +1,11 @@
 package pojo;
 
+import constant.COMMON_CONSTANT;
+import util.StringUtil;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: zhanglinfeng
@@ -25,6 +30,17 @@ public class TableInfo {
     private List<ColumnInfo> columnList;
     /** 用于查询的字段信息 */
     private List<ColumnInfo> queryColumnList;
+
+    public TableInfo() {
+    }
+
+    public TableInfo(String sqlTableName) {
+        String tableName = Arrays.stream(sqlTableName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
+        this.sqlTableName = sqlTableName;
+        this.tableName = tableName;
+        this.firstLowerTableName = firstLowerTableName;
+    }
 
     public String getAuthor() {
         return author;

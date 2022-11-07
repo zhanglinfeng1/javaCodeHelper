@@ -23,7 +23,11 @@ public class MysqlParse extends SqlParse {
 
     @Override
     public TableInfo getTableInfo() {
-        String tableComment = StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX);
+        List<String> lineList = Arrays.stream(sqlStr.split(COMMON_CONSTANT.WRAP_REGEX)).filter(s -> StringUtil.isNotEmpty(s) && s.split(COMMON_CONSTANT.SPACE_REGEX).length > 1).collect(Collectors.toList());
+        String[] sqlTableNameArr = lineList.get(0).split(COMMON_CONSTANT.SPACE_REGEX)[2].split(COMMON_CONSTANT.DOT_REGEX);
+        String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING);
+        tableInfo = new TableInfo(sqlTableName);
+        tableInfo.setTableComment(StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX));
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : lineList) {
             List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING)).collect(Collectors.toList());
@@ -35,7 +39,6 @@ public class MysqlParse extends SqlParse {
             }
         }
         tableInfo.setColumnList(columnList);
-        tableInfo.setTableComment(tableComment);
         return tableInfo;
     }
 }

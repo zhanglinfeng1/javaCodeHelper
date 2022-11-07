@@ -17,7 +17,8 @@ public class COMMON_CONSTANT {
     public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String SEMICOLON = ";";
-    public static final String LEFT_BRACE = "{";
+    public static final String LEFT_BRACKETS = "{";
+    public static final String RIGHT_PARENTHESES = ")";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
 
@@ -37,9 +38,10 @@ public class COMMON_CONSTANT {
     /** 数据库 */
     public static final String MYSQL = "mysql";
     public static final String ORACLE = "oracle";
+    public static final String POSTGRESQL = "postgresql";
     public static final String TABLE = "TABLE";
     public static final String COMMENT = "COMMENT";
-    public static final String CREATE = "CREATE";
+    public static final String CONSTRAINT = "constraint";
     public static final String[] QUERY_COLUMN_TABLE_HEADER = {"字段名", "别名", "查询方式"};
     public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
 
