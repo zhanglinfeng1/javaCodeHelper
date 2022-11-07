@@ -36,6 +36,7 @@ public class OracleParse extends SqlParse {
             List<String> valueList = Arrays.stream(line.split(COMMON_CONSTANT.SPACE_REGEX)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
             if (!COMMON_CONSTANT.CONSTRAINT.equalsIgnoreCase(valueList.get(0)) && !line.startsWith(COMMON_CONSTANT.RIGHT_PARENTHESES)) {
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
+                columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));
                 columnList.add(columnInfo);
             }

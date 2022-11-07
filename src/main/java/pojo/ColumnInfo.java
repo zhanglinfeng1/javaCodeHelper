@@ -17,7 +17,9 @@ public class ColumnInfo {
     private String columnName;
     /** 首字母大写的字段名 */
     private String firstUpperColumnName;
-    /** 字段类型 */
+    /** 原始字段类型 */
+    private String sqlColumnType;
+    /** java类型 */
     private String columnType;
     /** 字段备注 */
     private String columnComment;
@@ -33,8 +35,8 @@ public class ColumnInfo {
         this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
     }
 
-    public ColumnInfo(Object sqlColumnName, Object columnName, Object queryType) {
-        this.sqlColumnName = StringUtil.toString(sqlColumnName);
+    public ColumnInfo(String sqlColumnName, Object columnName, Object queryType) {
+        this.sqlColumnName = sqlColumnName;
         this.columnName = StringUtil.toString(columnName);
         this.queryType = StringUtil.toString(queryType);
     }
@@ -87,4 +89,11 @@ public class ColumnInfo {
         this.queryType = queryType;
     }
 
+    public String getSqlColumnType() {
+        return sqlColumnType;
+    }
+
+    public void setSqlColumnType(String sqlColumnType) {
+        this.sqlColumnType = sqlColumnType;
+    }
 }

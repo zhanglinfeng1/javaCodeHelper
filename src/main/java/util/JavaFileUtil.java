@@ -68,7 +68,7 @@ public class JavaFileUtil {
         if (attributeValue.startsWith(COMMON_CONSTANT.LEFT_BRACKETS)) {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
-        return attributeValue.replaceAll(COMMON_CONSTANT.DOUBLE_QUOTES_REGEX, COMMON_CONSTANT.BLANK_STRING);
+        return attributeValue.replaceAll(COMMON_CONSTANT.DOUBLE_QUOTES_REGEX, COMMON_CONSTANT.BLANK_STRING).trim();
     }
 
 }

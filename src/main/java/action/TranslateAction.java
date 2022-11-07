@@ -63,7 +63,7 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(translateResult)) {
             return;
         }
-        String finalSelectedText = selectedText + " " + translateResult;
+        String finalSelectedText = selectedText + COMMON_CONSTANT.SPACE + translateResult;
         WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
     }
 

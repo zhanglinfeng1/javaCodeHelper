@@ -68,11 +68,7 @@ public abstract class FastJump {
                 break;
             }
             PsiJavaFile psiJavaFile = (PsiJavaFile) file;
-            PsiClass[] psiClassArr = psiJavaFile.getClasses();
-            if (psiClassArr.length == 0) {
-                continue;
-            }
-            PsiClass psiClass = psiClassArr[0];
+            PsiClass psiClass = psiJavaFile.getClasses()[0];
             if (!checkClass(psiClass)) {
                 continue;
             }

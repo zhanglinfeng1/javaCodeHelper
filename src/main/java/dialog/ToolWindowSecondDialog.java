@@ -28,6 +28,9 @@ import java.awt.event.MouseListener;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ToolWindowSecondDialog extends JDialog {
     private String[] columnArr;
@@ -39,6 +42,7 @@ public class ToolWindowSecondDialog extends JDialog {
     private JButton addButton;
     private JButton deleteButton;
     private JButton downloadButton;
+    private List<ColumnInfo> columnInfoList;
 
     public ToolWindowSecondDialog() {
         setContentPane(contentPane);
@@ -92,7 +96,7 @@ public class ToolWindowSecondDialog extends JDialog {
         });
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
-            Object[] row = {columnArr[0], "", COMMON_CONSTANT.SELECT_OPTIONS[0]};
+            Object[] row = {columnArr[0], COMMON_CONSTANT.BLANK_STRING, COMMON_CONSTANT.SELECT_OPTIONS[0]};
             model.insertRow(model.getRowCount(), row);
             JComboBox<String> columnComboBox = new JComboBox<>(columnArr);
             columnComboBox.setSelectedIndex(0);
@@ -163,7 +167,7 @@ public class ToolWindowSecondDialog extends JDialog {
     public void initColumn(TableInfo tableInfo) {
         customTemplatesPathField.setForeground(JBColor.GRAY);
         customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-        List<ColumnInfo> columnInfoList = tableInfo.getColumnList();
+        columnInfoList = tableInfo.getColumnList();
         int columnCount = columnInfoList.size();
         columnArr = new String[columnCount];
         for (int i = 0; i < columnCount; i++) {
@@ -189,8 +193,16 @@ public class ToolWindowSecondDialog extends JDialog {
         DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
         int rowCount = model.getRowCount();
         if (rowCount > 0) {
+            Map<String, ColumnInfo> columnInfoMap = columnInfoList.stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
             for (int i = 0; i < rowCount; i++) {
-                queryColumnList.add(new ColumnInfo(model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2)));
+                String columnName = StringUtil.toString(model.getValueAt(i, 0));
+                ColumnInfo queryColumnInfo = new ColumnInfo(columnName, model.getValueAt(i, 1), model.getValueAt(i, 2));
+                ColumnInfo sqlColumnInfo = columnInfoMap.get(columnName);
+                if (null != sqlColumnInfo) {
+                    queryColumnInfo.setSqlColumnType(sqlColumnInfo.getSqlColumnType());
+                    queryColumnInfo.setColumnType(sqlColumnInfo.getColumnType());
+                }
+                queryColumnList.add(queryColumnInfo);
             }
         }
         return queryColumnList;

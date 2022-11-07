@@ -33,6 +33,7 @@ public class MysqlParse extends SqlParse {
             List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING)).collect(Collectors.toList());
             if (COMMON_CONSTANT.COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
+                columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));
                 columnInfo.setColumnComment(valueList.get(valueList.size() - 1));
                 columnList.add(columnInfo);

@@ -67,14 +67,12 @@ public class MethodCompletion extends BasicCompletion {
 
     private List<LookupElementBuilder> lookupElementBuilderList(List<String> typeList, String str) {
         //TODO 优化类导入
-        PsiClass psiClass = currentMethod.getContainingClass();
-        PsiJavaFile javaFile = (PsiJavaFile) psiClass.getContainingFile();
-        Project returnClassProject = returnClass.getProject();
-        JavaPsiFacade instance = JavaPsiFacade.getInstance(returnClassProject);
         String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + " = new ";
         return typeList.stream().map(s -> LookupElementBuilder.create(finalStr + s + "<>();").withPresentableText("new " + s).withInsertHandler((context, item) -> {
-            PsiClass importClass = instance.findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
+            Project returnClassProject = returnClass.getProject();
+            PsiClass importClass = JavaPsiFacade.getInstance(returnClassProject).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
             if (null != importClass) {
+                PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
                 javaFile.importClass(importClass);
             }
         })).collect(Collectors.toList());
