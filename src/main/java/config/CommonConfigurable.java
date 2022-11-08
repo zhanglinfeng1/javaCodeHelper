@@ -52,6 +52,9 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
             return true;
         }
+        if (!dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath())) {
+            return true;
+        }
         return false;
     }
 
@@ -63,6 +66,7 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setFastJumpType(dialog.getFastJumpType());
         commonConfig.setControllerFolderName(dialog.getControllerFolderName());
         commonConfig.setFeignFolderName(dialog.getFeignFolderName());
+        commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
         ConfigFactory.getInstance().updateCommonConfig(commonConfig);
     }
 

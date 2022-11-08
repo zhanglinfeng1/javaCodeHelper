@@ -1,15 +1,8 @@
 package dialog;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import constant.COMMON_CONSTANT;
 import constant.ICON_CONSTANT;
-import factory.TemplateFactory;
-import freemarker.template.Template;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.StringUtil;
@@ -21,11 +14,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,34 +27,14 @@ public class ToolWindowSecondDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton backButton;
-    private JTextField customTemplatesPathField;
     private JBTable columnTable;
     private JButton addButton;
     private JButton deleteButton;
-    private JButton downloadButton;
     private List<ColumnInfo> columnInfoList;
 
     public ToolWindowSecondDialog() {
         setContentPane(contentPane);
         setModal(true);
-
-        customTemplatesPathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(customTemplatesPathField.getText())) {
-                    customTemplatesPathField.setText(COMMON_CONSTANT.BLANK_STRING);
-                    customTemplatesPathField.setForeground(JBColor.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (StringUtil.isEmpty(customTemplatesPathField.getText())) {
-                    customTemplatesPathField.setForeground(JBColor.GRAY);
-                    customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-                }
-            }
-        });
 
         addButton.setContentAreaFilled(false);
         addButton.setBorderPainted(false);
@@ -144,29 +114,10 @@ public class ToolWindowSecondDialog extends JDialog {
             }
         });
 
-        downloadButton.addActionListener(e -> {
-            VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
-            if (virtualFile != null) {
-                String path = virtualFile.getPath();
-                try {
-                    List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
-                    for (Template template : defaultTemplateList) {
-                        FileWriter file = new FileWriter(path + COMMON_CONSTANT.DOUBLE_BACKSLASH + template.getName(), true);
-                        //TODO 寻找替换方法
-                        file.append(template.getRootTreeNode().toString());
-                        file.flush();
-                        file.close();
-                    }
-                } catch (Exception ex) {
-                    Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
-                }
-            }
-        });
+
     }
 
     public void initColumn(TableInfo tableInfo) {
-        customTemplatesPathField.setForeground(JBColor.GRAY);
-        customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         columnInfoList = tableInfo.getColumnList();
         int columnCount = columnInfoList.size();
         columnArr = new String[columnCount];
@@ -206,10 +157,6 @@ public class ToolWindowSecondDialog extends JDialog {
             }
         }
         return queryColumnList;
-    }
-
-    public String getCustomTemplatesPath() {
-        return this.customTemplatesPathField.getText();
     }
 
 }

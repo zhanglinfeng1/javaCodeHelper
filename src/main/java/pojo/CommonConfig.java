@@ -19,6 +19,8 @@ public class CommonConfig {
     private String controllerFolderName;
     /** feign所在文件夹名 */
     private String feignFolderName;
+    /** 自定义模板文件夹 */
+    private String customTemplatesPath;
 
     public CommonConfig() {
         this.fastJumpType = COMMON_CONSTANT.MODULAR;
@@ -72,4 +74,11 @@ public class CommonConfig {
         this.feignFolderName = feignFolderName;
     }
 
+    public String getCustomTemplatesPath() {
+        return customTemplatesPath;
+    }
+
+    public void setCustomTemplatesPath(String customTemplatesPath) {
+        this.customTemplatesPath = customTemplatesPath;
+    }
 }

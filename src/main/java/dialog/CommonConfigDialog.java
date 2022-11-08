@@ -1,14 +1,27 @@
 package dialog;
 
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import constant.COMMON_CONSTANT;
 import factory.ConfigFactory;
+import factory.TemplateFactory;
+import freemarker.template.Template;
 import pojo.CommonConfig;
+import util.StringUtil;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.FileWriter;
+import java.util.List;
 
 /**
  * @Author zhanglinfeng
@@ -23,6 +36,47 @@ public class CommonConfigDialog {
     private JRadioButton gatewayRadioButton;
     private JTextField controllerFolderNameTextField;
     private JTextField feignFolderNameTextField;
+    private JTextField customTemplatesPathField;
+    private JButton downloadButton;
+
+    public CommonConfigDialog() {
+        customTemplatesPathField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(customTemplatesPathField.getText())) {
+                    customTemplatesPathField.setText(COMMON_CONSTANT.BLANK_STRING);
+                    customTemplatesPathField.setForeground(JBColor.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (StringUtil.isEmpty(customTemplatesPathField.getText())) {
+                    customTemplatesPathField.setForeground(JBColor.GRAY);
+                    customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+                }
+            }
+        });
+
+        downloadButton.addActionListener(e -> {
+            VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
+            if (virtualFile != null) {
+                String path = virtualFile.getPath();
+                try {
+                    List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
+                    for (Template template : defaultTemplateList) {
+                        FileWriter file = new FileWriter(path + COMMON_CONSTANT.DOUBLE_BACKSLASH + template.getName(), true);
+                        //TODO 寻找替换方法
+                        file.append(template.getRootTreeNode().toString());
+                        file.flush();
+                        file.close();
+                    }
+                } catch (Exception ex) {
+                    Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+                }
+            }
+        });
+    }
 
     public void reset() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
@@ -36,6 +90,13 @@ public class CommonConfigDialog {
         } else {
             modularRadioButton.setSelected(false);
             gatewayRadioButton.setSelected(true);
+        }
+        String customTemplatesPath = commonConfig.getCustomTemplatesPath();
+        if (StringUtil.isEmpty(customTemplatesPath)) {
+            customTemplatesPathField.setForeground(JBColor.GRAY);
+            customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+        } else {
+            customTemplatesPathField.setText(customTemplatesPath);
         }
     }
 
@@ -73,4 +134,8 @@ public class CommonConfigDialog {
         return feignFolderNameTextField.getText();
     }
 
+    public String getCustomTemplatesPath() {
+        String path = customTemplatesPathField.getText();
+        return COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON_CONSTANT.BLANK_STRING : path;
+    }
 }
