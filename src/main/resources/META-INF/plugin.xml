@@ -16,7 +16,7 @@
             </li>
             <li>Generate code according to the table creating SQL<br />
                 It is recommended to use a custom template. The generated code is more consistent with your project. Template Rules：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
-                The default template can generate model, VO, service, serviceImpl, Mapper, and Controller<br />
+                The default template can generate model, vo, service, serviceImpl, mapper, and controller<br />
             </li>
             <li>One click translation<br />
                 Currently, only Baidu Translation is supported. You can apply for Baidu Translation Platform Account and translate 1 million characters for free every month<br />
@@ -35,7 +35,7 @@
             </li>
             <li>根据建表SQL生成代码<br />
                 建议使用自定义模板，生成的代码更符合自己的项目，模板规则：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
-                默认模板可生成model、VO、service、serviceImpl、Mapper、Controller<br />
+                默认模板可生成model、vo、service、serviceImpl、mapper、controller<br />
             </li>
             <li>一键翻译<br />
                 目前仅支持百度翻译，可自行申请百度翻译平台账号，每月可免费翻译100万字符<br />
