@@ -16,6 +16,7 @@ import util.StringUtil;
 import util.TypeUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,43 +39,49 @@ public class MethodCompletion extends BasicCompletion {
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
-        if (StringUtil.isEmpty(returnTypeFullName)) {
+        if (StringUtil.isEmpty(returnTypeFullName) || returnTypeFullName.contains("?") || returnTypeFullName.equals("void")) {
             return new ArrayList<>();
         }
-        if (returnTypeFullName.startsWith(TYPE_CONSTANT.LIST)) {
-            String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
-            if (match(paradigmName)) {
-                String str = (TypeUtil.isObject(paradigmName) ? paradigmName : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.LIST;
-                return lookupElementBuilderList(TYPE_CONSTANT.LIST_TYPE_LIST, str);
+        String returnTypeName = returnTypeFullName;
+        String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
+        String codeStr = returnTypeFullName;
+        String endStr = "();";
+        if (StringUtil.isNotEmpty(paradigmName)) {
+            String[] paradigmNameArr = paradigmName.split(COMMON_CONSTANT.COMMA);
+            if (Arrays.stream(paradigmNameArr).map(String::trim).anyMatch(s -> s.equals("T") || s.equals("E"))) {
+                return new ArrayList<>();
             }
-        } else if (returnTypeFullName.startsWith(TYPE_CONSTANT.MAP)) {
-            String[] arr = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).split(COMMON_CONSTANT.COMMA);
-            if (arr.length == 2) {
-                String keyType = arr[0].trim();
-                String valueType = arr[1].trim();
-                if (match(keyType) && match(valueType)) {
-                    String str = (TypeUtil.isObject(valueType) ? valueType : COMMON_CONSTANT.BLANK_STRING) + TYPE_CONSTANT.MAP;
-                    return lookupElementBuilderList(TYPE_CONSTANT.MAP_TYPE_LIST, str);
-                }
-            }
+            returnTypeName = returnTypeFullName.substring(0, returnTypeFullName.indexOf(COMMON_CONSTANT.LEFT_BRACKETS)).trim();
+            codeStr = paradigmNameArr[paradigmNameArr.length - 1].trim() + returnTypeName;
+            endStr = "<>();";
+        }
+        codeStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(codeStr) + " = new ";
+        if (TYPE_CONSTANT.LIST.equals(returnTypeName)) {
+            return lookupElementBuilderList(TYPE_CONSTANT.LIST_TYPE_LIST, codeStr, endStr);
+        } else if (TYPE_CONSTANT.MAP.equals(returnTypeName)) {
+            return lookupElementBuilderList(TYPE_CONSTANT.MAP_TYPE_LIST, codeStr, endStr);
+        }
+        if (TypeUtil.isObject(returnTypeName)) {
+            return lookupElementBuilderList(List.of(returnTypeName), codeStr, endStr);
         }
         return new ArrayList<>();
     }
 
-    private boolean match(String val) {
-        return !"?".equals(val) && !"T".equals(val) && StringUtil.isNotEmpty(val);
-    }
-
-    private List<LookupElementBuilder> lookupElementBuilderList(List<String> typeList, String str) {
+    private List<LookupElementBuilder> lookupElementBuilderList(List<String> typeList, String codeStr, String endStr) {
         //TODO 优化类导入
-        String finalStr = returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(str) + " = new ";
-        return typeList.stream().map(s -> LookupElementBuilder.create(finalStr + s + "<>();").withPresentableText("new " + s).withInsertHandler((context, item) -> {
-            Project returnClassProject = returnClass.getProject();
-            PsiClass importClass = JavaPsiFacade.getInstance(returnClassProject).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
-            if (null != importClass) {
-                PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
-                javaFile.importClass(importClass);
+        return typeList.stream().map(s -> {
+            LookupElementBuilder builder = LookupElementBuilder.create(codeStr + s + endStr).withPresentableText("new " + s);
+            if (typeList.size() > 1) {
+                builder = builder.withInsertHandler((context, item) -> {
+                    Project returnClassProject = returnClass.getProject();
+                    PsiClass importClass = JavaPsiFacade.getInstance(returnClassProject).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
+                    if (null != importClass) {
+                        PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
+                        javaFile.importClass(importClass);
+                    }
+                });
             }
-        })).collect(Collectors.toList());
+            return builder;
+        }).collect(Collectors.toList());
     }
 }

@@ -17,7 +17,8 @@ public class COMMON_CONSTANT {
     public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String SEMICOLON = ";";
-    public static final String LEFT_BRACKETS = "{";
+    public static final String LEFT_BRACE = "{";
+    public static final String LEFT_BRACKETS = "<";
     public static final String RIGHT_PARENTHESES = ")";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
