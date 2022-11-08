@@ -62,7 +62,8 @@ public class MethodCompletion extends BasicCompletion {
             return lookupElementBuilderList(TYPE_CONSTANT.MAP_TYPE_LIST, codeStr, endStr);
         }
         if (TypeUtil.isObject(returnTypeName)) {
-            return lookupElementBuilderList(List.of(returnTypeName), codeStr, endStr);
+            //TODO 兼顾低版本，不使用List.of
+            return lookupElementBuilderList(Arrays.asList(returnTypeName), codeStr, endStr);
         }
         return new ArrayList<>();
     }
