@@ -15,7 +15,7 @@
                 Support fast jump between feign and controller. Click the jump icon to jump
             </li>
             <li>Generate code according to the table creating SQL<br />
-                It is recommended to use a custom template. The generated code is more consistent with your project. Template Rules<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
+                It is recommended to use a custom template. The generated code is more consistent with your project. Template Rules：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
                 The default template can generate model, VO, service, serviceImpl, Mapper, and Controller<br />
             </li>
             <li>One click translation<br />
@@ -34,7 +34,7 @@
                 支持feign与controller的快捷跳转，点击跳转图标，一键跳转
             </li>
             <li>根据建表SQL生成代码<br />
-                建议使用自定义模板，生成的代码更符合自己的项目，模板规则<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
+                建议使用自定义模板，生成的代码更符合自己的项目，模板规则：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a><br />
                 默认模板可生成model、VO、service、serviceImpl、Mapper、Controller<br />
             </li>
             <li>一键翻译<br />
