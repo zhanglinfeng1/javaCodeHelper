@@ -40,7 +40,8 @@ public class CodeCompletionContributor extends CompletionContributor {
         int lineStart = document.getLineStartOffset(lineNum);
         int lineEnd = document.getLineEndOffset(lineNum);
         String lineText = document.getText(TextRange.create(lineStart, lineEnd));
-        if (StringUtil.isEmpty(lineText) && lineText.replaceAll(COMMON_CONSTANT.WRAP_REGEX, COMMON_CONSTANT.BLANK_STRING).trim().length() > psiElement.getText().trim().length()) {
+        lineText = lineText.replaceAll(COMMON_CONSTANT.WRAP_REGEX, COMMON_CONSTANT.BLANK_STRING).trim();
+        if (StringUtil.isNotEmpty(lineText) && lineText.length() > psiElement.getText().trim().length()) {
             return;
         }
         //当前光标所在的方法

@@ -31,6 +31,7 @@ public class BaiDuTransApi {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
         String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
+        // TODO 兼容低版本，没有使用URLEncoder
         urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
         SSLContext sslcontext = SSLContext.getInstance("TLS");
         sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
