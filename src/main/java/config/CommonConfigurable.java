@@ -52,10 +52,7 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
             return true;
         }
-        if (!dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath())) {
-            return true;
-        }
-        return false;
+        return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
     }
 
     @Override

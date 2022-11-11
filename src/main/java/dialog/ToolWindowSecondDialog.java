@@ -113,8 +113,6 @@ public class ToolWindowSecondDialog extends JDialog {
                 model.removeRow(rowNum);
             }
         });
-
-
     }
 
     public void initColumn(TableInfo tableInfo) {

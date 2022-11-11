@@ -12,7 +12,4 @@ public class TypeUtil {
         return !TYPE_CONSTANT.BASIC_TYPE_LIST.contains(type) && !TYPE_CONSTANT.COMMON_TYPE_LIST.contains(type);
     }
 
-    public static boolean equals(String firstType, String secondType) {
-        return firstType.equals(secondType) || firstType.equals(TYPE_CONSTANT.BASIC_TYPE_MAP.get(secondType));
-    }
 }

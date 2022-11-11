@@ -52,7 +52,7 @@ public class SqlFactory implements ToolWindowFactory {
                         sqlParse = new PostgresqlParse(sqlStr);
                         break;
                     default:
-                        throw new Exception("Database not exist");
+                        throw new Exception("Database not support");
                 }
                 TableInfo tableInfo = sqlParse.getTableInfo();
                 tableInfo.setAuthor(firstDialog.getAuthor());
