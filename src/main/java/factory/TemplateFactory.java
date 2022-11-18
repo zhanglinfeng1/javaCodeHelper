@@ -7,6 +7,7 @@ import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.DateUtil;
 import util.JsonUtil;
+import util.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,8 +31,6 @@ public class TemplateFactory {
     private static Configuration configuration;
     /** 默认模板文件 */
     private final List<Template> defaultTemplateList = new ArrayList<>();
-    /** 自定义模板文件 */
-    private final List<Template> customTemplateList = new ArrayList<>();
     /** 解析后的表信息 */
     private TableInfo tableInfo;
     /** 全路径 */
@@ -77,7 +76,34 @@ public class TemplateFactory {
         }
     }
 
-    public void create(List<ColumnInfo> queryColumnList) throws Exception {
+    public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
+        List<Template> templateList = new ArrayList<>();
+        if (useDefaultTemplate) {
+            //添加自定义模板
+            String customTemplatesPath = ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath();
+            if (StringUtil.isEmpty(customTemplatesPath)) {
+                throw new Exception("Please configure first! File > Setting > Other Settings > JavaCodeHelp");
+            }
+            File file = new File(customTemplatesPath);
+            if (!file.exists()) {
+                throw new Exception("Custom template path error");
+            }
+            if (!file.isDirectory()) {
+                throw new Exception("Non folder path");
+            }
+            configuration.setDirectoryForTemplateLoading(file);
+            for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
+                String name = subFile.getName();
+                if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
+                    templateList.add(configuration.getTemplate(name));
+                }
+            }
+            if (templateList.isEmpty()) {
+                throw new Exception("The custom template does not exist");
+            }
+        } else {
+            templateList = templateFactory.defaultTemplateList;
+        }
         File file = new File(this.fullPath);
         if (!file.exists()) {
             if (!file.mkdirs()) {
@@ -86,10 +112,6 @@ public class TemplateFactory {
         }
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
-        List<Template> templateList = templateFactory.defaultTemplateList;
-        if (!templateFactory.customTemplateList.isEmpty()) {
-            templateList = templateFactory.customTemplateList;
-        }
         for (Template template : templateList) {
             String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
             try {
@@ -97,27 +119,6 @@ public class TemplateFactory {
             } catch (Exception e) {
                 throw new Exception("Failed to generate file");
             }
-        }
-    }
-
-    public void useCustomTemplates(String customTemplatesPath) throws Exception {
-        File file = new File(customTemplatesPath);
-        if (!file.exists()) {
-            throw new Exception("Custom template path error");
-        }
-        if (!file.isDirectory()) {
-            throw new Exception("Non folder path");
-        }
-        configuration.setDirectoryForTemplateLoading(file);
-        templateFactory.customTemplateList.clear();
-        for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
-            String name = subFile.getName();
-            if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
-                templateFactory.customTemplateList.add(configuration.getTemplate(name));
-            }
-        }
-        if (templateFactory.customTemplateList.isEmpty()) {
-            throw new Exception("The custom template does not exist");
         }
     }
 

@@ -10,11 +10,6 @@ import java.util.List;
  * @Date create in 2022/10/16 19:04
  */
 public abstract class BasicCompletion {
-    public PsiMethod currentMethod;
 
-    public BasicCompletion(PsiMethod currentMethod) {
-        this.currentMethod = currentMethod;
-    }
-
-    public abstract List<LookupElementBuilder> getLookupElement();
+    public abstract List<LookupElementBuilder> getLookupElement(PsiMethod currentMethod);
 }

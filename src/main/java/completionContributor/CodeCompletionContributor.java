@@ -51,11 +51,11 @@ public class CodeCompletionContributor extends CompletionContributor {
         }
         BasicCompletion basicCompletion;
         if (currentMethod.isConstructor()) {
-            basicCompletion = new ConstructorCompletion(currentMethod);
+            basicCompletion = new ConstructorCompletion();
         } else {
-            basicCompletion = new MethodCompletion(currentMethod);
+            basicCompletion = new MethodCompletion();
         }
-        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement();
+        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement(currentMethod);
         if (elementList.isEmpty()) {
             return;
         }

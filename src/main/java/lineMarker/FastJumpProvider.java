@@ -31,7 +31,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
         if (element instanceof PsiMethod) {
             PsiMethod psiMethod = (PsiMethod) element;
-            PsiClass psiClass = (PsiClass) psiMethod.getParent();
+            PsiClass psiClass = psiMethod.getContainingClass();
             FastJump fastJump;
             if (JavaFileUtil.isFeign(psiClass)) {
                 fastJump = new FeignFastJump(psiClass, psiMethod, controllerFolderName, fastJumpType);

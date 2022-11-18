@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseEvent;
@@ -30,6 +31,8 @@ public class ToolWindowSecondDialog extends JDialog {
     private JBTable columnTable;
     private JButton addButton;
     private JButton deleteButton;
+    private JRadioButton defaultTemplateRadioButton;
+    private JRadioButton customTemplateRadioButton;
     private List<ColumnInfo> columnInfoList;
 
     public ToolWindowSecondDialog() {
@@ -157,4 +160,7 @@ public class ToolWindowSecondDialog extends JDialog {
         return queryColumnList;
     }
 
+    public boolean useDefaultTemplate(){
+        return defaultTemplateRadioButton.isSelected();
+    }
 }

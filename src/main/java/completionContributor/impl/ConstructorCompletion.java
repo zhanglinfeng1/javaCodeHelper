@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
  */
 public class ConstructorCompletion extends BasicCompletion {
 
-    public ConstructorCompletion(PsiMethod currentMethod) {
-        super(currentMethod);
-    }
-
     @Override
-    public List<LookupElementBuilder> getLookupElement() {
-        PsiClass psiClass = (PsiClass) currentMethod.getParent();
+    public List<LookupElementBuilder> getLookupElement(PsiMethod currentMethod) {
+        PsiClass psiClass = currentMethod.getContainingClass();
         //构造方法的方法体
         String currentMethodBodyStr = COMMON_CONSTANT.BLANK_STRING;
         PsiCodeBlock codeBlock = currentMethod.getBody();

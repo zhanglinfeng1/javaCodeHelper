@@ -69,12 +69,7 @@ public class SqlFactory implements ToolWindowFactory {
         //生成代码
         secondDialog.getButtonOK().addActionListener(e -> {
             try {
-                //添加自定义模板
-                String customTemplatesPath = ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath();
-                if (StringUtil.isNotEmpty(customTemplatesPath)) {
-                    TemplateFactory.getInstance().useCustomTemplates(customTemplatesPath);
-                }
-                TemplateFactory.getInstance().create(secondDialog.getQueryColumnList());
+                TemplateFactory.getInstance().create(secondDialog.getQueryColumnList(), secondDialog.useDefaultTemplate());
                 this.display(toolWindow, content);
                 Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
