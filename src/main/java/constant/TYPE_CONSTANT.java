@@ -22,4 +22,8 @@ public class TYPE_CONSTANT {
         put("HashMap", "java.util.HashMap");
         put("LinkedHashMap", "java.util.LinkedHashMap");
     }};
+
+    /** 泛型 */
+    public static final List<String> GENERIC_PARADIGM_LIST = Arrays.asList("T", "E", "?");
+
 }

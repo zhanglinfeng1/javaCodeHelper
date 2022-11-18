@@ -18,7 +18,8 @@ public class COMMON_CONSTANT {
     public static final String DOT = ".";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
-    public static final String LEFT_BRACKETS = "<";
+    public static final String LEFT_BRACKETS = "[";
+    public static final String LESS_THAN_SIGN = "<";
     public static final String RIGHT_PARENTHESES = ")";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
@@ -60,4 +61,18 @@ public class COMMON_CONSTANT {
     /** 跳转类型 */
     public static final String MODULAR = "modular";
     public static final String GATEWAY = "gateway";
+
+    /** 关键字 */
+    public static final String VOID = "void";
+    public static final String NEW = "new";
+
+    /** 用于拼接的字符串 */
+    public static final String THIS_STR = "this.";
+    public static final String EQ_STR = " = ";
+    public static final String GET_STR = ".get";
+    public static final String END_STR = "();";
+    public static final String GENERIC_PARADIGM_END_STR = "<>();";
+    public static final String COMMA_STR = ", ";
+    public static final String ARR_STR = "Arr";
+    public static final String OBJ_STR = "obj";
 }

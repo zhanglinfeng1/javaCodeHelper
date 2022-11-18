@@ -34,25 +34,19 @@ public class ConstructorCompletion extends BasicCompletion {
         List<String> list = new ArrayList<>();
         List<String> existFieldNameList = new ArrayList<>();
         //构造方法所在类的变量
-        PsiField[] currentMethodClassFieldArr = psiClass.getFields();
-        PsiParameter[] currentMethodParameterArr = currentMethod.getParameterList().getParameters();
-        String thisStr = "this.";
-        String eqStr = " = ";
-        String getStr = ".get";
-        String endStr = "();";
-        for (PsiField methodClassField : currentMethodClassFieldArr) {
+        for (PsiField methodClassField : psiClass.getFields()) {
             String fieldName = methodClassField.getName();
-            if (currentMethodBodyStr.contains(thisStr + fieldName)) {
+            if (currentMethodBodyStr.contains(COMMON_CONSTANT.THIS_STR + fieldName)) {
                 existFieldNameList.add(fieldName);
                 continue;
             }
             //构造方法的参数
-            for (PsiParameter parameter : currentMethodParameterArr) {
+            for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
                 if (existFieldNameList.contains(parameter.getName())) {
                     continue;
                 }
                 if (parameter.getName().equals(fieldName)) {
-                    list.add(thisStr + fieldName + eqStr + fieldName + COMMON_CONSTANT.SEMICOLON);
+                    list.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + fieldName + COMMON_CONSTANT.SEMICOLON);
                     existFieldNameList.add(fieldName);
                     continue;
                 }
@@ -60,14 +54,13 @@ public class ConstructorCompletion extends BasicCompletion {
                 if (null == parameterClass) {
                     continue;
                 }
-                PsiField[] parameterClassFieldArr = parameterClass.getFields();
                 //构造方法的参数为对象类型，处理对象的变量
-                for (PsiField field : parameterClassFieldArr) {
+                for (PsiField field : parameterClass.getFields()) {
                     if (existFieldNameList.contains(field.getName())) {
                         continue;
                     }
                     if (field.getName().equals(fieldName)) {
-                        list.add(thisStr + fieldName + eqStr + parameter.getName() + getStr + StringUtil.toUpperCaseFirst(fieldName) + endStr);
+                        list.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + parameter.getName() + COMMON_CONSTANT.GET_STR + StringUtil.toUpperCaseFirst(fieldName) + COMMON_CONSTANT.END_STR);
                         existFieldNameList.add(fieldName);
                     }
                 }
