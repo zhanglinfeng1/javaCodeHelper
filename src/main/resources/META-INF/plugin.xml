@@ -9,7 +9,8 @@
         <ul>
             <li>Code intelligent completion<br />
                 1.In the construction method, the one key completion field is assigned according to the parameters<br />
-                2.In non construction methods, one click to create new objects according to the return type
+                2.In non construction methods, one click to create new objects according to the return type<br/>
+                3.In non construction methods, the method of finding variables with the same name
             </li>
             <li>Fast Jump<br />
                 Support fast jump between feign and controller. Click the jump icon to jump
