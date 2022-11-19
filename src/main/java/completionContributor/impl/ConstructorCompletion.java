@@ -31,7 +31,7 @@ public class ConstructorCompletion extends BasicCompletion {
         if (codeBlock != null) {
             currentMethodBodyStr = codeBlock.getText();
         }
-        List<String> list = new ArrayList<>();
+        List<String> addParameterList = new ArrayList<>();
         List<String> existFieldNameList = new ArrayList<>();
         //构造方法所在类的变量
         for (PsiField methodClassField : psiClass.getFields()) {
@@ -46,7 +46,7 @@ public class ConstructorCompletion extends BasicCompletion {
                     continue;
                 }
                 if (parameter.getName().equals(fieldName)) {
-                    list.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + fieldName + COMMON_CONSTANT.SEMICOLON);
+                    addParameterList.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + fieldName + COMMON_CONSTANT.SEMICOLON);
                     existFieldNameList.add(fieldName);
                     continue;
                 }
@@ -60,14 +60,14 @@ public class ConstructorCompletion extends BasicCompletion {
                         continue;
                     }
                     if (field.getName().equals(fieldName)) {
-                        list.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + parameter.getName() + COMMON_CONSTANT.GET_STR + StringUtil.toUpperCaseFirst(fieldName) + COMMON_CONSTANT.END_STR);
+                        addParameterList.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + parameter.getName() + COMMON_CONSTANT.GET_STR + StringUtil.toUpperCaseFirst(fieldName) + COMMON_CONSTANT.END_STR);
                         existFieldNameList.add(fieldName);
                     }
                 }
             }
         }
 
-        String str = list.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
+        String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
         List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         if (StringUtil.isNotEmpty(str)) {
             lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {

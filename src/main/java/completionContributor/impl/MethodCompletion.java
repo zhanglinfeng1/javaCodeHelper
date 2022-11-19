@@ -42,15 +42,7 @@ public class MethodCompletion extends BasicCompletion {
 
     private void addNewReturnTypeObject(List<LookupElementBuilder> returnList, PsiMethod currentMethod) {
         PsiType psiType = currentMethod.getReturnType();
-        if (null == psiType) {
-            return;
-        }
-        PsiClass returnClass = PsiUtil.resolveClassInClassTypeOnly(psiType);
-        String returnTypeFullName = psiType.getPresentableText();
-        if (StringUtil.isEmpty(returnTypeFullName)) {
-            return;
-        }
-        AutoCompletion autoCompletion = getAutoCompletion(returnTypeFullName);
+        AutoCompletion autoCompletion = getAutoCompletion(psiType);
         if (null == autoCompletion) {
             return;
         }
@@ -62,13 +54,14 @@ public class MethodCompletion extends BasicCompletion {
         } else if (TypeUtil.isObject(autoCompletion.getReturnTypeName())) {
             typeList.add(autoCompletion.getReturnTypeName());
         }
-        //TODO 优化类导入
+        PsiClass returnClass = PsiUtil.resolveClassInClassTypeOnly(psiType);
         List<String> finalTypeList = typeList;
         returnList.addAll(typeList.stream().map(s -> {
             String code = autoCompletion.getStartCode() + COMMON_CONSTANT.NEW + COMMON_CONSTANT.SPACE + s + autoCompletion.getEndCode();
             LookupElementBuilder builder = LookupElementBuilder.create(code).withPresentableText(COMMON_CONSTANT.NEW + COMMON_CONSTANT.SPACE + s);
             if (finalTypeList.size() > 1) {
                 builder = builder.withInsertHandler((context, item) -> {
+                    //TODO 优化类导入
                     Project returnClassProject = returnClass.getProject();
                     PsiClass importClass = JavaPsiFacade.getInstance(returnClassProject).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
                     if (null != importClass) {
@@ -95,34 +88,35 @@ public class MethodCompletion extends BasicCompletion {
             }
             loop:
             for (PsiMethod fieldMethod : psiFieldClass.getMethods()) {
-                if (methodName.equals(fieldMethod.getName())) {
-                    PsiType psiType = fieldMethod.getReturnType();
-                    if (null == psiType) {
-                        continue;
-                    }
-                    AutoCompletion autoCompletion = getAutoCompletion(psiType.getPresentableText());
-                    String startCode = null == autoCompletion ? COMMON_CONSTANT.BLANK_STRING : autoCompletion.getStartCode();
-                    PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
-                    if (psiParameterArr.length == 0) {
-                        returnList.add(LookupElementBuilder.create(startCode + psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName() + COMMON_CONSTANT.END_STR).withPresentableText(psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName()));
-                    } else {
-                        for (PsiParameter parameter : psiParameterArr) {
-                            if (!parameter.getType().getPresentableText().equals(paramMap.get(parameter.getName()))) {
-                                continue loop;
-                            }
+                if (!methodName.equals(fieldMethod.getName())) {
+                    continue;
+                }
+                AutoCompletion autoCompletion = getAutoCompletion(fieldMethod.getReturnType());
+                String startCode = null == autoCompletion ? COMMON_CONSTANT.BLANK_STRING : autoCompletion.getStartCode();
+                PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
+                if (psiParameterArr.length == 0) {
+                    returnList.add(LookupElementBuilder.create(startCode + psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName() + COMMON_CONSTANT.END_STR).withPresentableText(psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName()));
+                } else {
+                    for (PsiParameter parameter : psiParameterArr) {
+                        if (!parameter.getType().getPresentableText().equals(paramMap.get(parameter.getName()))) {
+                            continue loop;
                         }
-                        StringBuilder paramStr = new StringBuilder(COMMON_CONSTANT.END_STR);
-                        paramStr.insert(1, Arrays.stream(psiParameterArr).map(PsiParameter::getName).collect(Collectors.joining(COMMON_CONSTANT.COMMA_STR)));
-                        returnList.add(LookupElementBuilder.create(startCode + psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName() + paramStr)
-                                .withPresentableText(psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName()));
                     }
+                    StringBuilder paramStr = new StringBuilder(COMMON_CONSTANT.END_STR);
+                    paramStr.insert(1, Arrays.stream(psiParameterArr).map(PsiParameter::getName).collect(Collectors.joining(COMMON_CONSTANT.COMMA_STR)));
+                    returnList.add(LookupElementBuilder.create(startCode + psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName() + paramStr)
+                            .withPresentableText(psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName()));
                 }
             }
         }
     }
 
-    private AutoCompletion getAutoCompletion(String returnTypeFullName) {
-        if (COMMON_CONSTANT.VOID.equals(returnTypeFullName)) {
+    private AutoCompletion getAutoCompletion(PsiType psiType) {
+        if (null == psiType) {
+            return null;
+        }
+        String returnTypeFullName = psiType.getPresentableText();
+        if (StringUtil.isEmpty(returnTypeFullName) || COMMON_CONSTANT.VOID.equals(returnTypeFullName)) {
             return null;
         }
         AutoCompletion autoCompletion = new AutoCompletion();
