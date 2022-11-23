@@ -24,7 +24,11 @@ public class ConstructorCompletion extends BasicCompletion {
 
     @Override
     public List<LookupElementBuilder> getLookupElement(PsiMethod currentMethod) {
+        List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         PsiClass psiClass = currentMethod.getContainingClass();
+        if (null == psiClass) {
+            return lookupElementBuilderList;
+        }
         //构造方法的方法体
         String currentMethodBodyStr = COMMON_CONSTANT.BLANK_STRING;
         PsiCodeBlock codeBlock = currentMethod.getBody();
@@ -68,7 +72,6 @@ public class ConstructorCompletion extends BasicCompletion {
         }
 
         String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
-        List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
         if (StringUtil.isNotEmpty(str)) {
             lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {
                 CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(currentMethod.getProject());

@@ -74,5 +74,4 @@ public class COMMON_CONSTANT {
     public static final String GENERIC_PARADIGM_END_STR = "<>();";
     public static final String COMMA_STR = ", ";
     public static final String ARR_STR = "Arr";
-    public static final String OBJ_STR = "obj";
 }

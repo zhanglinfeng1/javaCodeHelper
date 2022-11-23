@@ -1,7 +1,6 @@
 package completionContributor.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
@@ -29,41 +28,49 @@ import java.util.stream.Collectors;
  * @Date create in 2022/10/16 19:16
  */
 public class MethodCompletion extends BasicCompletion {
+    private PsiMethod currentMethod;
+    private AutoCompletion autoCompletion;
+    private List<LookupElementBuilder> returnList;
 
     @Override
     public List<LookupElementBuilder> getLookupElement(PsiMethod currentMethod) {
-        List<LookupElementBuilder> returnList = new ArrayList<>();
-        //根据返回类型新建对象
-        addNewReturnTypeObject(returnList, currentMethod);
+        this.currentMethod = currentMethod;
+        autoCompletion = getAutoCompletion(currentMethod.getReturnType());
+        returnList = new ArrayList<>();
+        if (null != autoCompletion) {
+            if (!autoCompletion.checkParameterExist(currentMethod.getBody())) {
+                //根据返回类型新建对象
+                addNewReturnTypeObject();
+            }
+            //根据返回类型，寻找构造函数，一键转化
+            addTransformation();
+        }
         //寻找变量的同名方法
-        addSameMethodName(returnList, currentMethod);
+        addSameNameMethod();
         return returnList;
     }
 
-    private void addNewReturnTypeObject(List<LookupElementBuilder> returnList, PsiMethod currentMethod) {
-        PsiType psiType = currentMethod.getReturnType();
-        AutoCompletion autoCompletion = getAutoCompletion(psiType);
-        if (null == autoCompletion) {
+    private void addNewReturnTypeObject() {
+        List<String> typeList = new ArrayList<>();
+        if (TYPE_CONSTANT.LIST.equals(autoCompletion.getReturnType())) {
+            typeList = TYPE_CONSTANT.LIST_TYPE_LIST;
+        } else if (TYPE_CONSTANT.MAP.equals(autoCompletion.getReturnType())) {
+            typeList = TYPE_CONSTANT.MAP_TYPE_LIST;
+        } else if (TypeUtil.isObject(autoCompletion.getReturnType())) {
+            typeList.add(autoCompletion.getReturnType());
+        } else {
             return;
         }
-        List<String> typeList = new ArrayList<>();
-        if (TYPE_CONSTANT.LIST.equals(autoCompletion.getReturnTypeName())) {
-            typeList = TYPE_CONSTANT.LIST_TYPE_LIST;
-        } else if (TYPE_CONSTANT.MAP.equals(autoCompletion.getReturnTypeName())) {
-            typeList = TYPE_CONSTANT.MAP_TYPE_LIST;
-        } else if (TypeUtil.isObject(autoCompletion.getReturnTypeName())) {
-            typeList.add(autoCompletion.getReturnTypeName());
-        }
-        PsiClass returnClass = PsiUtil.resolveClassInClassTypeOnly(psiType);
-        List<String> finalTypeList = typeList;
+
+        boolean needInsertHandler = typeList.size() > 1;
         returnList.addAll(typeList.stream().map(s -> {
             String code = autoCompletion.getStartCode() + COMMON_CONSTANT.NEW + COMMON_CONSTANT.SPACE + s + autoCompletion.getEndCode();
             LookupElementBuilder builder = LookupElementBuilder.create(code).withPresentableText(COMMON_CONSTANT.NEW + COMMON_CONSTANT.SPACE + s);
-            if (finalTypeList.size() > 1) {
+            if (needInsertHandler) {
                 builder = builder.withInsertHandler((context, item) -> {
                     //TODO 优化类导入
-                    Project returnClassProject = returnClass.getProject();
-                    PsiClass importClass = JavaPsiFacade.getInstance(returnClassProject).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), GlobalSearchScope.allScope(returnClassProject));
+                    GlobalSearchScope globalSearchScope = currentMethod.getReturnType().getResolveScope();
+                    PsiClass importClass = JavaPsiFacade.getInstance(globalSearchScope.getProject()).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), globalSearchScope);
                     if (null != importClass) {
                         PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
                         javaFile.importClass(importClass);
@@ -74,7 +81,7 @@ public class MethodCompletion extends BasicCompletion {
         }).collect(Collectors.toList()));
     }
 
-    private void addSameMethodName(List<LookupElementBuilder> returnList, PsiMethod currentMethod) {
+    private void addSameNameMethod() {
         PsiClass methodClass = currentMethod.getContainingClass();
         if (null == methodClass) {
             return;
@@ -91,8 +98,12 @@ public class MethodCompletion extends BasicCompletion {
                 if (!methodName.equals(fieldMethod.getName())) {
                     continue;
                 }
-                AutoCompletion autoCompletion = getAutoCompletion(fieldMethod.getReturnType());
-                String startCode = null == autoCompletion ? COMMON_CONSTANT.BLANK_STRING : autoCompletion.getStartCode();
+                AutoCompletion fieldMethodAutoCompletion = getAutoCompletion(fieldMethod.getReturnType());
+                String startCode = COMMON_CONSTANT.BLANK_STRING;
+                if (null != fieldMethodAutoCompletion) {
+                    fieldMethodAutoCompletion.dealParameterName(currentMethod.getBody());
+                    startCode = fieldMethodAutoCompletion.getStartCode();
+                }
                 PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
                 if (psiParameterArr.length == 0) {
                     returnList.add(LookupElementBuilder.create(startCode + psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName() + COMMON_CONSTANT.END_STR).withPresentableText(psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName()));
@@ -111,34 +122,33 @@ public class MethodCompletion extends BasicCompletion {
         }
     }
 
+    private void addTransformation() {
+        if (TYPE_CONSTANT.LIST.equals(autoCompletion.getReturnType()) && StringUtil.isNotEmpty(autoCompletion.getParadigmType())) {
+
+        }
+    }
+
     private AutoCompletion getAutoCompletion(PsiType psiType) {
         if (null == psiType) {
             return null;
         }
         String returnTypeFullName = psiType.getPresentableText();
-        if (StringUtil.isEmpty(returnTypeFullName) || COMMON_CONSTANT.VOID.equals(returnTypeFullName)) {
+        if (StringUtil.isEmpty(returnTypeFullName) || COMMON_CONSTANT.VOID.equals(returnTypeFullName) || returnTypeFullName.contains(COMMON_CONSTANT.LEFT_BRACKETS)) {
             return null;
         }
-        AutoCompletion autoCompletion = new AutoCompletion();
-        autoCompletion.setReturnTypeName(returnTypeFullName);
-        autoCompletion.setStartCode(returnTypeFullName);
-        autoCompletion.setEndCode(COMMON_CONSTANT.END_STR);
+        AutoCompletion autoCompletion = new AutoCompletion(returnTypeFullName);
         String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
         if (StringUtil.isNotEmpty(paradigmName)) {
             String[] paradigmNameArr = paradigmName.split(COMMON_CONSTANT.COMMA);
             if (Arrays.stream(paradigmNameArr).map(String::trim).anyMatch(TYPE_CONSTANT.GENERIC_PARADIGM_LIST::contains)) {
                 return null;
             }
-            autoCompletion.setReturnTypeName(returnTypeFullName.substring(0, returnTypeFullName.indexOf(COMMON_CONSTANT.LESS_THAN_SIGN)).trim());
-            autoCompletion.setStartCode(paradigmNameArr[paradigmNameArr.length - 1].trim() + autoCompletion.getReturnTypeName());
-            autoCompletion.setEndCode(COMMON_CONSTANT.GENERIC_PARADIGM_END_STR);
-        } else if (returnTypeFullName.contains(COMMON_CONSTANT.LEFT_BRACKETS)) {
-            autoCompletion.setReturnTypeName(returnTypeFullName.substring(0, returnTypeFullName.indexOf(COMMON_CONSTANT.LEFT_BRACKETS)).trim());
-            autoCompletion.setStartCode(autoCompletion.getReturnTypeName() + COMMON_CONSTANT.ARR_STR);
+            autoCompletion.setReturnType(returnTypeFullName.substring(0, returnTypeFullName.indexOf(COMMON_CONSTANT.LESS_THAN_SIGN)).trim());
+            autoCompletion.setParadigmType(paradigmNameArr[paradigmNameArr.length - 1].trim());
+            autoCompletion.setParameterName(StringUtil.toLowerCaseFirst(autoCompletion.getParadigmType() + autoCompletion.getReturnType()));
         } else if (TYPE_CONSTANT.BASIC_TYPE_LIST.contains(returnTypeFullName) || TYPE_CONSTANT.COMMON_TYPE_LIST.contains(returnTypeFullName)) {
-            autoCompletion.setStartCode(COMMON_CONSTANT.OBJ_STR);
+            return null;
         }
-        autoCompletion.setStartCode(returnTypeFullName + COMMON_CONSTANT.SPACE + StringUtil.toLowerCaseFirst(autoCompletion.getStartCode()) + COMMON_CONSTANT.EQ_STR);
         return autoCompletion;
     }
 }

@@ -34,6 +34,11 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (null == psiElement) {
             return;
         }
+        //当前光标所在的方法
+        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+        if (null == currentMethod) {
+            return;
+        }
         //当前光标在新的一行
         Document document = parameters.getEditor().getDocument();
         int lineNum = document.getLineNumber(parameters.getOffset());
@@ -44,11 +49,6 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (StringUtil.isNotEmpty(lineText) && lineText.length() > psiElement.getText().trim().length()) {
             return;
         }
-        //当前光标所在的方法
-        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
-        if (null == currentMethod) {
-            return;
-        }
         BasicCompletion basicCompletion;
         if (currentMethod.isConstructor()) {
             basicCompletion = new ConstructorCompletion();
@@ -56,10 +56,9 @@ public class CodeCompletionContributor extends CompletionContributor {
             basicCompletion = new MethodCompletion();
         }
         List<LookupElementBuilder> elementList = basicCompletion.getLookupElement(currentMethod);
-        if (elementList.isEmpty()) {
-            return;
+        if (!elementList.isEmpty()) {
+            elementList.forEach(e -> result.addElement(e.withIcon(ICON_CONSTANT.BO_LUO_SVG_16).withCaseSensitivity(true)));
         }
-        elementList.forEach(e -> result.addElement(e.withIcon(ICON_CONSTANT.BO_LUO_SVG_16).withCaseSensitivity(true)));
     }
 
 }
