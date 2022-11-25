@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class TYPE_CONSTANT {
     public static final String LIST = "List";
+    public static final String LIST_PATH = "java.util.List";
     public static final List<String> LIST_TYPE_LIST = Arrays.asList("ArrayList", "LinkedList");
     public static final String MAP = "Map";
     public static final List<String> MAP_TYPE_LIST = Arrays.asList("HashMap", "LinkedHashMap");
@@ -24,6 +25,6 @@ public class TYPE_CONSTANT {
     }};
 
     /** 泛型 */
-    public static final List<String> GENERIC_PARADIGM_LIST = Arrays.asList("T", "E", "?");
+    public static final List<String> GENERIC_PARADIGM_LIST = Arrays.asList("T", "E", "?", "<");
 
 }

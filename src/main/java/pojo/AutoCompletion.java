@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
  */
 public class AutoCompletion {
     /** 返回类型 */
-    private String returnType;
+    private String returnTypeFullName;
+    /** 返回类型 */
+    private String returnTypeShortName;
     /** 返回类型的泛型对象类型 */
     private String paradigmType;
     /** 变量名 */
@@ -28,12 +30,13 @@ public class AutoCompletion {
     }
 
     public AutoCompletion(String returnTypeFullName) {
-        this.returnType = returnTypeFullName;
+        this.returnTypeFullName = returnTypeFullName;
+        this.returnTypeShortName = returnTypeFullName;
         this.parameterName = StringUtil.toLowerCaseFirst(returnTypeFullName);
     }
 
     public String getStartCode() {
-        return this.returnType + COMMON_CONSTANT.SPACE + this.parameterName + COMMON_CONSTANT.EQ_STR;
+        return this.returnTypeFullName + COMMON_CONSTANT.SPACE + this.parameterName + COMMON_CONSTANT.EQ_STR;
     }
 
     public String getEndCode() {
@@ -68,12 +71,20 @@ public class AutoCompletion {
         }
     }
 
-    public String getReturnType() {
-        return returnType;
+    public String getReturnTypeFullName() {
+        return returnTypeFullName;
     }
 
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
+    public void setReturnTypeFullName(String returnTypeFullName) {
+        this.returnTypeFullName = returnTypeFullName;
+    }
+
+    public String getReturnTypeShortName() {
+        return returnTypeShortName;
+    }
+
+    public void setReturnTypeShortName(String returnTypeShortName) {
+        this.returnTypeShortName = returnTypeShortName;
     }
 
     public String getParameterName() {
