@@ -8,9 +8,7 @@
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG 、 Raise requirements ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>Code intelligent completion<br />
-                1.In the construction method, the one key completion field is assigned according to the parameters<br />
-                2.In non construction methods, one click to create new objects according to the return type<br/>
-                3.In non construction methods, the method of finding variables with the same name
+                With<img src="https://gitee.com/zlfzh/idea-plug/raw/master/boLuo16.png">Marked
             </li>
             <li>Fast Jump<br />
                 Support fast jump between feign and controller. Click the jump icon to jump
@@ -28,9 +26,7 @@
         <p>用于学习插件开发。交流想法、反馈BUG、提需求 ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>代码智能补全<br />
-                1.构造方法内，根据参数，一键补全字段赋值<br />
-                2.非构造方法内，根据返回类型，一键新建对象<br />
-                3.非构造方法内，寻找变量的同名方法<br />
+                带<img src="https://gitee.com/zlfzh/idea-plug/raw/master/boLuo16.png">标记的
             </li>
             <li>快捷跳转<br />
                 支持feign与controller的快捷跳转，点击跳转图标，一键跳转
