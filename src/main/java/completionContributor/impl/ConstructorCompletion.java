@@ -22,12 +22,15 @@ import java.util.stream.Collectors;
  */
 public class ConstructorCompletion extends BasicCompletion {
 
+    public ConstructorCompletion(PsiMethod currentMethod) {
+        super(currentMethod);
+    }
+
     @Override
-    public List<LookupElementBuilder> getLookupElement(PsiMethod currentMethod) {
-        List<LookupElementBuilder> lookupElementBuilderList = new ArrayList<>();
+    public List<LookupElementBuilder> getLookupElement() {
         PsiClass psiClass = currentMethod.getContainingClass();
         if (null == psiClass) {
-            return lookupElementBuilderList;
+            return returnList;
         }
         //构造方法的方法体
         String currentMethodBodyStr = COMMON_CONSTANT.BLANK_STRING;
@@ -73,12 +76,12 @@ public class ConstructorCompletion extends BasicCompletion {
 
         String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
         if (StringUtil.isNotEmpty(str)) {
-            lookupElementBuilderList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {
+            returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {
                 CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(currentMethod.getProject());
                 codeStyleManager.reformat(currentMethod);
             }));
         }
-        return lookupElementBuilderList;
+        return returnList;
     }
 
 }

@@ -51,11 +51,11 @@ public class CodeCompletionContributor extends CompletionContributor {
         }
         BasicCompletion basicCompletion;
         if (currentMethod.isConstructor()) {
-            basicCompletion = new ConstructorCompletion();
+            basicCompletion = new ConstructorCompletion(currentMethod);
         } else {
-            basicCompletion = new MethodCompletion();
+            basicCompletion = new MethodCompletion(currentMethod);
         }
-        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement(currentMethod);
+        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement();
         if (!elementList.isEmpty()) {
             elementList.forEach(e -> result.addElement(e.withIcon(ICON_CONSTANT.BO_LUO_SVG_16).withCaseSensitivity(true)));
         }

@@ -64,14 +64,16 @@ public class COMMON_CONSTANT {
 
     /** 关键字 */
     public static final String VOID = "void";
-    public static final String NEW = "new";
 
     /** 用于拼接的字符串 */
     public static final String THIS_STR = "this.";
+    public static final String NEW_STR = "new ";
     public static final String EQ_STR = " = ";
     public static final String GET_STR = ".get";
     public static final String END_STR = "();";
     public static final String GENERIC_PARADIGM_END_STR = "<>();";
     public static final String COMMA_STR = ", ";
-    public static final String ARR_STR = "Arr";
+    public static final String TO_STR = " to ";
+    public static final String STREAM_MAP_STR = ".stream().map(";
+    public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
 }

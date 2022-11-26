@@ -35,7 +35,8 @@ public class AutoCompletion {
         this.parameterName = StringUtil.toLowerCaseFirst(returnTypeFullName);
     }
 
-    public String getStartCode() {
+    public String getStartCode(PsiCodeBlock codeBlock) {
+        dealParameterName(codeBlock, 0);
         return this.returnTypeFullName + COMMON_CONSTANT.SPACE + this.parameterName + COMMON_CONSTANT.EQ_STR;
     }
 
@@ -56,17 +57,10 @@ public class AutoCompletion {
         return parameterList.contains(parameterName);
     }
 
-    public void dealParameterName(PsiCodeBlock codeBlock) {
-        if (checkParameterExist(codeBlock)) {
-            parameterName = parameterName + 1;
-            dealParameterName(codeBlock, 1);
-        }
-    }
-
     public void dealParameterName(PsiCodeBlock codeBlock, int num) {
         if (checkParameterExist(codeBlock)) {
             num++;
-            parameterName = parameterName.substring(0, parameterName.length() - 1) + num;
+            parameterName = (num == 1 ? parameterName : parameterName.substring(0, parameterName.length() - 1)) + num;
             dealParameterName(codeBlock, num);
         }
     }
