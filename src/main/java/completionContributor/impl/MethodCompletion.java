@@ -8,24 +8,24 @@ import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
 import completionContributor.BasicCompletion;
 import constant.COMMON_CONSTANT;
 import constant.TYPE_CONSTANT;
-import pojo.AutoCompletion;
 import util.StringUtil;
-import util.TypeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,68 +35,41 @@ import java.util.stream.Collectors;
  * @Date create in 2022/10/16 19:16
  */
 public class MethodCompletion extends BasicCompletion {
-    private AutoCompletion autoCompletion;
-    private final PsiCodeBlock currentMethodCodeBlock;
+    private PsiType variableType;
+    private String variableTypeName;
 
-    public MethodCompletion(PsiMethod currentMethod) {
+    public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod);
-        currentMethodCodeBlock = currentMethod.getBody();
+        PsiElement spaceElement = psiElement.getParent().getPrevSibling();
+        if (spaceElement instanceof PsiWhiteSpace) {
+            PsiElement eqElement = spaceElement.getPrevSibling();
+            if (eqElement instanceof PsiJavaToken && COMMON_CONSTANT.EQUAL_SIGN.contains(eqElement.getText())) {
+                PsiElement typeElement = psiElement.getParent().getParent().getFirstChild().getNextSibling();
+                if (typeElement instanceof PsiTypeElement) {
+                    variableType = ((PsiTypeElement) typeElement).getType();
+                    variableTypeName = variableType.getInternalCanonicalText();
+                }
+            }
+        }
     }
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
-        //解析返回类型
-        autoCompletion = getAutoCompletion(currentMethod.getReturnType());
-        if (null != autoCompletion) {
-            if (!autoCompletion.checkParameterExist(currentMethodCodeBlock)) {
-                //根据返回类型新建对象
-                addNewReturnTypeObject();
-            }
-            //根据返回类型，寻找构造函数，一键转化
-            addTransformation();
+        if (null == variableType) {
+            return returnList;
         }
+        //转化
+        addTransformation();
         //寻找变量的同名方法
-        addSameNameMethod();
+        addMethodByVariableType();
         return returnList;
     }
 
-    private void addNewReturnTypeObject() {
-        List<String> typeList = new ArrayList<>();
-        if (TYPE_CONSTANT.LIST.equals(autoCompletion.getReturnTypeShortName())) {
-            typeList = TYPE_CONSTANT.LIST_TYPE_LIST;
-        } else if (TYPE_CONSTANT.MAP.equals(autoCompletion.getReturnTypeShortName())) {
-            typeList = TYPE_CONSTANT.MAP_TYPE_LIST;
-        } else if (TypeUtil.isObject(autoCompletion.getReturnTypeShortName())) {
-            typeList.add(autoCompletion.getReturnTypeShortName());
-        } else {
-            return;
-        }
-        //是否需要导入类
-        boolean needInsertHandler = typeList.size() > 1;
-        returnList.addAll(typeList.stream().map(s -> {
-            String code = autoCompletion.getStartCode(currentMethodCodeBlock) + COMMON_CONSTANT.NEW_STR + s + autoCompletion.getEndCode();
-            LookupElementBuilder builder = LookupElementBuilder.create(code).withPresentableText(COMMON_CONSTANT.NEW_STR + s);
-            if (needInsertHandler) {
-                builder = builder.withInsertHandler((context, item) -> {
-                    //TODO 优化类导入
-                    GlobalSearchScope globalSearchScope = currentMethod.getReturnType().getResolveScope();
-                    PsiClass importClass = JavaPsiFacade.getInstance(globalSearchScope.getProject()).findClass(TYPE_CONSTANT.TYPE_MAP.get(s), globalSearchScope);
-                    if (null != importClass) {
-                        PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
-                        javaFile.importClass(importClass);
-                    }
-                });
-            }
-            return builder;
-        }).collect(Collectors.toList()));
-    }
-
-    private void addSameNameMethod() {
+    private void addMethodByVariableType() {
         PsiClass methodClass = currentMethod.getContainingClass();
         if (null == methodClass) {
             return;
         }
-        String methodName = currentMethod.getName();
         Map<String, String> paramMap = Arrays.stream(currentMethod.getParameterList().getParameters()).collect(Collectors.toMap(PsiParameter::getName, p -> p.getType().getPresentableText()));
         //方法所在类的变量
         for (PsiField psiField : methodClass.getFields()) {
@@ -107,15 +80,16 @@ public class MethodCompletion extends BasicCompletion {
             //变量类的方法
             loop:
             for (PsiMethod fieldMethod : psiFieldClass.getMethods()) {
-                if (!methodName.equals(fieldMethod.getName())) {
+                PsiType fieldMethodReturnType = fieldMethod.getReturnType();
+                if (null == fieldMethodReturnType) {
                     continue;
                 }
-                //方法同名、返回类型一致
-                AutoCompletion fieldMethodAutoCompletion = getAutoCompletion(fieldMethod.getReturnType());
-                String startCode = null == fieldMethodAutoCompletion ? COMMON_CONSTANT.BLANK_STRING : fieldMethodAutoCompletion.getStartCode(currentMethodCodeBlock);
+                //返回类型一致
+                if (!variableTypeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
+                    continue;
+                }
                 //变量所在类的方法包含的参数
                 PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
-                String fieldStr = psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName();
                 StringBuilder paramStr = new StringBuilder(COMMON_CONSTANT.END_STR);
                 if (psiParameterArr.length != 0) {
                     for (PsiParameter parameter : psiParameterArr) {
@@ -125,78 +99,71 @@ public class MethodCompletion extends BasicCompletion {
                     }
                     paramStr.insert(1, Arrays.stream(psiParameterArr).map(PsiParameter::getName).collect(Collectors.joining(COMMON_CONSTANT.COMMA_STR)));
                 }
-                returnList.add(LookupElementBuilder.create(startCode + fieldStr + paramStr).withPresentableText(fieldStr));
+                String fieldStr = psiField.getName() + COMMON_CONSTANT.DOT + fieldMethod.getName();
+                returnList.add(LookupElementBuilder.create(fieldStr + paramStr).withPresentableText(fieldStr));
             }
         }
     }
 
     private void addTransformation() {
-        if (TYPE_CONSTANT.LIST.equals(autoCompletion.getReturnTypeShortName()) && StringUtil.isNotEmpty(autoCompletion.getParadigmType()) && null != currentMethodCodeBlock) {
-            PsiClassReferenceType referenceType = (PsiClassReferenceType) currentMethod.getReturnType();
-            PsiType[] psiTypeArr = referenceType.getParameters();
-            if (psiTypeArr.length != 1) {
-                return;
+        PsiCodeBlock currentMethodCodeBlock = currentMethod.getBody();
+        String paradigmName = StringUtil.getFirstMatcher(variableTypeName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
+        //List 类型且泛型不为空
+        if (!variableTypeName.startsWith(TYPE_CONSTANT.LIST_PATH) || StringUtil.isEmpty(paradigmName) || null == currentMethodCodeBlock || TYPE_CONSTANT.GENERIC_PARADIGM_LIST.contains(paradigmName)) {
+            return;
+        }
+        //当前变量类型的泛型
+        PsiClassReferenceType referenceType = (PsiClassReferenceType) variableType;
+        PsiType[] psiTypeArr = referenceType.getParameters();
+        if (psiTypeArr.length != 1) {
+            return;
+        }
+        //泛型类
+        PsiClass psiClass = PsiUtil.resolveClassInClassTypeOnly(psiTypeArr[0]);
+        List<String> typeList = new ArrayList<>();
+        //处理只有一个变量的构造方法
+        for (PsiMethod psiMethod : psiClass.getConstructors()) {
+            PsiParameter[] parameterArr = psiMethod.getParameterList().getParameters();
+            if (parameterArr.length != 1) {
+                continue;
             }
-            //方法内的所有变量
-            Map<String, String> variableMap = new HashMap<>();
-            for (PsiStatement statements : currentMethodCodeBlock.getStatements()) {
-                if (statements instanceof PsiDeclarationStatement) {
-                    PsiElement element = statements.getFirstChild();
-                    //获取变量
-                    if (element instanceof PsiLocalVariable) {
-                        PsiLocalVariable variable = (PsiLocalVariable) element;
-                        PsiType variableType = variable.getType();
-                        String paradigmName = StringUtil.getFirstMatcher(variableType.getInternalCanonicalText(), COMMON_CONSTANT.PARENTHESES_REGEX).trim();
-                        //List 类型且泛型不为空
-                        if (variableType.getCanonicalText().startsWith(TYPE_CONSTANT.LIST_PATH) && StringUtil.isNotEmpty(paradigmName)) {
-                            variableMap.put(paradigmName, variable.getName());
+            typeList.add(parameterArr[0].getType().getInternalCanonicalText());
+        }
+        if (typeList.isEmpty()) {
+            return;
+        }
+        //方法内的所有变量
+        for (PsiStatement statements : currentMethodCodeBlock.getStatements()) {
+            if (statements instanceof PsiDeclarationStatement) {
+                //获取变量
+                if (statements.getFirstChild() instanceof PsiLocalVariable) {
+                    PsiLocalVariable currentMethodVariable = (PsiLocalVariable) statements.getFirstChild();
+                    String currentMethodVariableName = currentMethodVariable.getName();
+                    String currentMethodVariableTypeName = currentMethodVariable.getType().getInternalCanonicalText();
+                    //List 类型且泛型不为空
+                    String endCode = COMMON_CONSTANT.MAP_STR + psiClass.getName() + COMMON_CONSTANT.COLLECT_LIST_STR;
+                    String presentableText = currentMethodVariableName + COMMON_CONSTANT.TO_STR + variableType.getPresentableText();
+                    if (currentMethodVariableTypeName.startsWith(TYPE_CONSTANT.LIST_PATH)) {
+                        String currentMethodVariableParadigmName = StringUtil.getFirstMatcher(currentMethodVariableTypeName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
+                        if (typeList.contains(currentMethodVariableParadigmName)) {
+                            returnList.add(LookupElementBuilder.create(currentMethodVariableName + COMMON_CONSTANT.STREAM_STR + endCode).withPresentableText(presentableText));
+                        }
+                    } else if (currentMethodVariableTypeName.contains(COMMON_CONSTANT.LEFT_BRACKETS)) {
+                        String currentMethodVariableParadigmName = currentMethodVariableTypeName.split(COMMON_CONSTANT.LEFT_BRACKETS_REGEX)[0];
+                        if (typeList.contains(currentMethodVariableParadigmName)) {
+                            String startCode = COMMON_CONSTANT.ARRAYS_STREAM + currentMethodVariableName + COMMON_CONSTANT.RIGHT_PARENTHESES;
+                            returnList.add(LookupElementBuilder.create(startCode + endCode).withPresentableText(presentableText)
+                                    .withInsertHandler((context, item) -> {
+                                        //TODO 优化类导入
+                                        GlobalSearchScope globalSearchScope = variableType.getResolveScope();
+                                        PsiClass importClass = JavaPsiFacade.getInstance(globalSearchScope.getProject()).findClass(TYPE_CONSTANT.ARRAYS_PATH, globalSearchScope);
+                                        PsiJavaFile javaFile = (PsiJavaFile) currentMethod.getContainingClass().getContainingFile();
+                                        javaFile.importClass(importClass);
+                                    }));
                         }
                     }
                 }
             }
-            if (variableMap.isEmpty()) {
-                return;
-            }
-            //泛型类
-            PsiClass psiClass = PsiUtil.resolveClassInClassTypeOnly(psiTypeArr[0]);
-            //处理只有一个变量的构造方法
-            for (PsiMethod psiMethod : psiClass.getConstructors()) {
-                PsiParameter[] parameterArr = psiMethod.getParameterList().getParameters();
-                if (parameterArr.length != 1) {
-                    continue;
-                }
-                PsiParameter parameter = parameterArr[0];
-                String variableName = variableMap.get(parameter.getType().getCanonicalText());
-                if (StringUtil.isNotEmpty(variableName)) {
-                    returnList.add(LookupElementBuilder.create(autoCompletion.getStartCode(currentMethodCodeBlock) + variableName + COMMON_CONSTANT.STREAM_MAP_STR + autoCompletion.getParadigmType() + COMMON_CONSTANT.COLLECT_LIST_STR)
-                            .withPresentableText(variableName + COMMON_CONSTANT.TO_STR + autoCompletion.getReturnTypeFullName()));
-                }
-            }
         }
-    }
-
-    private AutoCompletion getAutoCompletion(PsiType psiType) {
-        if (null == psiType) {
-            return null;
-        }
-        String returnTypeFullName = psiType.getPresentableText();
-        if (StringUtil.isEmpty(returnTypeFullName) || COMMON_CONSTANT.VOID.equals(returnTypeFullName) || returnTypeFullName.contains(COMMON_CONSTANT.LEFT_BRACKETS)) {
-            return null;
-        }
-        AutoCompletion autoCompletion = new AutoCompletion(returnTypeFullName);
-        //泛型
-        String paradigmName = StringUtil.getFirstMatcher(returnTypeFullName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
-        if (StringUtil.isNotEmpty(paradigmName)) {
-            String[] paradigmNameArr = paradigmName.split(COMMON_CONSTANT.COMMA);
-            if (Arrays.stream(paradigmNameArr).map(String::trim).anyMatch(TYPE_CONSTANT.GENERIC_PARADIGM_LIST::contains)) {
-                return null;
-            }
-            autoCompletion.setReturnTypeShortName(returnTypeFullName.substring(0, returnTypeFullName.indexOf(COMMON_CONSTANT.LESS_THAN_SIGN)).trim());
-            autoCompletion.setParadigmType(paradigmNameArr[paradigmNameArr.length - 1].trim());
-            autoCompletion.setParameterName(StringUtil.toLowerCaseFirst(autoCompletion.getParadigmType() + autoCompletion.getReturnTypeShortName()));
-        } else if (TYPE_CONSTANT.BASIC_TYPE_LIST.contains(returnTypeFullName) || TYPE_CONSTANT.COMMON_TYPE_LIST.contains(returnTypeFullName)) {
-            return null;
-        }
-        return autoCompletion;
     }
 }

@@ -1,8 +1,12 @@
 package completionContributor.impl;
 
+import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -22,12 +26,25 @@ import java.util.stream.Collectors;
  */
 public class ConstructorCompletion extends BasicCompletion {
 
-    public ConstructorCompletion(PsiMethod currentMethod) {
+    public ConstructorCompletion(PsiMethod currentMethod, CompletionParameters parameters, PsiElement psiElement) {
         super(currentMethod);
+        //当前光标在新的一行
+        Document document = parameters.getEditor().getDocument();
+        int lineNum = document.getLineNumber(parameters.getOffset());
+        int lineStart = document.getLineStartOffset(lineNum);
+        int lineEnd = document.getLineEndOffset(lineNum);
+        String lineText = document.getText(TextRange.create(lineStart, lineEnd));
+        lineText = lineText.replaceAll(COMMON_CONSTANT.WRAP_REGEX, COMMON_CONSTANT.BLANK_STRING).trim();
+        if (StringUtil.isNotEmpty(lineText) && lineText.length() > psiElement.getText().trim().length()) {
+            this.currentMethod = null;
+        }
     }
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
+        if (null == currentMethod) {
+            return returnList;
+        }
         PsiClass psiClass = currentMethod.getContainingClass();
         if (null == psiClass) {
             return returnList;

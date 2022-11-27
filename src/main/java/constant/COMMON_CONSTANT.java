@@ -14,15 +14,14 @@ public class COMMON_CONSTANT {
     public static final String BLANK_STRING = "";
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
-    public static final String COMMA = ",";
     public static final String DOT = ".";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String LEFT_BRACKETS = "[";
-    public static final String LESS_THAN_SIGN = "<";
     public static final String RIGHT_PARENTHESES = ")";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
+    public static final String EQUAL_SIGN = "=";
 
     /** 正则 */
     public static final String SQL_REPLACE_REGEX = "[',`]";
@@ -32,6 +31,7 @@ public class COMMON_CONSTANT {
     public static final String DOUBLE_QUOTES_REGEX = "\"";
     public static final String WRAP_REGEX = "[\n\r/*]";
     public static final String PARENTHESES_REGEX = "<(.*?)>";
+    public static final String LEFT_BRACKETS_REGEX = "\\[";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";
@@ -62,18 +62,17 @@ public class COMMON_CONSTANT {
     public static final String MODULAR = "modular";
     public static final String GATEWAY = "gateway";
 
-    /** 关键字 */
-    public static final String VOID = "void";
-
     /** 用于拼接的字符串 */
     public static final String THIS_STR = "this.";
-    public static final String NEW_STR = "new ";
     public static final String EQ_STR = " = ";
     public static final String GET_STR = ".get";
     public static final String END_STR = "();";
-    public static final String GENERIC_PARADIGM_END_STR = "<>();";
     public static final String COMMA_STR = ", ";
     public static final String TO_STR = " to ";
-    public static final String STREAM_MAP_STR = ".stream().map(";
+    public static final String STREAM_STR = ".stream()";
+    public static final String MAP_STR = ".map(";
+
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
+    public static final String ARRAYS_STREAM = "Arrays.stream(";
+
 }
