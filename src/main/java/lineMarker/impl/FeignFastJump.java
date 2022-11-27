@@ -3,7 +3,7 @@ package lineMarker.impl;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import lineMarker.FastJump;
-import util.JavaFileUtil;
+import util.PsiObjectUtil;
 
 /**
  * @Author zhanglinfeng
@@ -17,6 +17,6 @@ public class FeignFastJump extends FastJump {
 
     @Override
     public boolean checkClass(PsiClass psiClass) {
-        return JavaFileUtil.isController(fastJumpType, psiClass);
+        return PsiObjectUtil.isController(fastJumpType, psiClass);
     }
 }

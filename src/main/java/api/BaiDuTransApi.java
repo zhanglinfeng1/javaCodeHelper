@@ -41,7 +41,7 @@ public class BaiDuTransApi {
             ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
         }
         conn.setConnectTimeout(COMMON_CONSTANT.SOCKET_TIMEOUT);
-        conn.setRequestMethod(COMMON_CONSTANT.GET);
+        conn.setRequestMethod(COMMON_CONSTANT.REQUEST_GET);
         if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             return COMMON_CONSTANT.BLANK_STRING;
         }

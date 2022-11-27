@@ -15,8 +15,9 @@ import javax.swing.JComponent;
  * @Date create in 2022/10/5 9:10
  */
 public class CommonConfigurable implements Configurable {
-
+    /** 配置参数 */
     private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+    /** 配置界面 */
     private final CommonConfigDialog dialog = new CommonConfigDialog();
 
     @Nls(capitalization = Nls.Capitalization.Title)

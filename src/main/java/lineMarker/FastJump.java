@@ -14,7 +14,7 @@ import com.intellij.psi.PsiMethod;
 import constant.ANNOTATION_CONSTANT;
 import constant.COMMON_CONSTANT;
 import pojo.MappingAnnotation;
-import util.JavaFileUtil;
+import util.PsiObjectUtil;
 import util.StringUtil;
 
 import java.util.ArrayList;
@@ -116,9 +116,9 @@ public abstract class FastJump {
         if (null == annotation) {
             return COMMON_CONSTANT.BLANK_STRING;
         }
-        String url = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
+        String url = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
         if (StringUtil.isEmpty(url)) {
-            return JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
+            return PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
         }
         return url;
     }
@@ -126,7 +126,7 @@ public abstract class FastJump {
     private String getMappingMethod(PsiAnnotation annotation) {
         String method = ANNOTATION_CONSTANT.MAPPING_METHOD_MAP.get(Objects.requireNonNull(annotation.getQualifiedName()));
         if (StringUtil.isEmpty(method)) {
-            method = JavaFileUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
+            method = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
             if (method.contains(COMMON_CONSTANT.DOT)) {
                 method = method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
             }
