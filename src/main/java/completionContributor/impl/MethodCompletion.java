@@ -22,6 +22,7 @@ import util.StringUtil;
 import util.TypeUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +38,8 @@ public class MethodCompletion extends BasicCompletion {
     private final String currentText;
     /** 当前方法包含的变量Map */
     private final Map<String, PsiType> currentMethodVariableMap;
+    /** 当前方法包含的变量Map */
+    private final Map<String, PsiType> totalVariableMap = new HashMap<>();
     /** 是否是return */
     private boolean isReturnType = false;
 
@@ -49,6 +52,8 @@ public class MethodCompletion extends BasicCompletion {
             isReturnType = true;
         }
         currentMethodVariableMap = PsiObjectUtil.getVariableMapFromMethod(currentMethod, psiElement.getTextOffset());
+        totalVariableMap.putAll(currentMethodVariableMap);
+        totalVariableMap.putAll(PsiObjectUtil.getVariableMapFromClass(currentMethodClass));
     }
 
     @Override
@@ -126,7 +131,7 @@ public class MethodCompletion extends BasicCompletion {
                     continue;
                 }
                 for (PsiParameter parameter : psiParameterArr) {
-                    PsiType variableType = currentMethodVariableMap.get(parameter.getName());
+                    PsiType variableType = totalVariableMap.get(parameter.getName());
                     if (null == variableType || !parameter.getType().getPresentableText().equals(variableType.getPresentableText())) {
                         continue loop;
                     }

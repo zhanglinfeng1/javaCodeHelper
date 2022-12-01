@@ -70,10 +70,8 @@ public class ConstructorCompletion extends BasicCompletion {
         }
         String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
         if (StringUtil.isNotEmpty(str)) {
-            returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor").withInsertHandler((context, item) -> {
-                CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(currentMethod.getProject());
-                codeStyleManager.reformat(currentMethod);
-            }));
+            returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor")
+                    .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
         return returnList;
     }
