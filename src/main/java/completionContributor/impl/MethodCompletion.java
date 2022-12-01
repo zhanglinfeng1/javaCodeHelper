@@ -53,6 +53,9 @@ public class MethodCompletion extends BasicCompletion {
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
+        if (StringUtil.isEmpty(currentText)) {
+            return returnList;
+        }
         //当前元素是变量
         if (null != variable) {
             PsiType variableType = variable.getType();
