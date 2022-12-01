@@ -126,7 +126,8 @@ public class MethodCompletion extends BasicCompletion {
                     continue;
                 }
                 for (PsiParameter parameter : psiParameterArr) {
-                    if (!parameter.getType().getPresentableText().equals(currentMethodVariableMap.get(parameter.getName()).getPresentableText())) {
+                    PsiType variableType = currentMethodVariableMap.get(parameter.getName());
+                    if (null == variableType || !parameter.getType().getPresentableText().equals(variableType.getPresentableText())) {
                         continue loop;
                     }
                 }
