@@ -11,7 +11,7 @@ import factory.ConfigFactory;
 import lineMarker.impl.ControllerFastJump;
 import lineMarker.impl.FeignFastJump;
 import org.jetbrains.annotations.NotNull;
-import util.IconUtil;
+import constant.ICON;
 import util.PsiObjectUtil;
 
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             }
             List<PsiMethod> elementList = fastJump.getMethodList();
             if (!elementList.isEmpty()) {
-                NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(IconUtil.getIcon(IconUtil.BO_LUO_SVG_16)).setTargets(elementList).setTooltipText(COMMON.BLANK_STRING);
+                NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(elementList).setTooltipText(COMMON.BLANK_STRING);
                 result.add(builder.createLineMarkerInfo(element));
             }
         }

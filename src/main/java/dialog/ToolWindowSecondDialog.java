@@ -4,7 +4,7 @@ import com.intellij.ui.table.JBTable;
 import constant.COMMON;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
-import util.IconUtil;
+import constant.ICON;
 import util.StringUtil;
 
 import javax.swing.DefaultCellEditor;
@@ -59,12 +59,12 @@ public class ToolWindowSecondDialog extends JDialog {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                addButton.setIcon(IconUtil.getIcon(IconUtil.ADD2_PNG));
+                addButton.setIcon(ICON.ADD2_PNG);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                addButton.setIcon(IconUtil.getIcon(IconUtil.ADD_PNG));
+                addButton.setIcon(ICON.ADD_PNG);
             }
         });
         addButton.addActionListener(e -> {
@@ -100,12 +100,12 @@ public class ToolWindowSecondDialog extends JDialog {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                deleteButton.setIcon(IconUtil.getIcon(IconUtil.DELETE2_PNG));
+                deleteButton.setIcon(ICON.DELETE2_PNG);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                deleteButton.setIcon(IconUtil.getIcon(IconUtil.DELETE_PNG));
+                deleteButton.setIcon(ICON.DELETE_PNG);
             }
         });
 
