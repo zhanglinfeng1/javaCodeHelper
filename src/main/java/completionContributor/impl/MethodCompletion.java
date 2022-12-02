@@ -65,12 +65,9 @@ public class MethodCompletion extends BasicCompletion {
         if (null != variable) {
             PsiType variableType = variable.getType();
             String variableName = variable.getName().replace(TYPE_CONSTANT.INTELLIJ_IDEA_RULEZZZ, COMMON_CONSTANT.BLANK_STRING);
-            // 当前类包含的变量Map
-            Map<String, PsiType> totalVariableMap = PsiObjectUtil.getVariableMapFromClass(currentMethodClass);
-            totalVariableMap.putAll(currentMethodVariableMap);
             variableName = PsiObjectUtil.dealVariableName(variableName, variableType, totalVariableMap);
             //新建变量转化
-            addTransformation(variableType, variableName + COMMON_CONSTANT.EQ_STR, variableName);
+            addTransformation(variableType, variableName + COMMON_CONSTANT.EQ_STR);
             //寻找变量的同类型方法,无参需判断参数名
             addSameType(COMMON_CONSTANT.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON_CONSTANT.EQ_STR);
         } else if (isNewLine) {
@@ -85,35 +82,35 @@ public class MethodCompletion extends BasicCompletion {
             if (null == currentMethodReturnType) {
                 return returnList;
             }
-            addTransformation(currentMethodReturnType, COMMON_CONSTANT.BLANK_STRING, currentMethodReturnType.getPresentableText());
+            addTransformation(currentMethodReturnType, COMMON_CONSTANT.BLANK_STRING);
             addSameType(currentText, currentMethodReturnType.getInternalCanonicalText(), COMMON_CONSTANT.BLANK_STRING);
         }
         return returnList;
     }
 
-    private void addSameType(String methodName, String typeName, String code) {
+    private void addSameType(String variableName, String typeName, String code) {
         if (null == currentMethodClass) {
             return;
         }
         //当前类的方法
-        findFromClass(PsiObjectUtil.getMethods(currentMethodClass, currentMethod), methodName, typeName, code);
+        findFromClass(PsiObjectUtil.getMethods(currentMethodClass, currentMethod), typeName, code);
         //方法所在类的变量
         for (PsiField psiField : currentMethodClass.getFields()) {
+            if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
+                continue;
+            }
             PsiClass psiFieldClass = PsiUtil.resolveClassInClassTypeOnly(psiField.getType());
             if (null == psiFieldClass) {
                 continue;
             }
             //变量类的方法
-            findFromClass(psiFieldClass.getMethods(), methodName, typeName, code + psiField.getName() + COMMON_CONSTANT.DOT);
+            findFromClass(psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON_CONSTANT.DOT);
         }
     }
 
-    private void findFromClass(PsiMethod[] methodArr, String methodName, String typeName, String code) {
+    private void findFromClass(PsiMethod[] methodArr, String typeName, String code) {
         loop:
         for (PsiMethod fieldMethod : methodArr) {
-            if (StringUtil.isNotEmpty(methodName) && !fieldMethod.getName().contains(methodName)) {
-                continue;
-            }
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
             //返回类型不一致
             if (null == fieldMethodReturnType || !typeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
@@ -147,11 +144,11 @@ public class MethodCompletion extends BasicCompletion {
             if (!entry.getKey().contains(currentText)) {
                 continue;
             }
-            addTransformation(entry.getValue(), entry.getKey() + COMMON_CONSTANT.EQ_STR, entry.getKey());
+            addTransformation(entry.getValue(), entry.getKey() + COMMON_CONSTANT.EQ_STR);
         }
     }
 
-    private void addTransformation(PsiType variableType, String startCode, String presentableText) {
+    private void addTransformation(PsiType variableType, String startCode) {
         //变量类型存在
         PsiClass variableTypeClass = PsiUtil.resolveClassInClassTypeOnly(variableType);
         String endCode;
@@ -186,15 +183,13 @@ public class MethodCompletion extends BasicCompletion {
             if (TypeUtil.isList(currentMethodVariableClass) || TypeUtil.isSet(currentMethodVariableClass)) {
                 String currentMethodVariableParadigmName = StringUtil.getFirstMatcher(currentMethodVariableTypeName, COMMON_CONSTANT.PARENTHESES_REGEX).trim();
                 if (typeList.contains(currentMethodVariableParadigmName)) {
-                    returnList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + COMMON_CONSTANT.STREAM_MAP_STR + endCode)
-                            .withPresentableText(currentMethodVariableName + COMMON_CONSTANT.TO_STR + presentableText));
+                    returnList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + COMMON_CONSTANT.STREAM_MAP_STR + endCode));
                 }
             } else if (TypeUtil.isSimpleArr(currentMethodVariableType)) {
                 //数组类型
                 String currentMethodVariableParadigmName = currentMethodVariableTypeName.split(COMMON_CONSTANT.LEFT_BRACKETS_REGEX)[0];
                 if (typeList.contains(currentMethodVariableParadigmName)) {
                     returnList.add(LookupElementBuilder.create(startCode + COMMON_CONSTANT.ARRAYS_STREAM_STR + currentMethodVariableName + COMMON_CONSTANT.MAP_STR + endCode)
-                            .withPresentableText(currentMethodVariableName + COMMON_CONSTANT.TO_STR + presentableText)
                             .withInsertHandler((context, item) -> {
                                 //TODO 优化类导入
                                 GlobalSearchScope globalSearchScope = variableType.getResolveScope();

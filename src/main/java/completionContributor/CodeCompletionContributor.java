@@ -28,7 +28,7 @@ public class CodeCompletionContributor extends CompletionContributor {
         }
         PsiElement psiElement = parameters.getPosition();
         //当前光标所在的方法
-        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
         if (null == currentMethod) {
             return;
         }

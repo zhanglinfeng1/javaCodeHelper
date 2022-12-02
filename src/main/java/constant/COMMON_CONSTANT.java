@@ -69,7 +69,6 @@ public class COMMON_CONSTANT {
     public static final String EQ_STR = " = ";
     public static final String END_STR = "();";
     public static final String COMMA_STR = ", ";
-    public static final String TO_STR = " to ";
     public static final String MAP_STR = ").map(";
     public static final String ARRAYS_STREAM_STR = "Arrays.stream(";
     public static final String STREAM_MAP_STR = ".stream().map(";
