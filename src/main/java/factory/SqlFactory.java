@@ -6,7 +6,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import dialog.ToolWindowFirstDialog;
 import dialog.ToolWindowSecondDialog;
 import factory.impl.MysqlParse;
@@ -14,7 +14,6 @@ import factory.impl.OracleParse;
 import factory.impl.PostgresqlParse;
 import org.jetbrains.annotations.NotNull;
 import pojo.TableInfo;
-import util.StringUtil;
 
 /**
  * @Author: zhanglinfeng
@@ -29,10 +28,10 @@ public class SqlFactory implements ToolWindowFactory {
         //添加到IDEA中
         //TODO ContentFactory.SERVICE.getInstance() 计划删除
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(firstDialog.getContent(), COMMON_CONSTANT.BLANK_STRING, false);
-        content.setDisplayName(COMMON_CONSTANT.BLANK_STRING);
-        Content subContent = contentFactory.createContent(secondDialog.getContent(), COMMON_CONSTANT.BLANK_STRING, false);
-        subContent.setDisplayName(COMMON_CONSTANT.BLANK_STRING);
+        Content content = contentFactory.createContent(firstDialog.getContent(), COMMON.BLANK_STRING, false);
+        content.setDisplayName(COMMON.BLANK_STRING);
+        Content subContent = contentFactory.createContent(secondDialog.getContent(), COMMON.BLANK_STRING, false);
+        subContent.setDisplayName(COMMON.BLANK_STRING);
         toolWindow.getContentManager().addContent(content);
 
         //下一步
@@ -42,13 +41,13 @@ public class SqlFactory implements ToolWindowFactory {
                 SqlParse sqlParse;
                 String sqlStr = firstDialog.getSqlStr();
                 switch (firstDialog.getDataBaseType()) {
-                    case COMMON_CONSTANT.MYSQL:
+                    case COMMON.MYSQL:
                         sqlParse = new MysqlParse(sqlStr);
                         break;
-                    case COMMON_CONSTANT.ORACLE:
+                    case COMMON.ORACLE:
                         sqlParse = new OracleParse(sqlStr);
                         break;
-                    case COMMON_CONSTANT.POSTGRESQL:
+                    case COMMON.POSTGRESQL:
                         sqlParse = new PostgresqlParse(sqlStr);
                         break;
                     default:
@@ -61,7 +60,7 @@ public class SqlFactory implements ToolWindowFactory {
                 this.display(toolWindow, subContent);
                 secondDialog.initColumn(tableInfo);
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
             }
         });
         //上一步
@@ -71,9 +70,9 @@ public class SqlFactory implements ToolWindowFactory {
             try {
                 TemplateFactory.getInstance().create(secondDialog.getQueryColumnList(), secondDialog.useDefaultTemplate());
                 this.display(toolWindow, content);
-                Messages.showMessageDialog(COMMON_CONSTANT.SUCCESS, COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(COMMON.SUCCESS, COMMON.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
             }
         });
     }

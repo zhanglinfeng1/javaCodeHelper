@@ -10,8 +10,8 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import completionContributor.impl.ConstructorCompletion;
 import completionContributor.impl.MethodCompletion;
-import constant.ICON_CONSTANT;
 import org.jetbrains.annotations.NotNull;
+import util.IconUtil;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class CodeCompletionContributor extends CompletionContributor {
         }
         List<LookupElementBuilder> elementList = basicCompletion.getLookupElement();
         if (!elementList.isEmpty()) {
-            elementList.forEach(e -> result.addElement(e.withIcon(ICON_CONSTANT.BO_LUO_SVG_16).withCaseSensitivity(true)));
+            elementList.forEach(e -> result.addElement(e.withIcon(IconUtil.getIcon(IconUtil.BO_LUO_SVG_16)).withCaseSensitivity(true)));
         }
     }
 }

@@ -1,6 +1,6 @@
 package pojo;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 
 /**
  * @Author zhanglinfeng
@@ -23,7 +23,7 @@ public class CommonConfig {
     private String customTemplatesPath;
 
     public CommonConfig() {
-        this.fastJumpType = COMMON_CONSTANT.MODULAR;
+        this.fastJumpType = COMMON.MODULAR;
     }
 
     public String getApi() {

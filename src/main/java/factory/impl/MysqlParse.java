@@ -1,6 +1,7 @@
 package factory.impl;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
+import constant.REGEX;
 import factory.SqlParse;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
@@ -23,15 +24,15 @@ public class MysqlParse extends SqlParse {
 
     @Override
     public TableInfo getTableInfo() {
-        List<String> lineList = Arrays.stream(sqlStr.split(COMMON_CONSTANT.WRAP_REGEX)).filter(s -> StringUtil.isNotEmpty(s) && s.split(COMMON_CONSTANT.SPACE_REGEX).length > 1).collect(Collectors.toList());
-        String[] sqlTableNameArr = lineList.get(0).split(COMMON_CONSTANT.SPACE_REGEX)[2].split(COMMON_CONSTANT.DOT_REGEX);
-        String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING);
+        List<String> lineList = Arrays.stream(sqlStr.split(REGEX.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(REGEX.SPACE).length > 1).collect(Collectors.toList());
+        String[] sqlTableNameArr = lineList.get(0).split(REGEX.SPACE)[2].split(REGEX.DOT);
+        String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(REGEX.SQL_REPLACE, COMMON.BLANK_STRING);
         tableInfo = new TableInfo(sqlTableName);
-        tableInfo.setTableComment(StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), COMMON_CONSTANT.APOSTROPHE_EN_REGEX));
+        tableInfo.setTableComment(StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), REGEX.APOSTROPHE));
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : lineList) {
-            List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING)).collect(Collectors.toList());
-            if (COMMON_CONSTANT.COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
+            List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(REGEX.SQL_REPLACE, COMMON.BLANK_STRING)).collect(Collectors.toList());
+            if (COMMON.COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
                 columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));

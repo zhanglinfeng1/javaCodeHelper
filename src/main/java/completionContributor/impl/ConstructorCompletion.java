@@ -10,7 +10,7 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
 import completionContributor.BasicCompletion;
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import util.StringUtil;
 
 import java.util.ArrayList;
@@ -31,24 +31,21 @@ public class ConstructorCompletion extends BasicCompletion {
 
     @Override
     public List<LookupElementBuilder> getLookupElement() {
-        if (null == currentMethod || !isNewLine) {
-            return returnList;
-        }
-        PsiClass psiClass = currentMethod.getContainingClass();
-        if (null == psiClass) {
+        if (null == currentMethod || !isNewLine || null == currentMethodClass) {
             return returnList;
         }
         //构造方法的方法体
         PsiCodeBlock codeBlock = currentMethod.getBody();
-        String currentMethodBodyStr = codeBlock == null ? COMMON_CONSTANT.BLANK_STRING : codeBlock.getText();
+        String currentMethodBodyStr = codeBlock == null ? COMMON.BLANK_STRING : codeBlock.getText();
         List<String> addParameterList = new ArrayList<>();
         //待处理的变量
-        Map<String, String> fieldNameMap = Arrays.stream(psiClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON_CONSTANT.THIS_STR + f.getName())).collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
+        Map<String, String> fieldNameMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
+                .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
             String parameterName = parameter.getName();
             if (parameter.getType().getInternalCanonicalText().equals(fieldNameMap.get(parameterName))) {
-                addParameterList.add(COMMON_CONSTANT.THIS_STR + parameterName + COMMON_CONSTANT.EQ_STR + parameterName + COMMON_CONSTANT.SEMICOLON);
+                addParameterList.add(COMMON.THIS_STR + parameterName + COMMON.EQ_STR + parameterName + COMMON.SEMICOLON);
                 fieldNameMap.remove(parameterName);
                 continue;
             }
@@ -60,15 +57,15 @@ public class ConstructorCompletion extends BasicCompletion {
             //构造方法的参数为对象类型，处理对象的变量
             for (PsiField field : parameterClass.getFields()) {
                 String fieldName = field.getName();
-                String methodName = COMMON_CONSTANT.GET + StringUtil.toUpperCaseFirst(fieldName);
+                String methodName = COMMON.GET + StringUtil.toUpperCaseFirst(fieldName);
                 if (!field.getType().getInternalCanonicalText().equals(fieldNameMap.get(fieldName)) || !parameterClassMethodNameList.contains(methodName)) {
                     continue;
                 }
-                addParameterList.add(COMMON_CONSTANT.THIS_STR + fieldName + COMMON_CONSTANT.EQ_STR + parameter.getName() + COMMON_CONSTANT.DOT + methodName + COMMON_CONSTANT.END_STR);
+                addParameterList.add(COMMON.THIS_STR + fieldName + COMMON.EQ_STR + parameter.getName() + COMMON.DOT + methodName + COMMON.END_STR);
                 fieldNameMap.remove(fieldName);
             }
         }
-        String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON_CONSTANT.BLANK_STRING));
+        String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.BLANK_STRING));
         if (StringUtil.isNotEmpty(str)) {
             returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor")
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));

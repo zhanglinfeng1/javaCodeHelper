@@ -5,7 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import factory.ConfigFactory;
 import factory.TemplateFactory;
 import freemarker.template.Template;
@@ -43,8 +43,8 @@ public class CommonConfigDialog {
         customTemplatesPathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(customTemplatesPathField.getText())) {
-                    customTemplatesPathField.setText(COMMON_CONSTANT.BLANK_STRING);
+                if (COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(customTemplatesPathField.getText())) {
+                    customTemplatesPathField.setText(COMMON.BLANK_STRING);
                     customTemplatesPathField.setForeground(JBColor.BLACK);
                 }
             }
@@ -53,7 +53,7 @@ public class CommonConfigDialog {
             public void focusLost(FocusEvent e) {
                 if (StringUtil.isEmpty(customTemplatesPathField.getText())) {
                     customTemplatesPathField.setForeground(JBColor.GRAY);
-                    customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+                    customTemplatesPathField.setText(COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
                 }
             }
         });
@@ -65,14 +65,14 @@ public class CommonConfigDialog {
                 try {
                     List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
                     for (Template template : defaultTemplateList) {
-                        FileWriter file = new FileWriter(path + COMMON_CONSTANT.DOUBLE_BACKSLASH + template.getName(), true);
+                        FileWriter file = new FileWriter(path + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
                         //TODO 寻找替换方法
                         file.append(template.getRootTreeNode().toString());
                         file.flush();
                         file.close();
                     }
                 } catch (Exception ex) {
-                    Messages.showMessageDialog(ex.getMessage(), COMMON_CONSTANT.BLANK_STRING, Messages.getInformationIcon());
+                    Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
                 }
             }
         });
@@ -84,7 +84,7 @@ public class CommonConfigDialog {
         securityKeyTextField.setText(commonConfig.getSecretKey());
         controllerFolderNameTextField.setText(commonConfig.getControllerFolderName());
         feignFolderNameTextField.setText(commonConfig.getFeignFolderName());
-        if (COMMON_CONSTANT.MODULAR.equals(commonConfig.getFastJumpType())) {
+        if (COMMON.MODULAR.equals(commonConfig.getFastJumpType())) {
             modularRadioButton.setSelected(true);
             gatewayRadioButton.setSelected(false);
         } else {
@@ -94,7 +94,7 @@ public class CommonConfigDialog {
         String customTemplatesPath = commonConfig.getCustomTemplatesPath();
         if (StringUtil.isEmpty(customTemplatesPath)) {
             customTemplatesPathField.setForeground(JBColor.GRAY);
-            customTemplatesPathField.setText(COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+            customTemplatesPathField.setText(COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
@@ -114,16 +114,16 @@ public class CommonConfigDialog {
 
     public String getApi() {
         if (null == apiComboBox.getSelectedItem()) {
-            return COMMON_CONSTANT.BLANK_STRING;
+            return COMMON.BLANK_STRING;
         }
         return apiComboBox.getSelectedItem().toString();
     }
 
     public String getFastJumpType() {
         if (modularRadioButton.isSelected()) {
-            return COMMON_CONSTANT.MODULAR;
+            return COMMON.MODULAR;
         }
-        return COMMON_CONSTANT.GATEWAY;
+        return COMMON.GATEWAY;
     }
 
     public String getControllerFolderName() {
@@ -136,6 +136,6 @@ public class CommonConfigDialog {
 
     public String getCustomTemplatesPath() {
         String path = customTemplatesPathField.getText();
-        return COMMON_CONSTANT.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON_CONSTANT.BLANK_STRING : path;
+        return COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON.BLANK_STRING : path;
     }
 }

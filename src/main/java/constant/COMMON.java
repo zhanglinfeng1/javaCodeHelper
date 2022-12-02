@@ -4,7 +4,7 @@ package constant;
  * @Author zhanglinfeng
  * @Date create in 2022/9/8 17:52
  */
-public class COMMON_CONSTANT {
+public class COMMON {
     /** 通用常量 */
     public static final String BAIDU_TRANSLATE = "百度翻译";
     public static final String SUCCESS = "成功";
@@ -24,16 +24,6 @@ public class COMMON_CONSTANT {
     public static final String LESS_THAN_SIGN = "<";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
-
-    /** 正则 */
-    public static final String SQL_REPLACE_REGEX = "[',`]";
-    public static final String SPACE_REGEX = "\\s+";
-    public static final String APOSTROPHE_EN_REGEX = "'(.*?)'";
-    public static final String DOT_REGEX = "\\.";
-    public static final String DOUBLE_QUOTES_REGEX = "\"";
-    public static final String WRAP_REGEX = "[\n\r/*]";
-    public static final String PARENTHESES_REGEX = "<(.*?)>";
-    public static final String LEFT_BRACKETS_REGEX = "\\[";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";

@@ -1,7 +1,7 @@
 package dialog;
 
 import com.intellij.ui.JBColor;
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import util.StringUtil;
 
 import javax.swing.JButton;
@@ -25,17 +25,17 @@ public class ToolWindowFirstDialog extends JDialog {
 
     public ToolWindowFirstDialog() {
         fullPathField.setForeground(JBColor.GRAY);
-        fullPathField.setText(COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER);
+        fullPathField.setText(COMMON.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
-        packagePathField.setText(COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER);
+        packagePathField.setText(COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER);
         setContentPane(contentPane);
         setModal(true);
 
         fullPathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPathField.getText())) {
-                    fullPathField.setText(COMMON_CONSTANT.BLANK_STRING);
+                if (COMMON.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPathField.getText())) {
+                    fullPathField.setText(COMMON.BLANK_STRING);
                     fullPathField.setForeground(JBColor.BLACK);
                 }
             }
@@ -44,15 +44,15 @@ public class ToolWindowFirstDialog extends JDialog {
             public void focusLost(FocusEvent e) {
                 if (StringUtil.isEmpty(fullPathField.getText())) {
                     fullPathField.setForeground(JBColor.GRAY);
-                    fullPathField.setText(COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER);
+                    fullPathField.setText(COMMON.FULL_PATH_INPUT_PLACEHOLDER);
                 }
             }
         });
         packagePathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePathField.getText())) {
-                    packagePathField.setText(COMMON_CONSTANT.BLANK_STRING);
+                if (COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePathField.getText())) {
+                    packagePathField.setText(COMMON.BLANK_STRING);
                     packagePathField.setForeground(JBColor.BLACK);
                 }
             }
@@ -61,7 +61,7 @@ public class ToolWindowFirstDialog extends JDialog {
             public void focusLost(FocusEvent e) {
                 if (StringUtil.isEmpty(packagePathField.getText())) {
                     packagePathField.setForeground(JBColor.GRAY);
-                    packagePathField.setText(COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER);
+                    packagePathField.setText(COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER);
                 }
             }
         });
@@ -81,7 +81,7 @@ public class ToolWindowFirstDialog extends JDialog {
 
     public String getFullPath() throws Exception {
         String fullPath = fullPathField.getText();
-        if (COMMON_CONSTANT.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPath) || StringUtil.isEmpty(fullPath)) {
+        if (COMMON.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPath) || StringUtil.isEmpty(fullPath)) {
             throw new Exception("Full path is not null");
         }
         return fullPathField.getText();
@@ -89,7 +89,7 @@ public class ToolWindowFirstDialog extends JDialog {
 
     public String getPackagePathField() throws Exception {
         String packagePath = packagePathField.getText();
-        if (COMMON_CONSTANT.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
+        if (COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
             throw new Exception("Package is not null");
         }
         return packagePath;

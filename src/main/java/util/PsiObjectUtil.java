@@ -14,8 +14,9 @@ import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiUtil;
-import constant.ANNOTATION_CONSTANT;
-import constant.COMMON_CONSTANT;
+import constant.ANNOTATION;
+import constant.COMMON;
+import constant.REGEX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,14 +41,14 @@ public class PsiObjectUtil {
         if (!psiClass.isInterface()) {
             return false;
         }
-        return psiClass.getAnnotation(ANNOTATION_CONSTANT.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION_CONSTANT.NETFLIX_FEIGN_CLIENT) != null;
+        return psiClass.getAnnotation(ANNOTATION.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION.NETFLIX_FEIGN_CLIENT) != null;
     }
 
     public static boolean isController(String feignFastJumpType, PsiClass psiClass) {
         switch (feignFastJumpType) {
-            case COMMON_CONSTANT.MODULAR:
+            case COMMON.MODULAR:
                 return isModuleController(psiClass);
-            case COMMON_CONSTANT.GATEWAY:
+            case COMMON.GATEWAY:
                 return isController(psiClass);
             default:
                 return false;
@@ -63,7 +64,7 @@ public class PsiObjectUtil {
             return false;
         }
         //属于controller
-        return Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION_CONSTANT.CONTROLLER_LIST.contains(a.getQualifiedName()));
+        return Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION.CONTROLLER_LIST.contains(a.getQualifiedName()));
     }
 
     public static boolean isModuleController(PsiClass psiClass) {
@@ -83,17 +84,17 @@ public class PsiObjectUtil {
      */
     public static String getAnnotationValue(PsiAnnotation annotation, String attributeName) {
         if (null == annotation) {
-            return COMMON_CONSTANT.BLANK_STRING;
+            return COMMON.BLANK_STRING;
         }
         PsiAnnotationMemberValue value = annotation.findAttributeValue(attributeName);
         if (value == null) {
-            return COMMON_CONSTANT.BLANK_STRING;
+            return COMMON.BLANK_STRING;
         }
         String attributeValue = value.getText();
-        if (attributeValue.startsWith(COMMON_CONSTANT.LEFT_BRACE)) {
+        if (attributeValue.startsWith(COMMON.LEFT_BRACE)) {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
-        return attributeValue.replaceAll(COMMON_CONSTANT.DOUBLE_QUOTES_REGEX, COMMON_CONSTANT.BLANK_STRING).trim();
+        return attributeValue.replaceAll(REGEX.DOUBLE_QUOTES, COMMON.BLANK_STRING).trim();
     }
 
     /**
@@ -152,10 +153,10 @@ public class PsiObjectUtil {
      */
     public static String dealVariableName(String variableName, PsiType psiType, Map<String, PsiType> currentMethodVariableMap) {
         String typeName = psiType.getPresentableText();
-        if (typeName.contains(COMMON_CONSTANT.LESS_THAN_SIGN)) {
-            variableName = variableName + typeName.split(COMMON_CONSTANT.LESS_THAN_SIGN)[0];
-        } else if (typeName.contains(COMMON_CONSTANT.LEFT_BRACKETS)) {
-            variableName = variableName + typeName.split(COMMON_CONSTANT.LEFT_BRACKETS_REGEX)[0];
+        if (typeName.contains(COMMON.LESS_THAN_SIGN)) {
+            variableName = variableName + typeName.split(COMMON.LESS_THAN_SIGN)[0];
+        } else if (typeName.contains(COMMON.LEFT_BRACKETS)) {
+            variableName = variableName + typeName.split(REGEX.LEFT_BRACKETS)[0];
         }
         List<String> variableNameList = new ArrayList<>(currentMethodVariableMap.keySet());
         if (variableNameList.contains(variableName)) {
@@ -193,8 +194,9 @@ public class PsiObjectUtil {
 
     /**
      * 获取类的方法，排除当前所在的方法
+     *
      * @param psiClass 当前类
-     * @param method 当前方法
+     * @param method   当前方法
      * @return 方法数组
      */
     public static PsiMethod[] getMethods(PsiClass psiClass, PsiMethod method) {

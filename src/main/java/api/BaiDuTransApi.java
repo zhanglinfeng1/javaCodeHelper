@@ -1,6 +1,6 @@
 package api;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import org.apache.commons.codec.digest.DigestUtils;
 import pojo.TransResult;
 import util.JsonUtil;
@@ -40,10 +40,10 @@ public class BaiDuTransApi {
         if (conn instanceof HttpsURLConnection) {
             ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
         }
-        conn.setConnectTimeout(COMMON_CONSTANT.SOCKET_TIMEOUT);
-        conn.setRequestMethod(COMMON_CONSTANT.REQUEST_GET);
+        conn.setConnectTimeout(COMMON.SOCKET_TIMEOUT);
+        conn.setRequestMethod(COMMON.REQUEST_GET);
         if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            return COMMON_CONSTANT.BLANK_STRING;
+            return COMMON.BLANK_STRING;
         }
         InputStream is = conn.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -60,7 +60,7 @@ public class BaiDuTransApi {
             throw new Exception(StringUtil.toString(map.get("error_msg")));
         }
         List<TransResult> list = JsonUtil.toList(map.get("trans_result").toString(), TransResult.class);
-        return list.stream().map(TransResult::getDst).collect(Collectors.joining(COMMON_CONSTANT.SEMICOLON));
+        return list.stream().map(TransResult::getDst).collect(Collectors.joining(COMMON.SEMICOLON));
     }
 
     private static final TrustManager myX509TrustManager = new X509TrustManager() {

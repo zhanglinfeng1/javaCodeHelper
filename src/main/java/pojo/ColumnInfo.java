@@ -1,6 +1,6 @@
 package pojo;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import util.StringUtil;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class ColumnInfo {
 
     public ColumnInfo(String sqlColumnName) {
         this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
+        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(COMMON.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
         this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
     }
 

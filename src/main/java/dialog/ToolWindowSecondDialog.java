@@ -1,10 +1,10 @@
 package dialog;
 
 import com.intellij.ui.table.JBTable;
-import constant.COMMON_CONSTANT;
-import constant.ICON_CONSTANT;
+import constant.COMMON;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
+import util.IconUtil;
 import util.StringUtil;
 
 import javax.swing.DefaultCellEditor;
@@ -59,25 +59,25 @@ public class ToolWindowSecondDialog extends JDialog {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                addButton.setIcon(ICON_CONSTANT.ADD2_PNG);
+                addButton.setIcon(IconUtil.getIcon(IconUtil.ADD2_PNG));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                addButton.setIcon(ICON_CONSTANT.ADD_PNG);
+                addButton.setIcon(IconUtil.getIcon(IconUtil.ADD_PNG));
             }
         });
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
-            Object[] row = {columnArr[0], COMMON_CONSTANT.BLANK_STRING, COMMON_CONSTANT.SELECT_OPTIONS[0]};
+            Object[] row = {columnArr[0], COMMON.BLANK_STRING, COMMON.SELECT_OPTIONS[0]};
             model.insertRow(model.getRowCount(), row);
             JComboBox<String> columnComboBox = new JComboBox<>(columnArr);
             columnComboBox.setSelectedIndex(0);
             columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(columnComboBox));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            JComboBox<String> selectOptionsComboBox = new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS);
+            JComboBox<String> selectOptionsComboBox = new JComboBox<>(COMMON.SELECT_OPTIONS);
             selectOptionsComboBox.setSelectedIndex(0);
-            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON_CONSTANT.SELECT_OPTIONS)));
+            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
         });
 
         deleteButton.setContentAreaFilled(false);
@@ -100,12 +100,12 @@ public class ToolWindowSecondDialog extends JDialog {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                deleteButton.setIcon(ICON_CONSTANT.DELETE2_PNG);
+                deleteButton.setIcon(IconUtil.getIcon(IconUtil.DELETE2_PNG));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                deleteButton.setIcon(ICON_CONSTANT.DELETE_PNG);
+                deleteButton.setIcon(IconUtil.getIcon(IconUtil.DELETE_PNG));
             }
         });
 
@@ -125,7 +125,7 @@ public class ToolWindowSecondDialog extends JDialog {
         for (int i = 0; i < columnCount; i++) {
             columnArr[i] = columnInfoList.get(i).getSqlColumnName();
         }
-        columnTable.setModel(new DefaultTableModel(null, COMMON_CONSTANT.QUERY_COLUMN_TABLE_HEADER));
+        columnTable.setModel(new DefaultTableModel(null, COMMON.QUERY_COLUMN_TABLE_HEADER));
     }
 
     public JButton getButtonOK() {

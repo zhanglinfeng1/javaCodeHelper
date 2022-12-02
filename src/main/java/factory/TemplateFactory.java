@@ -1,6 +1,6 @@
 package factory;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import pojo.ColumnInfo;
@@ -48,14 +48,14 @@ public class TemplateFactory {
                     ClassLoader classLoader = TemplateFactory.class.getClassLoader();
                     configuration = new Configuration(Configuration.VERSION_2_3_23);
                     configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-                    configuration.setClassLoaderForTemplateLoading(classLoader, COMMON_CONSTANT.TEMPLATE_PATH);
-                    JarURLConnection jarCon = (JarURLConnection) Objects.requireNonNull(classLoader.getResource(COMMON_CONSTANT.TEMPLATE_PATH)).openConnection();
+                    configuration.setClassLoaderForTemplateLoading(classLoader, COMMON.TEMPLATE_PATH);
+                    JarURLConnection jarCon = (JarURLConnection) Objects.requireNonNull(classLoader.getResource(COMMON.TEMPLATE_PATH)).openConnection();
                     Enumeration<JarEntry> jarEntryArr = jarCon.getJarFile().entries();
                     while (jarEntryArr.hasMoreElements()) {
                         JarEntry entry = jarEntryArr.nextElement();
                         String name = entry.getName();
-                        if (name.startsWith(COMMON_CONSTANT.TEMPLATE_PATH) && name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
-                            templateFactory.defaultTemplateList.add(configuration.getTemplate(name.replace(COMMON_CONSTANT.TEMPLATE_PATH + COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING)));
+                        if (name.startsWith(COMMON.TEMPLATE_PATH) && name.endsWith(COMMON.TEMPLATE_SUFFIX)) {
+                            templateFactory.defaultTemplateList.add(configuration.getTemplate(name.replace(COMMON.TEMPLATE_PATH + COMMON.SLASH, COMMON.BLANK_STRING)));
                         }
                     }
                 }
@@ -69,10 +69,10 @@ public class TemplateFactory {
         this.tableInfo = tableInfo;
         this.tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         this.tableInfo.setPackagePath(packagePath);
-        if (fullPath.endsWith(COMMON_CONSTANT.DOUBLE_BACKSLASH)) {
+        if (fullPath.endsWith(COMMON.DOUBLE_BACKSLASH)) {
             this.fullPath = fullPath;
         } else {
-            this.fullPath = fullPath + COMMON_CONSTANT.DOUBLE_BACKSLASH;
+            this.fullPath = fullPath + COMMON.DOUBLE_BACKSLASH;
         }
     }
 
@@ -94,7 +94,7 @@ public class TemplateFactory {
             configuration.setDirectoryForTemplateLoading(file);
             for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
                 String name = subFile.getName();
-                if (name.endsWith(COMMON_CONSTANT.TEMPLATE_SUFFIX)) {
+                if (name.endsWith(COMMON.TEMPLATE_SUFFIX)) {
                     templateList.add(configuration.getTemplate(name));
                 }
             }
@@ -113,7 +113,7 @@ public class TemplateFactory {
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateList) {
-            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON_CONSTANT.TEMPLATE_SUFFIX, COMMON_CONSTANT.BLANK_STRING);
+            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON.TEMPLATE_SUFFIX, COMMON.BLANK_STRING);
             try {
                 template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {

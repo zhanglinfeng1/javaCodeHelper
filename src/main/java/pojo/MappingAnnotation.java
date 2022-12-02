@@ -1,6 +1,6 @@
 package pojo;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 
 /**
  * @Author zhanglinfeng
@@ -35,8 +35,8 @@ public class MappingAnnotation {
     }
 
     public boolean equals(MappingAnnotation mappingAnnotation) {
-        String noSlashUrl = this.url.replaceAll(COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING);
-        String noSlashTargetUrl = mappingAnnotation.getUrl().replaceAll(COMMON_CONSTANT.SLASH, COMMON_CONSTANT.BLANK_STRING);
+        String noSlashUrl = this.url.replaceAll(COMMON.SLASH, COMMON.BLANK_STRING);
+        String noSlashTargetUrl = mappingAnnotation.getUrl().replaceAll(COMMON.SLASH, COMMON.BLANK_STRING);
         return (this.url.equals(mappingAnnotation.getUrl()) || noSlashUrl.equals(noSlashTargetUrl)) && this.method.equals(mappingAnnotation.getMethod());
     }
 }

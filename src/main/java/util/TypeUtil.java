@@ -2,8 +2,8 @@ package util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
-import constant.COMMON_CONSTANT;
-import constant.TYPE_CONSTANT;
+import constant.COMMON;
+import constant.TYPE;
 
 import java.util.Arrays;
 
@@ -13,18 +13,36 @@ import java.util.Arrays;
  */
 public class TypeUtil {
 
+    /**
+     * 判断对象是否是List
+     *
+     * @param psiClass 对象
+     * @return boolean
+     */
     public static boolean isList(PsiClass psiClass) {
-        return judgmentType(psiClass, TYPE_CONSTANT.LIST);
+        return judgmentType(psiClass, TYPE.LIST);
     }
 
+    /**
+     * 判断对象是否是Set
+     *
+     * @param psiClass 对象
+     * @return boolean
+     */
     public static boolean isSet(PsiClass psiClass) {
-        return judgmentType(psiClass, TYPE_CONSTANT.SET);
+        return judgmentType(psiClass, TYPE.SET);
     }
 
+    /**
+     * 判断是否是简单数组
+     *
+     * @param psiType 对象
+     * @return boolean
+     */
     public static boolean isSimpleArr(PsiType psiType) {
         String str = psiType.getPresentableText();
-        int firstIndex = str.indexOf(COMMON_CONSTANT.LEFT_BRACKETS);
-        return firstIndex != -1 && firstIndex == str.lastIndexOf(COMMON_CONSTANT.LEFT_BRACKETS);
+        int firstIndex = str.indexOf(COMMON.LEFT_BRACKETS);
+        return firstIndex != -1 && firstIndex == str.lastIndexOf(COMMON.LEFT_BRACKETS);
     }
 
     public static boolean judgmentType(PsiClass psiClass, String typeName) {

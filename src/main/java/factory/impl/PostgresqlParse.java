@@ -1,6 +1,7 @@
 package factory.impl;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
+import constant.REGEX;
 import factory.SqlParse;
 import pojo.TableInfo;
 import util.StringUtil;
@@ -22,12 +23,12 @@ public class PostgresqlParse extends SqlParse {
     @Override
     public TableInfo getTableInfo() {
         //表名
-        List<String> lineList = Arrays.stream(sqlStr.split(COMMON_CONSTANT.WRAP_REGEX)).filter(s -> StringUtil.isNotEmpty(s) && s.split(COMMON_CONSTANT.SPACE_REGEX).length > 1).collect(Collectors.toList());
-        List<String> sqlTableNameList = Arrays.stream(lineList.get(0).split(COMMON_CONSTANT.SPACE_REGEX)).map(s -> s.replaceAll(COMMON_CONSTANT.SQL_REPLACE_REGEX, COMMON_CONSTANT.BLANK_STRING))
+        List<String> lineList = Arrays.stream(sqlStr.split(REGEX.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(REGEX.SPACE).length > 1).collect(Collectors.toList());
+        List<String> sqlTableNameList = Arrays.stream(lineList.get(0).split(REGEX.SPACE)).map(s -> s.replaceAll(REGEX.SQL_REPLACE, COMMON.BLANK_STRING))
                 .filter(StringUtil::isNotEmpty).collect(Collectors.toList());
         String sqlTableName = sqlTableNameList.get(sqlTableNameList.size() - 1);
-        if (sqlTableName.contains(COMMON_CONSTANT.DOT)) {
-            sqlTableName = sqlTableName.split(COMMON_CONSTANT.DOT_REGEX)[1];
+        if (sqlTableName.contains(COMMON.DOT)) {
+            sqlTableName = sqlTableName.split(REGEX.DOT)[1];
         }
         tableInfo = new TableInfo(sqlTableName);
         TableInfo oracleTableInfo = new OracleParse(sqlStr).getTableInfo();

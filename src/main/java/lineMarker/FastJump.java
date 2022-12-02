@@ -11,8 +11,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
-import constant.ANNOTATION_CONSTANT;
-import constant.COMMON_CONSTANT;
+import constant.ANNOTATION;
+import constant.COMMON;
 import pojo.MappingAnnotation;
 import util.PsiObjectUtil;
 import util.StringUtil;
@@ -40,7 +40,7 @@ public abstract class FastJump {
             return;
         }
         //获取类的注解路径
-        String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+        String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
         mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
         Project project = psiMethod.getProject();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
@@ -73,7 +73,7 @@ public abstract class FastJump {
                 continue;
             }
             //类注解路径
-            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION_CONSTANT.REQUEST_MAPPING));
+            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
                 //获取方法的注解
                 MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
@@ -97,7 +97,7 @@ public abstract class FastJump {
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
         PsiAnnotation annotation = null;
         for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
-            if (ANNOTATION_CONSTANT.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
+            if (ANNOTATION.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
                 annotation = psiAnnotation;
                 break;
             }
@@ -114,21 +114,21 @@ public abstract class FastJump {
 
     private String getMappingUrl(PsiAnnotation annotation) {
         if (null == annotation) {
-            return COMMON_CONSTANT.BLANK_STRING;
+            return COMMON.BLANK_STRING;
         }
-        String url = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.VALUE);
+        String url = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
         if (StringUtil.isEmpty(url)) {
-            return PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.PATH);
+            return PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION.PATH);
         }
         return url;
     }
 
     private String getMappingMethod(PsiAnnotation annotation) {
-        String method = ANNOTATION_CONSTANT.MAPPING_METHOD_MAP.get(Objects.requireNonNull(annotation.getQualifiedName()));
+        String method = ANNOTATION.MAPPING_METHOD_MAP.get(Objects.requireNonNull(annotation.getQualifiedName()));
         if (StringUtil.isEmpty(method)) {
-            method = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION_CONSTANT.METHOD);
-            if (method.contains(COMMON_CONSTANT.DOT)) {
-                method = method.substring(method.indexOf(COMMON_CONSTANT.DOT) + 1);
+            method = PsiObjectUtil.getAnnotationValue(annotation, ANNOTATION.METHOD);
+            if (method.contains(COMMON.DOT)) {
+                method = method.substring(method.indexOf(COMMON.DOT) + 1);
             }
         }
         return method;

@@ -1,6 +1,6 @@
 package pojo;
 
-import constant.COMMON_CONSTANT;
+import constant.COMMON;
 import util.StringUtil;
 
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class TableInfo {
     }
 
     public TableInfo(String sqlTableName) {
-        String tableName = Arrays.stream(sqlTableName.split(COMMON_CONSTANT.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        String tableName = Arrays.stream(sqlTableName.split(COMMON.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.sqlTableName = sqlTableName;
         this.tableName = tableName;
