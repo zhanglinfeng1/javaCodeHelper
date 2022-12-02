@@ -18,7 +18,7 @@ import completionContributor.BasicCompletion;
 import constant.COMMON;
 import constant.REGEX;
 import constant.TYPE;
-import util.PsiObjectUtil;
+import util.MyPsiUtil;
 import util.StringUtil;
 import util.TypeUtil;
 
@@ -33,70 +33,51 @@ import java.util.stream.Collectors;
  * @Date create in 2022/10/16 19:16
  */
 public class MethodCompletion extends BasicCompletion {
-    /** 当前变量 */
-    private PsiLocalVariable variable;
-    /** 当前文本 */
-    private final String currentText;
     /** 当前方法包含的变量Map */
-    private final Map<String, PsiType> currentMethodVariableMap;
+    private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
     private final Map<String, PsiType> totalVariableMap = new HashMap<>();
-    /** 是否是return */
-    private boolean isReturnType = false;
 
     public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);
-        currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
-        if (psiElement instanceof PsiIdentifier && psiElement.getParent() instanceof PsiLocalVariable) {
-            variable = (PsiLocalVariable) psiElement.getParent();
-        } else if (psiElement.getParent().getParent() instanceof PsiReturnStatement) {
-            isReturnType = true;
-        }
-        //当前方法内的变量
-        currentMethodVariableMap = PsiObjectUtil.getVariableMapFromMethod(currentMethod, psiElement.getTextOffset());
-        totalVariableMap.putAll(currentMethodVariableMap);
-        //当前类的变量
-        totalVariableMap.putAll(PsiObjectUtil.getVariableMapFromClass(currentMethodClass));
     }
 
     @Override
-    public List<LookupElementBuilder> getLookupElement() {
-        if (StringUtil.isEmpty(currentText)) {
-            return returnList;
-        }
-        //当前元素是变量
-        if (null != variable) {
-            PsiType variableType = variable.getType();
-            String variableName = variable.getName().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
-            variableName = PsiObjectUtil.dealVariableName(variableName, variableType, totalVariableMap);
-            //新建变量转化
-            addTransformation(variableType, variableName + COMMON.EQ_STR);
-            //寻找变量的同类型方法,无参需判断参数名
-            addSameType(COMMON.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON.EQ_STR);
-        } else if (isNewLine) {
-            //在新的一行
+    public void init() {
+        //当前方法内的变量
+        currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
+        totalVariableMap.putAll(currentMethodVariableMap);
+        //当前类的变量
+        totalVariableMap.putAll(MyPsiUtil.getVariableMapFromClass(currentMethodClass));
+        //在新的一行
+        if (isNewLine) {
             //已有变量转化
             addExistVariableTransformation();
             //寻找void类型方法
             addSameType(currentText, TYPE.VOID, COMMON.BLANK_STRING);
-        } else if (isReturnType) {
+        } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
+            //当前元素是变量
+            PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
+            PsiType variableType = variable.getType();
+            String variableName = MyPsiUtil.dealVariableName(variable.getName(), variableType, totalVariableMap);
+            //新建变量转化
+            addTransformation(variableType, variableName + COMMON.EQ_STR);
+            //寻找变量的同类型方法,无参需判断参数名
+            addSameType(COMMON.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON.EQ_STR);
+        } else if (currentElement.getParent().getParent() instanceof PsiReturnStatement) {
             // 在return语句中
             PsiType currentMethodReturnType = currentMethod.getReturnType();
             if (null == currentMethodReturnType) {
-                return returnList;
+                return;
             }
             addTransformation(currentMethodReturnType, COMMON.BLANK_STRING);
             addSameType(currentText, currentMethodReturnType.getInternalCanonicalText(), COMMON.BLANK_STRING);
         }
-        return returnList;
     }
 
     private void addSameType(String variableName, String typeName, String code) {
-        if (null == currentMethodClass) {
-            return;
-        }
         //当前类的方法
-        findFromClass(PsiObjectUtil.getMethods(currentMethodClass, currentMethod), typeName, code);
+        findFromClass(MyPsiUtil.getMethods(currentMethodClass, currentMethod), typeName, code);
         //方法所在类的变量
         for (PsiField psiField : currentMethodClass.getFields()) {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
@@ -152,12 +133,13 @@ public class MethodCompletion extends BasicCompletion {
     }
 
     private void addTransformation(PsiType variableType, String startCode) {
+        if (currentMethodVariableMap.isEmpty()) {
+            return;
+        }
         //变量类型存在
         PsiClass variableTypeClass = PsiUtil.resolveClassInClassTypeOnly(variableType);
         String endCode;
-        if (null == variableTypeClass || currentMethodVariableMap.isEmpty()) {
-            return;
-        } else if (TypeUtil.isList(variableTypeClass)) {
+        if (TypeUtil.isList(variableTypeClass)) {
             endCode = COMMON.COLLECT_LIST_STR;
         } else if (TypeUtil.isSet(variableTypeClass)) {
             endCode = COMMON.COLLECT_SET_STR;
@@ -165,7 +147,7 @@ public class MethodCompletion extends BasicCompletion {
             return;
         }
         //当前变量类型的泛型类
-        PsiClass psiClass = PsiObjectUtil.getReferenceTypeClass(variableType);
+        PsiClass psiClass = MyPsiUtil.getReferenceTypeClass(variableType);
         if (null == psiClass) {
             return;
         }

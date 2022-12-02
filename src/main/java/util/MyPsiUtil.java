@@ -17,6 +17,7 @@ import com.intellij.psi.util.PsiUtil;
 import constant.ANNOTATION;
 import constant.COMMON;
 import constant.REGEX;
+import constant.TYPE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/9/26 16:25
  */
-public class PsiObjectUtil {
+public class MyPsiUtil {
 
     public static boolean isFeign(PsiClass psiClass) {
         if (null == psiClass) {
@@ -152,6 +153,7 @@ public class PsiObjectUtil {
      * @return 处理后的变量名
      */
     public static String dealVariableName(String variableName, PsiType psiType, Map<String, PsiType> currentMethodVariableMap) {
+        variableName = variableName.replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         String typeName = psiType.getPresentableText();
         if (typeName.contains(COMMON.LESS_THAN_SIGN)) {
             variableName = variableName + typeName.split(COMMON.LESS_THAN_SIGN)[0];

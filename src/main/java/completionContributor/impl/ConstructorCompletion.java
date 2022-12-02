@@ -30,9 +30,9 @@ public class ConstructorCompletion extends BasicCompletion {
     }
 
     @Override
-    public List<LookupElementBuilder> getLookupElement() {
-        if (null == currentMethod || !isNewLine || null == currentMethodClass) {
-            return returnList;
+    public void init() {
+        if (!isNewLine) {
+            return;
         }
         //构造方法的方法体
         PsiCodeBlock codeBlock = currentMethod.getBody();
@@ -70,6 +70,5 @@ public class ConstructorCompletion extends BasicCompletion {
             returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor")
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
-        return returnList;
     }
 }

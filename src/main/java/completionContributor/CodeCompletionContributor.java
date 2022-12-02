@@ -4,16 +4,13 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import completionContributor.impl.ConstructorCompletion;
 import completionContributor.impl.MethodCompletion;
-import org.jetbrains.annotations.NotNull;
 import constant.ICON;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @Author zhanglinfeng
@@ -38,9 +35,6 @@ public class CodeCompletionContributor extends CompletionContributor {
         } else {
             basicCompletion = new MethodCompletion(currentMethod, psiElement);
         }
-        List<LookupElementBuilder> elementList = basicCompletion.getLookupElement();
-        if (!elementList.isEmpty()) {
-            elementList.forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
-        }
+        basicCompletion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
     }
 }

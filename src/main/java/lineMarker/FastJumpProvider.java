@@ -12,7 +12,7 @@ import lineMarker.impl.ControllerFastJump;
 import lineMarker.impl.FeignFastJump;
 import org.jetbrains.annotations.NotNull;
 import constant.ICON;
-import util.PsiObjectUtil;
+import util.MyPsiUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,9 +33,9 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             PsiMethod psiMethod = (PsiMethod) element;
             PsiClass psiClass = psiMethod.getContainingClass();
             FastJump fastJump;
-            if (PsiObjectUtil.isFeign(psiClass)) {
+            if (MyPsiUtil.isFeign(psiClass)) {
                 fastJump = new FeignFastJump(psiClass, psiMethod, controllerFolderName, fastJumpType);
-            } else if (PsiObjectUtil.isController(fastJumpType, psiClass)) {
+            } else if (MyPsiUtil.isController(fastJumpType, psiClass)) {
                 fastJump = new ControllerFastJump(psiClass, psiMethod, feignFolderName, fastJumpType);
             } else {
                 return;
