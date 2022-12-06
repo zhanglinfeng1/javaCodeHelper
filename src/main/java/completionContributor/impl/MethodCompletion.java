@@ -36,7 +36,7 @@ public class MethodCompletion extends BasicCompletion {
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
-    private final Map<String, PsiType> totalVariableMap = new HashMap<>();
+    private Map<String, PsiType> totalVariableMap;
 
     public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);
@@ -46,6 +46,7 @@ public class MethodCompletion extends BasicCompletion {
     public void init() {
         //当前方法内的变量
         currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
+        totalVariableMap = new HashMap<>();
         totalVariableMap.putAll(currentMethodVariableMap);
         //当前类的变量
         totalVariableMap.putAll(MyPsiUtil.getVariableMapFromClass(currentMethodClass));
@@ -58,8 +59,8 @@ public class MethodCompletion extends BasicCompletion {
         } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
             //当前元素是变量
             PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
-            currentMethodVariableMap.remove(variable.getName());
-            totalVariableMap.remove(variable.getName());
+            currentMethodVariableMap.remove(currentText);
+            totalVariableMap.remove(currentText);
             PsiType variableType = variable.getType();
             String variableName = MyPsiUtil.dealVariableName(variable.getName(), variableType, totalVariableMap);
             //新建变量转化
@@ -150,7 +151,7 @@ public class MethodCompletion extends BasicCompletion {
         }
         //当前变量类型的泛型类
         PsiClass psiClass = MyPsiUtil.getReferenceTypeClass(variableType);
-        if (null == psiClass) {
+        if (null == psiClass || TYPE.BASIC_TYPE_LIST.contains(psiClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiClass.getName())) {
             return;
         }
         endCode = psiClass.getName() + endCode;
