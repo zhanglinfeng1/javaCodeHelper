@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[
@@ -22,6 +22,9 @@
                 Currently, only Baidu Translation is supported. You can apply for Baidu Translation Platform Account and translate 1 million characters for free every month<br />
                 After configuring the account in the idea, select the text to be translated, right-click and select Translate<br />
             </li>
+            <li>Code suggestions<br />
+                Perfecting...
+            </li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
         <p>用于学习插件开发。交流想法、反馈BUG、提需求 ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
@@ -41,11 +44,16 @@
                 目前仅支持百度翻译，可自行申请百度翻译平台账号，每月可免费翻译100万字符<br />
                 在idea中配置账号后，选中待翻译文本，右击选择Translate即可<br />
             </li>
+            <li>代码建议<br />
+                完善中...
+            </li>
         </ul>
-    ]]></description>
+    ]]>
+    </description>
     <change-notes><![CDATA[
         <p>Details of changes in historical versions : <a href="https://gitee.com/zlfzh/idea-plug#%E7%89%88%E6%9C%AC%E6%94%B9%E5%8A%A8" target="_blank">gitee</a>
-    ]]></change-notes>
+    ]]>
+    </change-notes>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -62,6 +70,9 @@
         <applicationConfigurable instance="config.CommonConfigurable"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="completionContributor.CodeCompletionContributor"/>
+        <!-- 代码检查 -->
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="inspectionTool.CodeInspectionTool"/>
+        <localInspection language="XML" level="WARNING" groupName="JavaCodeHelper" displayName="SqlCheck" enabledByDefault="true" implementationClass="inspectionTool.SqlInspectionTool"/>
     </extensions>
 
     <actions>
