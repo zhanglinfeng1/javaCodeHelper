@@ -39,4 +39,10 @@ public class ANNOTATION {
     public static final String PATH = "path";
     public static final String METHOD = "method";
 
+    /** ibatis注解 */
+    public static final String IBATIS_INSERT = "org.apache.ibatis.annotations.Insert";
+    public static final String IBATIS_UPDATE = "org.apache.ibatis.annotations.Update";
+    public static final String IBATIS_SELECT = "org.apache.ibatis.annotations.Select";
+    public static final String IBATIS_DELETE = "org.apache.ibatis.annotations.Delete";
+
 }

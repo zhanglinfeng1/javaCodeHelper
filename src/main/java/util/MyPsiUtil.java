@@ -154,12 +154,17 @@ public class MyPsiUtil {
      */
     public static String dealVariableName(String variableName, PsiType psiType, Map<String, PsiType> currentMethodVariableMap) {
         variableName = variableName.replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
-        String typeName = psiType.getPresentableText();
-        if (typeName.contains(COMMON.LESS_THAN_SIGN)) {
-            variableName = variableName + typeName.split(COMMON.LESS_THAN_SIGN)[0];
-        } else if (typeName.contains(COMMON.LEFT_BRACKETS)) {
-            variableName = variableName + typeName.split(REGEX.LEFT_BRACKETS)[0];
+        String basicTypeName = psiType.getPresentableText();
+        String suggestedVariableName = COMMON.BLANK_STRING;
+        if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {
+            suggestedVariableName = StringUtil.toLowerCaseFirst(StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES));
+            basicTypeName = basicTypeName.split(COMMON.LESS_THAN_SIGN)[0];
+        } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
+            suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
+            basicTypeName = COMMON.S_STR;
         }
+        suggestedVariableName = suggestedVariableName + basicTypeName;
+        variableName = suggestedVariableName.contains(variableName) ? suggestedVariableName : (variableName + basicTypeName);
         List<String> variableNameList = new ArrayList<>(currentMethodVariableMap.keySet());
         if (variableNameList.contains(variableName)) {
             variableName = dealVariableName(variableNameList, variableName + 1, 1);

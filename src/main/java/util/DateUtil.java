@@ -1,7 +1,7 @@
 package util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @Author zhanglinfeng
@@ -11,6 +11,6 @@ public class DateUtil {
     public static final String YYYY_MM_DDHHMMSS = "yyyy-MM-dd HH:mm:ss";
 
     public static String nowStr(String formatType) {
-        return new SimpleDateFormat(formatType).format(new Date());
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(formatType));
     }
 }

@@ -3,13 +3,16 @@ package inspectionTool;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiType;
+import constant.ANNOTATION;
 import constant.TYPE;
 import org.jetbrains.annotations.NotNull;
+import util.MyPsiUtil;
 
 /**
  * @Author zhanglinfeng
@@ -30,6 +33,27 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
             public void visitLocalVariable(PsiLocalVariable variable) {
                 super.visitLocalVariable(variable);
                 checkType(holder, variable, variable.getType());
+            }
+
+            @Override
+            public void visitAnnotation(PsiAnnotation annotation) {
+                super.visitAnnotation(annotation);
+                String qualifiedName = annotation.getQualifiedName();
+                if (null == qualifiedName) {
+                    return;
+                }
+                switch (qualifiedName) {
+                    case ANNOTATION.IBATIS_INSERT:
+                    case ANNOTATION.IBATIS_UPDATE:
+                    case ANNOTATION.IBATIS_SELECT:
+                    case ANNOTATION.IBATIS_DELETE:
+                        String value = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
+                        if (value.contains("${")) {
+                            holder.registerProblem(annotation, "Replace $ with #");
+                        }
+                        break;
+                    default:
+                }
             }
         };
     }

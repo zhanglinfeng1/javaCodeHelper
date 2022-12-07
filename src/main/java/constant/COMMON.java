@@ -64,5 +64,5 @@ public class COMMON {
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
     public static final String COLLECT_SET_STR = "::new).collect(Collectors.toSet());";
-
+    public static final String S_STR = "s";
 }
