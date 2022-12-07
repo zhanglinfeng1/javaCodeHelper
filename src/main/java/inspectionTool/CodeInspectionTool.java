@@ -62,10 +62,10 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
         String typeFullName = psiType.getInternalCanonicalText();
         switch (typeFullName) {
             case TYPE.DATE:
-                holder.registerProblem(psiElement, "Replace with LocalDateTime");
+                holder.registerProblem(psiElement, "Replace Date with LocalDateTime");
                 return;
             case TYPE.SIMPLE_DATE_FORMAT:
-                holder.registerProblem(psiElement, "Replace with DateTimeFormatter");
+                holder.registerProblem(psiElement, "Replace SimpleDateFormat with DateTimeFormatter");
                 return;
             default:
         }
