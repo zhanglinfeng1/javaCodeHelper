@@ -46,17 +46,23 @@ public abstract class FastJump {
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
         mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
+        //当前项目路径
         Project project = psiMethod.getProject();
         String basePath = project.getBasePath();
-        basePath = basePath.substring(0, basePath.lastIndexOf(COMMON.SLASH));
-        String currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
-        currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, basePath.length() + 1));
+        //当前模块路径
+        String currentModulePath = COMMON.BLANK_STRING;
+        if (null != basePath && -1 != basePath.lastIndexOf(COMMON.SLASH)) {
+            basePath = basePath.substring(0, basePath.lastIndexOf(COMMON.SLASH));
+            currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
+            currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, basePath.length() + 1));
+        }
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            if (!virtualFile.getPath().contains("/resources") && !virtualFile.getPath().contains(currentModulePath)) {
-                PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
-                if (null != psiDirectory) {
-                    dealDirectory(psiDirectory);
-                }
+            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
+                continue;
+            }
+            PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
+            if (null != psiDirectory) {
+                dealDirectory(psiDirectory);
             }
         }
     }
