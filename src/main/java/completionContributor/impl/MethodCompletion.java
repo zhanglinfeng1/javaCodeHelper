@@ -59,12 +59,10 @@ public class MethodCompletion extends BasicCompletion {
         } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
             //当前元素是变量
             PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
-            currentMethodVariableMap.remove(currentText);
-            totalVariableMap.remove(currentText);
             PsiType variableType = variable.getType();
             String variableName = MyPsiUtil.dealVariableName(variable.getName(), variableType, totalVariableMap);
             //新建变量转化
-            addTransformation(variableType, variableName + COMMON.EQ_STR);
+            addTransformation(variableName, variableType, variableName + COMMON.EQ_STR);
             //寻找变量的同类型方法,无参需判断参数名
             addSameType(COMMON.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON.EQ_STR);
         } else if (currentElement.getParent().getParent() instanceof PsiReturnStatement) {
@@ -73,7 +71,7 @@ public class MethodCompletion extends BasicCompletion {
             if (null == currentMethodReturnType) {
                 return;
             }
-            addTransformation(currentMethodReturnType, COMMON.BLANK_STRING);
+            addTransformation(COMMON.BLANK_STRING, currentMethodReturnType, COMMON.BLANK_STRING);
             addSameType(currentText, currentMethodReturnType.getInternalCanonicalText(), COMMON.BLANK_STRING);
         }
     }
@@ -131,11 +129,11 @@ public class MethodCompletion extends BasicCompletion {
             if (!entry.getKey().contains(currentText)) {
                 continue;
             }
-            addTransformation(entry.getValue(), entry.getKey() + COMMON.EQ_STR);
+            addTransformation(entry.getKey(), entry.getValue(), entry.getKey() + COMMON.EQ_STR);
         }
     }
 
-    private void addTransformation(PsiType variableType, String startCode) {
+    private void addTransformation(String variableName, PsiType variableType, String startCode) {
         if (currentMethodVariableMap.isEmpty()) {
             return;
         }
@@ -164,6 +162,9 @@ public class MethodCompletion extends BasicCompletion {
         //方法内的所有变量
         for (Map.Entry<String, PsiType> entry : currentMethodVariableMap.entrySet()) {
             String currentMethodVariableName = entry.getKey();
+            if (currentMethodVariableName.equals(variableName)) {
+                continue;
+            }
             PsiType currentMethodVariableType = entry.getValue();
             PsiClass currentMethodVariableClass = PsiUtil.resolveClassInClassTypeOnly(currentMethodVariableType);
             String currentMethodVariableTypeName = currentMethodVariableType.getInternalCanonicalText();

@@ -42,6 +42,7 @@ public class ConstructorCompletion extends BasicCompletion {
         Map<String, String> fieldNameMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
+        loop:
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
             if (fieldNameMap.isEmpty()){
                 break;
@@ -59,6 +60,9 @@ public class ConstructorCompletion extends BasicCompletion {
             List<String> parameterClassMethodNameList = Arrays.stream(parameterClass.getMethods()).map(PsiMethod::getName).collect(Collectors.toList());
             //构造方法的参数为对象类型，处理对象的变量
             for (PsiField field : parameterClass.getFields()) {
+                if (fieldNameMap.isEmpty()){
+                    break loop;
+                }
                 String fieldName = field.getName();
                 String methodName = COMMON.GET + StringUtil.toUpperCaseFirst(fieldName);
                 if (!field.getType().getInternalCanonicalText().equals(fieldNameMap.get(fieldName)) || !parameterClassMethodNameList.contains(methodName)) {
