@@ -91,6 +91,7 @@ public class MyPsiUtil {
         if (value == null) {
             return COMMON.BLANK_STRING;
         }
+        //TODO 获取实际值
         String attributeValue = value.getText();
         if (attributeValue.startsWith(COMMON.LEFT_BRACE)) {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);

@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[
@@ -51,7 +51,6 @@
     ]]>
     </description>
     <change-notes><![CDATA[
-
         <p>See the <a href="https://gitee.com/zlfzh/idea-plug#%E7%89%88%E6%9C%AC%E6%94%B9%E5%8A%A8" target="_blank">gitee</a> for more details and history</p>
     ]]>
     </change-notes>

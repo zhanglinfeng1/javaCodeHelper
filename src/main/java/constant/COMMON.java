@@ -12,7 +12,6 @@ public class COMMON {
     public static final String SET = "set";
     public static final String EN = "en";
     public static final String ZH = "zh";
-    public static final int SOCKET_TIMEOUT = 2000;
     public static final String BLANK_STRING = "";
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
@@ -43,9 +42,6 @@ public class COMMON {
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\javaCodeHelperFile";
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
     public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "e.g. C:\\zlf\\CustomTemplate";
-
-    /** 请求方式 */
-    public static final String REQUEST_GET = "GET";
 
     /** 配置页菜单名 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";

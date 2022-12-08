@@ -13,13 +13,13 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import constant.ANNOTATION;
 import constant.COMMON;
+import constant.REQUEST;
 import pojo.MappingAnnotation;
 import util.MyPsiUtil;
 import util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author zhanglinfeng
@@ -95,21 +95,32 @@ public abstract class FastJump {
     }
 
     private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
-        PsiAnnotation annotation = null;
         for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
-            if (ANNOTATION.MAPPING_LIST.contains(psiAnnotation.getQualifiedName())) {
-                annotation = psiAnnotation;
-                break;
+            String annotationName = psiAnnotation.getQualifiedName();
+            if (null == annotationName) {
+                continue;
+            }
+            //请求路径
+            String methodUrl = getMappingUrl(psiAnnotation);
+            if (StringUtil.isEmpty(methodUrl)) {
+                return null;
+            }
+            //请求方式
+            switch (annotationName) {
+                case ANNOTATION.POST_MAPPING:
+                    return new MappingAnnotation(methodUrl, REQUEST.POST);
+                case ANNOTATION.PUT_MAPPING:
+                    return new MappingAnnotation(methodUrl, REQUEST.PUT);
+                case ANNOTATION.GET_MAPPING:
+                    return new MappingAnnotation(methodUrl, REQUEST.GET);
+                case ANNOTATION.DELETE_MAPPING:
+                    return new MappingAnnotation(methodUrl, REQUEST.DELETE);
+                case ANNOTATION.REQUEST_MAPPING:
+                    return new MappingAnnotation(methodUrl, MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
+                default:
             }
         }
-        //方法注解
-        String methodUrl = getMappingUrl(annotation);
-        if (StringUtil.isEmpty(methodUrl)) {
-            return null;
-        }
-        //请求方式
-        String requestMethod = getMappingMethod(annotation);
-        return new MappingAnnotation(methodUrl, requestMethod);
+        return null;
     }
 
     private String getMappingUrl(PsiAnnotation annotation) {
@@ -123,14 +134,4 @@ public abstract class FastJump {
         return url;
     }
 
-    private String getMappingMethod(PsiAnnotation annotation) {
-        String method = ANNOTATION.MAPPING_METHOD_MAP.get(Objects.requireNonNull(annotation.getQualifiedName()));
-        if (StringUtil.isEmpty(method)) {
-            method = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.METHOD);
-            if (method.contains(COMMON.DOT)) {
-                method = method.substring(method.indexOf(COMMON.DOT) + 1);
-            }
-        }
-        return method;
-    }
 }

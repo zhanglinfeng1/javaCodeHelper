@@ -1,6 +1,7 @@
 package api;
 
 import constant.COMMON;
+import constant.REQUEST;
 import org.apache.commons.codec.digest.DigestUtils;
 import pojo.TransResult;
 import util.JsonUtil;
@@ -40,8 +41,8 @@ public class BaiDuTransApi {
         if (conn instanceof HttpsURLConnection) {
             ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
         }
-        conn.setConnectTimeout(COMMON.SOCKET_TIMEOUT);
-        conn.setRequestMethod(COMMON.REQUEST_GET);
+        conn.setConnectTimeout(REQUEST.SOCKET_TIMEOUT);
+        conn.setRequestMethod(REQUEST.GET);
         if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             return COMMON.BLANK_STRING;
         }
