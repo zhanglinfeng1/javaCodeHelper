@@ -45,26 +45,29 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
         }
-        String from = COMMON.ZH;
-        String to = COMMON.EN;
-        if (StringUtil.isEnglish(selectedText)) {
-            from = COMMON.EN;
-            to = COMMON.ZH;
-        }
-        String translateResult = COMMON.BLANK_STRING;
-        //请求翻译API
-        try {
-            if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
-                translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
+        new Thread(() -> {
+            String from = COMMON.ZH;
+            String to = COMMON.EN;
+            if (StringUtil.isEnglish(selectedText)) {
+                from = COMMON.EN;
+                to = COMMON.ZH;
             }
-        } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
-        }
-        if (StringUtil.isEmpty(translateResult)) {
-            return;
-        }
-        String finalSelectedText = selectedText + COMMON.SPACE + translateResult;
-        WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
+            String translateResult = COMMON.BLANK_STRING;
+            //请求翻译API
+            try {
+                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
+                    translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
+                }
+            } catch (Exception e) {
+                Messages.showMessageDialog(e.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
+            }
+            if (StringUtil.isEmpty(translateResult)) {
+                return;
+            }
+            String finalSelectedText = selectedText + COMMON.SPACE + translateResult;
+            WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
+
+        }).start();
     }
 
 }
