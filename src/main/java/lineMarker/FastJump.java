@@ -26,9 +26,13 @@ import java.util.List;
  * @Date create in 2022/10/17 16:34
  */
 public abstract class FastJump {
+    /** 跳转类型 */
     public final String fastJumpType;
+    /** 跳转目标 */
     public List<PsiMethod> methodList = new ArrayList<>();
+    /** 注解解析对象 */
     private final MappingAnnotation mappingAnnotation;
+    /** 过滤的文件名 */
     private final String filterFolderName;
 
     public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
@@ -43,8 +47,12 @@ public abstract class FastJump {
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
         mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
         Project project = psiMethod.getProject();
+        String basePath = project.getBasePath();
+        basePath = basePath.substring(0, basePath.lastIndexOf(COMMON.SLASH));
+        String currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
+        currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, basePath.length() + 1));
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            if (!virtualFile.getPath().contains("/resources")) {
+            if (!virtualFile.getPath().contains("/resources") && !virtualFile.getPath().contains(currentModulePath)) {
                 PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
                 if (null != psiDirectory) {
                     dealDirectory(psiDirectory);
@@ -65,7 +73,7 @@ public abstract class FastJump {
         for (PsiFile file : files) {
             // 不是 Java 类型的文件直接跳过
             if (!(file.getFileType() instanceof JavaFileType)) {
-                break;
+                continue;
             }
             PsiJavaFile psiJavaFile = (PsiJavaFile) file;
             PsiClass psiClass = psiJavaFile.getClasses()[0];
@@ -116,7 +124,8 @@ public abstract class FastJump {
                 case ANNOTATION.DELETE_MAPPING:
                     return new MappingAnnotation(methodUrl, REQUEST.DELETE);
                 case ANNOTATION.REQUEST_MAPPING:
-                    return new MappingAnnotation(methodUrl, MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
+                    String method = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD);
+                    return new MappingAnnotation(methodUrl, REQUEST.METHOD_LIST.stream().filter(method::contains).findAny().orElse(method));
                 default:
             }
         }
