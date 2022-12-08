@@ -43,6 +43,9 @@ public class ConstructorCompletion extends BasicCompletion {
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
+            if (fieldNameMap.isEmpty()){
+                break;
+            }
             String parameterName = parameter.getName();
             if (parameter.getType().getInternalCanonicalText().equals(fieldNameMap.get(parameterName))) {
                 addParameterList.add(COMMON.THIS_STR + parameterName + COMMON.EQ_STR + parameterName + COMMON.SEMICOLON);

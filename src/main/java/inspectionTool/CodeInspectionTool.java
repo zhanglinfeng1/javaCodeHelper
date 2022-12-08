@@ -49,6 +49,7 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
                     case ANNOTATION.IBATIS_DELETE:
                         String value = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
                         if (value.contains("${")) {
+                            //TODO 精确提示位置
                             holder.registerProblem(annotation, "Replace $ with #");
                         }
                         break;

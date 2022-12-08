@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SqlInspectionTool extends AbstractBaseJavaLocalInspectionTool {
 
+    //TODO sql中 $ 判断
 //    @Override
 //    public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
 //        return new JavaElementVisitor() {
