@@ -51,10 +51,12 @@ public abstract class FastJump {
         String basePath = project.getBasePath();
         //当前模块路径
         String currentModulePath = COMMON.BLANK_STRING;
-        if (null != basePath && -1 != basePath.lastIndexOf(COMMON.SLASH)) {
-            basePath = basePath.substring(0, basePath.lastIndexOf(COMMON.SLASH));
-            currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
-            currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, basePath.length() + 1));
+        if (null != basePath) {
+            int index = basePath.lastIndexOf(COMMON.SLASH);
+            if (-1 != index) {
+                currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
+                currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, index + 1));
+            }
         }
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {

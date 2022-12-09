@@ -69,15 +69,11 @@ public class TemplateFactory {
         this.tableInfo = tableInfo;
         this.tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         this.tableInfo.setPackagePath(packagePath);
-        if (fullPath.endsWith(COMMON.DOUBLE_BACKSLASH)) {
-            this.fullPath = fullPath;
-        } else {
-            this.fullPath = fullPath + COMMON.DOUBLE_BACKSLASH;
-        }
+        this.fullPath = fullPath + (fullPath.endsWith(COMMON.DOUBLE_BACKSLASH) ? COMMON.BLANK_STRING : COMMON.DOUBLE_BACKSLASH);
     }
 
     public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
-        List<Template> templateList = new ArrayList<>();
+        List<Template> templateList = templateFactory.defaultTemplateList;
         if (useDefaultTemplate) {
             //添加自定义模板
             String customTemplatesPath = ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath();
@@ -101,14 +97,10 @@ public class TemplateFactory {
             if (templateList.isEmpty()) {
                 throw new Exception("The custom template does not exist");
             }
-        } else {
-            templateList = templateFactory.defaultTemplateList;
         }
         File file = new File(this.fullPath);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                throw new Exception("Failed to create path");
-            }
+        if (!file.exists() && !file.mkdirs()) {
+            throw new Exception("Failed to create path");
         }
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);

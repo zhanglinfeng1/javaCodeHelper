@@ -38,6 +38,3 @@ public class PostgresqlParse extends SqlParse {
     }
 
 }
-
-
-

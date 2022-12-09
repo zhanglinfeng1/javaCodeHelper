@@ -31,11 +31,10 @@ public abstract class BasicCompletion {
     /** 是否是新行 */
     public boolean isNewLine;
     /** 自动补全List */
-    public List<LookupElementBuilder> returnList;
+    public List<LookupElementBuilder> returnList = new ArrayList<>();
 
     public BasicCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         this.currentElement = psiElement;
-        this.returnList = new ArrayList<>();
         this.currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();

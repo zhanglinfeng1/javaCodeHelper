@@ -85,7 +85,7 @@ public class MethodCompletion extends BasicCompletion {
                 continue;
             }
             PsiClass psiFieldClass = PsiUtil.resolveClassInClassTypeOnly(psiField.getType());
-            if (null == psiFieldClass) {
+            if (null == psiFieldClass || TYPE.BASIC_TYPE_LIST.contains(psiFieldClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiFieldClass.getName())) {
                 continue;
             }
             //变量类的方法
