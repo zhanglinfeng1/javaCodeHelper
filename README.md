@@ -48,6 +48,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 # 版本改动
 <ul>1.4.2
     <li>[BUG]修复翻译卡顿</li>
+    <li>[NEW]可选择Date, Timestamp, LocalDateTime来处理数据库中的时间类型字段</li>
 </ul>
 <ul>1.4.1
     <li>BUG修复</li>

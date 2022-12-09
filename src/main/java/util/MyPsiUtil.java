@@ -163,6 +163,8 @@ public class MyPsiUtil {
         } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
             suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
             basicTypeName = COMMON.S_STR;
+        } else if (TYPE.BASIC_TYPE_LIST.contains(basicTypeName) || TYPE.COMMON_TYPE_LIST.contains(basicTypeName)) {
+            basicTypeName = COMMON.BLANK_STRING;
         }
         suggestedVariableName = suggestedVariableName + basicTypeName;
         variableName = suggestedVariableName.contains(variableName) ? suggestedVariableName : (variableName + basicTypeName);

@@ -85,7 +85,7 @@ public class MethodCompletion extends BasicCompletion {
                 continue;
             }
             PsiClass psiFieldClass = PsiUtil.resolveClassInClassTypeOnly(psiField.getType());
-            if (null == psiFieldClass || TYPE.BASIC_TYPE_LIST.contains(psiFieldClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiFieldClass.getName())) {
+            if (null == psiFieldClass || TYPE.BASIC_TYPE_LIST.contains(psiFieldClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiFieldClass.getName()) || TYPE.COMMON_COLLECT_LIST.contains(psiFieldClass.getName())) {
                 continue;
             }
             //变量类的方法
@@ -149,7 +149,7 @@ public class MethodCompletion extends BasicCompletion {
         }
         //当前变量类型的泛型类
         PsiClass psiClass = MyPsiUtil.getReferenceTypeClass(variableType);
-        if (null == psiClass || TYPE.BASIC_TYPE_LIST.contains(psiClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiClass.getName())) {
+        if (null == psiClass || TYPE.BASIC_TYPE_LIST.contains(psiClass.getName()) || TYPE.COMMON_TYPE_LIST.contains(psiClass.getName()) || TYPE.COMMON_COLLECT_LIST.contains(psiClass.getName())) {
             return;
         }
         endCode = psiClass.getName() + endCode;

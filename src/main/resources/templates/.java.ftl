@@ -4,6 +4,13 @@ package ${packagePath};
     <#if fields.columnType == 'Timestamp'>
 import java.sql.Timestamp;
         <#break>
+    <#elseif fields.columnType == 'Date'>
+import java.util.Date;
+        <#break>
+    <#elseif fields.columnType == 'LocalDateTime'>
+import java.time.LocalDateTime;
+        <#break>
+    <#else>
     </#if>
 </#list>
 

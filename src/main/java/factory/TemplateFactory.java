@@ -74,7 +74,7 @@ public class TemplateFactory {
 
     public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
         List<Template> templateList = templateFactory.defaultTemplateList;
-        if (useDefaultTemplate) {
+        if (!useDefaultTemplate) {
             //添加自定义模板
             String customTemplatesPath = ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath();
             if (StringUtil.isEmpty(customTemplatesPath)) {

@@ -35,7 +35,7 @@ public class CommonConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getApi().equals(commonConfig.getApi())) {
+        if (!dialog.getApiType().equals(commonConfig.getApiType())) {
             return true;
         }
         if (!dialog.getAppId().equals(commonConfig.getAppId())) {
@@ -53,18 +53,22 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
             return true;
         }
+        if (!dialog.getDateClassType().equals(commonConfig.getDateClassType())) {
+            return true;
+        }
         return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
     }
 
     @Override
     public void apply() {
-        commonConfig.setApi(dialog.getApi());
+        commonConfig.setApiType(dialog.getApiType());
         commonConfig.setAppId(dialog.getAppId());
         commonConfig.setSecretKey(dialog.getSecurityKey());
         commonConfig.setFastJumpType(dialog.getFastJumpType());
         commonConfig.setControllerFolderName(dialog.getControllerFolderName());
         commonConfig.setFeignFolderName(dialog.getFeignFolderName());
         commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
+        commonConfig.setDateClassType(dialog.getDateClassType());
         ConfigFactory.getInstance().updateCommonConfig(commonConfig);
     }
 

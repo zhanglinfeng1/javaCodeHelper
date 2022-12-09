@@ -38,6 +38,7 @@ public class CommonConfigDialog {
     private JTextField feignFolderNameTextField;
     private JTextField customTemplatesPathField;
     private JButton downloadButton;
+    private JComboBox<String> dateClassComboBox;
 
     public CommonConfigDialog() {
         customTemplatesPathField.addFocusListener(new FocusAdapter() {
@@ -98,6 +99,14 @@ public class CommonConfigDialog {
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
+        Integer api = commonConfig.getApiType();
+        if (null != api) {
+            apiComboBox.setSelectedIndex(api);
+        }
+        Integer dateClassType = commonConfig.getDateClassType();
+        if (null != dateClassType) {
+            dateClassComboBox.setSelectedIndex(dateClassType);
+        }
     }
 
     public JComponent getComponent() {
@@ -112,11 +121,8 @@ public class CommonConfigDialog {
         return securityKeyTextField.getText();
     }
 
-    public String getApi() {
-        if (null == apiComboBox.getSelectedItem()) {
-            return COMMON.BLANK_STRING;
-        }
-        return apiComboBox.getSelectedItem().toString();
+    public Integer getApiType() {
+        return apiComboBox.getSelectedIndex();
     }
 
     public String getFastJumpType() {
@@ -137,5 +143,9 @@ public class CommonConfigDialog {
     public String getCustomTemplatesPath() {
         String path = customTemplatesPathField.getText();
         return COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON.BLANK_STRING : path;
+    }
+
+    public Integer getDateClassType() {
+        return dateClassComboBox.getSelectedIndex();
     }
 }

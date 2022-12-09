@@ -55,7 +55,7 @@ public class TranslateAction extends AnAction {
             String translateResult = COMMON.BLANK_STRING;
             //请求翻译API
             try {
-                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApi())) {
+                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
                     translateResult = new BaiDuTransApi().trans(appid, securityKey, selectedText, from, to);
                 }
             } catch (Exception e) {

@@ -8,30 +8,28 @@ import constant.COMMON;
  */
 public class CommonConfig {
     /** 翻译api */
-    private String api;
+    private Integer apiType = COMMON.BAIDU_TRANSLATE;
     /** 翻译api appId */
     private String appId;
     /** 翻译api secretKey */
     private String secretKey;
     /** 快捷跳转方式 */
-    private String fastJumpType;
+    private String fastJumpType = COMMON.MODULAR;
     /** controller所在文件夹名 */
     private String controllerFolderName;
     /** feign所在文件夹名 */
     private String feignFolderName;
     /** 自定义模板文件夹 */
     private String customTemplatesPath;
+    /** Java日期类 */
+    private Integer dateClassType = COMMON.DATE_CLASS_TYPE;
 
-    public CommonConfig() {
-        this.fastJumpType = COMMON.MODULAR;
+    public Integer getApiType() {
+        return apiType;
     }
 
-    public String getApi() {
-        return api;
-    }
-
-    public void setApi(String api) {
-        this.api = api;
+    public void setApiType(Integer apiType) {
+        this.apiType = apiType;
     }
 
     public String getAppId() {
@@ -80,5 +78,13 @@ public class CommonConfig {
 
     public void setCustomTemplatesPath(String customTemplatesPath) {
         this.customTemplatesPath = customTemplatesPath;
+    }
+
+    public Integer getDateClassType() {
+        return dateClassType;
+    }
+
+    public void setDateClassType(Integer dateClassType) {
+        this.dateClassType = dateClassType;
     }
 }

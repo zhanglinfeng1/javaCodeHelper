@@ -6,7 +6,8 @@ package constant;
  */
 public class COMMON {
     /** 通用常量 */
-    public static final String BAIDU_TRANSLATE = "百度翻译";
+    public static final Integer BAIDU_TRANSLATE = 0;
+    public static final Integer DATE_CLASS_TYPE = 0;
     public static final String SUCCESS = "成功";
     public static final String GET = "get";
     public static final String SET = "set";
