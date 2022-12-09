@@ -119,7 +119,7 @@ public abstract class FastJump {
             //请求路径
             String methodUrl = getMappingUrl(psiAnnotation);
             if (StringUtil.isEmpty(methodUrl)) {
-                return null;
+                continue;
             }
             //请求方式
             switch (annotationName) {
