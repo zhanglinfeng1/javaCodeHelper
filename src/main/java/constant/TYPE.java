@@ -1,9 +1,7 @@
 package constant;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author zhanglinfeng
@@ -20,10 +18,5 @@ public class TYPE {
     public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
     public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String", "Date", "Timestamp", "BigDecimal");
     public static final List<String> COMMON_COLLECT_LIST = Arrays.asList("List", "Set", "Map");
-    public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
-        put(0, "Date");
-        put(1, "Timestamp");
-        put(2, "LocalDateTime");
-    }};
 
 }

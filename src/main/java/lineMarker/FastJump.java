@@ -116,26 +116,33 @@ public abstract class FastJump {
             if (null == annotationName) {
                 continue;
             }
-            //请求路径
-            String methodUrl = getMappingUrl(psiAnnotation);
-            if (StringUtil.isEmpty(methodUrl)) {
-                continue;
-            }
             //请求方式
+            String method;
             switch (annotationName) {
                 case ANNOTATION.POST_MAPPING:
-                    return new MappingAnnotation(methodUrl, REQUEST.POST);
+                    method = REQUEST.POST;
+                    break;
                 case ANNOTATION.PUT_MAPPING:
-                    return new MappingAnnotation(methodUrl, REQUEST.PUT);
+                    method = REQUEST.PUT;
+                    break;
                 case ANNOTATION.GET_MAPPING:
-                    return new MappingAnnotation(methodUrl, REQUEST.GET);
+                    method = REQUEST.GET;
+                    break;
                 case ANNOTATION.DELETE_MAPPING:
-                    return new MappingAnnotation(methodUrl, REQUEST.DELETE);
+                    method = REQUEST.DELETE;
+                    break;
                 case ANNOTATION.REQUEST_MAPPING:
-                    String method = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD);
-                    return new MappingAnnotation(methodUrl, REQUEST.METHOD_LIST.stream().filter(method::contains).findAny().orElse(method));
+                    method = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD);
+                    break;
                 default:
+                    continue;
             }
+            //请求路径
+            String methodUrl = getMappingUrl(psiAnnotation);
+            if (StringUtil.isNotEmpty(methodUrl)) {
+                return new MappingAnnotation(methodUrl, method);
+            }
+            return null;
         }
         return null;
     }

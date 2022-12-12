@@ -2,17 +2,19 @@ package inspectionTool;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiLocalVariable;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import constant.ANNOTATION;
 import constant.TYPE;
 import org.jetbrains.annotations.NotNull;
-import util.MyPsiUtil;
 
 /**
  * @Author zhanglinfeng
@@ -26,13 +28,19 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
             @Override
             public void visitField(PsiField field) {
                 super.visitField(field);
-                checkType(holder, field, field.getType());
+                checkType(holder, field.getTypeElement(), field.getType());
             }
 
             @Override
             public void visitLocalVariable(PsiLocalVariable variable) {
                 super.visitLocalVariable(variable);
-                checkType(holder, variable, variable.getType());
+                checkType(holder, variable.getTypeElement(), variable.getType());
+            }
+
+            @Override
+            public void visitParameter(PsiParameter parameter) {
+                super.visitParameter(parameter);
+                checkType(holder, parameter.getTypeElement(), parameter.getType());
             }
 
             @Override
@@ -47,10 +55,13 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
                     case ANNOTATION.IBATIS_UPDATE:
                     case ANNOTATION.IBATIS_SELECT:
                     case ANNOTATION.IBATIS_DELETE:
-                        String value = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
-                        if (value.contains("${")) {
-                            //TODO 精确提示位置
-                            holder.registerProblem(annotation, "Replace $ with #");
+                        PsiAnnotationMemberValue memberValue = annotation.findAttributeValue(ANNOTATION.VALUE);
+                        if (null != memberValue) {
+                            String value = memberValue.getText();
+                            int index = value.indexOf("${");
+                            if (-1 != index) {
+                                holder.registerProblem(memberValue, new TextRange(index, index + 1), "Replace $ with #");
+                            }
                         }
                         break;
                     default:

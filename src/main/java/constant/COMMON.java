@@ -1,5 +1,8 @@
 package constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/9/8 17:52
@@ -44,8 +47,13 @@ public class COMMON {
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
     public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "e.g. C:\\zlf\\CustomTemplate";
 
-    /** 配置页菜单名 */
+    /** 配置 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
+    public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
+        put(0, "Date");
+        put(1, "Timestamp");
+        put(2, "LocalDateTime");
+    }};
 
     /** 跳转类型 */
     public static final String MODULAR = "modular";

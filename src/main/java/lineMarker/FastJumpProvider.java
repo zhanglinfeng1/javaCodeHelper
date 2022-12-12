@@ -42,8 +42,7 @@ public class FastJumpProvider extends RelatedItemLineMarkerProvider {
             }
             List<PsiMethod> elementList = fastJump.getMethodList();
             if (!elementList.isEmpty()) {
-                NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(elementList).setTooltipText(COMMON.BLANK_STRING);
-                result.add(builder.createLineMarkerInfo(element));
+                result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(elementList).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(element));
             }
         }
     }

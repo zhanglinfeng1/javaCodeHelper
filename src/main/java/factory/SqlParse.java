@@ -1,6 +1,6 @@
 package factory;
 
-import constant.TYPE;
+import constant.COMMON;
 import pojo.CommonConfig;
 import pojo.TableInfo;
 
@@ -24,7 +24,7 @@ public abstract class SqlParse {
         if (sqlType.contains("int") || sqlType.contains("integer") || sqlType.contains("smallint") || sqlType.contains("serial") || sqlType.contains("smallserial")) {
             return "Integer";
         } else if (sqlType.contains("timestamp") || sqlType.contains("date") || sqlType.contains("datetime") || sqlType.contains("time")) {
-            return TYPE.DATE_TYPE_MAP.get(commonConfig.getDateClassType());
+            return COMMON.DATE_TYPE_MAP.get(commonConfig.getDateClassType());
         } else if (sqlType.contains("double") || sqlType.contains("float") || sqlType.contains("decimal") || sqlType.contains("number") || sqlType.contains("money")) {
             return "Double";
         } else {
