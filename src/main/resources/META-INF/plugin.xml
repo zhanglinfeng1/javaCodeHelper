@@ -72,7 +72,6 @@
         <completion.contributor language="JAVA" implementationClass="completionContributor.CodeCompletionContributor"/>
         <!-- 代码检查 -->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="inspectionTool.CodeInspectionTool"/>
-        <localInspection language="XML" level="WARNING" groupName="JavaCodeHelper" displayName="SqlCheck" enabledByDefault="true" implementationClass="inspectionTool.SqlInspectionTool"/>
     </extensions>
 
     <actions>
