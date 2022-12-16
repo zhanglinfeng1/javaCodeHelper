@@ -43,6 +43,9 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
     }
 
     private void checkType(ProblemsHolder holder, PsiElement psiElement, PsiType psiType) {
+        if (null == psiElement) {
+            return;
+        }
         String typeFullName = psiType.getInternalCanonicalText();
         switch (typeFullName) {
             case TYPE.DATE:
