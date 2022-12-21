@@ -89,7 +89,7 @@ public interface ${tableName}Mapper {
             "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#list>)")
     void insert${tableName}(@Param("obj") ${tableName} obj);
 
-    @Insert("<#noparse><script></#noparse>INSERT INTO ${sqlTableName}(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
+    @Insert("<#noparse><script></#noparse>INSERT INTO ${sqlTableName}(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)VALUES" +
             "<foreach collection = 'list' item='obj' separator=',' > " +
             " (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#noparse>#{obj.</#noparse>${fields.columnName}}<#if fields_has_next>,</#if></#if></#list>) " +
             "</foreach> <#noparse></script></#noparse>")

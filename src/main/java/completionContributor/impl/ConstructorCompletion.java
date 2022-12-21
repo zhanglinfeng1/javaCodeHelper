@@ -13,9 +13,7 @@ import completionContributor.BasicCompletion;
 import constant.COMMON;
 import util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,7 +35,7 @@ public class ConstructorCompletion extends BasicCompletion {
         //构造方法的方法体
         PsiCodeBlock codeBlock = currentMethod.getBody();
         String currentMethodBodyStr = codeBlock == null ? COMMON.BLANK_STRING : codeBlock.getText();
-        List<String> addParameterList = new ArrayList<>();
+        StringBuilder fillStr = new StringBuilder();
         //待处理的变量
         Map<String, String> fieldNameMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
@@ -49,7 +47,7 @@ public class ConstructorCompletion extends BasicCompletion {
             }
             String parameterName = parameter.getName();
             if (parameter.getType().getInternalCanonicalText().equals(fieldNameMap.get(parameterName))) {
-                addParameterList.add(COMMON.THIS_STR + parameterName + COMMON.EQ_STR + parameterName + COMMON.SEMICOLON);
+                fillStr.append(COMMON.THIS_STR).append(parameterName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.SEMICOLON);
                 fieldNameMap.remove(parameterName);
                 continue;
             }
@@ -57,24 +55,21 @@ public class ConstructorCompletion extends BasicCompletion {
             if (null == parameterClass) {
                 continue;
             }
-            List<String> parameterClassMethodNameList = Arrays.stream(parameterClass.getMethods()).map(PsiMethod::getName).collect(Collectors.toList());
             //构造方法的参数为对象类型，处理对象的变量
             for (PsiField field : parameterClass.getFields()) {
                 if (fieldNameMap.isEmpty()){
                     break loop;
                 }
                 String fieldName = field.getName();
-                String methodName = COMMON.GET + StringUtil.toUpperCaseFirst(fieldName);
-                if (!field.getType().getInternalCanonicalText().equals(fieldNameMap.get(fieldName)) || !parameterClassMethodNameList.contains(methodName)) {
+                if (!field.getType().getInternalCanonicalText().equals(fieldNameMap.get(fieldName))) {
                     continue;
                 }
-                addParameterList.add(COMMON.THIS_STR + fieldName + COMMON.EQ_STR + parameter.getName() + COMMON.DOT + methodName + COMMON.END_STR);
+                fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameter.getName()).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
                 fieldNameMap.remove(fieldName);
             }
         }
-        String str = addParameterList.stream().filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.BLANK_STRING));
-        if (StringUtil.isNotEmpty(str)) {
-            returnList.add(LookupElementBuilder.create(str).withPresentableText("fillConstructor")
+        if (StringUtil.isNotEmpty(fillStr)) {
+            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText("fillConstructor")
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
     }

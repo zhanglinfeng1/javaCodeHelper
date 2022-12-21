@@ -17,6 +17,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 完善中...
 
 ## 根据建表SQL生成代码
+主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
 目前支持Mysql、Oracle、Postgresql,需要完整的建表语句加commont<br />
 默认模板可生成model、VO、service、serviceImpl、Mapper、Controller<br />
 建议使用自定义模板，生成的代码更符合自己的项目。可在配置中下载默认模板，在此基础上修改<br />
@@ -48,6 +49,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 # 版本改动
 <ul>1.4.3
     <li>[BUG]优化提示</li>
+    <li>[BUG]Mapper模板批量插入缺关键字VALUES</li>
 </ul>
 <ul>1.4.2
     <li>[BUG]修复翻译卡顿</li>
