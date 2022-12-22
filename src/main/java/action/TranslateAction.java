@@ -47,7 +47,7 @@ public class TranslateAction extends AnAction {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
         }
 
-        ThreadPoolFactory.POOL.execute(() -> {
+        ThreadPoolFactory.TRANS_POOL.execute(() -> {
             String from = COMMON.ZH;
             String to = COMMON.EN;
             if (StringUtil.isEnglish(selectedText)) {
@@ -69,6 +69,6 @@ public class TranslateAction extends AnAction {
             String finalSelectedText = selectedText + COMMON.SPACE + translateResult;
             WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
         });
-        ThreadPoolFactory.POOL.shutdown();
+        ThreadPoolFactory.TRANS_POOL.shutdown();
     }
 }
