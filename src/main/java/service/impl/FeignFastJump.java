@@ -1,8 +1,8 @@
-package lineMarker.impl;
+package service.impl;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
-import lineMarker.FastJump;
+import service.FastJump;
 import util.MyPsiUtil;
 
 /**

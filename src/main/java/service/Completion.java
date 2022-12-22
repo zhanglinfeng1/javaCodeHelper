@@ -1,4 +1,4 @@
-package completionContributor;
+package service;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
@@ -19,7 +19,7 @@ import java.util.List;
  * @Author zhanglinfeng
  * @Date create in 2022/10/16 19:04
  */
-public abstract class BasicCompletion {
+public abstract class Completion {
     /** 当前元素 */
     public PsiElement currentElement;
     /** 当前文本 */
@@ -33,7 +33,7 @@ public abstract class BasicCompletion {
     /** 自动补全List */
     public List<LookupElementBuilder> returnList = new ArrayList<>();
 
-    public BasicCompletion(PsiMethod currentMethod, PsiElement psiElement) {
+    public Completion(PsiMethod currentMethod, PsiElement psiElement) {
         this.currentElement = psiElement;
         this.currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         this.currentMethod = currentMethod;

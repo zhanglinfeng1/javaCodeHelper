@@ -108,7 +108,7 @@ public class MyPsiUtil {
      */
     public static Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
         PsiCodeBlock codeBlock = psiMethod.getBody();
-        Map<String, PsiType> variableMap = new HashMap<>();
+        Map<String, PsiType> variableMap = new HashMap<>(16);
         if (null == codeBlock) {
             return variableMap;
         }

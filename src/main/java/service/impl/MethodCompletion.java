@@ -1,4 +1,4 @@
-package completionContributor.impl;
+package service.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.JavaPsiFacade;
@@ -14,7 +14,7 @@ import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
-import completionContributor.BasicCompletion;
+import service.Completion;
 import constant.COMMON;
 import constant.REGEX;
 import constant.TYPE;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/10/16 19:16
  */
-public class MethodCompletion extends BasicCompletion {
+public class MethodCompletion extends Completion {
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */

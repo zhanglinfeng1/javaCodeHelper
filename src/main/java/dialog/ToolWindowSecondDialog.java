@@ -23,10 +23,14 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/9/20 10:33
+ */
 public class ToolWindowSecondDialog extends JDialog {
     private String[] columnArr;
     private JPanel contentPane;
-    private JButton buttonOK;
+    private JButton submitButton;
     private JButton backButton;
     private JBTable columnTable;
     private JButton addButton;
@@ -128,8 +132,8 @@ public class ToolWindowSecondDialog extends JDialog {
         columnTable.setModel(new DefaultTableModel(null, COMMON.QUERY_COLUMN_TABLE_HEADER));
     }
 
-    public JButton getButtonOK() {
-        return buttonOK;
+    public JButton getSubmitButton() {
+        return submitButton;
     }
 
     public JPanel getContent() {

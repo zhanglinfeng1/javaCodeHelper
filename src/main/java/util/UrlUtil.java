@@ -10,7 +10,7 @@ import java.util.BitSet;
  */
 public class UrlUtil {
     static BitSet dontNeedEncoding;
-    static final int caseDiff = ('a' - 'A');
+    static final int CASE_DIFF = ('a' - 'A');
 
     static {
         dontNeedEncoding = new BitSet(256);
@@ -65,12 +65,12 @@ public class UrlUtil {
                     out.append('%');
                     char ch = Character.forDigit((b >> 4) & 0xF, 16);
                     if (Character.isLetter(ch)) {
-                        ch -= caseDiff;
+                        ch -= CASE_DIFF;
                     }
                     out.append(ch);
                     ch = Character.forDigit(b & 0xF, 16);
                     if (Character.isLetter(ch)) {
-                        ch -= caseDiff;
+                        ch -= CASE_DIFF;
                     }
                     out.append(ch);
                 }

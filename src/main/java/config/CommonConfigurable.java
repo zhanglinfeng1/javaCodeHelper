@@ -69,7 +69,7 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setFeignFolderName(dialog.getFeignFolderName());
         commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
         commonConfig.setDateClassType(dialog.getDateClassType());
-        ConfigFactory.getInstance().updateCommonConfig(commonConfig);
+        ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 
     @Override

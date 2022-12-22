@@ -7,10 +7,11 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
-import completionContributor.impl.ConstructorCompletion;
-import completionContributor.impl.MethodCompletion;
 import constant.ICON;
 import org.jetbrains.annotations.NotNull;
+import service.Completion;
+import service.impl.ConstructorCompletion;
+import service.impl.MethodCompletion;
 
 /**
  * @Author zhanglinfeng
@@ -29,12 +30,12 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (null == currentMethod) {
             return;
         }
-        BasicCompletion basicCompletion;
+        Completion completion;
         if (currentMethod.isConstructor()) {
-            basicCompletion = new ConstructorCompletion(currentMethod, psiElement);
+            completion = new ConstructorCompletion(currentMethod, psiElement);
         } else {
-            basicCompletion = new MethodCompletion(currentMethod, psiElement);
+            completion = new MethodCompletion(currentMethod, psiElement);
         }
-        basicCompletion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
+        completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
     }
 }

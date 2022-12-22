@@ -21,7 +21,7 @@ public class ConfigFactory {
             synchronized (ConfigFactory.class) {
                 if (configFactory == null) {
                     configFactory = new ConfigFactory();
-                    //TODO 寻找替换方法
+                    //TODO 兼容老版本，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
                     configFactory.commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
                 }
             }
@@ -33,7 +33,7 @@ public class ConfigFactory {
         return commonConfig;
     }
 
-    public void updateCommonConfig(CommonConfig commonConfig) {
+    public void setCommonConfig(CommonConfig commonConfig) {
         this.commonConfig = commonConfig;
     }
 }

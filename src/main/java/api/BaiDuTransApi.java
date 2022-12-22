@@ -4,6 +4,7 @@ import constant.COMMON;
 import constant.REQUEST;
 import org.apache.commons.codec.digest.DigestUtils;
 import pojo.TransResult;
+import util.HttpsUtil;
 import util.JsonUtil;
 import util.StringUtil;
 import util.UrlUtil;
@@ -11,13 +12,11 @@ import util.UrlUtil;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class BaiDuTransApi {
         // TODO 兼容低版本，没有使用URLEncoder
         urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
         SSLContext sslcontext = SSLContext.getInstance("TLS");
-        sslcontext.init(null, new TrustManager[]{myX509TrustManager}, null);
+        sslcontext.init(null, new TrustManager[]{HttpsUtil.X_509_TRUST_MANAGER}, null);
         URL uri = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
         if (conn instanceof HttpsURLConnection) {
@@ -64,19 +63,4 @@ public class BaiDuTransApi {
         return list.stream().map(TransResult::getDst).collect(Collectors.joining(COMMON.SEMICOLON));
     }
 
-    private static final TrustManager myX509TrustManager = new X509TrustManager() {
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {
-        }
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {
-        }
-    };
 }

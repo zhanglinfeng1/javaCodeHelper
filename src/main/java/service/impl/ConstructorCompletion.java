@@ -1,4 +1,4 @@
-package completionContributor.impl;
+package service.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
@@ -9,7 +9,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
-import completionContributor.BasicCompletion;
+import service.Completion;
 import constant.COMMON;
 import util.StringUtil;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/10/16 19:02
  */
-public class ConstructorCompletion extends BasicCompletion {
+public class ConstructorCompletion extends Completion {
 
     public ConstructorCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);

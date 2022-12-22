@@ -12,6 +12,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import constant.COMMON;
 import factory.ConfigFactory;
+import factory.ThreadPoolFactory;
 import pojo.CommonConfig;
 import util.StringUtil;
 
@@ -45,7 +46,8 @@ public class TranslateAction extends AnAction {
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
         }
-        new Thread(() -> {
+
+        ThreadPoolFactory.POOL.execute(() -> {
             String from = COMMON.ZH;
             String to = COMMON.EN;
             if (StringUtil.isEnglish(selectedText)) {
@@ -66,6 +68,7 @@ public class TranslateAction extends AnAction {
             }
             String finalSelectedText = selectedText + COMMON.SPACE + translateResult;
             WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
-        }).start();
+        });
+        ThreadPoolFactory.POOL.shutdown();
     }
 }

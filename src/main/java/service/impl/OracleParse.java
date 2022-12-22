@@ -1,8 +1,8 @@
-package factory.impl;
+package service.impl;
 
 import constant.COMMON;
 import constant.REGEX;
-import factory.SqlParse;
+import service.SqlParse;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
 import util.StringUtil;

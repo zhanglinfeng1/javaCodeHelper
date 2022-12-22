@@ -9,11 +9,12 @@ import com.intellij.ui.content.ContentFactory;
 import constant.COMMON;
 import dialog.ToolWindowFirstDialog;
 import dialog.ToolWindowSecondDialog;
-import factory.impl.MysqlParse;
-import factory.impl.OracleParse;
-import factory.impl.PostgresqlParse;
 import org.jetbrains.annotations.NotNull;
 import pojo.TableInfo;
+import service.SqlParse;
+import service.impl.MysqlParse;
+import service.impl.OracleParse;
+import service.impl.PostgresqlParse;
 
 /**
  * @Author: zhanglinfeng
@@ -26,7 +27,7 @@ public class SqlFactory implements ToolWindowFactory {
         ToolWindowFirstDialog firstDialog = new ToolWindowFirstDialog();
         ToolWindowSecondDialog secondDialog = new ToolWindowSecondDialog();
         //添加到IDEA中
-        ContentFactory contentFactory =  toolWindow.getContentManager().getFactory();
+        ContentFactory contentFactory = toolWindow.getContentManager().getFactory();
         Content content = contentFactory.createContent(firstDialog.getContent(), COMMON.BLANK_STRING, false);
         content.setDisplayName(COMMON.BLANK_STRING);
         Content subContent = contentFactory.createContent(secondDialog.getContent(), COMMON.BLANK_STRING, false);
@@ -65,7 +66,7 @@ public class SqlFactory implements ToolWindowFactory {
         //上一步
         secondDialog.getBackButton().addActionListener(e -> this.display(toolWindow, content));
         //生成代码
-        secondDialog.getButtonOK().addActionListener(e -> {
+        secondDialog.getSubmitButton().addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().create(secondDialog.getQueryColumnList(), secondDialog.useDefaultTemplate());
                 this.display(toolWindow, content);

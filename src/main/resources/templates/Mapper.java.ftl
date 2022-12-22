@@ -84,7 +84,7 @@ public interface ${tableName}Mapper {
     }
 
 <#assign noInsert = ["id"]>
-    @SelectKey(keyColumn = "id", before = false, keyProperty = "obj.id", resultType = String.class, statementType = StatementType.STATEMENT, statement = "SELECT LAST_INSERT_ID() AS id")
+    @SelectKey(keyColumn = "id", before = false, keyProperty = "obj.id", resultType = Integer.class, statementType = StatementType.STATEMENT, statement = "SELECT LAST_INSERT_ID() AS id")
     @Insert("INSERT INTO ${sqlTableName} (<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if>${fields.sqlColumnName}</#if></#list>)" +
             "VALUES(<#list columnList as fields><#if !noInsert?seq_contains(fields.columnName)><#if fields_index gt 1>,</#if><#noparse>#{obj.</#noparse>${fields.columnName}}</#if></#list>)")
     void insert${tableName}(@Param("obj") ${tableName} obj);

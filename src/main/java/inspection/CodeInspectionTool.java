@@ -1,4 +1,4 @@
-package inspectionTool;
+package inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;

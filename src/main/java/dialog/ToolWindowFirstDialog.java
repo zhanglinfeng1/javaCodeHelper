@@ -14,6 +14,10 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Objects;
 
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/9/8 10:33
+ */
 public class ToolWindowFirstDialog extends JDialog {
     private JPanel contentPane;
     private JButton nextButton;

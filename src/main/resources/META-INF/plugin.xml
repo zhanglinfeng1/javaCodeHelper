@@ -1,14 +1,14 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.*"/>
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
-            <li>Automatic completion<br />
-                1.In the construction method, according to the parameters, one click completion field assignment<br/>
+            <li>Automatic completionContributor<br />
+                1.In the construction method, according to the parameters, one click completionContributor field assignment<br/>
                 2.In the non construction method, Complete the code according to the characters entered<br/>
             </li>
             <li>Fast Jump<br />
@@ -73,7 +73,7 @@
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="completionContributor.CodeCompletionContributor"/>
         <!-- 代码检查 -->
-        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="inspectionTool.CodeInspectionTool"/>
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="inspection.CodeInspectionTool"/>
     </extensions>
 
     <actions>

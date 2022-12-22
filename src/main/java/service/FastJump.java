@@ -1,4 +1,4 @@
-package lineMarker;
+package service;
 
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;

@@ -1,6 +1,7 @@
-package factory;
+package service;
 
 import constant.COMMON;
+import factory.ConfigFactory;
 import pojo.CommonConfig;
 import pojo.TableInfo;
 

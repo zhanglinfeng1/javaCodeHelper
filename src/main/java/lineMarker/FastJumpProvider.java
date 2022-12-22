@@ -7,11 +7,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import constant.COMMON;
-import factory.ConfigFactory;
-import lineMarker.impl.ControllerFastJump;
-import lineMarker.impl.FeignFastJump;
-import org.jetbrains.annotations.NotNull;
 import constant.ICON;
+import factory.ConfigFactory;
+import org.jetbrains.annotations.NotNull;
+import service.FastJump;
+import service.impl.ControllerFastJump;
+import service.impl.FeignFastJump;
 import util.MyPsiUtil;
 
 import java.util.Collection;
