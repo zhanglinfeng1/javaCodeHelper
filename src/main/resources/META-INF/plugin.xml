@@ -8,8 +8,8 @@
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>Automatic completionContributor<br />
-                1.In the construction method, according to the parameters, one click completionContributor field assignment<br/>
-                2.In the non construction method, Complete the code according to the characters entered<br/>
+                1.In the construction method, complete the field assignment<br/>
+                2.In the non construction method, complete the code according to the characters entered<br/>
             </li>
             <li>Fast Jump<br />
                 Support fast jump between feign and controller. Click the jump icon to jump
@@ -30,7 +30,7 @@
         <p>用于学习插件开发。交流想法、反馈BUG ：<a href="https://gitee.com/zlfzh/idea-plug/issues" target="_blank">gitee</a></p>
         <ul>
             <li>自动补全<br />
-                1.构造方法内，根据参数，一键补全字段赋值<br />
+                1.构造方法内，补全字段赋值<br />
                 2.非构造方法内，根据输入的字符，补全代码<br />
             </li>
             <li>快捷跳转<br />

@@ -11,13 +11,10 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import constant.COMMON;
-import constant.TYPE;
 import factory.ConfigFactory;
 import factory.ThreadPoolFactory;
 import pojo.CommonConfig;
 import util.StringUtil;
-
-import java.util.concurrent.Future;
 
 /**
  * @Author zhanglinfeng
@@ -50,7 +47,7 @@ public class TranslateAction extends AnAction {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
         }
 
-        Future<?> f = ThreadPoolFactory.TRANS_POOL.submit(() -> {
+        ThreadPoolFactory.TRANS_POOL.execute(() -> {
             String from = COMMON.ZH;
             String to = COMMON.EN;
             if (StringUtil.isEnglish(selectedText)) {
@@ -67,11 +64,5 @@ public class TranslateAction extends AnAction {
                 WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
             }
         });
-
-        try {
-            f.get();
-        } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage().replace(TYPE.RUN_TIME_EXCEPTION, COMMON.BLANK_STRING).replace(COMMON.COLON, COMMON.BLANK_STRING), COMMON.BLANK_STRING, Messages.getInformationIcon());
-        }
     }
 }

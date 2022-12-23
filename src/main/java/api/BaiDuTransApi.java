@@ -24,7 +24,7 @@ import java.net.URL;
  */
 public class BaiDuTransApi {
 
-    public String trans(String appid, String securityKey, String query, String from, String to) throws RuntimeException {
+    public String trans(String appid, String securityKey, String query, String from, String to) {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
         String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
@@ -59,7 +59,8 @@ public class BaiDuTransApi {
             }
             return result.getResult();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
+            return COMMON.BLANK_STRING;
         }
     }
 }
