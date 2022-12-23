@@ -15,7 +15,7 @@
                 Support fast jump between feign and controller. Click the jump icon to jump
             </li>
             <li>One click translation<br />
-                Currently, only Baidu Translation is supported. You can apply for Baidu Translation Platform Account and translate 1 million characters for free every month<br />
+                At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
                 After configuring the account in the idea, select the text to be translated, right-click and select Translate<br />
             </li>
             <li>Code suggestions<br />
@@ -34,10 +34,10 @@
                 2.非构造方法内，根据输入的字符，补全代码<br />
             </li>
             <li>快捷跳转<br />
-                支持feign与controller的快捷跳转，点击跳转图标，一键跳转
+                支持feign与controller的快捷跳转，点击图标跳转
             </li>
             <li>一键翻译<br />
-                目前仅支持百度翻译，可自行申请百度翻译平台账号，每月可免费翻译100万字符<br />
+                目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
                 在idea中配置账号后，选中待翻译文本，右击选择Translate即可<br />
             </li>
             <li>代码建议<br />

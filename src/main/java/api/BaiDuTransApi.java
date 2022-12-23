@@ -6,6 +6,7 @@ import constant.REQUEST;
 import org.apache.commons.codec.digest.DigestUtils;
 import pojo.BaiDuTransResult;
 import util.HttpsUtil;
+import util.JsonUtil;
 import util.StringUtil;
 import util.UrlUtil;
 
@@ -53,7 +54,7 @@ public class BaiDuTransApi {
             br.close();
             is.close();
             conn.disconnect();
-            BaiDuTransResult result = JSONObject.parseObject(builder.toString(), BaiDuTransResult.class);
+            BaiDuTransResult result = JsonUtil.toObject(builder.toString(), BaiDuTransResult.class);
             if (StringUtil.isNotEmpty(result.getError_code())) {
                 throw new RuntimeException(result.getError_msg());
             }
