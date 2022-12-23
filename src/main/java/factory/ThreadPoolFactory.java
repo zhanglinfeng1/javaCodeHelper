@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @Date create in 2022/12/22 17:51
  */
 public class ThreadPoolFactory {
-    public static final ThreadPoolExecutor TRANS_POOL = new ThreadPoolExecutor(3, 6, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
-            new ThreadFactoryBuilder().setNameFormat("trans-pool-%d").build());
+    public static final ThreadPoolExecutor TRANS_POOL = new ThreadPoolExecutor(3, 6, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+            new ThreadFactoryBuilder().setNameFormat("trans-pool-%d").build(),new ThreadPoolExecutor.AbortPolicy());
 
 }
