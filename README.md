@@ -48,10 +48,10 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 
 # 版本改动
 <ul>1.4.4
-    <li>[BUG]删除IDEA预计移除的方法 ContentFactory.SERVICE</li>
+    <li>配置界面美化</li>
 </ul>
 <ul>1.4.3
-    <li>[BUG]优化提示</li>
+    <li>优化提示</li>
     <li>[BUG]Mapper模板批量插入缺关键字VALUES</li>
 </ul>
 <ul>1.4.2
