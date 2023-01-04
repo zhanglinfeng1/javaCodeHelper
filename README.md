@@ -47,6 +47,9 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
+<ul>1.4.5
+    <li>优化变量名</li>
+</ul>
 <ul>1.4.4
     <li>配置界面美化</li>
 </ul>

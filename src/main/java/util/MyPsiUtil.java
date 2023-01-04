@@ -158,7 +158,8 @@ public class MyPsiUtil {
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = COMMON.BLANK_STRING;
         if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {
-            suggestedVariableName = StringUtil.toLowerCaseFirst(StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES));
+            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES).split(",");
+            suggestedVariableName = StringUtil.toLowerCaseFirst(suggestedVariableNames[suggestedVariableNames.length - 1].trim());
             basicTypeName = basicTypeName.split(COMMON.LESS_THAN_SIGN)[0];
         } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
             suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
@@ -166,8 +167,14 @@ public class MyPsiUtil {
         } else if (TYPE.BASIC_TYPE_LIST.contains(basicTypeName) || TYPE.COMMON_TYPE_LIST.contains(basicTypeName)) {
             basicTypeName = COMMON.BLANK_STRING;
         }
-        suggestedVariableName = suggestedVariableName + basicTypeName;
-        variableName = suggestedVariableName.contains(variableName) ? suggestedVariableName : (variableName + basicTypeName);
+        suggestedVariableName = (TYPE.BASIC_TYPE_LIST.contains(suggestedVariableName) || TYPE.COMMON_TYPE_LIST.contains(suggestedVariableName) ? COMMON.BLANK_STRING : suggestedVariableName) + basicTypeName;
+        if (suggestedVariableName.contains(variableName)) {
+            variableName = suggestedVariableName;
+        } else if (basicTypeName.contains(variableName)) {
+            variableName = basicTypeName;
+        } else {
+            variableName = variableName + basicTypeName;
+        }
         List<String> variableNameList = new ArrayList<>(currentMethodVariableMap.keySet());
         if (variableNameList.contains(variableName)) {
             variableName = dealVariableName(variableNameList, variableName + 1, 1);
