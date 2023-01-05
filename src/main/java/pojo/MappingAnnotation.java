@@ -1,6 +1,11 @@
 package pojo;
 
 import constant.COMMON;
+import util.StringUtil;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author zhanglinfeng
@@ -35,8 +40,20 @@ public class MappingAnnotation {
     }
 
     public boolean equals(MappingAnnotation mappingAnnotation) {
-        String noSlashUrl = this.url.replaceAll(COMMON.SLASH, COMMON.BLANK_STRING);
-        String noSlashTargetUrl = mappingAnnotation.getUrl().replaceAll(COMMON.SLASH, COMMON.BLANK_STRING);
-        return (this.url.equals(mappingAnnotation.getUrl()) || noSlashUrl.equals(noSlashTargetUrl)) && this.method.equals(mappingAnnotation.getMethod());
+        if (!this.method.equals(mappingAnnotation.getMethod())) {
+            return false;
+        }
+        List<String> urlList = Arrays.stream(this.url.split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
+        List<String> targetUrlList = Arrays.stream(mappingAnnotation.getUrl().split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
+        int urlSize = urlList.size();
+        if (urlSize != targetUrlList.size()) {
+            return false;
+        }
+        for (int i = 0; i < urlSize; i++) {
+            if (!urlList.get(i).equals(targetUrlList.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
