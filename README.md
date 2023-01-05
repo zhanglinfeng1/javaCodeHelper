@@ -2,15 +2,15 @@
 idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流想法、反馈BUG
 
 ## 代码补全
-1.构造方法内，根据参数，一键补全字段赋值<br />
+1.构造方法内，补全字段赋值<br />
 2.非构造方法内，根据输入的字符，补全代码<br />
 
 ## 快捷跳转
-支持feign与controller的快捷跳转，点击图标，一键跳转
+支持feign与controller的快捷跳转，点击图标跳转
 
 ## 一键翻译
-目前仅支持百度翻译，可自行申请百度翻译平台账号，每月可免费翻译100万字符<br />
-在idea中配置后，选中待翻译文本，右击选择Translate即可<br />
+目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
+在idea中配置账号后，选中待翻译文本，右击选择Translate即可<br />
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 
 ## 代码建议
@@ -18,8 +18,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
-目前支持Mysql、Oracle、Postgresql,需要完整的建表语句加commont<br />
-默认模板可生成model、VO、service、serviceImpl、Mapper、Controller<br />
+需要完整的建表语句加commont<br />
 建议使用自定义模板，生成的代码更符合自己的项目。可在配置中下载默认模板，在此基础上修改<br />
 模板变量如下<br />
 
