@@ -1,5 +1,7 @@
 package service;
 
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
+import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -13,13 +15,15 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import constant.ANNOTATION;
 import constant.COMMON;
+import constant.ICON;
 import constant.REQUEST;
 import pojo.MappingAnnotation;
 import util.MyPsiUtil;
 import util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author zhanglinfeng
@@ -27,27 +31,20 @@ import java.util.List;
  */
 public abstract class FastJump {
     /** 跳转类型 */
-    public final String fastJumpType;
-    /** 跳转目标 */
-    public List<PsiMethod> methodList = new ArrayList<>();
-    /** 注解解析对象 */
-    private final MappingAnnotation mappingAnnotation;
+    public String fastJumpType;
     /** 过滤的文件名 */
     private final String filterFolderName;
 
-    public FastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
+    public FastJump(String filterFolderName) {
         this.filterFolderName = filterFolderName;
+    }
+
+    public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass, String fastJumpType) {
         this.fastJumpType = fastJumpType;
-        //获取方法的注解
-        mappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
-        if (null == mappingAnnotation) {
-            return;
-        }
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-        mappingAnnotation.setUrl(classUrl + mappingAnnotation.getUrl());
         //当前项目路径
-        Project project = psiMethod.getProject();
+        Project project = psiClass.getProject();
         String basePath = project.getBasePath();
         //当前模块路径
         String currentModulePath = COMMON.BLANK_STRING;
@@ -58,20 +55,39 @@ public abstract class FastJump {
                 currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, index + 1));
             }
         }
+        Map<String, MappingAnnotation> map = new HashMap<>();
+        for (PsiMethod psiMethod : psiClass.getMethods()) {
+            //获取方法的注解
+            MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, psiMethod);
+            if (null == mappingAnnotation) {
+                continue;
+            }
+            map.put(mappingAnnotation.toString(), mappingAnnotation);
+        }
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
                 continue;
             }
             PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
             if (null != psiDirectory) {
-                dealDirectory(psiDirectory);
+                dealDirectory(map, psiDirectory);
+                if (end(map)) {
+                    break;
+                }
+            }
+        }
+        for (MappingAnnotation mappingAnnotation : map.values()) {
+            if (!mappingAnnotation.getTargetMethodList().isEmpty()) {
+                result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(mappingAnnotation.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(mappingAnnotation.getPsiMethod()));
             }
         }
     }
 
-    private void dealDirectory(PsiDirectory psiDirectory) {
+    public abstract boolean end(Map<String, MappingAnnotation> map);
+
+    private void dealDirectory(Map<String, MappingAnnotation> map, PsiDirectory psiDirectory) {
         for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
-            this.dealDirectory(subdirectory);
+            this.dealDirectory(map, subdirectory);
         }
         //只处理符合的文件夹名下的文件
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
@@ -92,13 +108,13 @@ public abstract class FastJump {
             String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
             for (PsiMethod psiMethod : psiClass.getMethods()) {
                 //获取方法的注解
-                MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(psiMethod.getAnnotations());
+                MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(classUrl, psiMethod);
                 if (null == targetMappingAnnotation) {
                     continue;
                 }
-                targetMappingAnnotation.setUrl(classUrl + targetMappingAnnotation.getUrl());
-                if (mappingAnnotation.equals(targetMappingAnnotation)) {
-                    methodList.add(psiMethod);
+                MappingAnnotation mappingAnnotation = map.get(targetMappingAnnotation.toString());
+                if (null != mappingAnnotation) {
+                    mappingAnnotation.getTargetMethodList().add(psiMethod);
                 }
             }
         }
@@ -106,12 +122,8 @@ public abstract class FastJump {
 
     public abstract boolean checkClass(PsiClass psiClass);
 
-    public List<PsiMethod> getMethodList() {
-        return methodList;
-    }
-
-    private MappingAnnotation getMappingAnnotation(PsiAnnotation[] psiAnnotationArr) {
-        for (PsiAnnotation psiAnnotation : psiAnnotationArr) {
+    private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
+        for (PsiAnnotation psiAnnotation : psiMethod.getAnnotations()) {
             String annotationName = psiAnnotation.getQualifiedName();
             if (null == annotationName) {
                 continue;
@@ -140,7 +152,7 @@ public abstract class FastJump {
             //请求路径
             String methodUrl = getMappingUrl(psiAnnotation);
             if (StringUtil.isNotEmpty(methodUrl)) {
-                return new MappingAnnotation(methodUrl, method);
+                return new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method);
             }
             return null;
         }

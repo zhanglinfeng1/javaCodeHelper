@@ -20,7 +20,7 @@ public class COMMON {
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
     public static final String DOT = ".";
-    public static final String COLON = ":";
+    public static final String COMMA = ",";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String LEFT_BRACKETS = "[";

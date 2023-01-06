@@ -158,7 +158,7 @@ public class MyPsiUtil {
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = COMMON.BLANK_STRING;
         if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {
-            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES).split(",");
+            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES).split(COMMON.COMMA);
             suggestedVariableName = StringUtil.toLowerCaseFirst(suggestedVariableNames[suggestedVariableNames.length - 1].trim());
             basicTypeName = basicTypeName.split(COMMON.LESS_THAN_SIGN)[0];
         } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {

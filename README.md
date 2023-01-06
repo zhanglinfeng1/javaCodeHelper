@@ -6,7 +6,8 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 2.非构造方法内，根据输入的字符，补全代码<br />
 
 ## 快捷跳转
-支持feign与controller的快捷跳转，点击图标跳转
+1.feign与controller的快捷跳转<br />
+2.sql与方法的快捷跳转<br />
 
 ## 一键翻译
 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
@@ -46,8 +47,9 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
-<ul>1.4.5
-    <li>优化变量名</li>
+<ul>1.5.0
+    <li>优化代码补全中的变量命名</li>
+    <li>[NEW]sql与方法的快捷跳转</li>
 </ul>
 <ul>1.4.4
     <li>配置界面美化</li>

@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.4.5</version>
+    <version>1.5.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41" until-build="223.8214.52"/>
     <description><![CDATA[
@@ -12,7 +12,8 @@
                 2.In the non construction method, complete the code according to the characters entered<br/>
             </li>
             <li>Fast Jump<br />
-                Support fast jump between feign and controller. Click the jump icon to jump
+                1.Support fast jump between feign and controller. Click the jump icon to jump<br />
+                2.Support quick jump of sql and methods<br />
             </li>
             <li>One click translation<br />
                 At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
@@ -34,7 +35,8 @@
                 2.非构造方法内，根据输入的字符，补全代码<br />
             </li>
             <li>快捷跳转<br />
-                支持feign与controller的快捷跳转，点击图标跳转
+                1.支持feign与controller的快捷跳转，点击图标跳转<br />
+                2.支持sql与方法的快捷跳转<br />
             </li>
             <li>一键翻译<br />
                 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
@@ -61,7 +63,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.FastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.FeignFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.MapperFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="XML" implementationClass="lineMarker.XmlFastJumpProvider"/>
         <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
         <!-- 配置持久化 -->

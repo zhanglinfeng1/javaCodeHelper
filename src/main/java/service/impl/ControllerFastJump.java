@@ -2,8 +2,12 @@ package service.impl;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import pojo.MappingAnnotation;
 import service.FastJump;
 import util.MyPsiUtil;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author zhanglinfeng
@@ -11,8 +15,13 @@ import util.MyPsiUtil;
  */
 public class ControllerFastJump extends FastJump {
 
-    public ControllerFastJump(PsiClass psiClass, PsiMethod psiMethod, String filterFolderName, String fastJumpType) {
-        super(psiClass, psiMethod, filterFolderName, fastJumpType);
+    public ControllerFastJump(String filterFolderName) {
+        super(filterFolderName);
+    }
+
+    @Override
+    public boolean end(Map<String, MappingAnnotation> map) {
+        return false;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package pojo;
 
+import com.intellij.psi.PsiMethod;
 import constant.COMMON;
 import util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,13 +16,17 @@ import java.util.stream.Collectors;
 public class MappingAnnotation {
     private String url;
     private String method;
+    private PsiMethod psiMethod;
+    private List<PsiMethod> targetMethodList;
 
     public MappingAnnotation() {
     }
 
-    public MappingAnnotation(String url, String method) {
+    public MappingAnnotation(PsiMethod psiMethod, String url, String method) {
+        this.psiMethod = psiMethod;
         this.url = url;
         this.method = method;
+        this.targetMethodList = new ArrayList<>();
     }
 
     public String getUrl() {
@@ -39,21 +45,24 @@ public class MappingAnnotation {
         this.method = method;
     }
 
-    public boolean equals(MappingAnnotation mappingAnnotation) {
-        if (!this.method.equals(mappingAnnotation.getMethod())) {
-            return false;
-        }
-        List<String> urlList = Arrays.stream(this.url.split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-        List<String> targetUrlList = Arrays.stream(mappingAnnotation.getUrl().split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-        int urlSize = urlList.size();
-        if (urlSize != targetUrlList.size()) {
-            return false;
-        }
-        for (int i = 0; i < urlSize; i++) {
-            if (!urlList.get(i).equals(targetUrlList.get(i))) {
-                return false;
-            }
-        }
-        return true;
+    public PsiMethod getPsiMethod() {
+        return psiMethod;
+    }
+
+    public void setPsiMethod(PsiMethod psiMethod) {
+        this.psiMethod = psiMethod;
+    }
+
+    public List<PsiMethod> getTargetMethodList() {
+        return targetMethodList;
+    }
+
+    public void setTargetMethodList(List<PsiMethod> targetMethodList) {
+        this.targetMethodList = targetMethodList;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.stream(this.url.split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.SLASH)) + COMMON.UNDERSCORE + this.method;
     }
 }

@@ -60,7 +60,7 @@ public class StringUtil {
     }
 
     /**
-     * 正则获取收个匹配的字符串
+     * 正则获取首个匹配的字符串
      *
      * @param str   待处理字符串
      * @param regex 正则表达式
