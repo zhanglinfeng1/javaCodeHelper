@@ -1,6 +1,7 @@
 package util;
 
 import constant.COMMON;
+import constant.REGEX;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,5 +73,22 @@ public class StringUtil {
             return m.group(1);
         }
         return COMMON.BLANK_STRING;
+    }
+
+    /**
+     * 转驼峰格式
+     *
+     * @param str 待处理字符串
+     * @return String
+     */
+    public static String toHumpStyle(String str) {
+        Pattern compile = Pattern.compile(REGEX.HUMP);
+        Matcher matcher = compile.matcher(str.toLowerCase());
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(0).toUpperCase().replace(COMMON.UNDERSCORE, COMMON.BLANK_STRING));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }

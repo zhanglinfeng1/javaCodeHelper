@@ -1,5 +1,6 @@
 package util;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
@@ -238,4 +239,26 @@ public class MyPsiUtil {
         }
         return classMethodList.toArray(new PsiMethod[0]);
     }
+
+    /**
+     * 获取当前模块路径
+     *
+     * @param element 元素
+     * @return 模块路径
+     */
+    public static String getCurrentModulePath(PsiElement element) {
+        Project project = element.getProject();
+        String basePath = project.getBasePath();
+        //当前模块路径
+        String currentModulePath = COMMON.BLANK_STRING;
+        if (null != basePath) {
+            int index = basePath.lastIndexOf(COMMON.SLASH);
+            if (-1 != index) {
+                currentModulePath = element.getContainingFile().getVirtualFile().getPath();
+                currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, index + 1));
+            }
+        }
+        return currentModulePath;
+    }
+
 }

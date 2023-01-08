@@ -43,18 +43,8 @@ public abstract class FastJump {
         this.fastJumpType = fastJumpType;
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-        //当前项目路径
-        Project project = psiClass.getProject();
-        String basePath = project.getBasePath();
         //当前模块路径
-        String currentModulePath = COMMON.BLANK_STRING;
-        if (null != basePath) {
-            int index = basePath.lastIndexOf(COMMON.SLASH);
-            if (-1 != index) {
-                currentModulePath = psiClass.getContainingFile().getVirtualFile().getPath();
-                currentModulePath = currentModulePath.substring(0, currentModulePath.indexOf(COMMON.SLASH, index + 1));
-            }
-        }
+        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
         Map<String, MappingAnnotation> map = new HashMap<>();
         for (PsiMethod psiMethod : psiClass.getMethods()) {
             //获取方法的注解
@@ -64,6 +54,7 @@ public abstract class FastJump {
             }
             map.put(mappingAnnotation.toString(), mappingAnnotation);
         }
+        Project project = psiClass.getProject();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
                 continue;
@@ -84,6 +75,8 @@ public abstract class FastJump {
     }
 
     public abstract boolean end(Map<String, MappingAnnotation> map);
+
+    public abstract boolean checkClass(PsiClass psiClass);
 
     private void dealDirectory(Map<String, MappingAnnotation> map, PsiDirectory psiDirectory) {
         for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
@@ -119,8 +112,6 @@ public abstract class FastJump {
             }
         }
     }
-
-    public abstract boolean checkClass(PsiClass psiClass);
 
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
         for (PsiAnnotation psiAnnotation : psiMethod.getAnnotations()) {

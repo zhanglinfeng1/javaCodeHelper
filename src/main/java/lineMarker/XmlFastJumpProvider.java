@@ -14,6 +14,6 @@ import java.util.Collection;
 public class XmlFastJumpProvider extends RelatedItemLineMarkerProvider {
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-
+        //TODO 跳方法
     }
 }

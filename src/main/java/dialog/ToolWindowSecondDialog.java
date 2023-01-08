@@ -73,14 +73,12 @@ public class ToolWindowSecondDialog extends JDialog {
         });
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
-            Object[] row = {columnArr[0], COMMON.BLANK_STRING, COMMON.SELECT_OPTIONS[0]};
+            Object[] row = {columnArr[0], StringUtil.toHumpStyle(columnArr[0]), COMMON.SELECT_OPTIONS[0]};
             model.insertRow(model.getRowCount(), row);
             JComboBox<String> columnComboBox = new JComboBox<>(columnArr);
             columnComboBox.setSelectedIndex(0);
             columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(columnComboBox));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            JComboBox<String> selectOptionsComboBox = new JComboBox<>(COMMON.SELECT_OPTIONS);
-            selectOptionsComboBox.setSelectedIndex(0);
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
         });
 
