@@ -2,12 +2,13 @@ package dialog;
 
 import com.intellij.ui.table.JBTable;
 import constant.COMMON;
+import constant.ICON;
 import pojo.ColumnInfo;
 import pojo.TableInfo;
-import constant.ICON;
 import util.StringUtil;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -45,72 +46,20 @@ public class ToolWindowSecondDialog extends JDialog {
 
         addButton.setContentAreaFilled(false);
         addButton.setBorderPainted(false);
-        addButton.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                addButton.setIcon(ICON.ADD2_PNG);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                addButton.setIcon(ICON.ADD_PNG);
-            }
-        });
+        addButton.addMouseListener(getListener(addButton, ICON.ADD2_PNG, ICON.ADD_PNG));
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
             Object[] row = {columnArr[0], StringUtil.toHumpStyle(columnArr[0]), COMMON.SELECT_OPTIONS[0]};
-            model.insertRow(model.getRowCount(), row);
-            JComboBox<String> columnComboBox = new JComboBox<>(columnArr);
-            columnComboBox.setSelectedIndex(0);
-            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(columnComboBox));
+            int rowNum = model.getRowCount();
+            model.insertRow(rowNum, row);
+            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
         });
 
         deleteButton.setContentAreaFilled(false);
         deleteButton.setBorderPainted(false);
-        deleteButton.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                deleteButton.setIcon(ICON.DELETE2_PNG);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                deleteButton.setIcon(ICON.DELETE_PNG);
-            }
-        });
-
+        deleteButton.addMouseListener(getListener(deleteButton, ICON.DELETE2_PNG, ICON.DELETE_PNG));
         deleteButton.addActionListener(e -> {
             int rowNum = columnTable.getSelectedRow();
             if (rowNum >= 0) {
@@ -128,6 +77,13 @@ public class ToolWindowSecondDialog extends JDialog {
             columnArr[i] = columnInfoList.get(i).getSqlColumnName();
         }
         columnTable.setModel(new DefaultTableModel(null, COMMON.QUERY_COLUMN_TABLE_HEADER));
+        columnTable.getModel().addTableModelListener(e -> {
+            int columnNum = e.getColumn();
+            if (columnNum == 0) {
+                DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
+                model.setValueAt(StringUtil.toHumpStyle(model.getValueAt(e.getFirstRow(), 0).toString()), e.getFirstRow(), 1);
+            }
+        });
     }
 
     public JButton getSubmitButton() {
@@ -162,7 +118,36 @@ public class ToolWindowSecondDialog extends JDialog {
         return queryColumnList;
     }
 
-    public boolean useDefaultTemplate(){
+    public boolean useDefaultTemplate() {
         return defaultTemplateRadioButton.isSelected();
+    }
+
+    private MouseListener getListener(JButton button, Icon mouseEnteredIcon, Icon mouseExitedIcon) {
+        return new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setIcon(mouseEnteredIcon);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setIcon(mouseExitedIcon);
+            }
+        };
     }
 }
