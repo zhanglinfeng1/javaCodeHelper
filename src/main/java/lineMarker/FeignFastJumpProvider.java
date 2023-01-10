@@ -1,16 +1,12 @@
 package lineMarker;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import factory.ConfigFactory;
-import org.jetbrains.annotations.NotNull;
 import service.FastJump;
 import service.impl.ControllerFastJump;
 import service.impl.FeignFastJump;
 import util.MyPsiUtil;
-
-import java.util.Collection;
 
 /**
  * @Author zhanglinfeng
@@ -28,16 +24,16 @@ public class FeignFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> 
     }
 
     @Override
-    public void addLineMarker(PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    public void dealPsiElement() {
         FastJump fastJump;
-        if (MyPsiUtil.isFeign(psiClass)) {
+        if (MyPsiUtil.isFeign(element)) {
             fastJump = new FeignFastJump(controllerFolderName);
-        } else if (MyPsiUtil.isController(fastJumpType, psiClass)) {
+        } else if (MyPsiUtil.isController(fastJumpType, element)) {
             fastJump = new ControllerFastJump(feignFolderName);
         } else {
             return;
         }
-        fastJump.addLineMarker(result, psiClass, fastJumpType);
+        fastJump.addLineMarker(result, element, fastJumpType);
     }
 
 }

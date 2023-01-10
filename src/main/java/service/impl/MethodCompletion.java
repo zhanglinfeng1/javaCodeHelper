@@ -52,7 +52,8 @@ public class MethodCompletion extends Completion {
         //在新的一行
         if (isNewLine) {
             //已有变量转化
-            addExistVariableTransformation();
+            currentMethodVariableMap.entrySet().stream().filter(t->t.getKey().contains(currentText))
+                    .forEach(t->addTransformation(t.getKey(), t.getValue(), t.getKey() + COMMON.EQ_STR));
             //寻找void类型方法
             addSameType(currentText, TYPE.VOID, COMMON.BLANK_STRING);
         } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
@@ -118,15 +119,6 @@ public class MethodCompletion extends Completion {
                 paramStr.insert(1, Arrays.stream(psiParameterArr).map(PsiParameter::getName).collect(Collectors.joining(COMMON.COMMA_STR)));
             }
             returnList.add(LookupElementBuilder.create(code + fieldMethod.getName() + paramStr).withPresentableText(code + fieldMethod.getName()));
-        }
-    }
-
-    private void addExistVariableTransformation() {
-        for (Map.Entry<String, PsiType> entry : currentMethodVariableMap.entrySet()) {
-            if (!entry.getKey().contains(currentText)) {
-                continue;
-            }
-            addTransformation(entry.getKey(), entry.getValue(), entry.getKey() + COMMON.EQ_STR);
         }
     }
 

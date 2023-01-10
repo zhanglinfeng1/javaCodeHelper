@@ -1,7 +1,5 @@
 package lineMarker;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -9,7 +7,6 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -18,16 +15,13 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import constant.ANNOTATION;
 import constant.COMMON;
-import constant.ICON;
 import constant.TYPE;
 import constant.XML;
-import org.jetbrains.annotations.NotNull;
 import util.MyPsiUtil;
 import util.StringUtil;
 import util.XmlUtil;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +33,8 @@ import java.util.stream.Collectors;
  * @Date create in 2023/1/6 14:25
  */
 public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> {
+    private String classFullName;
+    private Map<String, PsiMethod> methodMap;
 
     @Override
     public boolean checkPsiElement(PsiElement element) {
@@ -50,19 +46,18 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
     }
 
     @Override
-    public void addLineMarker(PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    public void dealPsiElement() {
         // 注解方式跳转
-        addByAnnotation(psiClass, result);
+        addByAnnotation();
         // xml方式跳转
-        addByXml(psiClass, result);
+        addByXml();
     }
 
-    private void addByAnnotation(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    private void addByAnnotation() {
         Map<String, PsiClass[]> psiClassMap = new HashMap<>();
-        PsiShortNamesCache cache = PsiShortNamesCache.getInstance(psiClass.getProject());
-        GlobalSearchScope searchScope = psiClass.getResolveScope();
-        loop:
-        for (PsiMethod psiMethod : psiClass.getMethods()) {
+        PsiShortNamesCache cache = PsiShortNamesCache.getInstance(element.getProject());
+        GlobalSearchScope searchScope = element.getResolveScope();
+        for (PsiMethod psiMethod : element.getMethods()) {
             Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && ANNOTATION.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isPresent()) {
                 PsiAnnotation annotation = annotationOptional.get();
@@ -72,49 +67,35 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
                     psiClassMap.put(className, searchResultArr);
                     return searchResultArr;
                 });
-                String method = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.METHOD);
-                for (PsiClass targetClass : psiClassArr) {
-                    for (PsiMethod targetMethod : targetClass.getMethods()) {
-                        if (method.equals(targetMethod.getName())) {
-                            result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(targetMethod).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(psiMethod));
-                            result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(psiMethod).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(targetMethod));
-                            continue loop;
-                        }
-                    }
-                }
+                Arrays.stream(psiClassArr).map(c -> Arrays.stream(c.getMethods()).filter(m -> MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.METHOD).equals(m.getName())).findAny())
+                        .filter(Optional::isPresent).map(Optional::get).findAny().ifPresent(t -> addLineMarkerBoth(t, psiMethod));
             }
         }
     }
 
-    private void addByXml(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
+    private void addByXml() {
+        String currentModulePath = MyPsiUtil.getCurrentModulePath(element);
         if (StringUtil.isNotEmpty(currentModulePath)) {
-            Project project = psiClass.getProject();
-            String classFullName = psiClass.getQualifiedName();
-            Map<String, PsiMethod> methodMap = Arrays.stream(psiClass.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
+            Project project = element.getProject();
+            classFullName = element.getQualifiedName();
+            methodMap = Arrays.stream(element.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
             for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
                 if (virtualFile.getPath().contains(currentModulePath)) {
-                    Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(t -> findXml(classFullName, methodMap, t, result));
+                    Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::findXml);
                 }
             }
         }
     }
 
-    private void findXml(String classFullName, Map<String, PsiMethod> methodMap, PsiDirectory psiDirectory, Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    private void findXml(PsiDirectory psiDirectory) {
         for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
-            this.findXml(classFullName, methodMap, subdirectory, result);
+            this.findXml(subdirectory);
         }
-        PsiFile[] files = psiDirectory.getFiles();
-        for (PsiFile file : files) {
-            if (!(file instanceof XmlFile)) {
-                continue;
-            }
-            XmlFile xmlFile = (XmlFile) file;
-            XmlTag rootTag = XmlUtil.getRootTagByName(xmlFile, XML.MAPPER);
+        Arrays.stream(psiDirectory.getFiles()).filter(f -> f instanceof XmlFile).forEach(f -> {
+            XmlTag rootTag = XmlUtil.getRootTagByName((XmlFile) f, XML.MAPPER);
             if (null == rootTag || !classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
-                continue;
+                XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT).forEach(x -> Optional.ofNullable(methodMap.get(x.getAttributeValue(XML.ID))).ifPresent(m -> addLineMarker(x, m)));
             }
-            XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT).forEach(x -> Optional.ofNullable(methodMap.get(x.getAttributeValue(XML.ID))).ifPresent(m -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(x).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(m))));
-        }
+        });
     }
 }

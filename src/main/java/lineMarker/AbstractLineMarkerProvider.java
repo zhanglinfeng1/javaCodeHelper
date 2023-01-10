@@ -2,7 +2,10 @@ package lineMarker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
+import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.psi.PsiElement;
+import constant.COMMON;
+import constant.ICON;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -13,15 +16,29 @@ import java.util.Collection;
  */
 public abstract class AbstractLineMarkerProvider<T> extends RelatedItemLineMarkerProvider {
 
+    public Collection<? super RelatedItemLineMarkerInfo<?>> result;
+    public T element;
+
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
         if (checkPsiElement(element)) {
-            addLineMarker((T) element, result);
+            this.result = result;
+            this.element = (T) element;
+            dealPsiElement();
         }
 
     }
 
     public abstract boolean checkPsiElement(PsiElement element);
 
-    public abstract void addLineMarker(T element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result);
+    public abstract void dealPsiElement();
+
+    public void addLineMarker(PsiElement targets,PsiElement element){
+        result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(targets).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(element));
+    }
+
+    public void addLineMarkerBoth(PsiElement targets,PsiElement element){
+        result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(targets).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(element));
+        result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(element).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(targets));
+    }
 }

@@ -9,7 +9,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
@@ -60,11 +59,8 @@ public abstract class FastJump {
                 break;
             }
         }
-        for (MappingAnnotation mappingAnnotation : map.values()) {
-            if (!mappingAnnotation.getTargetMethodList().isEmpty()) {
-                result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(mappingAnnotation.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(mappingAnnotation.getPsiMethod()));
-            }
-        }
+        map.values().stream().filter(t -> !t.getTargetMethodList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16)
+                .setTargets(t.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiMethod())));
     }
 
     public abstract boolean end(Map<String, MappingAnnotation> map);
@@ -79,21 +75,13 @@ public abstract class FastJump {
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
             return;
         }
-        PsiFile[] files = psiDirectory.getFiles();
-        for (PsiFile file : files) {
-            // 不是 Java 类型的文件直接跳过
-            if (!(file.getFileType() instanceof JavaFileType)) {
-                continue;
-            }
-            PsiJavaFile psiJavaFile = (PsiJavaFile) file;
-            PsiClass psiClass = psiJavaFile.getClasses()[0];
-            if (!checkClass(psiClass)) {
-                continue;
-            }
-            //类注解路径
-            String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-            Arrays.stream(psiClass.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m)).flatMap(t -> Optional.ofNullable(map.get(t.toString()))).ifPresent(t2 -> t2.getTargetMethodList().add(m)));
-        }
+        Arrays.stream(psiDirectory.getFiles()).filter(f -> f.getFileType() instanceof JavaFileType).map(f -> ((PsiJavaFile) f).getClasses()[0]).filter(this::checkClass)
+                .forEach(c -> {
+                    String classUrl = this.getMappingUrl(c.getAnnotation(ANNOTATION.REQUEST_MAPPING));
+                    Arrays.stream(c.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m))
+                            .flatMap(t -> Optional.ofNullable(map.get(t.toString())))
+                            .ifPresent(t2 -> t2.getTargetMethodList().add(m)));
+                });
     }
 
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
