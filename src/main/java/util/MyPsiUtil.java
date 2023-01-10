@@ -1,6 +1,7 @@
 package util;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
@@ -14,6 +15,7 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
 import constant.ANNOTATION;
 import constant.COMMON;
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -261,4 +264,31 @@ public class MyPsiUtil {
         return currentModulePath;
     }
 
+    /**
+     * 查找PsiClass
+     *
+     * @param element       同项目元素
+     * @param classFullName class全名
+     * @return Optional<PsiClass>
+     */
+    public static Optional<PsiClass> findClassByFullName(PsiElement element, String classFullName) {
+        if (StringUtil.isEmpty(classFullName) || null == element) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(JavaPsiFacade.getInstance(element.getProject()).findClass(classFullName, element.getResolveScope()));
+    }
+
+    /**
+     * 查找PsiClass
+     *
+     * @param globalSearchScope GlobalSearchScope
+     * @param classFullName     class全名
+     * @return Optional<PsiClass>
+     */
+    public static Optional<PsiClass> findClassByFullName(GlobalSearchScope globalSearchScope, String classFullName) {
+        if (StringUtil.isEmpty(classFullName) || null == globalSearchScope || null == globalSearchScope.getProject()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(JavaPsiFacade.getInstance(globalSearchScope.getProject()).findClass(classFullName, globalSearchScope));
+    }
 }

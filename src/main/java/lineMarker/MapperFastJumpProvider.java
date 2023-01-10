@@ -1,7 +1,6 @@
 package lineMarker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -30,7 +29,6 @@ import util.XmlUtil;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -40,19 +38,23 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2023/1/6 14:25
  */
-public class MapperFastJumpProvider extends RelatedItemLineMarkerProvider {
+public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> {
+
     @Override
-    protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+    public boolean checkPsiElement(PsiElement element) {
         if (element instanceof PsiClass) {
             PsiClass psiClass = (PsiClass) element;
-            if (!psiClass.isInterface() || psiClass.getMethods().length == 0) {
-                return;
-            }
-            // 注解方式跳转
-            addByAnnotation(psiClass, result);
-            // xml方式跳转
-            addByXml(psiClass, result);
+            return psiClass.isInterface() && psiClass.getMethods().length != 0;
         }
+        return false;
+    }
+
+    @Override
+    public void addLineMarker(PsiClass psiClass, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+        // 注解方式跳转
+        addByAnnotation(psiClass, result);
+        // xml方式跳转
+        addByXml(psiClass, result);
     }
 
     private void addByAnnotation(PsiClass psiClass, Collection<? super RelatedItemLineMarkerInfo<?>> result) {
@@ -109,14 +111,10 @@ public class MapperFastJumpProvider extends RelatedItemLineMarkerProvider {
             }
             XmlFile xmlFile = (XmlFile) file;
             XmlTag rootTag = XmlUtil.getRootTagByName(xmlFile, XML.MAPPER);
-            if (null == rootTag || classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
+            if (null == rootTag || !classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
                 continue;
             }
-            List<XmlTag> tagList = XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT);
-            for (XmlTag xmlTag : tagList) {
-                String attributeValue = xmlTag.getAttributeValue(XML.ID);
-                Optional.ofNullable(methodMap.get(attributeValue)).ifPresent(m -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(xmlTag).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(m)));
-            }
+            XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT).forEach(x -> Optional.ofNullable(methodMap.get(x.getAttributeValue(XML.ID))).ifPresent(m -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16).setTargets(x).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(m))));
         }
     }
 }

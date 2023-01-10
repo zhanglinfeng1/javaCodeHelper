@@ -1,7 +1,6 @@
 package service.impl;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
@@ -12,12 +11,11 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
-import service.Completion;
 import constant.COMMON;
 import constant.REGEX;
 import constant.TYPE;
+import service.Completion;
 import util.MyPsiUtil;
 import util.StringUtil;
 import util.TypeUtil;
@@ -180,10 +178,10 @@ public class MethodCompletion extends Completion {
                     returnList.add(LookupElementBuilder.create(startCode + COMMON.ARRAYS_STREAM_STR + currentMethodVariableName + COMMON.MAP_STR + endCode)
                             .withInsertHandler((context, item) -> {
                                 //TODO 优化类导入
-                                GlobalSearchScope globalSearchScope = variableType.getResolveScope();
-                                PsiClass importClass = JavaPsiFacade.getInstance(globalSearchScope.getProject()).findClass(TYPE.ARRAYS_PATH, globalSearchScope);
-                                PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
-                                javaFile.importClass(importClass);
+                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(c -> {
+                                    PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
+                                    javaFile.importClass(c);
+                                });
                             }));
                 }
             }
