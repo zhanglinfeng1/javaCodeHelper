@@ -3,7 +3,6 @@ package dialog;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
 import constant.COMMON;
 import factory.ConfigFactory;
@@ -22,6 +21,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.FileWriter;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -60,13 +60,11 @@ public class CommonConfigDialog {
         });
 
         downloadButton.addActionListener(e -> {
-            VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
-            if (virtualFile != null) {
-                String path = virtualFile.getPath();
+            Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).ifPresent(t -> {
                 try {
                     List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
                     for (Template template : defaultTemplateList) {
-                        FileWriter file = new FileWriter(path + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
+                        FileWriter file = new FileWriter(t.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
                         //TODO 寻找替换方法
                         file.append(template.getRootTreeNode().toString());
                         file.flush();
@@ -75,7 +73,7 @@ public class CommonConfigDialog {
                 } catch (Exception ex) {
                     Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
                 }
-            }
+            });
         });
     }
 
@@ -99,14 +97,8 @@ public class CommonConfigDialog {
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
-        Integer api = commonConfig.getApiType();
-        if (null != api) {
-            apiComboBox.setSelectedIndex(api);
-        }
-        Integer dateClassType = commonConfig.getDateClassType();
-        if (null != dateClassType) {
-            dateClassComboBox.setSelectedIndex(dateClassType);
-        }
+        Optional.ofNullable(commonConfig.getApiType()).ifPresent(t -> apiComboBox.setSelectedIndex(t));
+        Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(t -> dateClassComboBox.setSelectedIndex(t));
     }
 
     public JComponent getComponent() {

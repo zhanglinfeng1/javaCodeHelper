@@ -12,6 +12,8 @@ import com.intellij.psi.PsiType;
 import constant.TYPE;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/12/5 14:10
@@ -43,18 +45,17 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
     }
 
     private void checkType(ProblemsHolder holder, PsiElement psiElement, PsiType psiType) {
-        if (null == psiElement) {
-            return;
-        }
-        String typeFullName = psiType.getInternalCanonicalText();
-        switch (typeFullName) {
-            case TYPE.DATE:
-                holder.registerProblem(psiElement, "Replace Date with LocalDateTime");
-                return;
-            case TYPE.SIMPLE_DATE_FORMAT:
-                holder.registerProblem(psiElement, "Replace SimpleDateFormat with DateTimeFormatter");
-                return;
-            default:
-        }
+        Optional.ofNullable(psiElement).ifPresent(t -> {
+            String typeFullName = psiType.getInternalCanonicalText();
+            switch (typeFullName) {
+                case TYPE.DATE:
+                    holder.registerProblem(t, "Replace Date with LocalDateTime");
+                    return;
+                case TYPE.SIMPLE_DATE_FORMAT:
+                    holder.registerProblem(t, "Replace SimpleDateFormat with DateTimeFormatter");
+                    return;
+                default:
+            }
+        });
     }
 }

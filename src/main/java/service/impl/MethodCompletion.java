@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,12 +68,10 @@ public class MethodCompletion extends Completion {
             addSameType(COMMON.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON.EQ_STR);
         } else if (currentElement.getParent().getParent() instanceof PsiReturnStatement) {
             // 在return语句中
-            PsiType currentMethodReturnType = currentMethod.getReturnType();
-            if (null == currentMethodReturnType) {
-                return;
-            }
-            addTransformation(COMMON.BLANK_STRING, currentMethodReturnType, COMMON.BLANK_STRING);
-            addSameType(currentText, currentMethodReturnType.getInternalCanonicalText(), COMMON.BLANK_STRING);
+            Optional.ofNullable(currentMethod.getReturnType()).ifPresent(t -> {
+                addTransformation(COMMON.BLANK_STRING, t, COMMON.BLANK_STRING);
+                addSameType(currentText, t.getInternalCanonicalText(), COMMON.BLANK_STRING);
+            });
         }
     }
 

@@ -15,6 +15,7 @@ import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +34,7 @@ public class ConstructorCompletion extends Completion {
             return;
         }
         //构造方法的方法体
-        PsiCodeBlock codeBlock = currentMethod.getBody();
-        String currentMethodBodyStr = codeBlock == null ? COMMON.BLANK_STRING : codeBlock.getText();
+        String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(COMMON.BLANK_STRING);
         StringBuilder fillStr = new StringBuilder();
         //待处理的变量
         Map<String, String> fieldNameMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))

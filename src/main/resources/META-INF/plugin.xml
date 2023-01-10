@@ -13,7 +13,7 @@
             </li>
             <li>Fast Jump<br />
                 1.Support fast jump between feign and controller. Click the jump icon to jump<br />
-                2.Support quick jump of sql and methods<br />
+                2.Support quick jump of sql and java<br />
             </li>
             <li>One click translation<br />
                 At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
@@ -36,7 +36,7 @@
             </li>
             <li>快捷跳转<br />
                 1.支持feign与controller的快捷跳转，点击图标跳转<br />
-                2.支持sql与方法的快捷跳转<br />
+                2.支持sql与java的快捷跳转<br />
             </li>
             <li>一键翻译<br />
                 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />

@@ -16,6 +16,8 @@ import service.impl.MysqlParse;
 import service.impl.OracleParse;
 import service.impl.PostgresqlParse;
 
+import java.util.Optional;
+
 /**
  * @Author: zhanglinfeng
  * @Date: create in 2022/8/26 18:20
@@ -78,10 +80,7 @@ public class SqlFactory implements ToolWindowFactory {
     }
 
     private void display(ToolWindow toolWindow, Content content) {
-        Content selectContent = toolWindow.getContentManager().getSelectedContent();
-        if (null != selectContent) {
-            toolWindow.getContentManager().removeContent(selectContent, true);
-        }
+        Optional.ofNullable(toolWindow.getContentManager().getSelectedContent()).ifPresent(t -> toolWindow.getContentManager().removeContent(t, true));
         toolWindow.getContentManager().addContent(content);
     }
 }

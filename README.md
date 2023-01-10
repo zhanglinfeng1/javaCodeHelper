@@ -49,7 +49,8 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 # 版本改动
 <ul>1.5.0
     <li>优化代码补全中的变量命名</li>
-    <li>[NEW]sql与方法的快捷跳转</li>
+    <li>优化跳转图标加载速度</li>
+    <li>[NEW]sql与java的快捷跳转</li>
 </ul>
 <ul>1.4.4
     <li>配置界面美化</li>
@@ -70,7 +71,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
     <li>代码补全逻辑升级</li>
 </ul>
 <ul>1.3.7
-    <li>增加代码补全</li>
+    <li>优化代码补全</li>
 </ul>
 <ul>1.3.6
     <li>优化代码补全</li>

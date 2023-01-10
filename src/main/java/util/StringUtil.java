@@ -1,8 +1,8 @@
 package util;
 
 import constant.COMMON;
-import constant.REGEX;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,10 +13,7 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
     public static String toString(Object obj) {
-        if (null == obj) {
-            return COMMON.BLANK_STRING;
-        }
-        return obj.toString();
+        return Optional.ofNullable(obj).orElse(COMMON.BLANK_STRING).toString();
     }
 
     public static boolean isEmpty(Object obj) {
@@ -82,13 +79,16 @@ public class StringUtil {
      * @return String
      */
     public static String toHumpStyle(String str) {
-        Pattern compile = Pattern.compile(REGEX.HUMP);
-        Matcher matcher = compile.matcher(str.toLowerCase());
-        StringBuilder sb = new StringBuilder();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, matcher.group(0).toUpperCase().replace(COMMON.UNDERSCORE, COMMON.BLANK_STRING));
+        StringBuilder result = new StringBuilder();
+        char[] chars = str.toLowerCase().toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            String charStr = String.valueOf(chars[i]);
+            if (chars[i] == 95) {
+                i++;
+                charStr = String.valueOf(chars[i]).toUpperCase();
+            }
+            result.append(charStr);
         }
-        matcher.appendTail(sb);
-        return sb.toString();
+        return result.toString();
     }
 }

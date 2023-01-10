@@ -21,9 +21,11 @@ import pojo.MappingAnnotation;
 import util.MyPsiUtil;
 import util.StringUtil;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -46,25 +48,16 @@ public abstract class FastJump {
         //当前模块路径
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
         Map<String, MappingAnnotation> map = new HashMap<>();
-        for (PsiMethod psiMethod : psiClass.getMethods()) {
-            //获取方法的注解
-            MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, psiMethod);
-            if (null == mappingAnnotation) {
-                continue;
-            }
-            map.put(mappingAnnotation.toString(), mappingAnnotation);
-        }
+        //获取方法的注解
+        Arrays.stream(psiClass.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m)).ifPresent(t -> map.put(t.toString(), t)));
         Project project = psiClass.getProject();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
                 continue;
             }
-            PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(virtualFile);
-            if (null != psiDirectory) {
-                dealDirectory(map, psiDirectory);
-                if (end(map)) {
-                    break;
-                }
+            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(t -> dealDirectory(map, t));
+            if (end(map)) {
+                break;
             }
         }
         for (MappingAnnotation mappingAnnotation : map.values()) {
@@ -99,17 +92,7 @@ public abstract class FastJump {
             }
             //类注解路径
             String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-            for (PsiMethod psiMethod : psiClass.getMethods()) {
-                //获取方法的注解
-                MappingAnnotation targetMappingAnnotation = this.getMappingAnnotation(classUrl, psiMethod);
-                if (null == targetMappingAnnotation) {
-                    continue;
-                }
-                MappingAnnotation mappingAnnotation = map.get(targetMappingAnnotation.toString());
-                if (null != mappingAnnotation) {
-                    mappingAnnotation.getTargetMethodList().add(psiMethod);
-                }
-            }
+            Arrays.stream(psiClass.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m)).flatMap(t -> Optional.ofNullable(map.get(t.toString()))).ifPresent(t2 -> t2.getTargetMethodList().add(m)));
         }
     }
 
@@ -151,14 +134,9 @@ public abstract class FastJump {
     }
 
     private String getMappingUrl(PsiAnnotation annotation) {
-        if (null == annotation) {
-            return COMMON.BLANK_STRING;
-        }
-        String url = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
-        if (StringUtil.isEmpty(url)) {
-            return MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.PATH);
-        }
-        return url;
+        return Optional.ofNullable(annotation).map(t -> {
+            String url = MyPsiUtil.getAnnotationValue(t, ANNOTATION.VALUE);
+            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(t, ANNOTATION.PATH) : url;
+        }).orElse(COMMON.BLANK_STRING);
     }
-
 }

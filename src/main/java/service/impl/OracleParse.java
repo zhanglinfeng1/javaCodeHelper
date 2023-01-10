@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -55,10 +56,7 @@ public class OracleParse extends SqlParse {
                 }
                 String[] sqlColumnNameArr = valueList.get(3).split(REGEX.DOT);
                 String sqlColumnName = sqlColumnNameArr[sqlColumnNameArr.length - 1];
-                ColumnInfo columnInfo = columnMap.get(sqlColumnName);
-                if (null != columnInfo) {
-                    columnInfo.setColumnComment(comment);
-                }
+                Optional.ofNullable(columnMap.get(sqlColumnName)).ifPresent(t -> t.setColumnComment(comment));
             }
         }
         tableInfo.setColumnList(columnList);

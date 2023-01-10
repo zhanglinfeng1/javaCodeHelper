@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -107,11 +108,10 @@ public class ToolWindowSecondDialog extends JDialog {
             for (int i = 0; i < rowCount; i++) {
                 String columnName = StringUtil.toString(model.getValueAt(i, 0));
                 ColumnInfo queryColumnInfo = new ColumnInfo(columnName, model.getValueAt(i, 1), model.getValueAt(i, 2));
-                ColumnInfo sqlColumnInfo = columnInfoMap.get(columnName);
-                if (null != sqlColumnInfo) {
-                    queryColumnInfo.setSqlColumnType(sqlColumnInfo.getSqlColumnType());
-                    queryColumnInfo.setColumnType(sqlColumnInfo.getColumnType());
-                }
+                Optional.ofNullable(columnInfoMap.get(columnName)).ifPresent(t -> {
+                    queryColumnInfo.setSqlColumnType(t.getSqlColumnType());
+                    queryColumnInfo.setColumnType(t.getColumnType());
+                });
                 queryColumnList.add(queryColumnInfo);
             }
         }

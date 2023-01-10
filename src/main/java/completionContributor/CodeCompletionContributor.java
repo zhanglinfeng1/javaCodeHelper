@@ -13,6 +13,8 @@ import service.Completion;
 import service.impl.ConstructorCompletion;
 import service.impl.MethodCompletion;
 
+import java.util.Optional;
+
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/10/14 14:18
@@ -26,16 +28,9 @@ public class CodeCompletionContributor extends CompletionContributor {
         }
         PsiElement psiElement = parameters.getPosition();
         //当前光标所在的方法
-        PsiMethod currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
-        if (null == currentMethod) {
-            return;
-        }
-        Completion completion;
-        if (currentMethod.isConstructor()) {
-            completion = new ConstructorCompletion(currentMethod, psiElement);
-        } else {
-            completion = new MethodCompletion(currentMethod, psiElement);
-        }
-        completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
+        Optional.ofNullable(PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class)).ifPresent(t -> {
+            Completion completion = t.isConstructor() ? new ConstructorCompletion(t, psiElement) : new MethodCompletion(t, psiElement);
+            completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
+        });
     }
 }
