@@ -7,7 +7,7 @@
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">gitee</a></p>
         <ul>
-            <li>Automatic completionContributor<br />
+            <li>Automatic pers.zlf.completionContributor<br />
                 1.In the construction method, complete the field assignment<br/>
                 2.In the non construction method, complete the code according to the characters entered<br/>
             </li>
@@ -63,24 +63,24 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.FeignFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="lineMarker.MapperFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="XML" implementationClass="lineMarker.XmlFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.lineMarker.FeignFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.lineMarker.MapperFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.lineMarker.XmlFastJumpProvider"/>
         <!-- sql to java -->
-        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="factory.SqlFactory"/>
+        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="pers.zlf.plugin.factory.SqlFactory"/>
         <!-- 配置持久化 -->
-        <applicationService serviceImplementation="config.ConfigComponent"/>
+        <applicationService serviceImplementation="pers.zlf.plugin.config.ConfigComponent"/>
         <!-- 配置面板 -->
-        <applicationConfigurable instance="config.CommonConfigurable"/>
+        <applicationConfigurable instance="pers.zlf.plugin.config.CommonConfigurable"/>
         <!-- 代码补全 -->
-        <completion.contributor language="JAVA" implementationClass="completionContributor.CodeCompletionContributor"/>
+        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completionContributor.CodeCompletionContributor"/>
         <!-- 代码检查 -->
-        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="inspection.CodeInspectionTool"/>
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.CodeInspectionTool"/>
     </extensions>
 
     <actions>
         <!-- 右击菜单 翻译 -->
-        <action id="idea.plugins.TranslateAction" class="action.TranslateAction" text="Translate" icon="/icon/boLuo16.svg">
+        <action id="idea.plugins.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate" icon="/icon/boLuo16.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </action>
     </actions>

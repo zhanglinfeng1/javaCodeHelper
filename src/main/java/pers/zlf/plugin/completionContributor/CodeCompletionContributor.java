@@ -1,0 +1,36 @@
+package pers.zlf.plugin.completionContributor;
+
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.util.PsiTreeUtil;
+import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.constant.ICON;
+import pers.zlf.plugin.service.Completion;
+import pers.zlf.plugin.service.impl.ConstructorCompletion;
+import pers.zlf.plugin.service.impl.MethodCompletion;
+
+import java.util.Optional;
+
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2022/10/14 14:18
+ */
+public class CodeCompletionContributor extends CompletionContributor {
+
+    @Override
+    public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
+        if (parameters.getCompletionType() != CompletionType.BASIC) {
+            return;
+        }
+        PsiElement psiElement = parameters.getPosition();
+        //当前光标所在的方法
+        Optional.ofNullable(PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class)).ifPresent(method -> {
+            Completion completion = method.isConstructor() ? new ConstructorCompletion(method, psiElement) : new MethodCompletion(method, psiElement);
+            completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
+        });
+    }
+}
