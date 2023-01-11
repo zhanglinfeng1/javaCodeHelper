@@ -1,9 +1,9 @@
-package pers.zlf.plugin.service.impl;
+package pers.zlf.plugin.factory.service.impl;
 
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
+import pers.zlf.plugin.factory.service.SqlParse;
 import pers.zlf.plugin.pojo.TableInfo;
-import pers.zlf.plugin.service.SqlParse;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;

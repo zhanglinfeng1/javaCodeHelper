@@ -1,4 +1,4 @@
-package pers.zlf.plugin.lineMarker;
+package pers.zlf.plugin.marker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;

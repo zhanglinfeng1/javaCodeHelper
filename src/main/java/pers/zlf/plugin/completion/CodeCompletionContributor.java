@@ -1,4 +1,4 @@
-package pers.zlf.plugin.completionContributor;
+package pers.zlf.plugin.completion;
 
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.completion.service.Completion;
+import pers.zlf.plugin.completion.service.impl.ConstructorCompletion;
+import pers.zlf.plugin.completion.service.impl.MethodCompletion;
 import pers.zlf.plugin.constant.ICON;
-import pers.zlf.plugin.service.Completion;
-import pers.zlf.plugin.service.impl.ConstructorCompletion;
-import pers.zlf.plugin.service.impl.MethodCompletion;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package pers.zlf.plugin.service;
+package pers.zlf.plugin.factory.service;
 
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;

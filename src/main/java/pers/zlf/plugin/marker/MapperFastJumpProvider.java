@@ -1,4 +1,4 @@
-package pers.zlf.plugin.lineMarker;
+package pers.zlf.plugin.marker;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;

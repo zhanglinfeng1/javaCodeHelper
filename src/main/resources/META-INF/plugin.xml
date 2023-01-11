@@ -63,9 +63,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.lineMarker.FeignFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.lineMarker.MapperFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.lineMarker.XmlFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.FeignFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.MapperFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlFastJumpProvider"/>
         <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/boLuo16.svg" factoryClass="pers.zlf.plugin.factory.SqlFactory"/>
         <!-- 配置持久化 -->
@@ -73,7 +73,7 @@
         <!-- 配置面板 -->
         <applicationConfigurable instance="pers.zlf.plugin.config.CommonConfigurable"/>
         <!-- 代码补全 -->
-        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completionContributor.CodeCompletionContributor"/>
+        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.CodeInspectionTool"/>
     </extensions>

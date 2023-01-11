@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.dialog.ToolWindowFirstDialog;
 import pers.zlf.plugin.dialog.ToolWindowSecondDialog;
+import pers.zlf.plugin.factory.service.SqlParse;
+import pers.zlf.plugin.factory.service.impl.MysqlParse;
+import pers.zlf.plugin.factory.service.impl.OracleParse;
+import pers.zlf.plugin.factory.service.impl.PostgresqlParse;
 import pers.zlf.plugin.pojo.TableInfo;
-import pers.zlf.plugin.service.SqlParse;
-import pers.zlf.plugin.service.impl.MysqlParse;
-import pers.zlf.plugin.service.impl.OracleParse;
-import pers.zlf.plugin.service.impl.PostgresqlParse;
 
 import java.util.Optional;
 
