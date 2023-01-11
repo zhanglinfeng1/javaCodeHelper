@@ -12,7 +12,6 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -40,10 +39,7 @@ import java.util.stream.Collectors;
 public class MyPsiUtil {
 
     public static boolean isFeign(PsiClass psiClass) {
-        if (null == psiClass) {
-            return false;
-        }
-        if (!psiClass.isInterface()) {
+        if (null == psiClass || !psiClass.isInterface()) {
             return false;
         }
         return psiClass.getAnnotation(ANNOTATION.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION.NETFLIX_FEIGN_CLIENT) != null;
@@ -62,10 +58,7 @@ public class MyPsiUtil {
 
     public static boolean isController(PsiClass psiClass) {
         PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
-        if (psiAnnotationArr.length == 0) {
-            return false;
-        }
-        if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
+        if (psiAnnotationArr.length == 0 || psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
         //属于controller
@@ -111,31 +104,23 @@ public class MyPsiUtil {
      * @return key:变量名 value:变量类型
      */
     public static Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
-        PsiCodeBlock codeBlock = psiMethod.getBody();
         Map<String, PsiType> variableMap = new HashMap<>(16);
+        PsiCodeBlock codeBlock = psiMethod.getBody();
         if (null == codeBlock) {
             return variableMap;
         }
         //获取代码块中的变量
-        for (PsiStatement psiStatement : codeBlock.getStatements()) {
-            if (psiStatement.getTextOffset() > endOffset) {
-                continue;
-            }
-            if (psiStatement instanceof PsiDeclarationStatement) {
-                PsiDeclarationStatement ps = (PsiDeclarationStatement) psiStatement;
-                variableMap.putAll(Arrays.stream(ps.getDeclaredElements()).map(p -> {
-                    if (p instanceof PsiLocalVariable) {
-                        return (PsiLocalVariable) p;
-                    }
-                    PsiElement psiElement = p.getFirstChild();
-                    return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
-                }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)));
-            }
-        }
+        Arrays.stream(codeBlock.getStatements()).filter(t -> t.getTextOffset() <= endOffset && t instanceof PsiDeclarationStatement).forEach(t -> {
+            variableMap.putAll(Arrays.stream(((PsiDeclarationStatement) t).getDeclaredElements()).map(p -> {
+                if (p instanceof PsiLocalVariable) {
+                    return (PsiLocalVariable) p;
+                }
+                PsiElement psiElement = p.getFirstChild();
+                return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
+            }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)));
+        });
         //方法参数
-        for (PsiParameter parameter : psiMethod.getParameterList().getParameters()) {
-            variableMap.put(parameter.getName(), parameter.getType());
-        }
+        Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
         return variableMap;
     }
 

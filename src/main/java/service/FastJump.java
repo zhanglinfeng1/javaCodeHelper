@@ -48,13 +48,13 @@ public abstract class FastJump {
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
         Map<String, MappingAnnotation> map = new HashMap<>();
         //获取方法的注解
-        Arrays.stream(psiClass.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m)).ifPresent(t -> map.put(t.toString(), t)));
+        Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method)).ifPresent(t -> map.put(t.toString(), t)));
         Project project = psiClass.getProject();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
                 continue;
             }
-            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(t -> dealDirectory(map, t));
+            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(psiDirectory -> dealDirectory(map, psiDirectory));
             if (end(map)) {
                 break;
             }
@@ -76,11 +76,11 @@ public abstract class FastJump {
             return;
         }
         Arrays.stream(psiDirectory.getFiles()).filter(f -> f.getFileType() instanceof JavaFileType).map(f -> ((PsiJavaFile) f).getClasses()[0]).filter(this::checkClass)
-                .forEach(c -> {
-                    String classUrl = this.getMappingUrl(c.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-                    Arrays.stream(c.getMethods()).forEach(m -> Optional.ofNullable(this.getMappingAnnotation(classUrl, m))
-                            .flatMap(t -> Optional.ofNullable(map.get(t.toString())))
-                            .ifPresent(t2 -> t2.getTargetMethodList().add(m)));
+                .forEach(psiClass -> {
+                    String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
+                    Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method))
+                            .flatMap(mappingAnnotation -> Optional.ofNullable(map.get(mappingAnnotation.toString())))
+                            .ifPresent(mappingAnnotation -> mappingAnnotation.getTargetMethodList().add(method)));
                 });
     }
 
@@ -122,9 +122,9 @@ public abstract class FastJump {
     }
 
     private String getMappingUrl(PsiAnnotation annotation) {
-        return Optional.ofNullable(annotation).map(t -> {
-            String url = MyPsiUtil.getAnnotationValue(t, ANNOTATION.VALUE);
-            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(t, ANNOTATION.PATH) : url;
+        return Optional.ofNullable(annotation).map(psiAnnotation -> {
+            String url = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.VALUE);
+            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.PATH) : url;
         }).orElse(COMMON.BLANK_STRING);
     }
 }

@@ -67,9 +67,9 @@ public class MethodCompletion extends Completion {
             addSameType(COMMON.BLANK_STRING, variableType.getInternalCanonicalText(), variableName + COMMON.EQ_STR);
         } else if (currentElement.getParent().getParent() instanceof PsiReturnStatement) {
             // 在return语句中
-            Optional.ofNullable(currentMethod.getReturnType()).ifPresent(t -> {
-                addTransformation(COMMON.BLANK_STRING, t, COMMON.BLANK_STRING);
-                addSameType(currentText, t.getInternalCanonicalText(), COMMON.BLANK_STRING);
+            Optional.ofNullable(currentMethod.getReturnType()).ifPresent(psiType -> {
+                addTransformation(COMMON.BLANK_STRING, psiType, COMMON.BLANK_STRING);
+                addSameType(currentText, psiType.getInternalCanonicalText(), COMMON.BLANK_STRING);
             });
         }
     }

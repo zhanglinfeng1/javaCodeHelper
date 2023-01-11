@@ -60,11 +60,11 @@ public class CommonConfigDialog {
         });
 
         downloadButton.addActionListener(e -> {
-            Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).ifPresent(t -> {
+            Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).ifPresent(virtualFile -> {
                 try {
                     List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
                     for (Template template : defaultTemplateList) {
-                        FileWriter file = new FileWriter(t.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
+                        FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
                         //TODO 寻找替换方法
                         file.append(template.getRootTreeNode().toString());
                         file.flush();
