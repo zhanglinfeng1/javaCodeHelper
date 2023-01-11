@@ -7,7 +7,7 @@
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">gitee</a></p>
         <ul>
-            <li>Automatic pers.zlf.completionContributor<br />
+            <li>Automatic completionContributor<br />
                 1.In the construction method, complete the field assignment<br/>
                 2.In the non construction method, complete the code according to the characters entered<br/>
             </li>
