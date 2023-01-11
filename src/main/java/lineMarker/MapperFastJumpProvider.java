@@ -93,7 +93,7 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
         }
         Arrays.stream(psiDirectory.getFiles()).filter(f -> f instanceof XmlFile).forEach(f -> {
             XmlTag rootTag = XmlUtil.getRootTagByName((XmlFile) f, XML.MAPPER);
-            if (null == rootTag || !classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
+            if (null != rootTag && classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
                 XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT).forEach(x -> Optional.ofNullable(methodMap.get(x.getAttributeValue(XML.ID))).ifPresent(m -> addLineMarker(x, m)));
             }
         });

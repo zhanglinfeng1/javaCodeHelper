@@ -7,7 +7,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 
 ## 快捷跳转
 1.feign与controller的快捷跳转<br />
-2.sql与方法的快捷跳转<br />
+2.sql与java的快捷跳转<br />
 
 ## 一键翻译
 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
