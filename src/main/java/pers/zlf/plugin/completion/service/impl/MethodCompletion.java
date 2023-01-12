@@ -35,7 +35,7 @@ public class MethodCompletion extends Completion {
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
-    private final Map<String, PsiType> totalVariableMap = new HashMap<>();
+    private final Map<String, PsiType> totalVariableMap = new HashMap<>(16);
 
     public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);
@@ -100,14 +100,10 @@ public class MethodCompletion extends Completion {
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
             StringBuilder paramStr = new StringBuilder(COMMON.END_STR);
-            if (psiParameterArr.length == 0) {
-                if (fieldMethod.getName().startsWith(COMMON.GET)) {
-                    continue;
-                }
-            } else {
-                if (psiParameterArr.length == 1 && fieldMethod.getName().startsWith(COMMON.SET)) {
-                    continue;
-                }
+            if ((psiParameterArr.length == 0 && fieldMethod.getName().startsWith(COMMON.GET)) || psiParameterArr.length == 1 && fieldMethod.getName().startsWith(COMMON.SET)) {
+                continue;
+            }
+            if (psiParameterArr.length > 0) {
                 for (PsiParameter parameter : psiParameterArr) {
                     PsiType variableType = totalVariableMap.get(parameter.getName());
                     if (null == variableType || !parameter.getType().getPresentableText().equals(variableType.getPresentableText())) {

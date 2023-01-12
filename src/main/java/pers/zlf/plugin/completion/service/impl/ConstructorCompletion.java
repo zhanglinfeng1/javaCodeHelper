@@ -37,18 +37,18 @@ public class ConstructorCompletion extends Completion {
         String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(COMMON.BLANK_STRING);
         StringBuilder fillStr = new StringBuilder();
         //待处理的变量
-        Map<String, String> fieldNameMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
+        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         loop:
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
-            if (fieldNameMap.isEmpty()){
+            if (fieldMap.isEmpty()){
                 break;
             }
             String parameterName = parameter.getName();
-            if (parameter.getType().getInternalCanonicalText().equals(fieldNameMap.get(parameterName))) {
+            if (parameter.getType().getInternalCanonicalText().equals(fieldMap.get(parameterName))) {
                 fillStr.append(COMMON.THIS_STR).append(parameterName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.SEMICOLON);
-                fieldNameMap.remove(parameterName);
+                fieldMap.remove(parameterName);
                 continue;
             }
             PsiClass parameterClass = PsiUtil.resolveClassInClassTypeOnly(parameter.getType());
@@ -57,15 +57,15 @@ public class ConstructorCompletion extends Completion {
             }
             //构造方法的参数为对象类型，处理对象的变量
             for (PsiField field : parameterClass.getFields()) {
-                if (fieldNameMap.isEmpty()){
+                if (fieldMap.isEmpty()){
                     break loop;
                 }
                 String fieldName = field.getName();
-                if (!field.getType().getInternalCanonicalText().equals(fieldNameMap.get(fieldName))) {
+                if (!field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
                     continue;
                 }
                 fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameter.getName()).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
-                fieldNameMap.remove(fieldName);
+                fieldMap.remove(fieldName);
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
