@@ -18,5 +18,4 @@ public class TYPE {
     public static final String CLASS_FILE_SUFFIX = ".class";
     public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
     public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String", "Date", "Timestamp", "BigDecimal");
-    public static final List<String> COMMON_COLLECT_LIST = Arrays.asList("List", "Set", "Map");
 }

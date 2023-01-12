@@ -26,10 +26,9 @@ public class CodeCompletionContributor extends CompletionContributor {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
             return;
         }
-        PsiElement psiElement = parameters.getPosition();
         //当前光标所在的方法
         Optional.ofNullable(PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class)).ifPresent(method -> {
-            Completion completion = method.isConstructor() ? new ConstructorCompletion(method, psiElement) : new MethodCompletion(method, psiElement);
+            Completion completion = method.isConstructor() ? new ConstructorCompletion(method, parameters.getPosition()) : new MethodCompletion(method, parameters.getPosition());
             completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
         });
     }
