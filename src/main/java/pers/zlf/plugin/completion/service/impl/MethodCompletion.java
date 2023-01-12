@@ -35,7 +35,7 @@ public class MethodCompletion extends Completion {
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
-    private final Map<String, PsiType> totalVariableMap = new HashMap<>(16);
+    private Map<String, PsiType> totalVariableMap;
 
     public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);
@@ -46,6 +46,7 @@ public class MethodCompletion extends Completion {
         //当前方法内的变量
         currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
         //当前类的变量
+        totalVariableMap = new HashMap<>(16);
         totalVariableMap.putAll(currentMethodVariableMap);
         totalVariableMap.putAll(MyPsiUtil.getVariableMapFromClass(currentMethodClass));
         //在新的一行
