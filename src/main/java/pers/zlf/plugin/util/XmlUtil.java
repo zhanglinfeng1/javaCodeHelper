@@ -24,7 +24,7 @@ public class XmlUtil {
      */
     public static XmlTag getRootTagByName(XmlFile file, String rootTagName) {
         return Optional.ofNullable(file.getDocument()).map(XmlDocument::getRootTag)
-                .filter(t -> StringUtil.isNotEmpty(rootTagName) && !rootTagName.equals(t.getName()))
+                .filter(t -> StringUtil.isNotEmpty(rootTagName) && rootTagName.equals(t.getName()))
                 .orElse(null);
     }
 
