@@ -45,6 +45,7 @@ public class TranslateAction extends AnAction {
         String securityKey = commonConfig.getSecretKey();
         if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
+            return;
         }
 
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
