@@ -2,7 +2,6 @@ package pers.zlf.plugin.marker;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -12,7 +11,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.TYPE;
@@ -24,6 +22,7 @@ import pers.zlf.plugin.util.XmlUtil;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -77,25 +76,23 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
         String currentModulePath = MyPsiUtil.getCurrentModulePath(element);
         if (StringUtil.isNotEmpty(currentModulePath)) {
             Project project = element.getProject();
+            PsiManager manager = PsiManager.getInstance(project);
             classFullName = element.getQualifiedName();
             methodMap = Arrays.stream(element.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
-            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                if (virtualFile.getPath().contains(currentModulePath)) {
-                    Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::findXml);
-                }
-            }
+            Arrays.stream(ProjectRootManager.getInstance(project).getContentSourceRoots())
+                    .filter(virtualFile -> virtualFile.getPath().contains(currentModulePath))
+                    .map(manager::findDirectory).filter(Objects::nonNull).forEach(this::findXml);
         }
     }
 
     private void findXml(PsiDirectory psiDirectory) {
-        for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
-            this.findXml(subdirectory);
-        }
-        Arrays.stream(psiDirectory.getFiles()).filter(f -> f instanceof XmlFile).forEach(f -> {
-            XmlTag rootTag = XmlUtil.getRootTagByName((XmlFile) f, XML.MAPPER);
-            if (null != rootTag && classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE))) {
-                XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT).forEach(tag -> Optional.ofNullable(methodMap.get(tag.getAttributeValue(XML.ID))).ifPresent(m -> addLineMarker(tag, m)));
-            }
-        });
+        //文件夹
+        Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::findXml);
+        //文件
+        Arrays.stream(psiDirectory.getFiles()).filter(f -> f instanceof XmlFile)
+                .map(f -> XmlUtil.getRootTagByName((XmlFile) f, XML.MAPPER))
+                .filter(rootTag -> null != rootTag && classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE)))
+                .map(rootTag -> XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT))
+                .forEach(rootTagList -> rootTagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(XML.ID)).map(methodMap::get).ifPresent(m -> addLineMarker(tag, m))));
     }
 }

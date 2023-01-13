@@ -138,8 +138,9 @@ public class MethodCompletion extends Completion {
         }
         endCode = psiClass.getName() + endCode;
         //过滤只有一个参数的构造方法
-        List<String> typeList = Arrays.stream(psiClass.getConstructors()).filter(m -> 1 == m.getParameterList().getParameters().length)
-                .map(m -> m.getParameterList().getParameters()[0].getType().getInternalCanonicalText()).collect(Collectors.toList());
+        List<String> typeList = Arrays.stream(psiClass.getConstructors()).map(m -> m.getParameterList().getParameters())
+                .filter(parameterArr -> 1 == parameterArr.length)
+                .map(parameterArr -> parameterArr[0].getType().getInternalCanonicalText()).collect(Collectors.toList());
         if (typeList.isEmpty()) {
             return;
         }
@@ -165,10 +166,7 @@ public class MethodCompletion extends Completion {
                     returnList.add(LookupElementBuilder.create(startCode + COMMON.ARRAYS_STREAM_STR + currentMethodVariableName + COMMON.MAP_STR + endCode)
                             .withInsertHandler((context, item) -> {
                                 //TODO 优化类导入
-                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(c -> {
-                                    PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
-                                    javaFile.importClass(c);
-                                });
+                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(c -> ((PsiJavaFile) currentMethodClass.getContainingFile()).importClass(c));
                             }));
                 }
             }

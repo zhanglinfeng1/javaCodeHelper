@@ -33,6 +33,8 @@ import java.util.Optional;
 public abstract class FastJump {
     /** 跳转类型 */
     public String fastJumpType;
+    /** 处理结果 */
+    public Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
     private final String filterFolderName;
 
@@ -42,11 +44,11 @@ public abstract class FastJump {
 
     public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass, String fastJumpType) {
         this.fastJumpType = fastJumpType;
+        map = new HashMap<>();
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
         //当前模块路径
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
-        Map<String, MappingAnnotation> map = new HashMap<>();
         //获取方法的注解
         Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method)).ifPresent(t -> map.put(t.toString(), t)));
         Project project = psiClass.getProject();
@@ -54,8 +56,8 @@ public abstract class FastJump {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
                 continue;
             }
-            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(psiDirectory -> dealDirectory(map, psiDirectory));
-            if (end(map)) {
+            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
+            if (end()) {
                 break;
             }
         }
@@ -63,14 +65,13 @@ public abstract class FastJump {
                 .setTargets(t.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiMethod())));
     }
 
-    public abstract boolean end(Map<String, MappingAnnotation> map);
+    public abstract boolean end();
 
     public abstract boolean checkClass(PsiClass psiClass);
 
-    private void dealDirectory(Map<String, MappingAnnotation> map, PsiDirectory psiDirectory) {
-        for (PsiDirectory subdirectory : psiDirectory.getSubdirectories()) {
-            this.dealDirectory(map, subdirectory);
-        }
+    private void dealDirectory(PsiDirectory psiDirectory) {
+        //处理文件夹
+        Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::dealDirectory);
         //只处理符合的文件夹名下的文件
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
             return;

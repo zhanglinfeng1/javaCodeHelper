@@ -18,7 +18,7 @@ public class ControllerFastJump extends FastJump {
     }
 
     @Override
-    public boolean end(Map<String, MappingAnnotation> map) {
+    public boolean end() {
         return false;
     }
 

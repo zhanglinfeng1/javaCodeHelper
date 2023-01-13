@@ -12,9 +12,6 @@ import pers.zlf.plugin.util.UrlUtil;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -43,17 +40,8 @@ public class BaiDuTransApi {
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return COMMON.BLANK_STRING;
             }
-            InputStream is = conn.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                builder.append(line);
-            }
-            br.close();
-            is.close();
+            BaiDuTransResult result = JsonUtil.getContentAndToObject(conn.getInputStream(), BaiDuTransResult.class);
             conn.disconnect();
-            BaiDuTransResult result = JsonUtil.toObject(builder.toString(), BaiDuTransResult.class);
             if (StringUtil.isNotEmpty(result.getError_code())) {
                 throw new RuntimeException(result.getError_msg());
             }

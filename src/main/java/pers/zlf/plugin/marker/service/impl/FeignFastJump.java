@@ -18,7 +18,7 @@ public class FeignFastJump extends FastJump {
     }
 
     @Override
-    public boolean end(Map<String, MappingAnnotation> map) {
+    public boolean end() {
         return map.values().stream().anyMatch(l -> !l.getTargetMethodList().isEmpty());
     }
 

@@ -10,6 +10,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReferenceExpression;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.util.lambda.Equals;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.ArrayList;
@@ -40,10 +41,7 @@ public abstract class Completion {
         this.currentMethodClass = currentMethod.getContainingClass();
         this.isNewLine = psiElement instanceof PsiIdentifier && psiElement.getParent() instanceof PsiReferenceExpression
                 && psiElement.getParent().getParent() instanceof PsiExpressionStatement && psiElement.getParent().getParent().getParent() instanceof PsiCodeBlock;
-        if (StringUtil.isEmpty(currentText) || null == currentMethodClass) {
-            return;
-        }
-        init();
+        Equals.of(StringUtil.isNotEmpty(currentText) && null != currentMethodClass).ifTrue(this::init);
     }
 
     public abstract void init();

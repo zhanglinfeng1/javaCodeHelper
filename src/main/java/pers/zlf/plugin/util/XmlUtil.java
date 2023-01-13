@@ -7,6 +7,7 @@ import com.intellij.psi.xml.XmlTag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -22,15 +23,9 @@ public class XmlUtil {
      * @return XmlTag
      */
     public static XmlTag getRootTagByName(XmlFile file, String rootTagName) {
-        XmlDocument document = file.getDocument();
-        if (document == null) {
-            return null;
-        }
-        XmlTag rootTag = document.getRootTag();
-        if (rootTag == null || (StringUtil.isNotEmpty(rootTagName) && !rootTagName.equals(rootTag.getName()))) {
-            return null;
-        }
-        return rootTag;
+        return Optional.ofNullable(file.getDocument()).map(XmlDocument::getRootTag)
+                .filter(t -> StringUtil.isNotEmpty(rootTagName) && !rootTagName.equals(t.getName()))
+                .orElse(null);
     }
 
     /**

@@ -57,12 +57,11 @@ public class MyPsiUtil {
     }
 
     public static boolean isController(PsiClass psiClass) {
-        PsiAnnotation[] psiAnnotationArr = psiClass.getAnnotations();
-        if (psiAnnotationArr.length == 0 || psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
+        if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
         //属于controller
-        return Arrays.stream(psiAnnotationArr).anyMatch(a -> ANNOTATION.CONTROLLER_LIST.contains(a.getQualifiedName()));
+        return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(ANNOTATION.CONTROLLER_LIST::contains);
     }
 
     public static boolean isModuleController(PsiClass psiClass) {
