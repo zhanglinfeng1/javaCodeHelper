@@ -71,7 +71,7 @@ public abstract class FastJump {
 
     private void dealDirectory(PsiDirectory psiDirectory) {
         //处理文件夹
-        Arrays.stream(psiDirectory.getSubdirectories()).parallel().forEach(this::dealDirectory);
+        Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::dealDirectory);
         //只处理符合的文件夹名下的文件
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
             return;
