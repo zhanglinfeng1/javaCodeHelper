@@ -300,7 +300,7 @@ public class MyPsiUtil {
         for (PsiElement childrenElement : element.getChildren()) {
             if (childrenElement instanceof PsiDocComment) {
                 PsiDocComment docComment = (PsiDocComment) childrenElement;
-                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining("")).replaceAll(REGEX.WRAP, COMMON.BLANK_STRING));
+                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining(COMMON.BLANK_STRING)).replaceAll(REGEX.WRAP, COMMON.BLANK_STRING));
             } else if (childrenElement instanceof PsiComment) {
                 comment.append(childrenElement.getText());
             }

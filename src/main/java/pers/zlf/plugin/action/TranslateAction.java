@@ -52,8 +52,8 @@ public class TranslateAction extends BasicAction<PsiElement> {
                 translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionModel.getSelectedText(), from, to);
             }
             if (StringUtil.isNotEmpty(translateResult)) {
-                String finalSelectedText = selectionModel.getSelectedText() + COMMON.SPACE + translateResult;
-                WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), finalSelectedText));
+                String finalSelectedText = COMMON.SPACE + translateResult;
+                WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionModel.getSelectionEnd(), finalSelectedText));
             }
         });
     }

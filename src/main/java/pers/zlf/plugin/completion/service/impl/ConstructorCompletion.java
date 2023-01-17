@@ -61,11 +61,10 @@ public class ConstructorCompletion extends Completion {
                     break loop;
                 }
                 String fieldName = field.getName();
-                if (!field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
-                    continue;
+                if (field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
+                    fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameter.getName()).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
+                    fieldMap.remove(fieldName);
                 }
-                fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameter.getName()).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
-                fieldMap.remove(fieldName);
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {

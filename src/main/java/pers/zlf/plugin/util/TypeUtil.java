@@ -45,6 +45,13 @@ public class TypeUtil {
         return firstIndex != -1 && firstIndex == str.lastIndexOf(COMMON.LEFT_BRACKETS);
     }
 
+    /**
+     * 判断对象类型
+     *
+     * @param psiClass 对象
+     * @param typeName 类型名
+     * @return boolean
+     */
     public static boolean judgmentType(PsiClass psiClass, String typeName) {
         if (psiClass == null) {
             return false;

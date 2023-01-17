@@ -165,8 +165,8 @@ public class MethodCompletion extends Completion {
                 if (typeList.contains(currentMethodVariableParadigmName)) {
                     returnList.add(LookupElementBuilder.create(startCode + COMMON.ARRAYS_STREAM_STR + currentMethodVariableName + COMMON.MAP_STR + endCode)
                             .withInsertHandler((context, item) -> {
-                                //TODO 优化类导入
-                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(c -> ((PsiJavaFile) currentMethodClass.getContainingFile()).importClass(c));
+                                PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
+                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(javaFile::importClass);
                             }));
                 }
             }
