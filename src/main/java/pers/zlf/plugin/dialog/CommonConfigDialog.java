@@ -118,10 +118,7 @@ public class CommonConfigDialog {
     }
 
     public String getFastJumpType() {
-        if (modularRadioButton.isSelected()) {
-            return COMMON.MODULAR;
-        }
-        return COMMON.GATEWAY;
+        return modularRadioButton.isSelected() ? COMMON.MODULAR : COMMON.GATEWAY;
     }
 
     public String getControllerFolderName() {

@@ -3,6 +3,7 @@ package pers.zlf.plugin.dialog;
 import com.intellij.ui.JBColor;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -84,27 +85,17 @@ public class ToolWindowFirstDialog extends JDialog {
     }
 
     public String getFullPath() throws Exception {
-        String fullPath = fullPathField.getText();
-        if (COMMON.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPath) || StringUtil.isEmpty(fullPath)) {
-            throw new Exception("Full path is not null");
-        }
-        return fullPathField.getText();
+        return Equals.of(fullPathField.getText()).and(COMMON.FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                .ifTrueThrow(() -> new Exception("Full path is not null"));
     }
 
     public String getPackagePathField() throws Exception {
-        String packagePath = packagePathField.getText();
-        if (COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePath) || StringUtil.isEmpty(packagePath)) {
-            throw new Exception("Package is not null");
-        }
-        return packagePath;
+        return Equals.of(packagePathField.getText()).and(COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                .ifTrueThrow(() -> new Exception("Package is not null"));
     }
 
     public String getSqlStr() throws Exception {
-        String sqlStr = textArea.getText();
-        if (StringUtil.isEmpty(sqlStr)) {
-            throw new Exception("Sql is not null");
-        }
-        return sqlStr;
+        return Equals.of(textArea.getText()).and(StringUtil::isEmpty).ifTrueThrow(() -> new Exception("Sql is not null"));
     }
 
     public String getDataBaseType() {

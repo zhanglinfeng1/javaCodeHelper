@@ -6,14 +6,15 @@ import pers.zlf.plugin.constant.REQUEST;
 import pers.zlf.plugin.pojo.BaiDuTransResult;
 import pers.zlf.plugin.util.HttpsUtil;
 import pers.zlf.plugin.util.JsonUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.UrlUtil;
+import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -30,11 +31,9 @@ public class BaiDuTransApi {
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[]{HttpsUtil.X_509_TRUST_MANAGER}, null);
-            URL uri = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
-            if (conn instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
-            }
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            Equals.of(conn instanceof HttpsURLConnection).ifTrue(() -> ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory()));
             conn.setConnectTimeout(REQUEST.SOCKET_TIMEOUT);
             conn.setRequestMethod(REQUEST.GET);
             if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -42,9 +41,7 @@ public class BaiDuTransApi {
             }
             BaiDuTransResult result = JsonUtil.getContentAndToObject(conn.getInputStream(), BaiDuTransResult.class);
             conn.disconnect();
-            if (StringUtil.isNotEmpty(result.getError_code())) {
-                throw new RuntimeException(result.getError_msg());
-            }
+            Optional.ofNullable(result.getResult()).orElseThrow(() -> new Exception(result.getError_msg()));
             return result.getResult();
         } catch (Exception e) {
             e.printStackTrace();

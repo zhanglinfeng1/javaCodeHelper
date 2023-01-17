@@ -8,6 +8,7 @@ import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Equals;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -98,10 +99,7 @@ public class TemplateFactory {
                 throw new Exception("The custom template does not exist");
             }
         }
-        File file = new File(this.fullPath);
-        if (!file.exists() && !file.mkdirs()) {
-            throw new Exception("Failed to create path");
-        }
+        Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateList) {

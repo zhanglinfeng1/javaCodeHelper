@@ -6,6 +6,7 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
@@ -14,6 +15,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.ANNOTATION;
@@ -285,5 +287,24 @@ public class MyPsiUtil {
      */
     public static boolean isSameProject(PsiElement element1, PsiElement element2) {
         return element1.getProject().getName().equals(element2.getProject().getName());
+    }
+
+    /**
+     * 获取元素的注释
+     *
+     * @param element 元素
+     * @return 注释
+     */
+    public static String getComment(PsiElement element) {
+        StringBuilder comment = new StringBuilder(COMMON.BLANK_STRING);
+        for (PsiElement childrenElement : element.getChildren()) {
+            if (childrenElement instanceof PsiDocComment) {
+                PsiDocComment docComment = (PsiDocComment) childrenElement;
+                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining("")).replaceAll(REGEX.WRAP, COMMON.BLANK_STRING));
+            } else if (childrenElement instanceof PsiComment) {
+                comment.append(childrenElement.getText());
+            }
+        }
+        return comment.toString();
     }
 }

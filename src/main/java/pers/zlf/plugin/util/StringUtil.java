@@ -33,7 +33,7 @@ public class StringUtil {
      */
     public static String toLowerCaseFirst(String str) {
         char[] ch = str.toCharArray();
-        if (ch[0] <= 90) {
+        if (ch[0] >= 65 && ch[0] <= 90) {
             ch[0] = (char) (ch[0] + 32);
         }
         return new String(ch);
@@ -47,7 +47,7 @@ public class StringUtil {
      */
     public static String toUpperCaseFirst(String str) {
         char[] ch = str.toCharArray();
-        if (ch[0] > 90) {
+        if (ch[0] >= 97 && ch[0] <= 122) {
             ch[0] = (char) (ch[0] - 32);
         }
         return new String(ch);
@@ -66,10 +66,7 @@ public class StringUtil {
      */
     public static String getFirstMatcher(String str, String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
-        if (m.find()) {
-            return m.group(1);
-        }
-        return COMMON.BLANK_STRING;
+        return m.find() ? m.group(1) : COMMON.BLANK_STRING;
     }
 
     /**

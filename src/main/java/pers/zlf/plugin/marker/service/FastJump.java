@@ -114,10 +114,7 @@ public abstract class FastJump {
             }
             //请求路径
             String methodUrl = getMappingUrl(psiAnnotation);
-            if (StringUtil.isNotEmpty(methodUrl)) {
-                return new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method);
-            }
-            return null;
+            return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method) : null;
         }
         return null;
     }
