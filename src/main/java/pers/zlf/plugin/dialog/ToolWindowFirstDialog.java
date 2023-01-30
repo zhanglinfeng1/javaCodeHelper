@@ -3,6 +3,7 @@ package pers.zlf.plugin.dialog;
 import com.intellij.ui.JBColor;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.JButton;
@@ -95,7 +96,7 @@ public class ToolWindowFirstDialog extends JDialog {
     }
 
     public String getSqlStr() throws Exception {
-        return Equals.of(textArea.getText()).and(StringUtil::isEmpty).ifTrueThrow(() -> new Exception("Sql is not null"));
+        return Empty.of(textArea.getText()).ifEmptyThrow(() -> new Exception("Sql is not null"));
     }
 
     public String getDataBaseType() {

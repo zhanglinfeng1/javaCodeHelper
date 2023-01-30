@@ -2,6 +2,7 @@ package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.COMMON;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,10 @@ public class StringUtil {
     }
 
     public static boolean isEmpty(Object obj) {
+        if (obj instanceof Collection<?>){
+            Collection<?> col = (Collection<?>) obj;
+            return col.isEmpty();
+        }
         String str = toString(obj);
         return str == null || str.trim().length() == 0;
     }

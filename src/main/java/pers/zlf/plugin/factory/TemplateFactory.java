@@ -7,7 +7,7 @@ import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
-import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import java.io.BufferedWriter;
@@ -77,17 +77,10 @@ public class TemplateFactory {
         List<Template> templateList = templateFactory.defaultTemplateList;
         if (!useDefaultTemplate) {
             //添加自定义模板
-            String customTemplatesPath = ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath();
-            if (StringUtil.isEmpty(customTemplatesPath)) {
-                throw new Exception("Please configure first! File > Setting > Other Settings > JavaCodeHelp");
-            }
+            String customTemplatesPath = Empty.of(ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath()).ifEmptyThrow(() -> new Exception("Please configure first! File > Setting > Other Settings > JavaCodeHelp"));
             File file = new File(customTemplatesPath);
-            if (!file.exists()) {
-                throw new Exception("Custom template path error");
-            }
-            if (!file.isDirectory()) {
-                throw new Exception("Non folder path");
-            }
+            Equals.of(file.exists()).ifFalseThrow(() -> new Exception("Custom template path error"));
+            Equals.of(file.isDirectory()).ifFalseThrow(() -> new Exception("Non folder path"));
             configuration.setDirectoryForTemplateLoading(file);
             for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
                 String name = subFile.getName();
@@ -95,9 +88,7 @@ public class TemplateFactory {
                     templateList.add(configuration.getTemplate(name));
                 }
             }
-            if (templateList.isEmpty()) {
-                throw new Exception("The custom template does not exist");
-            }
+            Empty.of(templateList).ifEmptyThrow(() -> new Exception("The custom template does not exist"));
         }
         Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
         tableInfo.setQueryColumnList(queryColumnList);

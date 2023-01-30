@@ -81,12 +81,9 @@ public class MethodCompletion extends Completion {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
                 continue;
             }
-            PsiClass psiFieldClass = PsiUtil.resolveClassInClassTypeOnly(psiField.getType());
-            if (null == psiFieldClass || MyPsiUtil.isSameProject(currentMethodClass, psiFieldClass)) {
-                continue;
-            }
-            //变量类的方法
-            findFromClass(psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT);
+            Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(psiField.getType()))
+                    .filter(psiFieldClass -> MyPsiUtil.notSameProject(currentMethodClass, psiFieldClass))
+                    .ifPresent(psiFieldClass -> findFromClass(psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT));
         }
     }
 

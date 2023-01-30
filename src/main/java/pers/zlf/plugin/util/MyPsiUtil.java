@@ -289,6 +289,10 @@ public class MyPsiUtil {
         return element1.getProject().getName().equals(element2.getProject().getName());
     }
 
+    public static boolean notSameProject(PsiElement element1, PsiElement element2) {
+        return !isSameProject(element1, element2);
+    }
+
     /**
      * 获取元素的注释
      *
