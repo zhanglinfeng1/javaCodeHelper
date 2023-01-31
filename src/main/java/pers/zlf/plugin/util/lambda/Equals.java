@@ -8,7 +8,7 @@ import java.util.function.Supplier;
  * @Date create in 2023/1/13 14:17
  */
 public final class Equals<T> {
-    private final Boolean run;
+    private Boolean run;
     private final T obj;
 
     private Equals(Boolean run, T obj) {
@@ -25,19 +25,23 @@ public final class Equals<T> {
     }
 
     public Equals<T> and(Predicate<? super T> predicate) {
-        return new Equals<>(null == run ? predicate.test(obj) : (run && predicate.test(obj)), obj);
+        this.run = null == run ? predicate.test(obj) : (run && predicate.test(obj));
+        return this;
     }
 
     public Equals<T> and(boolean bool) {
-        return new Equals<>(null == run ? bool : (run && bool), obj);
+        this.run = null == run ? bool : (run && bool);
+        return this;
     }
 
     public Equals<T> or(Predicate<? super T> predicate) {
-        return new Equals<>(null == run ? predicate.test(obj) : (run || predicate.test(obj)), obj);
+        this.run = null == run ? predicate.test(obj) : (run || predicate.test(obj));
+        return this;
     }
 
     public Equals<T> or(boolean bool) {
-        return new Equals<>(null == run ? bool : (run || bool), obj);
+        this.run = null == run ? bool : (run || bool);
+        return this;
     }
 
     public void ifTrue(Runnable runnable) {

@@ -10,7 +10,9 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.MESSAGE_ENUM;
+import pers.zlf.plugin.constant.MESSAGE_ENUM_TYPE;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Optional;
 
@@ -45,17 +47,7 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
     }
 
     private void checkType(ProblemsHolder holder, PsiElement psiElement, PsiType psiType) {
-        Optional.ofNullable(psiElement).ifPresent(t -> {
-            String typeFullName = psiType.getInternalCanonicalText();
-            switch (typeFullName) {
-                case TYPE.DATE:
-                    holder.registerProblem(t, "Replace Date with LocalDateTime");
-                    return;
-                case TYPE.SIMPLE_DATE_FORMAT:
-                    holder.registerProblem(t, "Replace SimpleDateFormat with DateTimeFormatter");
-                    return;
-                default:
-            }
-        });
+        Optional.ofNullable(psiElement).ifPresent(t -> Empty.of(MESSAGE_ENUM.select(MESSAGE_ENUM_TYPE.CODE_INSPECTION, psiType.getInternalCanonicalText()))
+                .ifPresent(s -> holder.registerProblem(t, s.getValue())));
     }
 }

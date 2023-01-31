@@ -23,14 +23,11 @@ public class TranslateAction extends BasicAction<PsiElement> {
     public boolean check() {
         this.selectionModel = editor.getSelectionModel();
         //获取选择内容
-        String selectedText = selectionModel.getSelectedText();
-        if (StringUtil.isEmpty(selectedText)) {
+        if (StringUtil.isEmpty(selectionModel.getSelectedText())) {
             return false;
         }
         this.commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        String appid = commonConfig.getAppId();
-        String securityKey = commonConfig.getSecretKey();
-        if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
+        if (StringUtil.isEmpty(commonConfig.getAppId()) || StringUtil.isEmpty(commonConfig.getSecretKey())) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
             return false;
         }

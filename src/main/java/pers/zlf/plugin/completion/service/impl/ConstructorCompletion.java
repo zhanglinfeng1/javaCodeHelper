@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.completion.service.Completion;
@@ -46,12 +47,13 @@ public class ConstructorCompletion extends Completion {
                 break;
             }
             String parameterName = parameter.getName();
-            if (parameter.getType().getInternalCanonicalText().equals(fieldMap.get(parameterName))) {
+            PsiType parameterType = parameter.getType();
+            if (parameterType.getInternalCanonicalText().equals(fieldMap.get(parameterName))) {
                 fillStr.append(COMMON.THIS_STR).append(parameterName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.SEMICOLON);
                 fieldMap.remove(parameterName);
                 continue;
             }
-            PsiClass parameterClass = PsiUtil.resolveClassInClassTypeOnly(parameter.getType());
+            PsiClass parameterClass = PsiUtil.resolveClassInClassTypeOnly(parameterType);
             if (null == parameterClass) {
                 continue;
             }
@@ -62,7 +64,7 @@ public class ConstructorCompletion extends Completion {
                 }
                 String fieldName = field.getName();
                 if (field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
-                    fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameter.getName()).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
+                    fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
                     fieldMap.remove(fieldName);
                 }
             }

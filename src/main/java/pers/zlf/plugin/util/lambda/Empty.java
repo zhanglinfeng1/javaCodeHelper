@@ -2,6 +2,7 @@ package pers.zlf.plugin.util.lambda;
 
 import pers.zlf.plugin.util.StringUtil;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -17,6 +18,12 @@ public final class Empty<T> {
 
     public static <T> Empty<T> of(T value) {
         return new Empty<>(value);
+    }
+
+    public void ifPresent(Consumer<? super T> action) {
+        if (value != null) {
+            action.accept(value);
+        }
     }
 
     public <X extends Throwable> T ifEmptyThrow(Supplier<? extends X> exceptionSupplier) throws X {
