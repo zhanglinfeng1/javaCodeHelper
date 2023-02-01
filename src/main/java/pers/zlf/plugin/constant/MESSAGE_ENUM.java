@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public enum MESSAGE_ENUM {
     /** 代码检查 */
-    CODE_INSPECTION_DATE(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.util.Date", "Replace Date with LocalDateTime"),
-    CODE_INSPECTION_SIMPLE_DATE_FORMAT(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.text.SimpleDateFormat", "Replace SimpleDateFormat with DateTimeFormatter");
+    CODE_INSPECTION_DATE(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.util.Date", "(JavaCodeHelp) Replace Date with LocalDateTime"),
+    CODE_INSPECTION_SIMPLE_DATE_FORMAT(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.text.SimpleDateFormat", "(JavaCodeHelp) Replace SimpleDateFormat with DateTimeFormatter");
 
     private String type;
 
