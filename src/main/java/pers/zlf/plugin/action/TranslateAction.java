@@ -1,7 +1,6 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.api.BaiDuTransApi;
@@ -17,15 +16,17 @@ import pers.zlf.plugin.util.StringUtil;
  */
 public class TranslateAction extends BasicAction<PsiElement> {
     private CommonConfig commonConfig;
-    private SelectionModel selectionModel;
+    private String selectionText;
+    private int selectionEnd;
 
     @Override
     public boolean check() {
-        this.selectionModel = editor.getSelectionModel();
         //获取选择内容
-        if (StringUtil.isEmpty(selectionModel.getSelectedText())) {
+        this.selectionText = editor.getSelectionModel().getSelectedText();
+        if (StringUtil.isEmpty(selectionText)) {
             return false;
         }
+        this.selectionEnd = editor.getSelectionModel().getSelectionEnd();
         this.commonConfig = ConfigFactory.getInstance().getCommonConfig();
         if (StringUtil.isEmpty(commonConfig.getAppId()) || StringUtil.isEmpty(commonConfig.getSecretKey())) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
@@ -39,18 +40,18 @@ public class TranslateAction extends BasicAction<PsiElement> {
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
             String from = COMMON.ZH;
             String to = COMMON.EN;
-            if (StringUtil.isEnglish(selectionModel.getSelectedText())) {
+            if (StringUtil.isEnglish(selectionText)) {
                 from = COMMON.EN;
                 to = COMMON.ZH;
             }
             String translateResult = COMMON.BLANK_STRING;
             //请求翻译API
             if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
-                translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionModel.getSelectedText(), from, to);
+                translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
             }
             if (StringUtil.isNotEmpty(translateResult)) {
                 String finalSelectedText = COMMON.SPACE + translateResult;
-                WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionModel.getSelectionEnd(), finalSelectedText));
+                WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, finalSelectedText));
             }
         });
     }
