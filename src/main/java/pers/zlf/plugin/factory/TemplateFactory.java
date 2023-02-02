@@ -74,7 +74,7 @@ public class TemplateFactory {
     }
 
     public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
-        List<Template> templateList = templateFactory.defaultTemplateList;
+        List<Template> templateList = new ArrayList<>();
         if (!useDefaultTemplate) {
             //添加自定义模板
             String customTemplatesPath = Empty.of(ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath()).ifEmptyThrow(() -> new Exception("Please configure first! File > Setting > Other Settings > JavaCodeHelp"));
@@ -89,6 +89,8 @@ public class TemplateFactory {
                 }
             }
             Empty.of(templateList).ifEmptyThrow(() -> new Exception("The custom template does not exist"));
+        }else {
+            templateList = templateFactory.defaultTemplateList;
         }
         Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
         tableInfo.setQueryColumnList(queryColumnList);

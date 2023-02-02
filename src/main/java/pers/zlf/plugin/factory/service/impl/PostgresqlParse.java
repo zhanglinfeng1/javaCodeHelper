@@ -16,12 +16,8 @@ import java.util.stream.Collectors;
  */
 public class PostgresqlParse extends SqlParse {
 
-    public PostgresqlParse(String sqlStr) {
-        super(sqlStr);
-    }
-
     @Override
-    public TableInfo getTableInfo() {
+    public TableInfo getTableInfo(String sqlStr) {
         //表名
         List<String> lineList = Arrays.stream(sqlStr.split(REGEX.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(REGEX.SPACE).length > 1).collect(Collectors.toList());
         List<String> sqlTableNameList = Arrays.stream(lineList.get(0).split(REGEX.SPACE)).map(s -> s.replaceAll(REGEX.SQL_REPLACE, COMMON.BLANK_STRING))
@@ -31,7 +27,7 @@ public class PostgresqlParse extends SqlParse {
             sqlTableName = sqlTableName.split(REGEX.DOT)[1];
         }
         tableInfo = new TableInfo(sqlTableName);
-        TableInfo oracleTableInfo = new OracleParse(sqlStr).getTableInfo();
+        TableInfo oracleTableInfo = new OracleParse().getTableInfo(sqlStr);
         tableInfo.setTableComment(oracleTableInfo.getTableComment());
         tableInfo.setColumnList(oracleTableInfo.getColumnList());
         return tableInfo;

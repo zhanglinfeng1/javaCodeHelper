@@ -18,12 +18,8 @@ import java.util.stream.Collectors;
  */
 public class MysqlParse extends SqlParse {
 
-    public MysqlParse(String sqlStr) {
-        super(sqlStr);
-    }
-
     @Override
-    public TableInfo getTableInfo() {
+    public TableInfo getTableInfo(String sqlStr) {
         List<String> lineList = Arrays.stream(sqlStr.split(REGEX.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(REGEX.SPACE).length > 1).collect(Collectors.toList());
         String[] sqlTableNameArr = lineList.get(0).split(REGEX.SPACE)[2].split(REGEX.DOT);
         String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(REGEX.SQL_REPLACE, COMMON.BLANK_STRING);

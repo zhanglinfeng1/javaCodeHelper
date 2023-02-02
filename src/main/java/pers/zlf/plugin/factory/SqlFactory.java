@@ -16,6 +16,8 @@ import pers.zlf.plugin.factory.service.impl.OracleParse;
 import pers.zlf.plugin.factory.service.impl.PostgresqlParse;
 import pers.zlf.plugin.pojo.TableInfo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,6 +25,12 @@ import java.util.Optional;
  * @Date: create in 2022/8/26 18:20
  */
 public class SqlFactory implements ToolWindowFactory {
+    private final Map<String, SqlParse> sqlParseMap = new HashMap<>() {{
+        put(COMMON.MYSQL, new MysqlParse());
+        put(COMMON.ORACLE, new OracleParse());
+        put(COMMON.POSTGRESQL, new PostgresqlParse());
+    }};
+
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         //初始化组件
@@ -40,22 +48,9 @@ public class SqlFactory implements ToolWindowFactory {
         firstDialog.getNextButton().addActionListener(e -> {
             try {
                 //解析sql
-                SqlParse sqlParse;
-                String sqlStr = firstDialog.getSqlStr();
-                switch (firstDialog.getDataBaseType()) {
-                    case COMMON.MYSQL:
-                        sqlParse = new MysqlParse(sqlStr);
-                        break;
-                    case COMMON.ORACLE:
-                        sqlParse = new OracleParse(sqlStr);
-                        break;
-                    case COMMON.POSTGRESQL:
-                        sqlParse = new PostgresqlParse(sqlStr);
-                        break;
-                    default:
-                        throw new Exception("Database not support");
-                }
-                TableInfo tableInfo = sqlParse.getTableInfo();
+                SqlParse sqlParse = sqlParseMap.get(firstDialog.getDataBaseType());
+                Optional.ofNullable(sqlParse).orElseThrow(() -> new Exception("Database not support"));
+                TableInfo tableInfo = sqlParse.getTableInfo(firstDialog.getSqlStr());
                 tableInfo.setAuthor(firstDialog.getAuthor());
                 //初始化文件路径
                 TemplateFactory.getInstance().init(firstDialog.getFullPath(), firstDialog.getPackagePathField(), tableInfo);

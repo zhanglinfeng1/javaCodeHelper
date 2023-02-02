@@ -11,13 +11,8 @@ import pers.zlf.plugin.pojo.TableInfo;
  */
 public abstract class SqlParse {
     public TableInfo tableInfo;
-    public String sqlStr;
 
-    public SqlParse(String sqlStr) {
-        this.sqlStr = sqlStr;
-    }
-
-    public abstract TableInfo getTableInfo();
+    public abstract TableInfo getTableInfo(String sqlStr);
 
     public String toJavaType(String sqlType) {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();

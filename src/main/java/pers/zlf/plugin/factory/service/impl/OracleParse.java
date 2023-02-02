@@ -21,12 +21,8 @@ import java.util.stream.Collectors;
  */
 public class OracleParse extends SqlParse {
 
-    public OracleParse(String sqlStr) {
-        super(sqlStr);
-    }
-
     @Override
-    public TableInfo getTableInfo() {
+    public TableInfo getTableInfo(String sqlStr) {
         int index = sqlStr.indexOf(COMMON.SEMICOLON);
         List<String> columnLineList = Arrays.stream(sqlStr.substring(0, index).split(REGEX.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(REGEX.SPACE).length > 1).collect(Collectors.toList());
         String[] sqlTableNameArr = columnLineList.get(0).split(REGEX.SPACE)[2].split(REGEX.DOT);
