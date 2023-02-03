@@ -1,9 +1,9 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
     <vendor>zhanglinfeng</vendor>
-    <idea-version since-build="182.5107.41" until-build="223.8214.52"/>
+    <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">gitee</a></p>
         <ul>

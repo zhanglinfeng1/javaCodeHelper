@@ -191,10 +191,9 @@ public class MyPsiUtil {
         if (psiType instanceof PsiClassReferenceType) {
             PsiClassReferenceType referenceType = (PsiClassReferenceType) psiType;
             PsiType[] psiTypeArr = referenceType.getParameters();
-            if (psiTypeArr.length != 1) {
-                return null;
+            if (psiTypeArr.length == 1) {
+                return PsiUtil.resolveClassInClassTypeOnly(psiTypeArr[0]);
             }
-            return PsiUtil.resolveClassInClassTypeOnly(psiTypeArr[0]);
         }
         return null;
     }
@@ -287,10 +286,6 @@ public class MyPsiUtil {
      */
     public static boolean isSameProject(PsiElement element1, PsiElement element2) {
         return element1.getProject().getName().equals(element2.getProject().getName());
-    }
-
-    public static boolean notSameProject(PsiElement element1, PsiElement element2) {
-        return !isSameProject(element1, element2);
     }
 
     /**

@@ -82,7 +82,7 @@ public class MethodCompletion extends Completion {
                 continue;
             }
             Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(psiField.getType()))
-                    .filter(psiFieldClass -> MyPsiUtil.notSameProject(currentMethodClass, psiFieldClass))
+                    .filter(psiFieldClass -> MyPsiUtil.isSameProject(currentMethodClass, psiFieldClass))
                     .ifPresent(psiFieldClass -> findFromClass(psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT));
         }
     }
