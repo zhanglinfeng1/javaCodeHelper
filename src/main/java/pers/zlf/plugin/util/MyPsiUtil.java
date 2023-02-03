@@ -154,10 +154,10 @@ public class MyPsiUtil {
         } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
             suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
             basicTypeName = COMMON.S_STR;
-        } else if (TYPE.BASIC_TYPE_LIST.contains(basicTypeName) || TYPE.COMMON_TYPE_LIST.contains(basicTypeName)) {
+        } else if (TypeUtil.isSimpleType(basicTypeName)) {
             basicTypeName = COMMON.BLANK_STRING;
         }
-        suggestedVariableName = (TYPE.BASIC_TYPE_LIST.contains(suggestedVariableName) || TYPE.COMMON_TYPE_LIST.contains(suggestedVariableName) ? COMMON.BLANK_STRING : suggestedVariableName) + basicTypeName;
+        suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? COMMON.BLANK_STRING : suggestedVariableName) + basicTypeName;
         if (suggestedVariableName.contains(variableName)) {
             variableName = suggestedVariableName;
         } else if (basicTypeName.contains(variableName)) {
@@ -201,17 +201,22 @@ public class MyPsiUtil {
     /**
      * 获取类的方法，排除当前所在的方法
      *
-     * @param psiClass 当前类
-     * @param method   当前方法
+     * @param psiClass     当前类
+     * @param method       当前方法
+     * @param containsName 方法名包含的字符
      * @return 方法数组
      */
-    public static PsiMethod[] getMethods(PsiClass psiClass, PsiMethod method) {
+    public static PsiMethod[] getMethods(PsiClass psiClass, PsiMethod method, String containsName) {
         LinkedList<PsiMethod> classMethodList = Arrays.stream(psiClass.getMethods()).collect(Collectors.toCollection(LinkedList::new));
         Iterator<PsiMethod> iterator = classMethodList.iterator();
         loop:
         while (iterator.hasNext()) {
             PsiMethod classMethod = iterator.next();
-            if (classMethod.getName().equals(method.getName())) {
+            if (StringUtil.isNotEmpty(containsName) && !classMethod.getName().contains(containsName)) {
+                iterator.remove();
+                continue;
+            }
+            if (null != method && classMethod.getName().equals(method.getName())) {
                 PsiParameter[] classMethodParameterArr = classMethod.getParameterList().getParameters();
                 PsiParameter[] methodParameterArr = method.getParameterList().getParameters();
                 if (classMethodParameterArr.length == methodParameterArr.length) {

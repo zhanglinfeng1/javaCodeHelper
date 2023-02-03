@@ -62,4 +62,13 @@ public class TypeUtil {
         return Arrays.stream(psiClass.getImplementsListTypes()).anyMatch(t -> typeName.equals(t.getName()));
     }
 
+    /**
+     * 判断是否是简单类型
+     *
+     * @param typeStr 类型
+     * @return boolean
+     */
+    public static boolean isSimpleType(String typeStr) {
+        return TYPE.BASIC_TYPE_LIST.contains(typeStr) || TYPE.COMMON_TYPE_LIST.contains(typeStr);
+    }
 }
