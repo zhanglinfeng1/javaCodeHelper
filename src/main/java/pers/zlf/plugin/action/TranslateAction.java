@@ -9,6 +9,7 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
 /**
  * @Author zhanglinfeng
@@ -46,12 +47,14 @@ public class TranslateAction extends BasicAction<PsiElement> {
             }
             String translateResult = COMMON.BLANK_STRING;
             //请求翻译API
-            if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
-                translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
-            }
-            if (StringUtil.isNotEmpty(translateResult)) {
-                String finalSelectedText = COMMON.SPACE + translateResult;
-                WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, finalSelectedText));
+            try {
+                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
+                    translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
+                }
+                Empty.of(translateResult).map(t -> COMMON.SPACE + t).isPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, t)));
+            } catch (Exception e) {
+                String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getApiType()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
+                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(errorMessage, COMMON.BLANK_STRING, Messages.getInformationIcon()));
             }
         });
     }

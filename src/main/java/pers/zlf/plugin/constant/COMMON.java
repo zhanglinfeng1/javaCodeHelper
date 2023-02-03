@@ -9,8 +9,6 @@ import java.util.Map;
  */
 public class COMMON {
     /** 通用常量 */
-    public static final Integer BAIDU_TRANSLATE = 0;
-    public static final Integer DATE_CLASS_TYPE = 0;
     public static final String SUCCESS = "成功";
     public static final String GET = "get";
     public static final String SET = "set";
@@ -21,6 +19,7 @@ public class COMMON {
     public static final String SLASH = "/";
     public static final String DOT = ".";
     public static final String COMMA = ",";
+    public static final String COLON = ":";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String LEFT_BRACKETS = "[";
@@ -50,8 +49,9 @@ public class COMMON {
 
     /** 配置 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
+    public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
-        put(0, "Date");
+        put(DATE_CLASS_TYPE, "Date");
         put(1, "Timestamp");
         put(2, "LocalDateTime");
     }};
@@ -71,4 +71,10 @@ public class COMMON {
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
     public static final String COLLECT_SET_STR = "::new).collect(Collectors.toSet());";
     public static final String S_STR = "s";
+
+    /** 翻译 */
+    public static final Integer BAIDU_TRANSLATE = 0;
+    public static final Map<Integer, String> TRANSLATE_MAP = new HashMap<>() {{
+        put(BAIDU_TRANSLATE, "百度翻译");
+    }};
 }

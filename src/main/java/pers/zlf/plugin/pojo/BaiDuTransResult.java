@@ -3,6 +3,7 @@ package pers.zlf.plugin.pojo;
 import pers.zlf.plugin.constant.COMMON;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +40,7 @@ public class BaiDuTransResult {
     }
 
     public String getResult() {
-        return this.trans_result.stream().map(Detail::getDst).collect(Collectors.joining(COMMON.SEMICOLON));
+        return Optional.ofNullable(this.trans_result).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(COMMON.SEMICOLON))).orElse(null);
     }
 
     private static class Detail {

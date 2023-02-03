@@ -2,7 +2,9 @@ package pers.zlf.plugin.util.lambda;
 
 import pers.zlf.plugin.util.StringUtil;
 
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -20,7 +22,20 @@ public final class Empty<T> {
         return new Empty<>(value);
     }
 
-    public void ifPresent(Consumer<? super T> action) {
+    public <U> Empty<U> map(Function<? super T, ? extends U> mapper) {
+        Objects.requireNonNull(mapper);
+        if (!isPresent()) {
+            return new Empty<>(null);
+        } else {
+            return Empty.of(mapper.apply(value));
+        }
+    }
+
+    public boolean isPresent() {
+        return value != null;
+    }
+
+    public void isPresent(Consumer<? super T> action) {
         if (value != null) {
             action.accept(value);
         }
