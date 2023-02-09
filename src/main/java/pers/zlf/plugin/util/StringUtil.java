@@ -37,6 +37,9 @@ public class StringUtil {
      * @return String
      */
     public static String toLowerCaseFirst(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
         char[] ch = str.toCharArray();
         if (ch[0] >= 65 && ch[0] <= 90) {
             ch[0] = (char) (ch[0] + 32);
@@ -51,6 +54,9 @@ public class StringUtil {
      * @return String
      */
     public static String toUpperCaseFirst(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
         char[] ch = str.toCharArray();
         if (ch[0] >= 97 && ch[0] <= 122) {
             ch[0] = (char) (ch[0] - 32);
