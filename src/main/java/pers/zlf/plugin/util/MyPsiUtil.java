@@ -149,7 +149,7 @@ public class MyPsiUtil {
         String suggestedVariableName = COMMON.BLANK_STRING;
         if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {
             String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, REGEX.PARENTHESES).split(COMMON.COMMA);
-            suggestedVariableName = StringUtil.toLowerCaseFirst(suggestedVariableNames[suggestedVariableNames.length - 1].trim());
+            suggestedVariableName = suggestedVariableNames[suggestedVariableNames.length - 1].trim();
             basicTypeName = basicTypeName.split(COMMON.LESS_THAN_SIGN)[0];
         } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
             suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
@@ -157,10 +157,10 @@ public class MyPsiUtil {
         } else if (TypeUtil.isSimpleType(basicTypeName)) {
             basicTypeName = COMMON.BLANK_STRING;
         }
-        suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? COMMON.BLANK_STRING : suggestedVariableName) + basicTypeName;
+        suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? COMMON.BLANK_STRING : StringUtil.toLowerCaseFirst(suggestedVariableName)) + basicTypeName;
         if (suggestedVariableName.contains(variableName)) {
             variableName = suggestedVariableName;
-        } else if (basicTypeName.contains(variableName)) {
+        } else if (StringUtil.toLowerCaseFirst(basicTypeName).contains(variableName)) {
             variableName = basicTypeName;
         } else {
             variableName = variableName + basicTypeName;
