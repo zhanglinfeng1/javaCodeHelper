@@ -1,11 +1,9 @@
 package pers.zlf.plugin.marker.service.impl;
 
 import com.intellij.psi.PsiClass;
+import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.marker.service.FastJump;
-import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
-
-import java.util.Map;
 
 /**
  * @Author zhanglinfeng
@@ -25,5 +23,10 @@ public class ControllerFastJump extends FastJump {
     @Override
     public boolean checkClass(PsiClass psiClass) {
         return MyPsiUtil.isFeign(psiClass);
+    }
+
+    @Override
+    public String getClassUrl(PsiClass psiClass) {
+        return COMMON.BLANK_STRING;
     }
 }

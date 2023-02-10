@@ -69,9 +69,18 @@ public abstract class FastJump {
                 .setTargets(t.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiMethod())));
     }
 
+    public String getMappingUrl(PsiAnnotation annotation) {
+        return Optional.ofNullable(annotation).map(psiAnnotation -> {
+            String url = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.VALUE);
+            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.PATH) : url;
+        }).orElse(COMMON.BLANK_STRING);
+    }
+
     public abstract boolean end();
 
     public abstract boolean checkClass(PsiClass psiClass);
+
+    public abstract String getClassUrl(PsiClass psiClass);
 
     private void dealDirectory(PsiDirectory psiDirectory) {
         //处理文件夹
@@ -80,9 +89,10 @@ public abstract class FastJump {
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
             return;
         }
-        Arrays.stream(psiDirectory.getFiles()).filter(f -> f.getFileType() instanceof JavaFileType).map(f -> ((PsiJavaFile) f).getClasses()[0]).filter(this::checkClass)
+        Arrays.stream(psiDirectory.getFiles()).filter(f -> f.getFileType() instanceof JavaFileType).map(f -> ((PsiJavaFile) f).getClasses())
+                .filter(classes -> classes.length == 1).map(classes -> classes[0]).filter(this::checkClass)
                 .forEach(psiClass -> {
-                    String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
+                    String classUrl = this.getClassUrl(psiClass);
                     Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method))
                             .flatMap(mappingAnnotation -> Optional.ofNullable(map.get(mappingAnnotation.toString())))
                             .ifPresent(mappingAnnotation -> mappingAnnotation.getTargetMethodList().add(method)));
@@ -123,10 +133,4 @@ public abstract class FastJump {
         return null;
     }
 
-    private String getMappingUrl(PsiAnnotation annotation) {
-        return Optional.ofNullable(annotation).map(psiAnnotation -> {
-            String url = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.VALUE);
-            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.PATH) : url;
-        }).orElse(COMMON.BLANK_STRING);
-    }
 }
