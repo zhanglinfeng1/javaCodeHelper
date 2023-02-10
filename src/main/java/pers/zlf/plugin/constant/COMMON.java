@@ -10,6 +10,7 @@ import java.util.Map;
 public class COMMON {
     /** 通用常量 */
     public static final String SUCCESS = "成功";
+    public static final String RESOURCES = "resources";
     public static final String GET = "get";
     public static final String SET = "set";
     public static final String EN = "en";

@@ -22,9 +22,11 @@ import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @Author zhanglinfeng
@@ -44,16 +46,18 @@ public abstract class FastJump {
 
     public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass, String fastJumpType) {
         this.fastJumpType = fastJumpType;
-        map = new HashMap<>();
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
-        //当前模块路径
-        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass);
         //获取方法的注解
-        Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method)).ifPresent(t -> map.put(t.toString(), t)));
+        map = Arrays.stream(psiClass.getMethods()).map(method -> this.getMappingAnnotation(classUrl, method)).filter(Objects::nonNull).collect(Collectors.toMap(MappingAnnotation::toString, Function.identity(), (k1, k2) -> k2));
+        if (map.isEmpty()) {
+            return;
+        }
+        //当前模块路径
         Project project = psiClass.getProject();
+        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(), project);
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().contains(currentModulePath)) || virtualFile.getPath().contains("/resources")) {
+            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().startsWith(currentModulePath)) || virtualFile.getPath().endsWith(COMMON.RESOURCES)) {
                 continue;
             }
             Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);

@@ -1,7 +1,8 @@
 package pers.zlf.plugin.marker;
 
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
@@ -16,7 +17,6 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.TYPE;
 import pers.zlf.plugin.constant.XML;
 import pers.zlf.plugin.util.MyPsiUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.XmlUtil;
 
 import java.util.Arrays;
@@ -73,16 +73,17 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
     }
 
     private void addByXml() {
-        String currentModulePath = MyPsiUtil.getCurrentModulePath(element);
-        if (StringUtil.isNotEmpty(currentModulePath)) {
-            Project project = element.getProject();
-            PsiManager manager = PsiManager.getInstance(project);
-            classFullName = element.getQualifiedName();
-            methodMap = Arrays.stream(element.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
-            Arrays.stream(ProjectRootManager.getInstance(project).getContentSourceRoots())
-                    .filter(virtualFile -> virtualFile.getPath().contains(currentModulePath))
-                    .map(manager::findDirectory).filter(Objects::nonNull).forEach(this::findXml);
+        Project project = element.getProject();
+        PsiManager manager = PsiManager.getInstance(project);
+        classFullName = element.getQualifiedName();
+        methodMap = Arrays.stream(element.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
+        if (methodMap.isEmpty()) {
+            return;
         }
+        Optional.ofNullable(ModuleUtil.findModuleForFile(element.getContainingFile().getVirtualFile(), project))
+                .map(ModuleRootManager::getInstance).map(ModuleRootManager::getSourceRoots)
+                .ifPresent(virtualFiles -> Arrays.stream(virtualFiles).filter(virtualFile -> virtualFile.getPath().endsWith(COMMON.RESOURCES))
+                        .map(manager::findDirectory).filter(Objects::nonNull).forEach(this::findXml));
     }
 
     private void findXml(PsiDirectory psiDirectory) {
