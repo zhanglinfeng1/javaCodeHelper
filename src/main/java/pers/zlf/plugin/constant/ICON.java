@@ -10,9 +10,5 @@ import javax.swing.Icon;
  */
 public class ICON {
     public static Icon BO_LUO_SVG_16 = IconLoader.getIcon("/icon/boLuo16.svg", ICON.class);
-    public static Icon ADD_PNG = IconLoader.getIcon("/icon/add.png", ICON.class);
-    public static Icon ADD2_PNG = IconLoader.getIcon("/icon/add2.png", ICON.class);
-    public static Icon DELETE_PNG = IconLoader.getIcon("/icon/delete.png", ICON.class);
-    public static Icon DELETE2_PNG = IconLoader.getIcon("/icon/delete2.png", ICON.class);
 
 }
