@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
@@ -71,7 +71,8 @@
         <!-- 配置持久化 -->
         <applicationService serviceImplementation="pers.zlf.plugin.config.ConfigComponent"/>
         <!-- 配置面板 -->
-        <applicationConfigurable instance="pers.zlf.plugin.config.CommonConfigurable"/>
+        <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable"/>
+        <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->

@@ -1,5 +1,6 @@
 package pers.zlf.plugin.util.lambda;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -50,15 +51,14 @@ public final class Equals<T> {
         }
     }
 
-    public <X extends Throwable> T ifTrueThrow(Supplier<? extends X> exceptionSupplier) throws X {
+    public void ifTrue(Consumer<? super T> action) {
         if (run) {
-            throw exceptionSupplier.get();
+            action.accept(obj);
         }
-        return obj;
     }
 
-    public <X extends Throwable> T ifFalseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if (!run) {
+    public <X extends Throwable> T ifTrueThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        if (run) {
             throw exceptionSupplier.get();
         }
         return obj;
@@ -70,4 +70,16 @@ public final class Equals<T> {
         }
     }
 
+    public void ifFalse(Consumer<? super T> action) {
+        if (run) {
+            action.accept(obj);
+        }
+    }
+
+    public <X extends Throwable> T ifFalseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        if (!run) {
+            throw exceptionSupplier.get();
+        }
+        return obj;
+    }
 }

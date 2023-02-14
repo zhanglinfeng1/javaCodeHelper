@@ -2,9 +2,11 @@ package pers.zlf.plugin.marker.service.impl;
 
 import com.intellij.psi.PsiClass;
 import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.marker.service.FastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
+
+import java.util.List;
 
 /**
  * @Author zhanglinfeng
@@ -12,18 +14,19 @@ import pers.zlf.plugin.util.MyPsiUtil;
  */
 public class FeignFastJump extends FastJump {
 
-    public FeignFastJump(String filterFolderName) {
-        super(filterFolderName);
+    public FeignFastJump() {
+        super(ConfigFactory.getInstance().getCommonConfig().getControllerFolderName());
     }
 
     @Override
-    public boolean end() {
-        return COMMON.MODULAR.equals(fastJumpType) && map.values().stream().anyMatch(l -> !l.getTargetMethodList().isEmpty());
+    public boolean jump(String virtualFilePath) {
+        List<String> gatewayModuleNameList = ConfigFactory.getInstance().getCommonConfig().getModuleNameList();
+        return gatewayModuleNameList.stream().noneMatch(virtualFilePath::contains);
     }
 
     @Override
     public boolean checkClass(PsiClass psiClass) {
-        return MyPsiUtil.isController(fastJumpType, psiClass);
+        return MyPsiUtil.isController(psiClass);
     }
 
     @Override

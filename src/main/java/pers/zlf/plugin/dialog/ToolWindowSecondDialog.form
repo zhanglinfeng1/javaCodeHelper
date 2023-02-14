@@ -73,6 +73,8 @@
               </grid>
             </constraints>
             <properties>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
               <icon value="icon/add.png"/>
               <text value=""/>
             </properties>
@@ -91,6 +93,8 @@
               </grid>
             </constraints>
             <properties>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
               <icon value="icon/delete.png"/>
               <text value=""/>
             </properties>

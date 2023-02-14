@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -28,14 +27,10 @@ import java.util.Optional;
  * @Date create in 2022/10/4 14:03
  */
 public class CommonConfigDialog {
+    private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
     private JComboBox<String> apiComboBox;
-    private JPanel panel;
-    private JRadioButton modularRadioButton;
-    private JRadioButton gatewayRadioButton;
-    private JTextField controllerFolderNameTextField;
-    private JTextField feignFolderNameTextField;
     private JTextField customTemplatesPathField;
     private JButton downloadButton;
     private JComboBox<String> dateClassComboBox;
@@ -59,37 +54,27 @@ public class CommonConfigDialog {
             }
         });
 
-        downloadButton.addActionListener(e -> {
-            Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).ifPresent(virtualFile -> {
-                try {
-                    List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
-                    for (Template template : defaultTemplateList) {
-                        FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
-                        //TODO 寻找替换方法
-                        file.append(template.getRootTreeNode().toString());
-                        file.flush();
-                        file.close();
+        downloadButton.addActionListener(e -> Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null))
+                .ifPresent(virtualFile -> {
+                    try {
+                        List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
+                        for (Template template : defaultTemplateList) {
+                            FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
+                            //TODO 寻找替换方法
+                            file.append(template.getRootTreeNode().toString());
+                            file.flush();
+                            file.close();
+                        }
+                    } catch (Exception ex) {
+                        Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
                     }
-                } catch (Exception ex) {
-                    Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
-                }
-            });
-        });
+                }));
     }
 
     public void reset() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(commonConfig.getAppId());
         securityKeyTextField.setText(commonConfig.getSecretKey());
-        controllerFolderNameTextField.setText(commonConfig.getControllerFolderName());
-        feignFolderNameTextField.setText(commonConfig.getFeignFolderName());
-        if (COMMON.MODULAR.equals(commonConfig.getFastJumpType())) {
-            modularRadioButton.setSelected(true);
-            gatewayRadioButton.setSelected(false);
-        } else {
-            modularRadioButton.setSelected(false);
-            gatewayRadioButton.setSelected(true);
-        }
         String customTemplatesPath = commonConfig.getCustomTemplatesPath();
         if (StringUtil.isEmpty(customTemplatesPath)) {
             customTemplatesPathField.setForeground(JBColor.GRAY);
@@ -117,18 +102,6 @@ public class CommonConfigDialog {
         return apiComboBox.getSelectedIndex();
     }
 
-    public String getFastJumpType() {
-        return modularRadioButton.isSelected() ? COMMON.MODULAR : COMMON.GATEWAY;
-    }
-
-    public String getControllerFolderName() {
-        return controllerFolderNameTextField.getText();
-    }
-
-    public String getFeignFolderName() {
-        return feignFolderNameTextField.getText();
-    }
-
     public String getCustomTemplatesPath() {
         String path = customTemplatesPathField.getText();
         return COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON.BLANK_STRING : path;
@@ -137,4 +110,5 @@ public class CommonConfigDialog {
     public Integer getDateClassType() {
         return dateClassComboBox.getSelectedIndex();
     }
+
 }

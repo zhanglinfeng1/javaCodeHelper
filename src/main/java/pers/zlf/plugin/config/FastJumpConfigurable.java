@@ -4,26 +4,27 @@ import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.dialog.CommonConfigDialog;
+import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
 
 /**
  * @Author zhanglinfeng
- * @Date create in 2022/10/5 9:10
+ * @Date create in 2023/2/13 10:36
  */
-public class CommonConfigurable implements Configurable {
+public class FastJumpConfigurable implements Configurable {
     /** 配置参数 */
     private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
     /** 配置界面 */
-    private final CommonConfigDialog dialog = new CommonConfigDialog();
+    private final FastJumpConfigDialog dialog = new FastJumpConfigDialog();
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return COMMON.JAVA_CODE_HELP;
+        return COMMON.FAST_JUMP;
     }
 
     @Nullable
@@ -35,29 +36,20 @@ public class CommonConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getApiType().equals(commonConfig.getApiType())) {
+        if (!dialog.getControllerFolderName().equals(commonConfig.getControllerFolderName())) {
             return true;
         }
-        if (!dialog.getAppId().equals(commonConfig.getAppId())) {
+        if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
             return true;
         }
-        if (!dialog.getSecurityKey().equals(commonConfig.getSecretKey())) {
-            return true;
-        }
-
-        if (!dialog.getDateClassType().equals(commonConfig.getDateClassType())) {
-            return true;
-        }
-        return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
+        return !CollectionUtil.equals(dialog.getModuleNameList(), commonConfig.getModuleNameList());
     }
 
     @Override
     public void apply() {
-        commonConfig.setApiType(dialog.getApiType());
-        commonConfig.setAppId(dialog.getAppId());
-        commonConfig.setSecretKey(dialog.getSecurityKey());
-        commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
-        commonConfig.setDateClassType(dialog.getDateClassType());
+        commonConfig.setControllerFolderName(dialog.getControllerFolderName());
+        commonConfig.setFeignFolderName(dialog.getFeignFolderName());
+        commonConfig.setModuleNameList(dialog.getModuleNameList());
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 

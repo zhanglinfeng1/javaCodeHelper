@@ -3,7 +3,6 @@ package pers.zlf.plugin.marker;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.marker.service.FastJump;
 import pers.zlf.plugin.marker.service.impl.ControllerFastJump;
 import pers.zlf.plugin.marker.service.impl.FeignFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -14,10 +13,6 @@ import pers.zlf.plugin.util.MyPsiUtil;
  */
 public class FeignFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> {
 
-    private final String fastJumpType = ConfigFactory.getInstance().getCommonConfig().getFastJumpType();
-    private final String controllerFolderName = ConfigFactory.getInstance().getCommonConfig().getControllerFolderName();
-    private final String feignFolderName = ConfigFactory.getInstance().getCommonConfig().getFeignFolderName();
-
     @Override
     public boolean checkPsiElement(PsiElement element) {
         return element instanceof PsiClass;
@@ -25,15 +20,11 @@ public class FeignFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> 
 
     @Override
     public void dealPsiElement() {
-        FastJump fastJump;
         if (MyPsiUtil.isFeign(element)) {
-            fastJump = new FeignFastJump(controllerFolderName);
-        } else if (MyPsiUtil.isController(fastJumpType, element)) {
-            fastJump = new ControllerFastJump(feignFolderName);
-        } else {
-            return;
+            new FeignFastJump().addLineMarker(result, element);
+        } else if (MyPsiUtil.isController(element, ConfigFactory.getInstance().getCommonConfig().getModuleNameList())) {
+            new ControllerFastJump().addLineMarker(result, element);
         }
-        fastJump.addLineMarker(result, element, fastJumpType);
     }
 
 }

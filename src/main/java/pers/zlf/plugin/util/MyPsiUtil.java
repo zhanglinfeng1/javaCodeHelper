@@ -50,31 +50,18 @@ public class MyPsiUtil {
         return psiClass.getAnnotation(ANNOTATION.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION.NETFLIX_FEIGN_CLIENT) != null;
     }
 
-    public static boolean isController(String feignFastJumpType, PsiClass psiClass) {
-        switch (feignFastJumpType) {
-            case COMMON.MODULAR:
-                return isModuleController(psiClass);
-            case COMMON.GATEWAY:
-                return isController(psiClass);
-            default:
-                return false;
-        }
-    }
-
     public static boolean isController(PsiClass psiClass) {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
-        //属于controller
         return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(ANNOTATION.CONTROLLER_LIST::contains);
     }
 
-    public static boolean isModuleController(PsiClass psiClass) {
-        if (isController(psiClass)) {
-            //排除网关
-            return Arrays.stream(psiClass.getFields()).noneMatch(f -> isFeign(PsiUtil.resolveClassInClassTypeOnly(f.getType())));
+    public static boolean isController(PsiClass psiClass, List<String> gatewayModuleNameList) {
+        if (gatewayModuleNameList.stream().anyMatch(t -> psiClass.getContainingFile().getVirtualFile().getPath().contains(t))) {
+            return false;
         }
-        return false;
+        return isController(psiClass);
     }
 
     /**

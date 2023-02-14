@@ -47,6 +47,9 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
+<ul>1.5.2
+    <li>[NEW]可配置feign不跳转的模块</li>
+</ul>
 <ul>1.5.1
     <li>[BUG]代码补全不提示</li>
     <li>[优化]翻译相关报错以弹窗形式展示</li>

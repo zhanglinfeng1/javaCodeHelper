@@ -45,8 +45,6 @@ public class ToolWindowSecondDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
 
-        addButton.setContentAreaFilled(false);
-        addButton.setBorderPainted(false);
         addButton.addMouseListener(getListener(addButton, ICON.ADD2_PNG, ICON.ADD_PNG));
         addButton.addActionListener(e -> {
             DefaultTableModel model = (DefaultTableModel) columnTable.getModel();
@@ -58,8 +56,6 @@ public class ToolWindowSecondDialog extends JDialog {
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
         });
 
-        deleteButton.setContentAreaFilled(false);
-        deleteButton.setBorderPainted(false);
         deleteButton.addMouseListener(getListener(deleteButton, ICON.DELETE2_PNG, ICON.DELETE_PNG));
         deleteButton.addActionListener(e -> {
             int rowNum = columnTable.getSelectedRow();

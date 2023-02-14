@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
  * @Date create in 2022/10/17 16:34
  */
 public abstract class FastJump {
-    /** 跳转类型 */
-    public String fastJumpType;
     /** 处理结果 */
     public Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
@@ -44,8 +42,7 @@ public abstract class FastJump {
         this.filterFolderName = filterFolderName;
     }
 
-    public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass, String fastJumpType) {
-        this.fastJumpType = fastJumpType;
+    public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass) {
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
         //获取方法的注解
@@ -57,12 +54,12 @@ public abstract class FastJump {
         Project project = psiClass.getProject();
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(), project);
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFile.getPath().startsWith(currentModulePath)) || virtualFile.getPath().endsWith(COMMON.RESOURCES)) {
+            String virtualFilePath = virtualFile.getPath();
+            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES)) {
                 continue;
             }
-            Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
-            if (end()) {
-                break;
+            if (jump(virtualFilePath)) {
+                Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
         }
         map.values().stream().filter(t -> !t.getTargetMethodList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16)
@@ -76,7 +73,7 @@ public abstract class FastJump {
         }).orElse(COMMON.BLANK_STRING);
     }
 
-    public abstract boolean end();
+    public abstract boolean jump(String virtualFilePath);
 
     public abstract boolean checkClass(PsiClass psiClass);
 
