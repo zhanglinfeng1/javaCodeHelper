@@ -44,7 +44,6 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getSecurityKey().equals(commonConfig.getSecretKey())) {
             return true;
         }
-
         if (!dialog.getDateClassType().equals(commonConfig.getDateClassType())) {
             return true;
         }

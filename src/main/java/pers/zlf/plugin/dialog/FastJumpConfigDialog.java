@@ -100,7 +100,7 @@ public class FastJumpConfigDialog {
     }
 
     private List<String> getOptionalList() {
-        List<String> list = new ArrayList<>(totalSelectList);
+        List<String> list = totalSelectList.stream().sorted().collect(Collectors.toList());
         list.removeAll(getModuleNameList());
         return list;
     }

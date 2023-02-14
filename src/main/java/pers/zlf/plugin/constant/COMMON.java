@@ -52,7 +52,7 @@ public class COMMON {
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
     public static final String FAST_JUMP = "FastJump";
     public static final String MODULE_NAME_TABLE_HEADER = "feign跳转目标不包含以下模块";
-    public static final String SELECT_MODULE = "请选择Module";
+    public static final String SELECT_MODULE = "请选择";
     public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
         put(DATE_CLASS_TYPE, "Date");
