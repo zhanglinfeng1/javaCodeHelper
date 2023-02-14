@@ -2,6 +2,7 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
@@ -22,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,10 +44,12 @@ public class FastJumpConfigDialog {
     private final DefaultTableModel defaultTableModel;
 
     public FastJumpConfigDialog() {
-        Module[] modules = ModuleManager.getInstance(ProjectManager.getInstance().getOpenProjects()[0]).getModules();
-        totalSelectList = Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet());
-        totalSelectList.addAll(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
-        defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.MODULE_NAME_TABLE_HEADER}){
+        totalSelectList = new HashSet<>(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            Module[] modules = ModuleManager.getInstance(project).getModules();
+            totalSelectList.addAll(Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet()));
+        }
+        defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.MODULE_NAME_TABLE_HEADER}) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
