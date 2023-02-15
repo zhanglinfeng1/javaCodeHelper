@@ -73,13 +73,13 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
     }
 
     private void addByXml() {
-        Project project = element.getProject();
-        PsiManager manager = PsiManager.getInstance(project);
         classFullName = element.getQualifiedName();
         methodMap = Arrays.stream(element.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
         if (methodMap.isEmpty()) {
             return;
         }
+        Project project = element.getProject();
+        PsiManager manager = PsiManager.getInstance(project);
         Optional.ofNullable(ModuleUtil.findModuleForFile(element.getContainingFile().getVirtualFile(), project))
                 .map(ModuleRootManager::getInstance).map(ModuleRootManager::getSourceRoots)
                 .ifPresent(virtualFiles -> Arrays.stream(virtualFiles).filter(virtualFile -> virtualFile.getPath().endsWith(COMMON.RESOURCES))
