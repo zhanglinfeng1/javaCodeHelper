@@ -22,4 +22,23 @@ public class CollectionUtil {
         return collection1.size() == collection2.size() && collection1.containsAll(collection2);
     }
 
+    /**
+     * 判断集合是否为空
+     *
+     * @param collection 集合
+     * @return boolean
+     */
+    public static boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    /**
+     * 判断集合是否非空
+     *
+     * @param collection 集合
+     * @return boolean
+     */
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return !isEmpty(collection);
+    }
 }
