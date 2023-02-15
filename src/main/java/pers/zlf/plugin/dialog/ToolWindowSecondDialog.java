@@ -48,9 +48,7 @@ public class ToolWindowSecondDialog extends JDialog {
         columnTable.setModel(defaultTableModel);
 
         addButton.addActionListener(e -> {
-            Object[] row = {columnArr[0], StringUtil.toHumpStyle(columnArr[0]), COMMON.SELECT_OPTIONS[0]};
-            int rowNum = defaultTableModel.getRowCount();
-            defaultTableModel.insertRow(rowNum, row);
+            defaultTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), COMMON.SELECT_OPTIONS[0]});
             columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
