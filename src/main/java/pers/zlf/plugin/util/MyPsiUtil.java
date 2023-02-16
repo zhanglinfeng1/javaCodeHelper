@@ -13,6 +13,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -58,7 +59,8 @@ public class MyPsiUtil {
     }
 
     public static boolean isController(PsiClass psiClass, List<String> gatewayModuleNameList) {
-        if (gatewayModuleNameList.stream().anyMatch(t -> psiClass.getContainingFile().getVirtualFile().getPath().contains(t))) {
+        String filePath = Optional.ofNullable(psiClass).map(PsiClass::getContainingFile).map(PsiFile::getVirtualFile).map(VirtualFile::getPath).orElse(null);
+        if (StringUtil.isEmpty(filePath) || gatewayModuleNameList.stream().anyMatch(filePath::contains)) {
             return false;
         }
         return isController(psiClass);
@@ -227,7 +229,7 @@ public class MyPsiUtil {
      * 获取当前模块路径
      *
      * @param virtualFile VirtualFile
-     * @param project Project
+     * @param project     Project
      * @return 模块路径
      */
     public static String getCurrentModulePath(VirtualFile virtualFile, Project project) {
