@@ -128,7 +128,6 @@
             </constraints>
             <properties>
               <icon value="icon/download.png"/>
-              <text value="下载默认模板"/>
             </properties>
           </component>
           <component id="6f608" class="javax.swing.JLabel">

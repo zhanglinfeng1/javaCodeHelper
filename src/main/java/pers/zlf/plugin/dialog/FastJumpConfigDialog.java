@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.Consumer;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON;
+import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.constant.TYPE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -62,10 +62,10 @@ public class FastJumpConfigDialog {
 
         Consumer<String> addCallback = value -> {
             defaultTableModel.addRow(new String[]{value});
-            ListenerUtil.addMouseListener(deleteModuleButton, ICON.REMOVE_DARK);
-            ListenerUtil.addMouseListener(editModuleButton, ICON.EDIT_DARK);
+            ListenerUtil.addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
+            ListenerUtil.addMouseListener(editModuleButton, ICON_ENUM.EDIT);
             if (CollectionUtil.isEmpty(getOptionalList())) {
-                ListenerUtil.removeMouseListener(addModuleButton, ICON.ADD);
+                ListenerUtil.removeMouseListener(addModuleButton, ICON_ENUM.ADD);
             }
         };
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).isPresent(list -> showChooseWindow(list, addCallback)));
@@ -74,10 +74,10 @@ public class FastJumpConfigDialog {
             int rowNum = moduleTable.getSelectedRow();
             if (rowNum >= 0) {
                 defaultTableModel.removeRow(rowNum);
-                ListenerUtil.addMouseListener(addModuleButton, ICON.ADD_DARK);
+                ListenerUtil.addMouseListener(addModuleButton, ICON_ENUM.ADD);
                 if (moduleTable.getRowCount() == 0) {
-                    ListenerUtil.removeMouseListener(deleteModuleButton, ICON.REMOVE);
-                    ListenerUtil.removeMouseListener(editModuleButton, ICON.EDIT);
+                    ListenerUtil.removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
+                    ListenerUtil.removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
                 }
             }
         });
@@ -98,17 +98,17 @@ public class FastJumpConfigDialog {
         feignTextField.setText(commonConfig.getFeignFolderName());
         defaultTableModel.getDataVector().clear();
         List<String> selectModuleList = commonConfig.getModuleNameList();
-        ListenerUtil.addMouseListener(addModuleButton, ICON.ADD_DARK);
+        ListenerUtil.addMouseListener(addModuleButton, ICON_ENUM.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
-            ListenerUtil.removeMouseListener(deleteModuleButton, ICON.REMOVE);
-            ListenerUtil.removeMouseListener(editModuleButton, ICON.EDIT);
+            ListenerUtil.removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
+            ListenerUtil.removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
         } else {
             commonConfig.getModuleNameList().forEach(value -> defaultTableModel.addRow(new String[]{value}));
-            ListenerUtil.addMouseListener(deleteModuleButton, ICON.REMOVE_DARK);
-            ListenerUtil.addMouseListener(editModuleButton, ICON.EDIT_DARK);
+            ListenerUtil.addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
+            ListenerUtil.addMouseListener(editModuleButton, ICON_ENUM.EDIT);
             List<String> optionalList = getOptionalList();
             if (CollectionUtil.isEmpty(optionalList)) {
-                ListenerUtil.removeMouseListener(addModuleButton, ICON.ADD);
+                ListenerUtil.removeMouseListener(addModuleButton, ICON_ENUM.ADD);
             }
         }
     }

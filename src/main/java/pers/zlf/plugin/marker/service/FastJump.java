@@ -62,7 +62,7 @@ public abstract class FastJump {
                 Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
         }
-        map.values().stream().filter(t -> !t.getTargetMethodList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.BO_LUO_SVG_16)
+        map.values().stream().filter(t -> !t.getTargetMethodList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.LOGO)
                 .setTargets(t.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiMethod())));
     }
 

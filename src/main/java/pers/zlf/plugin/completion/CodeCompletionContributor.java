@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ public class CodeCompletionContributor extends CompletionContributor {
         //当前光标所在的方法
         Optional.ofNullable(PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class)).ifPresent(method -> {
             Completion completion = method.isConstructor() ? new ConstructorCompletion(method, parameters.getPosition()) : new MethodCompletion(method, parameters.getPosition());
-            completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.BO_LUO_SVG_16).withCaseSensitivity(true)));
+            completion.getLookupElement().forEach(e -> result.addElement(e.withIcon(ICON.LOGO).withCaseSensitivity(true)));
         });
     }
 }
