@@ -6,15 +6,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.Consumer;
 import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.ICON;
 import pers.zlf.plugin.constant.TYPE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.ListenerUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
-import pers.zlf.plugin.util.lambda.Equals;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -34,9 +36,9 @@ import java.util.stream.Collectors;
  */
 public class FastJumpConfigDialog {
     private JPanel panel;
-    private JTextField controllerFolderNameTextField;
-    private JTextField feignFolderNameTextField;
-    private JBTable moduleNameTable;
+    private JTextField controllerTextField;
+    private JTextField feignTextField;
+    private JBTable moduleTable;
     private JButton addModuleButton;
     private JButton deleteModuleButton;
     private JButton editModuleButton;
@@ -55,28 +57,60 @@ public class FastJumpConfigDialog {
                 return false;
             }
         };
-        moduleNameTable.setModel(defaultTableModel);
-        moduleNameTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        moduleTable.setModel(defaultTableModel);
+        moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).map(list -> list.get(0)).isPresent(this::insertRow));
-        deleteModuleButton.addActionListener(e -> Equals.of(moduleNameTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(defaultTableModel::removeRow));
+        Consumer<String> addCallback = value -> {
+            defaultTableModel.addRow(new String[]{value});
+            ListenerUtil.addMouseListener(deleteModuleButton, ICON.REMOVE_DARK);
+            ListenerUtil.addMouseListener(editModuleButton, ICON.EDIT_DARK);
+            if (CollectionUtil.isEmpty(getOptionalList())) {
+                ListenerUtil.removeMouseListener(addModuleButton, ICON.ADD);
+            }
+        };
+        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).isPresent(list -> showChooseWindow(list, addCallback)));
+
+        deleteModuleButton.addActionListener(e -> {
+            int rowNum = moduleTable.getSelectedRow();
+            if (rowNum >= 0) {
+                defaultTableModel.removeRow(rowNum);
+                ListenerUtil.addMouseListener(addModuleButton, ICON.ADD_DARK);
+                if (moduleTable.getRowCount() == 0) {
+                    ListenerUtil.removeMouseListener(deleteModuleButton, ICON.REMOVE);
+                    ListenerUtil.removeMouseListener(editModuleButton, ICON.EDIT);
+                }
+            }
+        });
+
         editModuleButton.addActionListener(e -> {
-            int rowNum = moduleNameTable.getSelectedRow();
+            int rowNum = moduleTable.getSelectedRow();
             if (rowNum >= 0) {
                 List<String> optionalList = getOptionalList();
                 optionalList.add(String.valueOf(defaultTableModel.getValueAt(rowNum, 0)));
-                JBPopupFactory.getInstance().createPopupChooserBuilder(optionalList).setTitle(COMMON.SELECT_MODULE).setMovable(true)
-                        .setItemChosenCallback(s -> defaultTableModel.setValueAt(s, rowNum, 0)).createPopup().showInCenterOf(panel);
+                showChooseWindow(optionalList, s -> defaultTableModel.setValueAt(s, rowNum, 0));
             }
         });
     }
 
     public void reset() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        controllerFolderNameTextField.setText(commonConfig.getControllerFolderName());
-        feignFolderNameTextField.setText(commonConfig.getFeignFolderName());
+        controllerTextField.setText(commonConfig.getControllerFolderName());
+        feignTextField.setText(commonConfig.getFeignFolderName());
         defaultTableModel.getDataVector().clear();
-        commonConfig.getModuleNameList().forEach(this::insertRow);
+        List<String> selectModuleList = commonConfig.getModuleNameList();
+        ListenerUtil.addMouseListener(addModuleButton, ICON.ADD_DARK);
+        if (CollectionUtil.isEmpty(selectModuleList)) {
+            ListenerUtil.removeMouseListener(deleteModuleButton, ICON.REMOVE);
+            ListenerUtil.removeMouseListener(editModuleButton, ICON.EDIT);
+        } else {
+            commonConfig.getModuleNameList().forEach(value -> defaultTableModel.addRow(new String[]{value}));
+            ListenerUtil.addMouseListener(deleteModuleButton, ICON.REMOVE_DARK);
+            ListenerUtil.addMouseListener(editModuleButton, ICON.EDIT_DARK);
+            List<String> optionalList = getOptionalList();
+            if (CollectionUtil.isEmpty(optionalList)) {
+                ListenerUtil.removeMouseListener(addModuleButton, ICON.ADD);
+            }
+        }
     }
 
     public JComponent getComponent() {
@@ -84,11 +118,11 @@ public class FastJumpConfigDialog {
     }
 
     public String getControllerFolderName() {
-        return controllerFolderNameTextField.getText();
+        return controllerTextField.getText();
     }
 
     public String getFeignFolderName() {
-        return feignFolderNameTextField.getText();
+        return feignTextField.getText();
     }
 
     public List<String> getModuleNameList() {
@@ -105,10 +139,9 @@ public class FastJumpConfigDialog {
         return list;
     }
 
-    private void insertRow(String value) {
-        JTextField jTextField = new JTextField();
-        jTextField.setEnabled(false);
-        defaultTableModel.insertRow(defaultTableModel.getRowCount(), new String[]{value});
-        moduleNameTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(jTextField));
+    private void showChooseWindow(List<String> optionalList, Consumer<String> callback) {
+        JBPopupFactory.getInstance().createPopupChooserBuilder(optionalList).setTitle(COMMON.SELECT_MODULE)
+                .setMovable(true).setItemChosenCallback(callback).createPopup().showInCenterOf(panel);
     }
+
 }

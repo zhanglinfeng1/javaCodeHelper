@@ -41,12 +41,6 @@ public final class Empty<T> {
         }
     }
 
-    public void isPresent(Runnable runnable) {
-        if (value != null) {
-            runnable.run();
-        }
-    }
-
     public <X extends Throwable> T ifEmptyThrow(Supplier<? extends X> exceptionSupplier) throws X {
         if (value == null) {
             throw exceptionSupplier.get();
