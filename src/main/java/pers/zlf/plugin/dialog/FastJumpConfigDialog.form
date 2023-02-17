@@ -98,101 +98,60 @@
               </component>
             </children>
           </scrollpane>
-          <grid id="2de3b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="20" height="20"/>
-                <preferred-size width="20" height="20"/>
-                <maximum-size width="20" height="20"/>
-              </grid>
-            </constraints>
-            <properties>
-              <alignmentX value="0.5"/>
-            </properties>
-            <border type="empty"/>
-            <children>
-              <component id="c4862" class="javax.swing.JButton" binding="addModuleButton">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <minimum-size width="16" height="16"/>
-                    <preferred-size width="16" height="16"/>
-                    <maximum-size width="16" height="16"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <alignmentX value="0.5"/>
-                  <background color="-12828863"/>
-                  <borderPainted value="false"/>
-                  <contentAreaFilled value="false"/>
-                  <enabled value="true"/>
-                  <text value=""/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="641e9" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="20" height="20"/>
-                <preferred-size width="20" height="20"/>
-                <maximum-size width="20" height="20"/>
-              </grid>
-            </constraints>
-            <properties/>
-            <border type="empty"/>
-            <children>
-              <component id="81abb" class="javax.swing.JButton" binding="deleteModuleButton">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <minimum-size width="16" height="16"/>
-                    <preferred-size width="16" height="16"/>
-                    <maximum-size width="16" height="16"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <borderPainted value="false"/>
-                  <contentAreaFilled value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="c1876" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="20" height="20"/>
-                <preferred-size width="20" height="20"/>
-                <maximum-size width="20" height="20"/>
-              </grid>
-            </constraints>
-            <properties/>
-            <border type="empty"/>
-            <children>
-              <component id="2f8f2" class="javax.swing.JButton" binding="editModuleButton">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <minimum-size width="16" height="16"/>
-                    <preferred-size width="16" height="16"/>
-                    <maximum-size width="16" height="16"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <alignmentX value="0.5"/>
-                  <borderPainted value="false"/>
-                  <contentAreaFilled value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
-            </children>
-          </grid>
           <hspacer id="87adc">
             <constraints>
               <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
+          <component id="81abb" class="javax.swing.JButton" binding="deleteModuleButton">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="16" height="16"/>
+                <preferred-size width="16" height="16"/>
+                <maximum-size width="16" height="16"/>
+              </grid>
+            </constraints>
+            <properties>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <opaque value="true"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="c4862" class="javax.swing.JButton" binding="addModuleButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="16" height="16"/>
+                <preferred-size width="16" height="16"/>
+                <maximum-size width="16" height="16"/>
+              </grid>
+            </constraints>
+            <properties>
+              <alignmentX value="0.5"/>
+              <background color="-12828863"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <enabled value="true"/>
+              <opaque value="true"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="2f8f2" class="javax.swing.JButton" binding="editModuleButton">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="16" height="16"/>
+                <preferred-size width="16" height="16"/>
+                <maximum-size width="16" height="16"/>
+              </grid>
+            </constraints>
+            <properties>
+              <alignmentX value="0.5"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <opaque value="true"/>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="4a466" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

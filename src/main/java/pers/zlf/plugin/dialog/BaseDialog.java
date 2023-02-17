@@ -30,8 +30,7 @@ public class BaseDialog {
      * @param iconEnum ICON_ENUM
      */
     public void addMouseListener(JButton button, ICON_ENUM iconEnum) {
-        Container container = button.getParent();
-        button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
+        button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
         }
@@ -46,7 +45,7 @@ public class BaseDialog {
     public void removeMouseListener(JButton button, ICON_ENUM iconEnum) {
         Container container = button.getParent();
         button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
-        button.getParent().setBackground(container.getParent().getBackground());
+        button.setBackground(container.getBackground());
         Arrays.stream(button.getMouseListeners()).filter(m -> !(m instanceof BasicButtonListener)).findAny().ifPresent(button::removeMouseListener);
     }
 
@@ -78,7 +77,6 @@ public class BaseDialog {
 
     private void addMouseListener(JButton button) {
         Container container = button.getParent();
-        Container parentContainer = container.getParent();
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -97,13 +95,13 @@ public class BaseDialog {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                Color themeColor = parentContainer.getBackground();
-                container.setBackground(ColorUtil.isDark(themeColor) ? themeColor.brighter() : themeColor.darker());
+                Color themeColor = container.getBackground();
+                button.setBackground(ColorUtil.isDark(themeColor) ? themeColor.brighter() : themeColor.darker());
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                container.setBackground(parentContainer.getBackground());
+                button.setBackground(container.getBackground());
             }
         });
     }
