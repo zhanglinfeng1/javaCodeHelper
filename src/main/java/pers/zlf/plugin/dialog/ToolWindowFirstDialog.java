@@ -8,19 +8,16 @@ import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.Objects;
 
 /**
  * @Author zhanglinfeng
  * @Date create in 2022/9/8 10:33
  */
-public class ToolWindowFirstDialog extends JDialog {
+public class ToolWindowFirstDialog extends BaseDialog {
     private JPanel contentPane;
     private JButton nextButton;
     private JTextArea textArea;
@@ -34,43 +31,9 @@ public class ToolWindowFirstDialog extends JDialog {
         fullPathField.setText(COMMON.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        setContentPane(contentPane);
-        setModal(true);
 
-        fullPathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (COMMON.FULL_PATH_INPUT_PLACEHOLDER.equals(fullPathField.getText())) {
-                    fullPathField.setText(COMMON.BLANK_STRING);
-                    fullPathField.setForeground(JBColor.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (StringUtil.isEmpty(fullPathField.getText())) {
-                    fullPathField.setForeground(JBColor.GRAY);
-                    fullPathField.setText(COMMON.FULL_PATH_INPUT_PLACEHOLDER);
-                }
-            }
-        });
-        packagePathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER.equals(packagePathField.getText())) {
-                    packagePathField.setText(COMMON.BLANK_STRING);
-                    packagePathField.setForeground(JBColor.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (StringUtil.isEmpty(packagePathField.getText())) {
-                    packagePathField.setForeground(JBColor.GRAY);
-                    packagePathField.setText(COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER);
-                }
-            }
-        });
+        addFocusListener(fullPathField,COMMON.FULL_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(packagePathField,COMMON.PACKAGR_PATH_INPUT_PLACEHOLDER);
     }
 
     public JPanel getContent() {

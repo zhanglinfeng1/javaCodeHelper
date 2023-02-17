@@ -10,7 +10,6 @@ import pers.zlf.plugin.util.lambda.Equals;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/9/20 10:33
  */
-public class ToolWindowSecondDialog extends JDialog {
+public class ToolWindowSecondDialog {
     private JPanel contentPane;
     private JButton submitButton;
     private JButton backButton;
@@ -41,8 +40,6 @@ public class ToolWindowSecondDialog extends JDialog {
     private final DefaultTableModel defaultTableModel;
 
     public ToolWindowSecondDialog() {
-        setContentPane(contentPane);
-        setModal(true);
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         defaultTableModel = new DefaultTableModel(null, COMMON.QUERY_COLUMN_TABLE_HEADER);
         columnTable.setModel(defaultTableModel);

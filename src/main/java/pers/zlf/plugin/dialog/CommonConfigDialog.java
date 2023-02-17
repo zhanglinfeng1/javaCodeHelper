@@ -16,8 +16,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +24,7 @@ import java.util.Optional;
  * @Author zhanglinfeng
  * @Date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog {
+public class CommonConfigDialog extends BaseDialog{
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
@@ -36,24 +34,7 @@ public class CommonConfigDialog {
     private JComboBox<String> dateClassComboBox;
 
     public CommonConfigDialog() {
-        customTemplatesPathField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(customTemplatesPathField.getText())) {
-                    customTemplatesPathField.setText(COMMON.BLANK_STRING);
-                    customTemplatesPathField.setForeground(JBColor.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (StringUtil.isEmpty(customTemplatesPathField.getText())) {
-                    customTemplatesPathField.setForeground(JBColor.GRAY);
-                    customTemplatesPathField.setText(COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-                }
-            }
-        });
-
+        addFocusListener(customTemplatesPathField,COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         downloadButton.addActionListener(e -> Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null))
                 .ifPresent(virtualFile -> {
                     try {
