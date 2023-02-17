@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2023/2/13 10:36
  */
-public class FastJumpConfigDialog extends BaseDialog{
+public class FastJumpConfigDialog extends BaseDialog {
     private JPanel panel;
     private JTextField controllerTextField;
     private JTextField feignTextField;
@@ -50,7 +50,7 @@ public class FastJumpConfigDialog extends BaseDialog{
             Module[] modules = ModuleManager.getInstance(project).getModules();
             totalSelectList.addAll(Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet()));
         }
-        defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.MODULE_NAME_TABLE_HEADER}) {
+        defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING}) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -67,7 +67,8 @@ public class FastJumpConfigDialog extends BaseDialog{
                 removeMouseListener(addModuleButton, ICON_ENUM.ADD);
             }
         };
-        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).isPresent(list -> showChooseWindow(list, addCallback)));
+        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).isPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
+                .setMovable(true).setItemChosenCallback(addCallback).createPopup().showUnderneathOf(addModuleButton)));
 
         deleteModuleButton.addActionListener(e -> {
             int rowNum = moduleTable.getSelectedRow();
@@ -86,7 +87,8 @@ public class FastJumpConfigDialog extends BaseDialog{
             if (rowNum >= 0) {
                 List<String> optionalList = getOptionalList();
                 optionalList.add(String.valueOf(defaultTableModel.getValueAt(rowNum, 0)));
-                showChooseWindow(optionalList, s -> defaultTableModel.setValueAt(s, rowNum, 0));
+                JBPopupFactory.getInstance().createPopupChooserBuilder(optionalList).setTitle(COMMON.SELECT_MODULE).setMovable(true)
+                        .setItemChosenCallback(s -> defaultTableModel.setValueAt(s, rowNum, 0)).createPopup().showUnderneathOf(editModuleButton);
             }
         });
     }
@@ -136,11 +138,6 @@ public class FastJumpConfigDialog extends BaseDialog{
         List<String> list = totalSelectList.stream().sorted().collect(Collectors.toList());
         list.removeAll(getModuleNameList());
         return list;
-    }
-
-    private void showChooseWindow(List<String> optionalList, Consumer<String> callback) {
-        JBPopupFactory.getInstance().createPopupChooserBuilder(optionalList).setTitle(COMMON.SELECT_MODULE)
-                .setMovable(true).setItemChosenCallback(callback).createPopup().showInCenterOf(panel);
     }
 
 }
