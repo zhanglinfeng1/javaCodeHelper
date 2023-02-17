@@ -78,7 +78,7 @@ public class BaseDialog {
 
     private void addMouseListener(JButton button) {
         Container container = button.getParent();
-        Container parentContainer = button.getParent();
+        Container parentContainer = container.getParent();
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
