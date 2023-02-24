@@ -77,7 +77,7 @@ public class MethodCompletion extends Completion {
 
     private void addSameType(String variableName, String typeName, String code) {
         //当前类的方法
-        findFromClass(MyPsiUtil.getMethods(currentMethodClass, currentMethod, variableName), typeName, code + COMMON.THIS_STR);
+        findFromClass(currentMethodClass, MyPsiUtil.getMethods(currentMethodClass, currentMethod, variableName), typeName, code + COMMON.THIS_STR);
         //方法所在类的变量
         for (PsiField psiField : currentMethodClass.getFields()) {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
@@ -85,22 +85,21 @@ public class MethodCompletion extends Completion {
             }
             Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(psiField.getType()))
                     .filter(psiFieldClass -> MyPsiUtil.isSameProject(currentMethodClass, psiFieldClass))
-                    .ifPresent(psiFieldClass -> findFromClass(psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT));
+                    .ifPresent(psiFieldClass -> findFromClass(psiFieldClass, psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT));
         }
     }
 
-    private void findFromClass(PsiMethod[] methodArr, String typeName, String code) {
+    private void findFromClass(PsiClass psiClass, PsiMethod[] methodArr, String typeName, String code) {
+        List<String> setAndGetMethodList = Arrays.stream(psiClass.getFields()).map(f -> COMMON.SET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList());
+        setAndGetMethodList.addAll(Arrays.stream(psiClass.getFields()).map(f -> COMMON.GET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList()));
         for (PsiMethod fieldMethod : methodArr) {
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
-            //返回类型不一致
-            if (null == fieldMethodReturnType || !typeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
+            //返回类型不一致、set或get方法
+            if (setAndGetMethodList.contains(fieldMethod.getName()) || null == fieldMethodReturnType || !typeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
                 continue;
             }
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
-            if ((psiParameterArr.length == 0 && fieldMethod.getName().startsWith(COMMON.GET)) || psiParameterArr.length == 1 && fieldMethod.getName().startsWith(COMMON.SET)) {
-                continue;
-            }
             Optional.ofNullable(this.getParamNameList(psiParameterArr)).map(list -> new StringBuilder(COMMON.END_STR).insert(1, String.join(COMMON.COMMA_STR, list)))
                     .ifPresent(t -> returnList.add(LookupElementBuilder.create(code + fieldMethod.getName() + t).withPresentableText(code + fieldMethod.getName())));
         }
