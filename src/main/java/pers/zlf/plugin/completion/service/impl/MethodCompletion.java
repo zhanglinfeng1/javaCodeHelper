@@ -47,6 +47,7 @@ public class MethodCompletion extends Completion {
     public void init() {
         //当前方法内的变量
         currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
+        currentMethodVariableMap.remove(currentText);
         //当前类的变量
         totalVariableMap = new HashMap<>(16);
         totalVariableMap.putAll(currentMethodVariableMap);
