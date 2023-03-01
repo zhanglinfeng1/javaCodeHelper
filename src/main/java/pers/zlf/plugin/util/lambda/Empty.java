@@ -47,4 +47,12 @@ public final class Empty<T> {
         }
         return value;
     }
+
+    public T orElse(T other) {
+        return value != null ? value : other;
+    }
+
+    public T get() {
+        return value;
+    }
 }

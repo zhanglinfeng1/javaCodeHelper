@@ -18,6 +18,7 @@ public class ANNOTATION {
     public static final String GET_MAPPING = "org.springframework.web.bind.annotation.GetMapping";
     public static final String PUT_MAPPING = "org.springframework.web.bind.annotation.PutMapping";
     public static final String DELETE_MAPPING = "org.springframework.web.bind.annotation.DeleteMapping";
+    public static final List<String> MAPPING_LIST = Arrays.asList(REQUEST_MAPPING, POST_MAPPING, GET_MAPPING, PUT_MAPPING, DELETE_MAPPING);
 
     /** controller注解 */
     public static final String CONTROLLER_1 = "org.springframework.web.bind.annotation.Controller";

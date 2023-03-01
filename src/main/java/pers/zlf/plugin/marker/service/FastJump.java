@@ -15,10 +15,12 @@ import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON;
-import pers.zlf.plugin.constant.REQUEST;
+import pers.zlf.plugin.constant.MESSAGE_ENUM;
+import pers.zlf.plugin.constant.MESSAGE_ENUM_TYPE;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -99,33 +101,16 @@ public abstract class FastJump {
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
         for (PsiAnnotation psiAnnotation : psiMethod.getAnnotations()) {
             String annotationName = psiAnnotation.getQualifiedName();
-            if (null == annotationName) {
+            if (null == annotationName || !ANNOTATION.MAPPING_LIST.contains(annotationName)) {
                 continue;
             }
             //请求方式
-            String method;
-            switch (annotationName) {
-                case ANNOTATION.POST_MAPPING:
-                    method = REQUEST.POST;
-                    break;
-                case ANNOTATION.PUT_MAPPING:
-                    method = REQUEST.PUT;
-                    break;
-                case ANNOTATION.GET_MAPPING:
-                    method = REQUEST.GET;
-                    break;
-                case ANNOTATION.DELETE_MAPPING:
-                    method = REQUEST.DELETE;
-                    break;
-                case ANNOTATION.REQUEST_MAPPING:
-                    method = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD);
-                    break;
-                default:
-                    continue;
+            String method = Empty.of(MESSAGE_ENUM.select(MESSAGE_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(MESSAGE_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
+            if (StringUtil.isNotEmpty(method)) {
+                //请求路径
+                String methodUrl = getMappingUrl(psiAnnotation);
+                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method) : null;
             }
-            //请求路径
-            String methodUrl = getMappingUrl(psiAnnotation);
-            return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method) : null;
         }
         return null;
     }
