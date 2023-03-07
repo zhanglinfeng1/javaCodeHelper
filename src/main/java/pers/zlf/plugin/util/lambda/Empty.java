@@ -24,18 +24,18 @@ public final class Empty<T> {
 
     public <U> Empty<U> map(Function<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper);
-        if (!isPresent()) {
+        if (!ifPresent()) {
             return new Empty<>(null);
         } else {
             return Empty.of(mapper.apply(value));
         }
     }
 
-    public boolean isPresent() {
+    public boolean ifPresent() {
         return value != null;
     }
 
-    public void isPresent(Consumer<? super T> action) {
+    public void ifPresent(Consumer<? super T> action) {
         if (value != null) {
             action.accept(value);
         }

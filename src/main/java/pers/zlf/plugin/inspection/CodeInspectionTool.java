@@ -48,6 +48,6 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
 
     private void checkType(ProblemsHolder holder, PsiElement psiElement, PsiType psiType) {
         Optional.ofNullable(psiElement).ifPresent(t -> Empty.of(MESSAGE_ENUM.select(MESSAGE_ENUM_TYPE.CODE_INSPECTION, psiType.getInternalCanonicalText()))
-                .isPresent(s -> holder.registerProblem(t, s.getValue())));
+                .ifPresent(s -> holder.registerProblem(t, s.getValue())));
     }
 }

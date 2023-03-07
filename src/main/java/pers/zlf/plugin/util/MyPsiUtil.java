@@ -27,7 +27,6 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
 import pers.zlf.plugin.constant.TYPE;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -130,12 +129,12 @@ public class MyPsiUtil {
     /**
      * 处理变量名，重名在末尾加数字
      *
-     * @param variableName             待处理的变量名
-     * @param psiType                  变量类型
-     * @param currentMethodVariableMap 已存在的变量
+     * @param variableName     待处理的变量名
+     * @param psiType          变量类型
+     * @param variableNameList 已存在的变量
      * @return 处理后的变量名
      */
-    public static String dealVariableName(String variableName, PsiType psiType, Map<String, PsiType> currentMethodVariableMap) {
+    public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
         variableName = variableName.replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = COMMON.BLANK_STRING;
@@ -157,20 +156,17 @@ public class MyPsiUtil {
         } else {
             variableName = variableName + basicTypeName;
         }
-        List<String> variableNameList = new ArrayList<>(currentMethodVariableMap.keySet());
-        if (variableNameList.contains(variableName)) {
-            variableName = dealVariableName(variableNameList, variableName + 1, 1);
-        }
-        return StringUtil.toLowerCaseFirst(variableName);
+        return dealVariableName(variableNameList, variableName);
     }
 
-    public static String dealVariableName(List<String> variableNameList, String variableName, int num) {
-        if (variableNameList.contains(variableName)) {
+    public static String dealVariableName(List<String> variableNameList, String variableName) {
+        String val = variableName;
+        int num = 1;
+        while (variableNameList.contains(val)) {
+            val = variableName + num;
             num++;
-            variableName = variableName.substring(0, variableName.length() - 1) + num;
-            dealVariableName(variableNameList, variableName, num);
         }
-        return variableName;
+        return StringUtil.toLowerCaseFirst(val);
     }
 
     /**

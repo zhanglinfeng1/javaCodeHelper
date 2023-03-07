@@ -51,7 +51,7 @@ public class TranslateAction extends BasicAction<PsiElement> {
                 if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
                     translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
                 }
-                Empty.of(translateResult).map(t -> COMMON.SPACE + t).isPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, t)));
+                Empty.of(translateResult).map(t -> COMMON.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, t)));
             } catch (Exception e) {
                 String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getApiType()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
                 WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(errorMessage, COMMON.BLANK_STRING, Messages.getInformationIcon()));

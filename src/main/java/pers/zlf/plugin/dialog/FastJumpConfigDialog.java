@@ -67,7 +67,7 @@ public class FastJumpConfigDialog extends BaseDialog {
                 removeMouseListener(addModuleButton, ICON_ENUM.ADD);
             }
         };
-        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).isPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
+        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
                 .setMovable(true).setItemChosenCallback(addCallback).createPopup().showUnderneathOf(addModuleButton)));
 
         deleteModuleButton.addActionListener(e -> {
