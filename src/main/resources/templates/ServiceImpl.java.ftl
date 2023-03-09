@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: ${author}
@@ -50,14 +51,8 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
 
     @Override
     public ${tableName} get${tableName}(Integer id) {
-        if (null == id) {
-            return new ${tableName}();
-        }
-        ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Mapper.get${tableName}(id);
-        if (null == ${firstLowerTableName}) {
-            return new ${tableName}();
-        }
-        return ${firstLowerTableName};
+        //return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get${tableName}(id)).orElseThrow(() -> new Exception("", ""));
+        return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get${tableName}(id)).orElse(new ${tableName}());
     }
 
     @Override
@@ -67,7 +62,6 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
 
     @Override
     public List<${tableName}> get${tableName}List(<#list queryColumnList as fields>String ${fields.columnName}, </#list>int offset, int limit) {
-        List<${tableName}> list = ${firstLowerTableName}Mapper.get${tableName}List(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit);
-        return null == list ? new ArrayList<>() : list;
+        return Optional.ofNullable(${firstLowerTableName}Mapper.get${tableName}List(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit)).orElse(new ArrayList<>());
     }
 }
