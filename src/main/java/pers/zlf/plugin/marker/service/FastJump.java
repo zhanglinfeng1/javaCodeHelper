@@ -93,7 +93,7 @@ public abstract class FastJump {
                 .forEach(psiClass -> {
                     String classUrl = this.getClassUrl(psiClass);
                     Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method))
-                            .ifPresent(target -> Optional.ofNullable(map.get(target.toString())).ifPresent(resultMap -> resultMap.getTargetList().add(target.getPsiAnnotation()))));
+                            .flatMap(target -> Optional.ofNullable(map.get(target.toString()))).ifPresent(resultMap -> resultMap.getTargetList().add(method)));
                 });
     }
 

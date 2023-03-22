@@ -1,6 +1,7 @@
 package pers.zlf.plugin.pojo;
 
 import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -17,7 +18,7 @@ public class MappingAnnotation {
     private String url;
     private String method;
     private PsiAnnotation psiAnnotation;
-    private List<PsiAnnotation> targetList;
+    private List<PsiMethod> targetList;
 
     public MappingAnnotation() {
     }
@@ -53,11 +54,11 @@ public class MappingAnnotation {
         this.psiAnnotation = psiAnnotation;
     }
 
-    public List<PsiAnnotation> getTargetList() {
+    public List<PsiMethod> getTargetList() {
         return targetList;
     }
 
-    public void setTargetList(List<PsiAnnotation> targetList) {
+    public void setTargetList(List<PsiMethod> targetList) {
         this.targetList = targetList;
     }
 
