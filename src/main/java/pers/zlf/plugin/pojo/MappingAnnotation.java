@@ -1,6 +1,6 @@
 package pers.zlf.plugin.pojo;
 
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiAnnotation;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 public class MappingAnnotation {
     private String url;
     private String method;
-    private PsiMethod psiMethod;
-    private List<PsiMethod> targetMethodList;
+    private PsiAnnotation psiAnnotation;
+    private List<PsiAnnotation> targetList;
 
     public MappingAnnotation() {
     }
 
-    public MappingAnnotation(PsiMethod psiMethod, String url, String method) {
-        this.psiMethod = psiMethod;
+    public MappingAnnotation(PsiAnnotation psiMethod, String url, String method) {
+        this.psiAnnotation = psiMethod;
         this.url = url;
         this.method = method;
-        this.targetMethodList = new ArrayList<>();
+        this.targetList = new ArrayList<>();
     }
 
     public String getUrl() {
@@ -45,20 +45,20 @@ public class MappingAnnotation {
         this.method = method;
     }
 
-    public PsiMethod getPsiMethod() {
-        return psiMethod;
+    public PsiAnnotation getPsiAnnotation() {
+        return psiAnnotation;
     }
 
-    public void setPsiMethod(PsiMethod psiMethod) {
-        this.psiMethod = psiMethod;
+    public void setPsiAnnotation(PsiAnnotation psiAnnotation) {
+        this.psiAnnotation = psiAnnotation;
     }
 
-    public List<PsiMethod> getTargetMethodList() {
-        return targetMethodList;
+    public List<PsiAnnotation> getTargetList() {
+        return targetList;
     }
 
-    public void setTargetMethodList(List<PsiMethod> targetMethodList) {
-        this.targetMethodList = targetMethodList;
+    public void setTargetList(List<PsiAnnotation> targetList) {
+        this.targetList = targetList;
     }
 
     @Override

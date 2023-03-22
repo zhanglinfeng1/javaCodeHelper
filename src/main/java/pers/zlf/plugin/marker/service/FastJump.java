@@ -64,8 +64,8 @@ public abstract class FastJump {
                 Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
         }
-        map.values().stream().filter(t -> !t.getTargetMethodList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.LOGO)
-                .setTargets(t.getTargetMethodList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiMethod())));
+        map.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.LOGO)
+                .setTargets(t.getTargetList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiAnnotation())));
     }
 
     public String getMappingUrl(PsiAnnotation annotation) {
@@ -93,8 +93,7 @@ public abstract class FastJump {
                 .forEach(psiClass -> {
                     String classUrl = this.getClassUrl(psiClass);
                     Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method))
-                            .flatMap(mappingAnnotation -> Optional.ofNullable(map.get(mappingAnnotation.toString())))
-                            .ifPresent(mappingAnnotation -> mappingAnnotation.getTargetMethodList().add(method)));
+                            .ifPresent(target -> Optional.ofNullable(map.get(target.toString())).ifPresent(resultMap -> resultMap.getTargetList().add(target.getPsiAnnotation()))));
                 });
     }
 
@@ -109,7 +108,7 @@ public abstract class FastJump {
             if (StringUtil.isNotEmpty(method)) {
                 //请求路径
                 String methodUrl = getMappingUrl(psiAnnotation);
-                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiMethod, classUrl + COMMON.SLASH + methodUrl, method) : null;
+                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + COMMON.SLASH + methodUrl, method) : null;
             }
         }
         return null;
