@@ -2,19 +2,17 @@ package pers.zlf.plugin.completion.service;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpressionStatement;
-import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.util.PsiTreeUtil;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.TYPE;
-import pers.zlf.plugin.util.lambda.Equals;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Equals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -39,9 +37,7 @@ public abstract class Completion {
         this.currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();
-        // TODO 判断新行逻辑有误。待解决
-        this.isNewLine = psiElement instanceof PsiIdentifier && psiElement.getParent() instanceof PsiReferenceExpression
-                && psiElement.getParent().getParent() instanceof PsiExpressionStatement && psiElement.getParent().getParent().getParent() instanceof PsiCodeBlock;
+        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> COMMON.SEMICOLON.equals(t.getText())).orElse(false);
         Equals.of(StringUtil.isNotEmpty(currentText) && null != currentMethodClass).ifTrue(this::init);
     }
 
