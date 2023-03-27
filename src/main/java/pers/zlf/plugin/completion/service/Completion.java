@@ -37,7 +37,7 @@ public abstract class Completion {
         this.currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();
-        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> COMMON.SEMICOLON.equals(t.getText())).orElse(false);
+        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> COMMON.SEMICOLON.equals(t.getText()) || COMMON.LEFT_BRACE.equals(t.getText())).orElse(false);
         Equals.of(StringUtil.isNotEmpty(currentText) && null != currentMethodClass).ifTrue(this::init);
     }
 
