@@ -160,13 +160,13 @@ public class MyPsiUtil {
     }
 
     public static String dealVariableName(List<String> variableNameList, String variableName) {
-        String val = variableName;
+        String val = StringUtil.toLowerCaseFirst(variableName);
         int num = 1;
         while (variableNameList.contains(val)) {
             val = variableName + num;
             num++;
         }
-        return StringUtil.toLowerCaseFirst(val);
+        return val;
     }
 
     /**
