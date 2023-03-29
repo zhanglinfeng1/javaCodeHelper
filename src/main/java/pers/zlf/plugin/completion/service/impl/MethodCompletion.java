@@ -84,8 +84,7 @@ public class MethodCompletion extends Completion {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
                 continue;
             }
-            Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(psiField.getType()))
-                    .filter(psiFieldClass -> MyPsiUtil.isSameProject(currentMethodClass, psiFieldClass) && !TypeUtil.isSimpleType(psiFieldClass.getName()))
+            Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(psiField.getType())).filter(psiFieldClass -> !TypeUtil.isSimpleType(psiFieldClass.getName()))
                     .ifPresent(psiFieldClass -> findFromClass(psiFieldClass, psiFieldClass.getMethods(), typeName, code + psiField.getName() + COMMON.DOT));
         }
     }

@@ -262,17 +262,6 @@ public class MyPsiUtil {
     }
 
     /**
-     * 两元素是否是同项目
-     *
-     * @param element1 元素1
-     * @param element2 元素2
-     * @return boolean
-     */
-    public static boolean isSameProject(PsiElement element1, PsiElement element2) {
-        return element1.getProject().getName().equals(element2.getProject().getName());
-    }
-
-    /**
      * 获取元素的注释
      *
      * @param element 元素
