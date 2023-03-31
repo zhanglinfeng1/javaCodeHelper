@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.Consumer;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.constant.TYPE;
@@ -59,16 +58,8 @@ public class FastJumpConfigDialog extends BaseDialog {
         moduleTable.setModel(defaultTableModel);
         moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        Consumer<String> addCallback = value -> {
-            defaultTableModel.addRow(new String[]{value});
-            addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
-            addMouseListener(editModuleButton, ICON_ENUM.EDIT);
-            if (CollectionUtil.isEmpty(getOptionalList())) {
-                removeMouseListener(addModuleButton, ICON_ENUM.ADD);
-            }
-        };
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
-                .setMovable(true).setItemChosenCallback(addCallback).createPopup().showUnderneathOf(addModuleButton)));
+                .setMovable(true).setItemChosenCallback(this::addCallback).createPopup().showUnderneathOf(addModuleButton)));
 
         deleteModuleButton.addActionListener(e -> {
             int rowNum = moduleTable.getSelectedRow();
@@ -140,4 +131,12 @@ public class FastJumpConfigDialog extends BaseDialog {
         return list;
     }
 
+    private void addCallback(String value){
+        defaultTableModel.addRow(new String[]{value});
+        addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
+        addMouseListener(editModuleButton, ICON_ENUM.EDIT);
+        if (CollectionUtil.isEmpty(getOptionalList())) {
+            removeMouseListener(addModuleButton, ICON_ENUM.ADD);
+        }
+    }
 }
