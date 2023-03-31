@@ -40,7 +40,7 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
     public boolean checkPsiElement(PsiElement element) {
         if (element instanceof PsiClass) {
             PsiClass psiClass = (PsiClass) element;
-            return psiClass.isInterface() && psiClass.getMethods().length != 0;
+            return !psiClass.isAnnotationType() && psiClass.isInterface() && psiClass.getMethods().length != 0;
         }
         return false;
     }
