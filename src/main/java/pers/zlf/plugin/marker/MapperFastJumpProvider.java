@@ -7,6 +7,7 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -80,7 +81,7 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
         }
         Project project = element.getProject();
         PsiManager manager = PsiManager.getInstance(project);
-        Optional.ofNullable(ModuleUtil.findModuleForFile(element.getContainingFile().getVirtualFile(), project))
+        Optional.ofNullable(element.getContainingFile()).map(PsiFile::getVirtualFile).map(virtualFile -> ModuleUtil.findModuleForFile(virtualFile, project))
                 .map(ModuleRootManager::getInstance).map(ModuleRootManager::getSourceRoots)
                 .ifPresent(virtualFiles -> Arrays.stream(virtualFiles).filter(virtualFile -> virtualFile.getPath().endsWith(COMMON.RESOURCES))
                         .map(manager::findDirectory).filter(Objects::nonNull).forEach(this::findXml));
