@@ -47,6 +47,9 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
+<ul>1.5.5
+    <li>[BUG]修复打开注解类时报错</li>
+</ul>
 <ul>1.5.4
     <li>[优化]更改跳转图标的展示位置</li>
     <li>[BUG]修复代码补全新行判断问题</li>
