@@ -5,7 +5,7 @@
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
-        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">gitee</a></p>
+        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a>|<a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">GitHub</a></p>
         <ul>
             <li>Automatic completionContributor<br />
                 1.In the construction method, complete the field assignment<br/>
@@ -24,11 +24,11 @@
             </li>
             <li>Generate code according to the table creating SQL<br />
                 It is mainly used for learning plug-in development. Its functions are relatively simple. It is recommended to use other more perfect plug-ins to generate code<br />
-                It is recommended to use a custom template. The generated code is more consistent with your project. Template Rules：<a href="https://gitee.com/zlfzh/javaCodeHelper#%E6%A0%B9%E6%8D%AE%E5%BB%BA%E8%A1%A8sql%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81" target="_blank">gitee</a><br />
+                It is recommended to use a custom template. The generated code is more consistent with your project.<br />
             </li>
         </ul>
         <p>很蛋疼，官方要求必须英文开始</p>
-        <p>用于学习插件开发。交流想法、反馈BUG ：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">gitee</a></p>
+        <p>用于学习插件开发。交流想法、反馈BUG ：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a>|<a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">GitHub</a></p>
         <ul>
             <li>自动补全<br />
                 1.构造方法内，补全字段赋值<br />
@@ -47,7 +47,7 @@
             </li>
             <li>根据建表SQL生成代码<br />
                 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
-                建议使用自定义模板，生成的代码更符合自己的项目，模板规则：<a href="https://gitee.com/zlfzh/javaCodeHelper#%E6%A0%B9%E6%8D%AE%E5%BB%BA%E8%A1%A8sql%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81" target="_blank">gitee</a><br />
+                建议使用自定义模板，生成的代码更符合自己的项目<br />
             </li>
         </ul>
     ]]>
