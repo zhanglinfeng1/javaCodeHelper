@@ -66,6 +66,7 @@ public class SqlFactory implements ToolWindowFactory {
         secondDialog.getSubmitButton().addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().create(secondDialog.getQueryColumnList(), secondDialog.useDefaultTemplate());
+                secondDialog.clearTableContent();
                 this.display(toolWindow, content);
                 Messages.showMessageDialog(COMMON.SUCCESS, COMMON.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {

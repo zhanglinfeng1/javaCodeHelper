@@ -23,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class FastJumpConfigDialog extends BaseDialog {
         moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
-                .setMovable(true).setItemChosenCallback(this::addCallback).createPopup().showUnderneathOf(addModuleButton)));
+                .setMovable(true).setItemChosenCallback(value -> this.addCallback(Collections.singletonList(value))).createPopup().showUnderneathOf(addModuleButton)));
 
         deleteModuleButton.addActionListener(e -> {
             int rowNum = moduleTable.getSelectedRow();
@@ -95,13 +96,7 @@ public class FastJumpConfigDialog extends BaseDialog {
             removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
             removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
         } else {
-            commonConfig.getModuleNameList().forEach(value -> defaultTableModel.addRow(new String[]{value}));
-            addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
-            addMouseListener(editModuleButton, ICON_ENUM.EDIT);
-            List<String> optionalList = getOptionalList();
-            if (CollectionUtil.isEmpty(optionalList)) {
-                removeMouseListener(addModuleButton, ICON_ENUM.ADD);
-            }
+            this.addCallback(commonConfig.getModuleNameList());
         }
     }
 
@@ -131,8 +126,8 @@ public class FastJumpConfigDialog extends BaseDialog {
         return list;
     }
 
-    private void addCallback(String value){
-        defaultTableModel.addRow(new String[]{value});
+    private void addCallback(List<String> valueList){
+        valueList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
         addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
         addMouseListener(editModuleButton, ICON_ENUM.EDIT);
         if (CollectionUtil.isEmpty(getOptionalList())) {

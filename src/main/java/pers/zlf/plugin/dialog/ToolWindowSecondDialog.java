@@ -2,6 +2,7 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/9/20 10:33
  */
-public class ToolWindowSecondDialog {
+public class ToolWindowSecondDialog extends BaseDialog {
     private JPanel contentPane;
     private JButton submitButton;
     private JButton backButton;
@@ -50,13 +51,23 @@ public class ToolWindowSecondDialog {
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
             columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
         });
-
-        deleteButton.addActionListener(e -> Equals.of(columnTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(defaultTableModel::removeRow));
+        deleteButton.addActionListener(e -> Equals.of(columnTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
+            defaultTableModel.removeRow(rowNum);
+            if (columnTable.getRowCount() == 0) {
+                removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+            }
+        }));
     }
 
     public void initColumn(TableInfo tableInfo) {
         columnInfoList = tableInfo.getColumnList();
         columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
+        addMouseListener(addButton, ICON_ENUM.ADD);
+        if (columnTable.getRowCount() == 0) {
+            removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+        }else {
+            addMouseListener(deleteButton, ICON_ENUM.REMOVE);
+        }
         columnTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {
                 String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
@@ -99,4 +110,7 @@ public class ToolWindowSecondDialog {
         return defaultTemplateRadioButton.isSelected();
     }
 
+    public void clearTableContent(){
+        defaultTableModel.getDataVector().clear();
+    }
 }
