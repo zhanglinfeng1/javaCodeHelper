@@ -156,10 +156,6 @@ public class MyPsiUtil {
         } else {
             variableName = variableName + basicTypeName;
         }
-        return dealVariableName(variableNameList, variableName);
-    }
-
-    public static String dealVariableName(List<String> variableNameList, String variableName) {
         String val = StringUtil.toLowerCaseFirst(variableName);
         int num = 1;
         while (variableNameList.contains(val)) {
@@ -197,28 +193,67 @@ public class MyPsiUtil {
     public static PsiMethod[] getMethods(PsiClass psiClass, PsiMethod method, String containsName) {
         LinkedList<PsiMethod> classMethodList = Arrays.stream(psiClass.getMethods()).collect(Collectors.toCollection(LinkedList::new));
         Iterator<PsiMethod> iterator = classMethodList.iterator();
-        loop:
         while (iterator.hasNext()) {
             PsiMethod classMethod = iterator.next();
             if (StringUtil.isNotEmpty(containsName) && !classMethod.getName().contains(containsName)) {
                 iterator.remove();
                 continue;
             }
-            if (null != method && classMethod.getName().equals(method.getName())) {
-                PsiParameter[] classMethodParameterArr = classMethod.getParameterList().getParameters();
-                PsiParameter[] methodParameterArr = method.getParameterList().getParameters();
-                if (classMethodParameterArr.length == methodParameterArr.length) {
-                    for (int i = 0; i < classMethodParameterArr.length; i++) {
-                        if (!classMethodParameterArr[i].getType().getInternalCanonicalText().equals(methodParameterArr[i].getType().getInternalCanonicalText())) {
-                            continue loop;
-                        }
-                    }
-                    iterator.remove();
-                    break;
-                }
+            if (isSameMethod(classMethod, method)) {
+                iterator.remove();
+                break;
             }
         }
         return classMethodList.toArray(new PsiMethod[0]);
+    }
+
+    /**
+     * 判断是否是同一个方法
+     *
+     * @param method1 方法1
+     * @param method2 方法2
+     * @return boolean
+     */
+    public static boolean isSameMethod(PsiMethod method1, PsiMethod method2) {
+        // 判断方法名称是否相同
+        if (null == method1 || null == method2 || !method1.getName().equals(method2.getName())) {
+            return false;
+        }
+        String methodClassName1 = ((PsiClass) method1.getParent()).getQualifiedName();
+        String methodClassName2 = ((PsiClass) method2.getParent()).getQualifiedName();
+        if (null != methodClassName1 && methodClassName1.equals(methodClassName2)) {
+            return false;
+        }
+        // 判断方法参数列表是否相同
+        PsiParameter[] paramArr1 = method1.getParameterList().getParameters();
+        PsiParameter[] paramArr2 = method2.getParameterList().getParameters();
+        if (paramArr1.length != paramArr2.length) {
+            return false;
+        }
+        for (int i = 0; i < paramArr1.length; i++) {
+            if (!isSamePsiType(paramArr1[i].getType(), paramArr2[i].getType())) {
+                return false;
+            }
+        }
+        // 判断返回类型是否相同
+        return isSamePsiType(method1.getReturnType(), method2.getReturnType());
+    }
+
+    /**
+     * 判断是否是同一类型
+     *
+     * @param psiType1 类型1
+     * @param psiType2 类型2
+     * @return boolean
+     */
+    public static boolean isSamePsiType(PsiType psiType1, PsiType psiType2) {
+        if ((psiType1 == null && psiType2 != null) || (psiType1 != null && psiType2 == null)) {
+            return false;
+        }
+        if (psiType1 == null) {
+            return true;
+        }
+        return psiType1.getInternalCanonicalText().equals(psiType2.getInternalCanonicalText());
     }
 
     /**

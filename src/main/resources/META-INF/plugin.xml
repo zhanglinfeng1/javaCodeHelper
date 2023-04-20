@@ -74,7 +74,7 @@
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->
-        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.CodeInspectionTool"/>
+        <!-- <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.CodeInspectionTool"/> -->
     </extensions>
 
     <actions>
