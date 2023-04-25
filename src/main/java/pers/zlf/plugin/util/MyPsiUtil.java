@@ -20,6 +20,8 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
+import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.ANNOTATION;
@@ -36,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @Author zhanglinfeng
@@ -307,11 +310,38 @@ public class MyPsiUtil {
         for (PsiElement childrenElement : element.getChildren()) {
             if (childrenElement instanceof PsiDocComment) {
                 PsiDocComment docComment = (PsiDocComment) childrenElement;
-                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining(COMMON.BLANK_STRING)).replaceAll(REGEX.WRAP, COMMON.BLANK_STRING));
+                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining()).replaceAll(REGEX.WRAP, COMMON.SPACE));
             } else if (childrenElement instanceof PsiComment) {
                 comment.append(childrenElement.getText());
             }
         }
-        return comment.toString();
+        return comment.toString().trim();
+    }
+
+    /**
+     * 获取元素带标签的注释
+     *
+     * @param element 元素
+     * @return 注释
+     */
+    public static Map<String, String> getParamComment(PsiElement element) {
+        Map<String, String> commentMap = new HashMap<>();
+        for (PsiElement childrenElement : element.getChildren()) {
+            if (childrenElement instanceof PsiDocComment) {
+                PsiDocComment docComment = (PsiDocComment) childrenElement;
+                for (PsiDocTag tag : docComment.getTags()) {
+                    Optional.ofNullable(tag.getValueElement()).map(PsiDocTagValue::getText).ifPresent(paramName -> {
+                        PsiElement[] dataElementArr = tag.getDataElements();
+                        String paramComment = paramName;
+                        if (dataElementArr.length != 0) {
+                            paramComment = IntStream.range(1, dataElementArr.length - 1).mapToObj(i -> dataElementArr[i].getText())
+                                    .filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.COMMA));
+                        }
+                        commentMap.put(paramName, paramComment);
+                    });
+                }
+            }
+        }
+        return commentMap;
     }
 }

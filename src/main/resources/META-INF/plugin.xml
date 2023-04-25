@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.5.5</version>
+    <version>1.6.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
@@ -19,8 +19,8 @@
                 At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
                 After configuring the account in the idea, select the text to be translated, right-click and select Translate<br />
             </li>
-            <li>Code suggestions<br />
-                Perfecting...
+            <li>One click Add API annotation<br />
+                Api annotations can be added with just one click based on the annotation.Currently, only adding swagger annotations is supported<br />
             </li>
             <li>Generate code according to the table creating SQL<br />
                 It is mainly used for learning plug-in development. Its functions are relatively simple. It is recommended to use other more perfect plug-ins to generate code<br />
@@ -41,8 +41,8 @@
                 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
                 在idea中配置账号后，选中待翻译文本，右击选择Translate即可<br />
             </li>
-            <li>代码建议<br />
-                完善中...
+            <li>一键添加api注解<br />
+                可根据注释一键添加Api注解。目前仅支持添加swagger注解<br />
             </li>
             <li>根据建表SQL生成代码<br />
                 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
@@ -73,14 +73,19 @@
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
-        <!-- 代码检查 -->
-        <!-- <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="CodeCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.CodeInspectionTool"/> -->
     </extensions>
 
     <actions>
-        <!-- 右击菜单 翻译 -->
-        <action id="idea.plugins.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate" icon="/icon/logo.svg">
+        <group id="idea.plugins.action.JavaCodeHelper" text="JavaCodeHelper" popup="true" icon="/icon/logo.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
+        </group>
+        <!-- 翻译 -->
+        <action id="idea.plugins.action.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate">
+            <add-to-group group-id="idea.plugins.action.JavaCodeHelper" anchor="first"/>
+        </action>
+        <!-- 根据注释添加Swagger注解 -->
+        <action id="idea.plugins.action.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="AddApiAnnotation">
+            <add-to-group group-id="idea.plugins.action.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.action.TranslateAction"/>
         </action>
     </actions>
 </idea-plugin>

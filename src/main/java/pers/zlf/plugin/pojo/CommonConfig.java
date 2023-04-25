@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class CommonConfig {
     /** 翻译api */
-    private Integer apiType = COMMON.BAIDU_TRANSLATE;
+    private Integer translateApi = COMMON.BAIDU_TRANSLATE;
     /** 翻译api appId */
     private String appId;
     /** 翻译api secretKey */
@@ -26,13 +26,15 @@ public class CommonConfig {
     private String feignFolderName;
     /** 网关模块名 */
     private List<String> moduleNameList = new ArrayList<>();
+    /** api工具 */
+    private Integer apiTool = COMMON.SWAGGER_API;
 
-    public Integer getApiType() {
-        return apiType;
+    public Integer getTranslateApi() {
+        return translateApi;
     }
 
-    public void setApiType(Integer apiType) {
-        this.apiType = apiType;
+    public void setTranslateApi(Integer translateApi) {
+        this.translateApi = translateApi;
     }
 
     public String getAppId() {
@@ -89,5 +91,13 @@ public class CommonConfig {
 
     public void setModuleNameList(List<String> moduleNameList) {
         this.moduleNameList = moduleNameList;
+    }
+
+    public Integer getApiTool() {
+        return apiTool;
+    }
+
+    public void setApiTool(Integer apiTool) {
+        this.apiTool = apiTool;
     }
 }

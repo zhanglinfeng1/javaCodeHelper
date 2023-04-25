@@ -8,11 +8,10 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import pers.zlf.plugin.util.lambda.Equals;
 
-public abstract class BasicAction<T> extends AnAction {
+public abstract class BasicAction extends AnAction {
     public AnActionEvent event;
     public Editor editor;
     public Project project;
-    public T psiElement;
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -20,11 +19,11 @@ public abstract class BasicAction<T> extends AnAction {
         //获取当前的编辑器对象
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
-        Equals.of(null != editor && null != project && check()).ifTrue(() -> action(psiElement));
+        Equals.of(null != editor && null != project && check()).ifTrue(this::action);
     }
 
     public abstract boolean check();
 
-    public abstract void action(T psiElement);
+    public abstract void action();
 
 }

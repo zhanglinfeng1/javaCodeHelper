@@ -38,5 +38,22 @@ public class ANNOTATION {
     public static final String PATH = "path";
     public static final String METHOD = "method";
     public static final String TYPE = "type";
+    public static final String TAGS = "tags";
+    public static final String REQUIRED = "required";
+
+    /** api注解 */
+    public static final String SPRINGFOX_API_IGNORE = "springfox.documentation.annotations.ApiIgnore";
+    public static final String SWAGGER_API = "io.swagger.annotations.Api";
+    public static final String SWAGGER_API_OPERATION = "io.swagger.annotations.ApiOperation";
+    public static final String SWAGGER_API_PARAM = "io.swagger.annotations.ApiParam";
+    public static final String SWAGGER_API_MODEL = "io.swagger.annotations.ApiModel";
+    public static final String SWAGGER_API_MODEL_PROPERTY = "io.swagger.annotations.ApiModelProperty";
+
+    /** 参数注解 */
+    public static final String REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
+    public static final String REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody";
+    public static final String PATH_VARIABLE = "org.springframework.web.bind.annotation.PathVariable";
+    public static final String REQUEST_ATTRIBUTE = "org.springframework.web.bind.annotation.RequestAttribute";
+    public static final String REQUEST_HEADER = "org.springframework.web.bind.annotation.RequestHeader";
 
 }

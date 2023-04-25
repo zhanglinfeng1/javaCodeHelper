@@ -3,9 +3,6 @@ package pers.zlf.plugin.constant;
 import java.util.Arrays;
 
 public enum MESSAGE_ENUM {
-    /** 代码检查 */
-    CODE_INSPECTION_DATE(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.util.Date", "(JavaCodeHelp) Replace Date with LocalDateTime"),
-    CODE_INSPECTION_SIMPLE_DATE_FORMAT(MESSAGE_ENUM_TYPE.CODE_INSPECTION, "java.text.SimpleDateFormat", "(JavaCodeHelp) Replace SimpleDateFormat with DateTimeFormatter"),
     /** 请求方式 */
     POST_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.POST_MAPPING, REQUEST.POST),
     PUT_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.PUT_MAPPING, REQUEST.PUT),

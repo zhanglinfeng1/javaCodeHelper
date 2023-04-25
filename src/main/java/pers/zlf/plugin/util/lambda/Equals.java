@@ -82,4 +82,12 @@ public final class Equals<T> {
         }
         return obj;
     }
+
+    public void then(Consumer<? super T> trueAction, Consumer<? super T> falseAction) {
+        if (run) {
+            trueAction.accept(obj);
+        } else {
+            falseAction.accept(obj);
+        }
+    }
 }

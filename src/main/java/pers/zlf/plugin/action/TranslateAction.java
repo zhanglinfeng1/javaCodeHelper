@@ -2,7 +2,6 @@ package pers.zlf.plugin.action;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.api.BaiDuTransApi;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -15,7 +14,7 @@ import pers.zlf.plugin.util.lambda.Empty;
  * @Author zhanglinfeng
  * @Date create in 2022/9/17 19:18
  */
-public class TranslateAction extends BasicAction<PsiElement> {
+public class TranslateAction extends BasicAction {
     private CommonConfig commonConfig;
     private String selectionText;
     private int selectionEnd;
@@ -37,7 +36,7 @@ public class TranslateAction extends BasicAction<PsiElement> {
     }
 
     @Override
-    public void action(PsiElement element) {
+    public void action() {
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
             String from = COMMON.ZH;
             String to = COMMON.EN;
@@ -48,12 +47,12 @@ public class TranslateAction extends BasicAction<PsiElement> {
             String translateResult = COMMON.BLANK_STRING;
             //请求翻译API
             try {
-                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getApiType())) {
+                if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getTranslateApi())) {
                     translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
                 }
                 Empty.of(translateResult).map(t -> COMMON.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, t)));
             } catch (Exception e) {
-                String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getApiType()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
+                String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getTranslateApi()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
                 WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(errorMessage, COMMON.BLANK_STRING, Messages.getInformationIcon()));
             }
         });

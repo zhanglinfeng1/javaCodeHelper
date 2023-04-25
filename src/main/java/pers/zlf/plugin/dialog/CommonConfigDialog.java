@@ -28,10 +28,11 @@ public class CommonConfigDialog extends BaseDialog{
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
-    private JComboBox<String> apiComboBox;
+    private JComboBox<String> translateApiComboBox;
     private JTextField customTemplatesPathField;
     private JButton downloadButton;
     private JComboBox<String> dateClassComboBox;
+    private JComboBox<String> apiToolComboBox;
 
     public CommonConfigDialog() {
         addFocusListener(customTemplatesPathField,COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
@@ -63,8 +64,9 @@ public class CommonConfigDialog extends BaseDialog{
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
-        Optional.ofNullable(commonConfig.getApiType()).ifPresent(t -> apiComboBox.setSelectedIndex(t));
+        Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(t -> translateApiComboBox.setSelectedIndex(t));
         Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(t -> dateClassComboBox.setSelectedIndex(t));
+        Optional.ofNullable(commonConfig.getApiTool()).ifPresent(t -> apiToolComboBox.setSelectedIndex(t));
     }
 
     public JComponent getComponent() {
@@ -79,8 +81,8 @@ public class CommonConfigDialog extends BaseDialog{
         return securityKeyTextField.getText();
     }
 
-    public Integer getApiType() {
-        return apiComboBox.getSelectedIndex();
+    public Integer getTranslateApi() {
+        return translateApiComboBox.getSelectedIndex();
     }
 
     public String getCustomTemplatesPath() {
@@ -90,6 +92,10 @@ public class CommonConfigDialog extends BaseDialog{
 
     public Integer getDateClassType() {
         return dateClassComboBox.getSelectedIndex();
+    }
+
+    public Integer getApiTool() {
+        return apiToolComboBox.getSelectedIndex();
     }
 
 }

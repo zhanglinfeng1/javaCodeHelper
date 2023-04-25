@@ -10,6 +10,7 @@ import java.util.Map;
 public class COMMON {
     /** 通用常量 */
     public static final String SUCCESS = "成功";
+    public static final String TRUE = "true";
     public static final String RESOURCES = "resources";
     public static final String GET = "get";
     public static final String SET = "set";
@@ -24,10 +25,12 @@ public class COMMON {
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String LEFT_BRACKETS = "[";
+    public static final String LEFT_PARENTHESES = "(";
     public static final String RIGHT_PARENTHESES = ")";
     public static final String LESS_THAN_SIGN = "<";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
+    public static final String DOUBLE_QUOTATION_MARK = "\"";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";
@@ -76,4 +79,8 @@ public class COMMON {
     public static final Map<Integer, String> TRANSLATE_MAP = new HashMap<>() {{
         put(BAIDU_TRANSLATE, "百度翻译");
     }};
+
+    /** Api工具 */
+    public static final Integer SWAGGER_API = 0;
+
 }
