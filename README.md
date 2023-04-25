@@ -15,7 +15,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 
 ## 一键添加api注解
-可根据注释一键添加Api注解。目前仅支持添加swagger注解
+可根据注释一键添加Api注解。目前仅支持swagger
 
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
