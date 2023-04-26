@@ -71,7 +71,7 @@ public final class Equals<T> {
     }
 
     public void ifFalse(Consumer<? super T> action) {
-        if (run) {
+        if (!run) {
             action.accept(obj);
         }
     }
