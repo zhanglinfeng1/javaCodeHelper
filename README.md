@@ -47,6 +47,9 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
+<ul>1.6.1
+    <li>[BUG]请求百度翻译失败时，未关闭连接</li>
+</ul>
 <ul>1.6.0
     <li>[BUG]修复打开注解类时报错</li>
     <li>[DELETE]去除代码检查功能</li>

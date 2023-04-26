@@ -1,19 +1,11 @@
 package pers.zlf.plugin.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.REQUEST;
 import pers.zlf.plugin.pojo.BaiDuTransResult;
-import pers.zlf.plugin.util.HttpsUtil;
+import pers.zlf.plugin.util.HttpUtil;
 import pers.zlf.plugin.util.JsonUtil;
 import pers.zlf.plugin.util.UrlUtil;
-import pers.zlf.plugin.util.lambda.Equals;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Optional;
 
 /**
@@ -28,19 +20,8 @@ public class BaiDuTransApi {
         String urlStr = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=";
         // TODO 兼容低版本，没有使用URLEncoder
         urlStr = urlStr + UrlUtil.encode(query) + "&from=" + from + "&to=" + to + "&salt=" + salt + "&sign=" + sign + "&appid=" + appid;
-        SSLContext sslcontext = SSLContext.getInstance("TLS");
-        sslcontext.init(null, new TrustManager[]{HttpsUtil.X_509_TRUST_MANAGER}, null);
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        Equals.of(conn instanceof HttpsURLConnection).ifTrue(() -> ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory()));
-        conn.setConnectTimeout(REQUEST.SOCKET_TIMEOUT);
-        conn.setRequestMethod(REQUEST.GET);
-        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            return COMMON.BLANK_STRING;
-        }
-        BaiDuTransResult result = JsonUtil.getContentAndToObject(conn.getInputStream(), BaiDuTransResult.class);
-        conn.disconnect();
-        Optional.ofNullable(result.getResult()).orElseThrow(() -> new Exception(result.getError_msg()));
-        return result.getResult();
+        String result = HttpUtil.get(urlStr);
+        BaiDuTransResult transResult = JsonUtil.toObject(result, BaiDuTransResult.class);
+        return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getError_msg()));
     }
 }
