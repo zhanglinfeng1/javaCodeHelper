@@ -6,12 +6,14 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import pers.zlf.plugin.util.lambda.Equals;
 
 public abstract class BasicAction extends AnAction {
     public AnActionEvent event;
     public Editor editor;
     public Project project;
+    public PsiFile psiFile;
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -19,6 +21,7 @@ public abstract class BasicAction extends AnAction {
         //获取当前的编辑器对象
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
+        this.psiFile = event.getData(CommonDataKeys.PSI_FILE);
         Equals.of(null != editor && null != project && check()).ifTrue(this::action);
     }
 

@@ -7,13 +7,11 @@ import com.intellij.psi.PsiAnnotationOwner;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiUtilBase;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.pojo.annotation.BasicApi;
@@ -47,9 +45,11 @@ public class AddApiAnnotationAction extends BasicAction {
 
     @Override
     public boolean check() {
-        PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);
-        psiJavaFile = (PsiJavaFile) file;
-        return null != psiJavaFile;
+        if (psiFile instanceof PsiJavaFile) {
+            psiJavaFile = (PsiJavaFile) psiFile;
+            return true;
+        }
+        return false;
     }
 
     @Override

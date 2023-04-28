@@ -49,7 +49,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 # 版本改动
 <ul>1.6.1
     <li>[BUG]请求百度翻译失败时，未关闭连接</li>
-    <li>[BUG]添加注解时，无法识别@RequestPart注解</li>
+    <li>[BUG]添加注解时的一些报错</li>
 </ul>
 <ul>1.6.0
     <li>[BUG]修复打开注解类时报错</li>
