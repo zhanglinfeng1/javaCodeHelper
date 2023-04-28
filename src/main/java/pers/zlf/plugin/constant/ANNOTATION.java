@@ -51,6 +51,7 @@ public class ANNOTATION {
 
     /** 参数注解 */
     public static final String REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
+    public static final String REQUEST_PART = "org.springframework.web.bind.annotation.RequestPart";
     public static final String REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody";
     public static final String PATH_VARIABLE = "org.springframework.web.bind.annotation.PathVariable";
     public static final String REQUEST_ATTRIBUTE = "org.springframework.web.bind.annotation.RequestAttribute";

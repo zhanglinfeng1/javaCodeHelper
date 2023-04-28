@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class AddApiAnnotationAction extends BasicAction {
     private PsiJavaFile psiJavaFile;
     private Set<String> importClassSet;
-    private Map<PsiModifierList, String> addMap;
+    private Map<PsiModifierList, String> annotationMap;
 
     @Override
     public boolean check() {
@@ -55,7 +55,7 @@ public class AddApiAnnotationAction extends BasicAction {
     @Override
     public void action() {
         importClassSet = new HashSet<>();
-        addMap = new HashMap<>();
+        annotationMap = new HashMap<>();
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             Equals.of(psiClass).and(MyPsiUtil::isController).then(this::AddSwaggerForController, this::AddSwaggerForModel);
         }
@@ -63,7 +63,7 @@ public class AddApiAnnotationAction extends BasicAction {
         GlobalSearchScope globalSearchScope = psiJavaFile.getResolveScope();
         WriteCommandAction.runWriteCommandAction(project, () -> {
             importClassSet.forEach(t -> Optional.ofNullable(javaPsiFacade.findClass(t, globalSearchScope)).ifPresent(psiJavaFile::importClass));
-            addMap.forEach(PsiAnnotationOwner::addAnnotation);
+            annotationMap.forEach(PsiAnnotationOwner::addAnnotation);
         });
     }
 
@@ -73,9 +73,9 @@ public class AddApiAnnotationAction extends BasicAction {
             Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
             addApiAnnotation(new MethodApi(), method, method.getAnnotations(), method.getModifierList(), method.getName());
             for (PsiParameter parameter : method.getParameterList().getParameters()) {
-                Map<String, PsiAnnotation> annotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
+                Map<String, PsiAnnotation> parameterAnnotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
                 String parameterComment = Empty.of(parameterCommentMap.get(parameter.getName())).orElse(parameter.getName());
-                for (Map.Entry<String, PsiAnnotation> entry : annotationMap.entrySet()) {
+                for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {
                     PsiAnnotation annotation = entry.getValue();
                     switch (entry.getKey()) {
                         case ANNOTATION.REQUEST_ATTRIBUTE:
@@ -83,6 +83,7 @@ public class AddApiAnnotationAction extends BasicAction {
                             addApiAnnotation(new IgnoreApi(), parameter, parameter.getAnnotations(), parameter.getModifierList(), parameterComment);
                             break;
                         case ANNOTATION.REQUEST_PARAM:
+                        case ANNOTATION.REQUEST_PART:
                         case ANNOTATION.PATH_VARIABLE:
                         case ANNOTATION.REQUEST_BODY:
                             ParameterApi parameterApi = new ParameterApi();
@@ -113,7 +114,7 @@ public class AddApiAnnotationAction extends BasicAction {
         if (addApiAnnotations && null != modifierList) {
             basicApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
             importClassSet.add(basicApi.qualifiedName);
-            addMap.put(modifierList, basicApi.toString());
+            annotationMap.put(modifierList, basicApi.toString());
         }
     }
 

@@ -17,7 +17,7 @@ public class ControllerApi extends BasicApi {
     }
 
     public String toString() {
-        return name + COMMON.LEFT_PARENTHESES + ANNOTATION.TAGS + COMMON.EQ_STR + COMMON.DOUBLE_QUOTATION_MARK + getValue() + COMMON.DOUBLE_QUOTATION_MARK + COMMON.RIGHT_PARENTHESES;
+        return super.toString().replaceFirst(ANNOTATION.VALUE, ANNOTATION.TAGS);
     }
 
 }
