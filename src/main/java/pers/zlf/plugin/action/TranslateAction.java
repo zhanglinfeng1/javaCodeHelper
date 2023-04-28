@@ -17,7 +17,6 @@ import pers.zlf.plugin.util.lambda.Empty;
 public class TranslateAction extends BasicAction {
     private CommonConfig commonConfig;
     private String selectionText;
-    private int selectionEnd;
 
     @Override
     public boolean check() {
@@ -26,7 +25,6 @@ public class TranslateAction extends BasicAction {
         if (StringUtil.isEmpty(selectionText)) {
             return false;
         }
-        this.selectionEnd = editor.getSelectionModel().getSelectionEnd();
         this.commonConfig = ConfigFactory.getInstance().getCommonConfig();
         if (StringUtil.isEmpty(commonConfig.getAppId()) || StringUtil.isEmpty(commonConfig.getSecretKey())) {
             Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
@@ -50,7 +48,7 @@ public class TranslateAction extends BasicAction {
                 if (COMMON.BAIDU_TRANSLATE.equals(commonConfig.getTranslateApi())) {
                     translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
                 }
-                Empty.of(translateResult).map(t -> COMMON.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(selectionEnd, t)));
+                Empty.of(translateResult).map(t -> COMMON.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(editor.getSelectionModel().getSelectionEnd(), t)));
             } catch (Exception e) {
                 String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getTranslateApi()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
                 WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(errorMessage, COMMON.BLANK_STRING, Messages.getInformationIcon()));
