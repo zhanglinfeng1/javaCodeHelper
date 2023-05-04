@@ -57,7 +57,7 @@ public class AddApiAnnotationAction extends BasicAction {
         importClassSet = new HashSet<>();
         annotationMap = new HashMap<>();
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
-            Equals.of(psiClass).and(MyPsiUtil::isController).then(this::AddSwaggerForController, this::AddSwaggerForModel);
+            Equals.of(psiClass).and(MyPsiUtil::isController).then(this::addSwaggerForController, this::addSwaggerForModel);
         }
         JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
         GlobalSearchScope globalSearchScope = psiJavaFile.getResolveScope();
@@ -67,7 +67,7 @@ public class AddApiAnnotationAction extends BasicAction {
         });
     }
 
-    private void AddSwaggerForController(PsiClass psiClass) {
+    private void addSwaggerForController(PsiClass psiClass) {
         addApiAnnotation(new ControllerApi(), psiClass, psiClass.getAnnotations(), psiClass.getModifierList(), psiClass.getName());
         for (PsiMethod method : psiClass.getMethods()) {
             Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
@@ -99,7 +99,7 @@ public class AddApiAnnotationAction extends BasicAction {
         }
     }
 
-    private void AddSwaggerForModel(PsiClass psiClass) {
+    private void addSwaggerForModel(PsiClass psiClass) {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return;
         }
