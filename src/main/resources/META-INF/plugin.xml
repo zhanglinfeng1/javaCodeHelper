@@ -17,10 +17,11 @@
             </li>
             <li>One click translation<br />
                 At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
-                After configuring the account in the idea, select the text to be translated, right-click and select Translate<br />
+                After configuring the account in the idea, select the text to be translated, right click and select JavaCodeHelp>Translate<br />
             </li>
             <li>One click Add API annotation<br />
                 Api annotations can be added with just one click based on the annotation.Currently, only Swagger is supported<br />
+                Right click and select JavaCodeHelp>AddApiAnnotation<br />
             </li>
             <li>Generate code according to the table creating SQL<br />
                 It is mainly used for learning plug-in development. Its functions are relatively simple. It is recommended to use other more perfect plug-ins to generate code<br />
@@ -39,10 +40,11 @@
             </li>
             <li>一键翻译<br />
                 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
-                在idea中配置账号后，选中待翻译文本，右击选择Translate即可<br />
+                在idea中配置账号后，选中待翻译文本，右击选择JavaCodeHelp > Translate<br />
             </li>
             <li>一键添加api注解<br />
                 可根据注释一键添加Api注解。目前仅支持swagger<br />
+                右击选择JavaCodeHelp > AddApiAnnotation<br />
             </li>
             <li>根据建表SQL生成代码<br />
                 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
