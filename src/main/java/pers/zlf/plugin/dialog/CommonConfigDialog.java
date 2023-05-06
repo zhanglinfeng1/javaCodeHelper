@@ -1,10 +1,7 @@
 package pers.zlf.plugin.dialog;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
-import freemarker.template.Template;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
@@ -16,8 +13,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.io.FileWriter;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,21 +31,13 @@ public class CommonConfigDialog extends BaseDialog{
 
     public CommonConfigDialog() {
         addFocusListener(customTemplatesPathField,COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-        downloadButton.addActionListener(e -> Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null))
-                .ifPresent(virtualFile -> {
-                    try {
-                        List<Template> defaultTemplateList = TemplateFactory.getInstance().getDefaultTemplateList();
-                        for (Template template : defaultTemplateList) {
-                            FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
-                            //TODO 寻找替换方法
-                            file.append(template.getRootTreeNode().toString());
-                            file.flush();
-                            file.close();
-                        }
-                    } catch (Exception ex) {
-                        Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
-                    }
-                }));
+        downloadButton.addActionListener(e -> {
+            try {
+                TemplateFactory.getInstance().download();
+            } catch (Exception ex) {
+                Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
+            }
+        });
     }
 
     public void reset() {

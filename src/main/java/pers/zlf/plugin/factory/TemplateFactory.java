@@ -1,5 +1,8 @@
 package pers.zlf.plugin.factory;
 
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import pers.zlf.plugin.constant.COMMON;
@@ -13,6 +16,8 @@ import pers.zlf.plugin.util.lambda.Equals;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.JarURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +73,6 @@ public class TemplateFactory {
     public void init(String fullPath, String packagePath, TableInfo tableInfo) throws Exception {
         getInstance();
         this.tableInfo = tableInfo;
-        this.tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         this.tableInfo.setPackagePath(packagePath);
         this.fullPath = fullPath + (fullPath.endsWith(COMMON.DOUBLE_BACKSLASH) ? COMMON.BLANK_STRING : COMMON.DOUBLE_BACKSLASH);
     }
@@ -93,6 +97,7 @@ public class TemplateFactory {
             templateList = templateFactory.defaultTemplateList;
         }
         Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
+        tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateList) {
@@ -105,7 +110,16 @@ public class TemplateFactory {
         }
     }
 
-    public List<Template> getDefaultTemplateList() {
-        return defaultTemplateList;
+    public void download() throws IOException {
+        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
+        if (null != virtualFile) {
+            for (Template template : defaultTemplateList) {
+                FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
+                //TODO 寻找替换方法
+                file.append(template.getRootTreeNode().toString());
+                file.flush();
+                file.close();
+            }
+        }
     }
 }
