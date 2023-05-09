@@ -9,7 +9,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 feign与controller的快捷跳转<br />
 sql与java的快捷跳转<br />
 
-## 一键翻译
+## 翻译
 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
 在idea中配置账号后，选中待翻译文本，右击选择JavaCodeHelp > Translate<br />
 配置路径：File > Setting > Other Settings > JavaCodeHelp

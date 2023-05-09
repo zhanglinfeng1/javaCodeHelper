@@ -15,7 +15,7 @@
                 Support fast jump between feign and controller. Click the jump icon to jump<br />
                 Support quick jump of sql and java<br />
             </li>
-            <li>One click translation<br />
+            <li>Translation<br />
                 At present, only Baidu Translation is supported. You need to apply for Baidu Translation Platform account and translate 1 million characters for free every month<br />
                 After configuring the account in the idea, select the text to be translated, right click and select JavaCodeHelp>Translate<br />
             </li>
@@ -42,7 +42,7 @@
                 支持feign与controller的快捷跳转，点击图标跳转<br />
                 支持sql与java的快捷跳转<br />
             </li>
-            <li>一键翻译<br />
+            <li>翻译<br />
                 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
                 在idea中配置账号后，选中待翻译文本，右击选择JavaCodeHelp > Translate<br />
             </li>
