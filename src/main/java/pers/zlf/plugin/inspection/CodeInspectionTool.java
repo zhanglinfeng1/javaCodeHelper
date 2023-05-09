@@ -33,7 +33,7 @@ public class CodeInspectionTool extends AbstractBaseJavaLocalInspectionTool {
                     Optional.ofNullable(method.getNameIdentifier()).ifPresent(identifier -> {
                         PsiReference[] references = ReferencesSearch.search(method).toArray(new PsiReference[0]);
                         if (references.length == 0) {
-                            holder.registerProblem(identifier, "Method " + method.getName() + " is never used", ProblemHighlightType.LIKE_UNUSED_SYMBOL, (LocalQuickFix) null);
+                            holder.registerProblem(identifier, "(JavaCodeHelp) Method " + method.getName() + " is never used", ProblemHighlightType.LIKE_UNUSED_SYMBOL, (LocalQuickFix) null);
                         }
                     });
                 }

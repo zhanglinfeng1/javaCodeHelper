@@ -2,12 +2,12 @@
 idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流想法、反馈BUG
 
 ## 代码补全
-1.构造方法内，补全字段赋值<br />
-2.非构造方法内，根据输入的字符，补全代码<br />
+构造方法内，补全字段赋值<br />
+非构造方法内，根据输入的字符，补全代码<br />
 
 ## 快捷跳转
-1.feign与controller的快捷跳转<br />
-2.sql与java的快捷跳转<br />
+feign与controller的快捷跳转<br />
+sql与java的快捷跳转<br />
 
 ## 一键翻译
 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
@@ -15,8 +15,12 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 
 ## 一键添加api注解
-可根据注释一键添加Api注解。目前仅支持swagger
+可根据注释一键添加Api注解。目前仅支持swagger<br />
 右击选择JavaCodeHelp > AddApiAnnotation
+
+## 代码检查
+feign中方法未被调用，方法名置灰<br />
+陆续新增中...
 
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
@@ -48,9 +52,10 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
         ${columnType}           java字段类型
 
 # 版本改动
-<ul>1.6.1
+<ul>1.7.0
     <li>[BUG]请求百度翻译失败时，未关闭连接</li>
     <li>[BUG]添加注解时的一些报错</li>
+    <li>[NEW]代码检查</li>
 </ul>
 <ul>1.6.0
     <li>[BUG]修复打开注解类时报错</li>
