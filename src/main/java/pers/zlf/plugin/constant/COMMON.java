@@ -67,8 +67,7 @@ public class COMMON {
     public static final String EQ_STR = " = ";
     public static final String END_STR = "();";
     public static final String COMMA_STR = ", ";
-    public static final String MAP_STR = ").map(";
-    public static final String ARRAYS_STREAM_STR = "Arrays.stream(";
+    public static final String ARRAYS_STREAM_STR = "Arrays.stream(%s).map(";
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
     public static final String COLLECT_SET_STR = "::new).collect(Collectors.toSet());";
@@ -82,5 +81,8 @@ public class COMMON {
 
     /** Api工具 */
     public static final Integer SWAGGER_API = 0;
+
+    /** 构造方法补全提示 */
+    public static final String FILL_CONSTRUCTOR = "fillConstructor";
 
 }

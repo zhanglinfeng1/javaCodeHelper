@@ -15,8 +15,8 @@ import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON;
-import pers.zlf.plugin.constant.MESSAGE_ENUM;
-import pers.zlf.plugin.constant.MESSAGE_ENUM_TYPE;
+import pers.zlf.plugin.constant.COMMON_ENUM;
+import pers.zlf.plugin.constant.COMMON_ENUM_TYPE;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -104,7 +104,7 @@ public abstract class FastJump {
                 continue;
             }
             //请求方式
-            String method = Empty.of(MESSAGE_ENUM.select(MESSAGE_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(MESSAGE_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
+            String method = Empty.of(COMMON_ENUM.select(COMMON_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(COMMON_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
             if (StringUtil.isNotEmpty(method)) {
                 //请求路径
                 String methodUrl = getMappingUrl(psiAnnotation);

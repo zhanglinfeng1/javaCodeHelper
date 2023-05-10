@@ -162,7 +162,7 @@ public class MethodCompletion extends Completion {
                         .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + COMMON.STREAM_MAP_STR + endCode)));
                 //数组类型
                 Equals.of(currentMethodVariableType).and(TypeUtil::isSimpleArr).and(typeList.contains(currentMethodVariableTypeName.split(REGEX.LEFT_BRACKETS)[0]))
-                        .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + COMMON.ARRAYS_STREAM_STR + currentMethodVariableName + COMMON.MAP_STR + endCode)
+                        .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + String.format(COMMON.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode)
                                 .withInsertHandler((context, item) -> {
                                     PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
                                     MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(javaFile::importClass);

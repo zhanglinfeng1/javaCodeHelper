@@ -4,6 +4,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.Messages;
 import pers.zlf.plugin.api.BaiDuTransApi;
 import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.MESSAGE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -27,7 +28,7 @@ public class TranslateAction extends BasicAction {
         }
         this.commonConfig = ConfigFactory.getInstance().getCommonConfig();
         if (StringUtil.isEmpty(commonConfig.getAppId()) || StringUtil.isEmpty(commonConfig.getSecretKey())) {
-            Messages.showMessageDialog("Please configure first! File > Setting > Other Settings > JavaCodeHelp", COMMON.BLANK_STRING, Messages.getInformationIcon());
+            Messages.showMessageDialog(MESSAGE.TRANSLATION_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon());
             return false;
         }
         return true;

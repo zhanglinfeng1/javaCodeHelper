@@ -2,12 +2,12 @@ package pers.zlf.plugin.constant;
 
 import java.util.Arrays;
 
-public enum MESSAGE_ENUM {
+public enum COMMON_ENUM {
     /** 请求方式 */
-    POST_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.POST_MAPPING, REQUEST.POST),
-    PUT_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.PUT_MAPPING, REQUEST.PUT),
-    GET_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.GET_MAPPING, REQUEST.GET),
-    DELETE_REQUEST(MESSAGE_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.DELETE_MAPPING, REQUEST.DELETE);
+    POST_REQUEST(COMMON_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.POST_MAPPING, REQUEST.POST),
+    PUT_REQUEST(COMMON_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.PUT_MAPPING, REQUEST.PUT),
+    GET_REQUEST(COMMON_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.GET_MAPPING, REQUEST.GET),
+    DELETE_REQUEST(COMMON_ENUM_TYPE.REQUEST_TYPE, ANNOTATION.DELETE_MAPPING, REQUEST.DELETE);
 
     private String type;
 
@@ -15,14 +15,14 @@ public enum MESSAGE_ENUM {
 
     private String value;
 
-    MESSAGE_ENUM(String type, String key, String value) {
+    COMMON_ENUM(String type, String key, String value) {
         this.type = type;
         this.key = key;
         this.value = value;
     }
 
-    public static MESSAGE_ENUM select(String type, String key) {
-        return Arrays.stream(MESSAGE_ENUM.values()).filter(e -> e.key.equals(key) && e.type.equals(type)).findAny().orElse(null);
+    public static COMMON_ENUM select(String type, String key) {
+        return Arrays.stream(COMMON_ENUM.values()).filter(e -> e.key.equals(key) && e.type.equals(type)).findAny().orElse(null);
     }
 
     public String getType() {

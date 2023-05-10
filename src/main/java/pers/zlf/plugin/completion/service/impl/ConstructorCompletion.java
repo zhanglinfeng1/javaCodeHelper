@@ -70,7 +70,7 @@ public class ConstructorCompletion extends Completion {
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
-            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText("fillConstructor")
+            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText(COMMON.FILL_CONSTRUCTOR)
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
     }
