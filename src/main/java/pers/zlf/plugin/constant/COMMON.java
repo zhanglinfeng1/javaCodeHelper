@@ -1,6 +1,8 @@
 package pers.zlf.plugin.constant;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Map;
  */
 public class COMMON {
     /** 通用常量 */
-    public static final String SUCCESS = "成功";
+    public static final String SUCCESS = "success";
     public static final String TRUE = "true";
     public static final String RESOURCES = "resources";
     public static final String GET = "get";
@@ -35,6 +37,7 @@ public class COMMON {
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";
     public static final String TEMPLATE_PATH = "templates";
+    public static final List<String> TEMPLATE_LIST = Arrays.asList(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
 
     /** 数据库 */
     public static final String MYSQL = "mysql";

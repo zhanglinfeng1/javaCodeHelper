@@ -19,14 +19,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.JarURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.jar.JarEntry;
 
 /**
  * @Author zhanglinfeng
@@ -34,9 +31,7 @@ import java.util.jar.JarEntry;
  */
 public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
-    private static Configuration configuration;
-    /** 默认模板文件 */
-    private final List<Template> defaultTemplateList = new ArrayList<>();
+    private static final Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
     /** 解析后的表信息 */
     private TableInfo tableInfo;
     /** 全路径 */
@@ -52,18 +47,8 @@ public class TemplateFactory {
                     templateFactory = new TemplateFactory();
                     //加载默认模板
                     ClassLoader classLoader = TemplateFactory.class.getClassLoader();
-                    configuration = new Configuration(Configuration.VERSION_2_3_23);
                     configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
                     configuration.setClassLoaderForTemplateLoading(classLoader, COMMON.TEMPLATE_PATH);
-                    JarURLConnection jarCon = (JarURLConnection) Objects.requireNonNull(classLoader.getResource(COMMON.TEMPLATE_PATH)).openConnection();
-                    Enumeration<JarEntry> jarEntryArr = jarCon.getJarFile().entries();
-                    while (jarEntryArr.hasMoreElements()) {
-                        JarEntry entry = jarEntryArr.nextElement();
-                        String name = entry.getName();
-                        if (name.startsWith(COMMON.TEMPLATE_PATH) && name.endsWith(COMMON.TEMPLATE_SUFFIX)) {
-                            templateFactory.defaultTemplateList.add(configuration.getTemplate(name.replace(COMMON.TEMPLATE_PATH + COMMON.SLASH, COMMON.BLANK_STRING)));
-                        }
-                    }
                 }
             }
         }
@@ -93,8 +78,10 @@ public class TemplateFactory {
                 }
             }
             Empty.of(templateList).ifEmptyThrow(() -> new Exception("The custom template does not exist"));
-        }else {
-            templateList = templateFactory.defaultTemplateList;
+        } else {
+            for (String templateName : COMMON.TEMPLATE_LIST) {
+                templateList.add(configuration.getTemplate(templateName));
+            }
         }
         Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
         tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
@@ -113,7 +100,8 @@ public class TemplateFactory {
     public void download() throws IOException {
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
         if (null != virtualFile) {
-            for (Template template : defaultTemplateList) {
+            for (String templateName : COMMON.TEMPLATE_LIST) {
+                Template template = configuration.getTemplate(templateName);
                 FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
                 //TODO 寻找替换方法
                 file.append(template.getRootTreeNode().toString());

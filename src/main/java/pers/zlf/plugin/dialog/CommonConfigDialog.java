@@ -34,6 +34,7 @@ public class CommonConfigDialog extends BaseDialog{
         downloadButton.addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().download();
+                Messages.showMessageDialog(COMMON.SUCCESS, COMMON.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
             }
