@@ -114,14 +114,9 @@ public abstract class FastJump {
             }
             //请求方式
             String method = Empty.of(COMMON_ENUM.select(COMMON_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(COMMON_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
-            if (method.contains(REQUEST.GET)){
-                method = REQUEST.GET;
-            }else if (method.contains(REQUEST.POST)){
-                method = REQUEST.POST;
-            }else if (method.contains(REQUEST.PUT)){
-                method = REQUEST.PUT;
-            }else if (method.contains(REQUEST.DELETE)){
-                method = REQUEST.DELETE;
+            Optional<String> optional = REQUEST.TYPE_LIST.stream().filter(method::contains).findAny();
+            if (optional.isPresent()){
+                method = optional.get();
             }
             if (StringUtil.isNotEmpty(method)) {
                 //请求路径
