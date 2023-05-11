@@ -17,6 +17,7 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON;
 import pers.zlf.plugin.constant.COMMON_ENUM;
 import pers.zlf.plugin.constant.COMMON_ENUM_TYPE;
+import pers.zlf.plugin.constant.REQUEST;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -92,8 +93,16 @@ public abstract class FastJump {
                 .filter(classes -> classes.length == 1).map(classes -> classes[0]).filter(this::checkClass)
                 .forEach(psiClass -> {
                     String classUrl = this.getClassUrl(psiClass);
-                    Arrays.stream(psiClass.getMethods()).forEach(method -> Optional.ofNullable(this.getMappingAnnotation(classUrl, method))
-                            .flatMap(target -> Optional.ofNullable(map.get(target.toString()))).ifPresent(resultMap -> resultMap.getTargetList().add(method)));
+                    Arrays.stream(psiClass.getMethods()).forEach(method -> {
+                        MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, method);
+                        if (null != mappingAnnotation){
+                            MappingAnnotation t = map.get(mappingAnnotation.toString());
+                            if (null != t){
+                                t.getTargetList().add(method);
+                            }
+                        }
+
+                    });
                 });
     }
 
@@ -105,6 +114,15 @@ public abstract class FastJump {
             }
             //请求方式
             String method = Empty.of(COMMON_ENUM.select(COMMON_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(COMMON_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
+            if (method.contains(REQUEST.GET)){
+                method = REQUEST.GET;
+            }else if (method.contains(REQUEST.POST)){
+                method = REQUEST.POST;
+            }else if (method.contains(REQUEST.PUT)){
+                method = REQUEST.PUT;
+            }else if (method.contains(REQUEST.DELETE)){
+                method = REQUEST.DELETE;
+            }
             if (StringUtil.isNotEmpty(method)) {
                 //请求路径
                 String methodUrl = getMappingUrl(psiAnnotation);
