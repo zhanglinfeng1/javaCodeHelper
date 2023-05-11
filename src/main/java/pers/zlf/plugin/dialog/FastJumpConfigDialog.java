@@ -90,13 +90,13 @@ public class FastJumpConfigDialog extends BaseDialog {
         controllerTextField.setText(commonConfig.getControllerFolderName());
         feignTextField.setText(commonConfig.getFeignFolderName());
         defaultTableModel.getDataVector().clear();
-        List<String> selectModuleList = commonConfig.getModuleNameList();
+        List<String> selectModuleList = commonConfig.getModuleNameList().stream().sorted().collect(Collectors.toList());
         addMouseListener(addModuleButton, ICON_ENUM.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
             removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
             removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
         } else {
-            this.addCallback(commonConfig.getModuleNameList());
+            this.addCallback(selectModuleList);
         }
     }
 
