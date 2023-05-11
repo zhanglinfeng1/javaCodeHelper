@@ -38,18 +38,14 @@ public class TemplateFactory {
     private String fullPath;
 
     private TemplateFactory() {
+        configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
+        configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), COMMON.TEMPLATE_PATH);
     }
 
     public static TemplateFactory getInstance() throws Exception {
         if (templateFactory == null) {
             synchronized (TemplateFactory.class) {
-                if (templateFactory == null) {
-                    templateFactory = new TemplateFactory();
-                    //加载默认模板
-                    ClassLoader classLoader = TemplateFactory.class.getClassLoader();
-                    configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-                    configuration.setClassLoaderForTemplateLoading(classLoader, COMMON.TEMPLATE_PATH);
-                }
+                Equals.of(templateFactory == null).ifTrue(() -> templateFactory = new TemplateFactory());
             }
         }
         return templateFactory;

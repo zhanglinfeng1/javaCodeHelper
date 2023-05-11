@@ -3,6 +3,7 @@ package pers.zlf.plugin.factory;
 import com.intellij.openapi.components.ServiceManager;
 import pers.zlf.plugin.config.ConfigComponent;
 import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.lambda.Equals;
 
 /**
  * @Author zhanglinfeng
@@ -12,18 +13,15 @@ public class ConfigFactory {
     private static volatile ConfigFactory configFactory;
     private CommonConfig commonConfig;
 
-    private ConfigFactory(){
-
+    private ConfigFactory() {
+        //TODO 兼容老版本，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
+        commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
     }
 
     public static ConfigFactory getInstance() {
         if (configFactory == null) {
             synchronized (ConfigFactory.class) {
-                if (configFactory == null) {
-                    configFactory = new ConfigFactory();
-                    //TODO 兼容老版本，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
-                    configFactory.commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
-                }
+                Equals.of(configFactory == null).ifTrue(() -> configFactory = new ConfigFactory());
             }
         }
         return configFactory;
