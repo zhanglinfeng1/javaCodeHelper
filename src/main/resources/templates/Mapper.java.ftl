@@ -33,9 +33,7 @@ public interface ${tableName}Mapper {
 <#if eqList?seq_contains(fields.queryType)>
             Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}"));
 <#elseif inList?seq_contains(fields.queryType)>
-            <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
-            String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
-            Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") "));
+            Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + t + ") "));
     <#else>
             Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')"));
     </#if>
