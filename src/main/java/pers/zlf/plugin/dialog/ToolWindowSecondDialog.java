@@ -68,6 +68,7 @@ public class ToolWindowSecondDialog extends BaseDialog {
         }else {
             addMouseListener(deleteButton, ICON_ENUM.REMOVE);
         }
+        defaultTableModel.getDataVector().clear();
         columnTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {
                 String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
