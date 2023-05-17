@@ -26,6 +26,22 @@ public interface ${tableName}Mapper {
                     " from ${sqlTableName}";
         }
 
+        public void addWhere(SQL sql, Map<?, ?> params) {
+<#assign inList = ["in","not in"]>
+<#assign eqList = ["=",">", ">=", "<", "<="]>
+<#list queryColumnList as fields>
+<#if eqList?seq_contains(fields.queryType)>
+            Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}"));
+<#elseif inList?seq_contains(fields.queryType)>
+            <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
+            String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
+            Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") "));
+    <#else>
+            Optional.ofNullable(params.get("${fields.columnName}")).map(String::valueOf).ifPresent(t -> sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')"));
+    </#if>
+</#list>
+        }
+
         public String get${tableName}SQL(Map<?, ?> params) {
             SQL sql = new SQL();
             sql.SELECT(this.getColumn());
@@ -34,51 +50,17 @@ public interface ${tableName}Mapper {
         }
 
         public String get${tableName}ListCountSQL(Map<?, ?> params) {
-<#list queryColumnList as fields>
-            String ${fields.columnName} = (String) params.get("${fields.columnName}");
-</#list>
             SQL sql = new SQL();
             sql.SELECT("count(id)");
             sql.FROM("${sqlTableName}");
-<#assign inList = ["in","not in"]>
-<#assign eqList = ["=",">", ">=", "<", "<="]>
-<#list queryColumnList as fields>
-            if (!StringUtils.isEmpty(${fields.columnName})) {
-<#if eqList?seq_contains(fields.queryType)>
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
-<#elseif inList?seq_contains(fields.queryType)>
-                <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
-                String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");
-<#else>
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')");
-</#if>
-            }
-</#list>
+            addWhere(sql, params);
             return sql.toString();
         }
 
         public String get${tableName}ListSQL(Map<?, ?> params) {
-<#list queryColumnList as fields>
-            String ${fields.columnName} = (String) params.get("${fields.columnName}");
-</#list>
             SQL sql = new SQL();
             sql.SELECT(this.getColumn());
-<#assign inList = ["in","not in"]>
-<#assign eqList = ["=",">", ">=", "<", "<="]>
-<#list queryColumnList as fields>
-            if (!StringUtils.isEmpty(${fields.columnName})) {
-<#if eqList?seq_contains(fields.queryType)>
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} <#noparse>#{</#noparse>${fields.columnName}}");
-<#elseif inList?seq_contains(fields.queryType)>
-                <#noparse>List<String></#noparse> asList = Arrays.asList(${fields.columnName}.split(","));
-                String str = StringUtils.collectionToDelimitedString(asList, ",", "'", "'");
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} (" + str + ") ");
-<#else>
-                sql.WHERE(" ${fields.sqlColumnName} ${fields.queryType} concat('%',<#noparse>#{</#noparse>${fields.columnName}},'%')");
-</#if>
-            }
-</#list>
+            addWhere(sql, params);
             <#noparse>return sql + " LIMIT #{offset},#{limit}";</#noparse>
         }
     }
