@@ -224,7 +224,7 @@ public class MyPsiUtil {
         }
         String methodClassName1 = ((PsiClass) method1.getParent()).getQualifiedName();
         String methodClassName2 = ((PsiClass) method2.getParent()).getQualifiedName();
-        if (null != methodClassName1 && methodClassName1.equals(methodClassName2)) {
+        if (null != methodClassName1 && !methodClassName1.equals(methodClassName2)) {
             return false;
         }
         // 判断方法参数列表是否相同
