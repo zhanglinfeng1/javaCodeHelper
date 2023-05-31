@@ -126,7 +126,7 @@ public class FastJumpConfigDialog extends BaseDialog {
         return list;
     }
 
-    private void addCallback(List<String> valueList){
+    private void addCallback(List<String> valueList) {
         valueList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
         addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
         addMouseListener(editModuleButton, ICON_ENUM.EDIT);

@@ -14,9 +14,9 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON;
 import pers.zlf.plugin.constant.COMMON_ENUM;
 import pers.zlf.plugin.constant.COMMON_ENUM_TYPE;
+import pers.zlf.plugin.constant.ICON;
 import pers.zlf.plugin.constant.REQUEST;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -61,6 +61,8 @@ public abstract class FastJump {
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES)) {
                 continue;
             }
+            //controller跳转feign 固定true
+            //feign跳转controller 需排除配置的模块
             if (jump(virtualFilePath)) {
                 Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
@@ -70,10 +72,11 @@ public abstract class FastJump {
     }
 
     public String getMappingUrl(PsiAnnotation annotation) {
-        return Optional.ofNullable(annotation).map(psiAnnotation -> {
-            String url = MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.VALUE);
-            return StringUtil.isEmpty(url) ? MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.PATH) : url;
-        }).orElse(COMMON.BLANK_STRING);
+        if (null == annotation) {
+            return COMMON.BLANK_STRING;
+        }
+        String url = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
+        return Empty.of(url).orElse(MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.PATH));
     }
 
     public abstract boolean jump(String virtualFilePath);
@@ -89,20 +92,23 @@ public abstract class FastJump {
         if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
             return;
         }
-        Arrays.stream(psiDirectory.getFiles()).filter(f -> f.getFileType() instanceof JavaFileType).map(f -> ((PsiJavaFile) f).getClasses())
-                .filter(classes -> classes.length == 1).map(classes -> classes[0]).filter(this::checkClass)
+        //筛选不存在内部类的java文件
+        Arrays.stream(psiDirectory.getFiles())
+                .filter(f -> f.getFileType() instanceof JavaFileType)
+                .map(f -> ((PsiJavaFile) f).getClasses())
+                .filter(classes -> classes.length == 1)
+                .map(classes -> classes[0])
+                .filter(this::checkClass)
                 .forEach(psiClass -> {
+                    //处理类中的方法
                     String classUrl = this.getClassUrl(psiClass);
-                    Arrays.stream(psiClass.getMethods()).forEach(method -> {
+                    for (PsiMethod method : psiClass.getMethods()) {
                         MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, method);
-                        if (null != mappingAnnotation){
-                            MappingAnnotation t = map.get(mappingAnnotation.toString());
-                            if (null != t){
-                                t.getTargetList().add(method);
-                            }
+                        if (null == mappingAnnotation) {
+                            continue;
                         }
-
-                    });
+                        Optional.ofNullable(map.get(mappingAnnotation.toString())).ifPresent(t -> t.getTargetList().add(method));
+                    }
                 });
     }
 
@@ -115,7 +121,7 @@ public abstract class FastJump {
             //请求方式
             String method = Empty.of(COMMON_ENUM.select(COMMON_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(COMMON_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
             Optional<String> optional = REQUEST.TYPE_LIST.stream().filter(method::contains).findAny();
-            if (optional.isPresent()){
+            if (optional.isPresent()) {
                 method = optional.get();
             }
             if (StringUtil.isNotEmpty(method)) {

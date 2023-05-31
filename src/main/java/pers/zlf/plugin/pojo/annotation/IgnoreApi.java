@@ -9,8 +9,8 @@ import pers.zlf.plugin.constant.ANNOTATION;
 public class IgnoreApi extends BasicApi {
 
     @Override
-    public void selectApi() {
-        qualifiedName = ANNOTATION.SPRINGFOX_API_IGNORE;
+    public String getSwaggerApi() {
+        return ANNOTATION.SPRINGFOX_API_IGNORE;
     }
 
     public String toString() {

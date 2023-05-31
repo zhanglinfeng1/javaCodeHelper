@@ -1,7 +1,6 @@
 package pers.zlf.plugin.pojo.annotation;
 
 import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.COMMON;
 
 /**
  * @Author zhanglinfeng
@@ -10,10 +9,8 @@ import pers.zlf.plugin.constant.COMMON;
 public class ModelApi extends BasicApi {
 
     @Override
-    public void selectApi() {
-        if (COMMON.SWAGGER_API.equals(apiType)) {
-            qualifiedName = ANNOTATION.SWAGGER_API_MODEL;
-        }
+    public String getSwaggerApi() {
+        return ANNOTATION.SWAGGER_API_MODEL;
     }
 
 }

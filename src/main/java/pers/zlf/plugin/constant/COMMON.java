@@ -32,7 +32,7 @@ public class COMMON {
     public static final String LESS_THAN_SIGN = "<";
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
-    public static final String DOUBLE_QUOTATION_MARK = "\"";
+    public static final String DOUBLE_QUOTATION = "\"";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";

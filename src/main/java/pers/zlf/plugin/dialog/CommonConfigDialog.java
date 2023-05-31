@@ -19,7 +19,7 @@ import java.util.Optional;
  * @Author zhanglinfeng
  * @Date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog extends BaseDialog{
+public class CommonConfigDialog extends BaseDialog {
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
@@ -30,7 +30,7 @@ public class CommonConfigDialog extends BaseDialog{
     private JComboBox<String> apiToolComboBox;
 
     public CommonConfigDialog() {
-        addFocusListener(customTemplatesPathField,COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(customTemplatesPathField, COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         downloadButton.addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().download();
@@ -52,9 +52,9 @@ public class CommonConfigDialog extends BaseDialog{
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
-        Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(t -> translateApiComboBox.setSelectedIndex(t));
-        Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(t -> dateClassComboBox.setSelectedIndex(t));
-        Optional.ofNullable(commonConfig.getApiTool()).ifPresent(t -> apiToolComboBox.setSelectedIndex(t));
+        Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
+        Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(dateClassComboBox::setSelectedIndex);
+        Optional.ofNullable(commonConfig.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
     }
 
     public JComponent getComponent() {
