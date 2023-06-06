@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -34,7 +34,7 @@ public abstract class Completion {
 
     public Completion(PsiMethod currentMethod, PsiElement psiElement) {
         this.currentElement = psiElement;
-        this.currentText = psiElement.getText().replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
+        this.currentText = psiElement.getText().replace(CLASS_TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();
         this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> COMMON.SEMICOLON.equals(t.getText()) || COMMON.LEFT_BRACE.equals(t.getText())).orElse(false);

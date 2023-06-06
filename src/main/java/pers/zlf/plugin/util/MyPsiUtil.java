@@ -27,7 +27,7 @@ import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -138,7 +138,7 @@ public class MyPsiUtil {
      * @return 处理后的变量名
      */
     public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
-        variableName = variableName.replace(TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
+        variableName = variableName.replace(CLASS_TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = COMMON.BLANK_STRING;
         if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {

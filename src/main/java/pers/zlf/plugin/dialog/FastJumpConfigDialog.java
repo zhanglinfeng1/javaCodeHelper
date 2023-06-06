@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
@@ -48,7 +48,7 @@ public class FastJumpConfigDialog extends BaseDialog {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             Module[] modules = ModuleManager.getInstance(project).getModules();
-            totalSelectList.addAll(Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet()));
+            totalSelectList.addAll(Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet()));
         }
         defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING}) {
             @Override

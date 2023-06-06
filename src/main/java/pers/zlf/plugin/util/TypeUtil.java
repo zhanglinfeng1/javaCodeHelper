@@ -3,7 +3,7 @@ package pers.zlf.plugin.util;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isList(PsiClass psiClass) {
-        return judgmentType(psiClass, TYPE.LIST);
+        return judgmentType(psiClass, CLASS_TYPE.LIST);
     }
 
     /**
@@ -30,7 +30,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSet(PsiClass psiClass) {
-        return judgmentType(psiClass, TYPE.SET);
+        return judgmentType(psiClass, CLASS_TYPE.SET);
     }
 
     /**
@@ -69,6 +69,6 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSimpleType(String typeStr) {
-        return TYPE.BASIC_TYPE_LIST.contains(typeStr) || TYPE.COMMON_TYPE_LIST.contains(typeStr);
+        return CLASS_TYPE.BASIC_TYPE_LIST.contains(typeStr) || CLASS_TYPE.COMMON_TYPE_LIST.contains(typeStr);
     }
 }

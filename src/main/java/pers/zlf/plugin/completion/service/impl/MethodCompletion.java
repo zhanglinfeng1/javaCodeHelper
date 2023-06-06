@@ -15,7 +15,7 @@ import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.completion.service.Completion;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
-import pers.zlf.plugin.constant.TYPE;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.TypeUtil;
@@ -58,7 +58,7 @@ public class MethodCompletion extends Completion {
             currentMethodVariableMap.entrySet().stream().filter(t -> t.getKey().contains(currentText))
                     .forEach(t -> addTransformation(t.getKey(), t.getValue(), t.getKey() + COMMON.EQ_STR));
             //寻找void类型方法
-            addSameType(currentText, TYPE.VOID, COMMON.BLANK_STRING);
+            addSameType(currentText, CLASS_TYPE.VOID, COMMON.BLANK_STRING);
         } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
             //当前元素是变量
             PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
@@ -165,7 +165,7 @@ public class MethodCompletion extends Completion {
                     .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + String.format(COMMON.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode)
                             .withInsertHandler((context, item) -> {
                                 PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
-                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), TYPE.ARRAYS_PATH).ifPresent(javaFile::importClass);
+                                MyPsiUtil.findClassByFullName(variableType.getResolveScope(), CLASS_TYPE.ARRAYS_PATH).ifPresent(javaFile::importClass);
                             })));
         }
     }
