@@ -126,7 +126,7 @@ public class MyPsiUtil {
      * @return key:变量名 value:变量类型
      */
     public static Map<String, PsiType> getVariableMapFromClass(PsiClass psiClass) {
-        return Arrays.stream(psiClass.getFields()).collect(Collectors.toMap(PsiField::getName, PsiField::getType));
+        return Arrays.stream(psiClass.getFields()).collect(Collectors.toMap(PsiField::getName, PsiField::getType, (k1, k2) -> k2));
     }
 
     /**
