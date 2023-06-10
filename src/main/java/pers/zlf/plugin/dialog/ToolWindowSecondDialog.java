@@ -38,7 +38,6 @@ public class ToolWindowSecondDialog extends BaseDialog {
     private JRadioButton customTemplateRadioButton;
     private List<ColumnInfo> columnInfoList;
     private String[] columnArr;
-    private final DefaultTableModel defaultTableModel;
 
     public ToolWindowSecondDialog() {
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -111,7 +110,4 @@ public class ToolWindowSecondDialog extends BaseDialog {
         return defaultTemplateRadioButton.isSelected();
     }
 
-    public void clearTableContent(){
-        defaultTableModel.getDataVector().clear();
-    }
 }

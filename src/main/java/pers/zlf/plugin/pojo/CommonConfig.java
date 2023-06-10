@@ -28,6 +28,10 @@ public class CommonConfig {
     private List<String> moduleNameList = new ArrayList<>();
     /** api工具 */
     private Integer apiTool = COMMON.SWAGGER_API;
+    /** 代码行数统计文件类型 */
+    private List<String> fileTypeList = new ArrayList<>();
+    /** 统计注释 */
+    private boolean countComment = true;
 
     public Integer getTranslateApi() {
         return translateApi;
@@ -99,5 +103,21 @@ public class CommonConfig {
 
     public void setApiTool(Integer apiTool) {
         this.apiTool = apiTool;
+    }
+
+    public List<String> getFileTypeList() {
+        return fileTypeList;
+    }
+
+    public void setFileTypeList(List<String> fileTypeList) {
+        this.fileTypeList = fileTypeList;
+    }
+
+    public boolean isCountComment() {
+        return countComment;
+    }
+
+    public void setCountComment(boolean countComment) {
+        this.countComment = countComment;
     }
 }

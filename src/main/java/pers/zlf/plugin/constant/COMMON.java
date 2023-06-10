@@ -89,4 +89,9 @@ public class COMMON {
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "fillConstructor";
 
+    /** 注释前缀、后缀 */
+    public static final List<String> JAVA_COMMENT_PREFIX = Arrays.asList("//", "/**", "*", "*/", "/*");
+    public static final List<String> XML_COMMENT_PREFIX = Arrays.asList("<!--", "<![CDATA[");
+    public static final List<String> XML_COMMENT_SUFFIX = Arrays.asList("-->", "]]>");
+
 }

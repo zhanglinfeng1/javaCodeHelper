@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.7.2</version>
+    <version>1.8.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
@@ -26,6 +26,10 @@
             <li>Code Check<br />
                 Method not called in feign, method name grayed out<br />
                 Continuously adding.<br />
+            </li>
+            <li>Code Statistics<br />
+                After the module in the project file tree, the total number of code lines for that module will be noted<br />
+                Currently, comment judgment only supports .java and .xml files<br />
             </li>
             <li>Generate code according to the table creating SQL<br />
                 It is mainly used for learning plug-in development. Its functions are relatively simple. It is recommended to use other more perfect plug-ins to generate code<br />
@@ -54,8 +58,12 @@
                 feign中方法未被调用，方法名置灰<br />
                 陆续新增中...<br />
             </li>
+            <li>代码统计<br />
+                项目文件树中的模块后会备注上该模块的总代码行数<br />
+            </li>
             <li>根据建表SQL生成代码<br />
                 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
+                目前注释判断仅支持.java、.xml文件<br />
             </li>
         </ul>
     ]]>
@@ -85,6 +93,8 @@
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="MethodCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.MethodInspectionTool"/>
+        <!-- 代码行数统计 -->
+        <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
     </extensions>
 
     <actions>

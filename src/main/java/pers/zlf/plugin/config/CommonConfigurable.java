@@ -7,6 +7,7 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
 
@@ -50,6 +51,12 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getApiTool().equals(commonConfig.getApiTool())) {
             return true;
         }
+        if (!CollectionUtil.equals(dialog.getTableContentList(0), commonConfig.getFileTypeList())) {
+            return true;
+        }
+        if (dialog.isCountComment() != commonConfig.isCountComment()){
+            return true;
+        }
         return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
     }
 
@@ -61,6 +68,8 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
         commonConfig.setDateClassType(dialog.getDateClassType());
         commonConfig.setApiTool(dialog.getApiTool());
+        commonConfig.setFileTypeList(dialog.getTableContentList(0));
+        commonConfig.setCountComment(dialog.isCountComment());
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 

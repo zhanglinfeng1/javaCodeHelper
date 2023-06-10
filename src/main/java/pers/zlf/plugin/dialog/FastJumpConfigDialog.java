@@ -6,13 +6,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
-import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
@@ -21,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,9 +38,7 @@ public class FastJumpConfigDialog extends BaseDialog {
     private JBTable moduleTable;
     private JButton addModuleButton;
     private JButton deleteModuleButton;
-    private JButton editModuleButton;
     private final Set<String> totalSelectList;
-    private final DefaultTableModel defaultTableModel;
 
     public FastJumpConfigDialog() {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
@@ -69,18 +65,7 @@ public class FastJumpConfigDialog extends BaseDialog {
                 addMouseListener(addModuleButton, ICON_ENUM.ADD);
                 if (moduleTable.getRowCount() == 0) {
                     removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
-                    removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
                 }
-            }
-        });
-
-        editModuleButton.addActionListener(e -> {
-            int rowNum = moduleTable.getSelectedRow();
-            if (rowNum >= 0) {
-                List<String> optionalList = getOptionalList();
-                optionalList.add(String.valueOf(defaultTableModel.getValueAt(rowNum, 0)));
-                JBPopupFactory.getInstance().createPopupChooserBuilder(optionalList).setTitle(COMMON.SELECT_MODULE).setMovable(true)
-                        .setItemChosenCallback(s -> defaultTableModel.setValueAt(s, rowNum, 0)).createPopup().showUnderneathOf(editModuleButton);
             }
         });
     }
@@ -94,7 +79,6 @@ public class FastJumpConfigDialog extends BaseDialog {
         addMouseListener(addModuleButton, ICON_ENUM.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
             removeMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
-            removeMouseListener(editModuleButton, ICON_ENUM.EDIT);
         } else {
             this.addCallback(selectModuleList);
         }
@@ -112,24 +96,15 @@ public class FastJumpConfigDialog extends BaseDialog {
         return feignTextField.getText();
     }
 
-    public List<String> getModuleNameList() {
-        List<String> gatewayModuleNameList = new ArrayList<>();
-        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
-            gatewayModuleNameList.add(StringUtil.toString(defaultTableModel.getValueAt(i, 0)));
-        }
-        return gatewayModuleNameList;
-    }
-
     private List<String> getOptionalList() {
         List<String> list = totalSelectList.stream().sorted().collect(Collectors.toList());
-        list.removeAll(getModuleNameList());
+        list.removeAll(getTableContentList(0));
         return list;
     }
 
     private void addCallback(List<String> valueList) {
         valueList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
         addMouseListener(deleteModuleButton, ICON_ENUM.REMOVE);
-        addMouseListener(editModuleButton, ICON_ENUM.EDIT);
         if (CollectionUtil.isEmpty(getOptionalList())) {
             removeMouseListener(addModuleButton, ICON_ENUM.ADD);
         }

@@ -9,19 +9,24 @@ import pers.zlf.plugin.util.StringUtil;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicButtonListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author zhanglinfeng
  * @Date create in 2023/2/15 15:24
  */
 public class BaseDialog {
+    protected DefaultTableModel defaultTableModel;
 
     /**
      * 添加按钮的鼠标监听
@@ -73,6 +78,27 @@ public class BaseDialog {
                 }
             }
         });
+    }
+
+    /**
+     * 获取表格内容
+     *
+     * @return List<String>
+     */
+    public List<String> getTableContentList(Integer... columnNumArr) {
+        List<String> contentList = new ArrayList<>();
+        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
+            final int rowNum = i;
+            contentList.add(Arrays.stream(columnNumArr).map(columnNum -> StringUtil.toString(defaultTableModel.getValueAt(rowNum, columnNum))).collect(Collectors.joining(COMMON.SEMICOLON)));
+        }
+        return contentList;
+    }
+
+    /**
+     * 清空表格内容
+     */
+    public void clearTableContent() {
+        defaultTableModel.getDataVector().clear();
     }
 
     private void addMouseListener(JButton button) {

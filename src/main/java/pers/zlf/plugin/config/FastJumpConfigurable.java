@@ -42,14 +42,14 @@ public class FastJumpConfigurable implements Configurable {
         if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
             return true;
         }
-        return !CollectionUtil.equals(dialog.getModuleNameList(), commonConfig.getModuleNameList());
+        return !CollectionUtil.equals(dialog.getTableContentList(0), commonConfig.getModuleNameList());
     }
 
     @Override
     public void apply() {
         commonConfig.setControllerFolderName(dialog.getControllerFolderName());
         commonConfig.setFeignFolderName(dialog.getFeignFolderName());
-        commonConfig.setModuleNameList(dialog.getModuleNameList());
+        commonConfig.setModuleNameList(dialog.getTableContentList(0));
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 
