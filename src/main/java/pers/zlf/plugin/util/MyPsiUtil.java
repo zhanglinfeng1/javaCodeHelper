@@ -1,6 +1,5 @@
 package pers.zlf.plugin.util;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -366,23 +365,6 @@ public class MyPsiUtil {
             }
         }
         return commentMap;
-    }
-
-    /**
-     * 统计代码行数
-     *
-     * @param module       模块
-     * @param fileTypeList 文件类型
-     * @param countComment 是否统计注释
-     * @return int
-     */
-    public static int getLineCount(Module module, List<String> fileTypeList, boolean countComment) {
-        int totalCount = 0;
-        VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
-        for (VirtualFile virtualFile : virtualFiles) {
-            totalCount = totalCount + getLineCount(virtualFile, fileTypeList, countComment);
-        }
-        return totalCount;
     }
 
     /**

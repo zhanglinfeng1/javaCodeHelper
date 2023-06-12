@@ -4,21 +4,25 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
-import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.REGEX;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
@@ -44,11 +48,21 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
                 return;
             }
             //按模块统计
-            Arrays.stream(ModuleManager.getInstance(project).getModules()).filter(t -> directoryName.equals(t.getName())).findAny().ifPresent(module -> {
-                String count = COMMON.LEFT_PARENTHESES + MyPsiUtil.getLineCount(module, fileTypeList, commonConfig.isCountComment()) + COMMON.RIGHT_PARENTHESES;
+            int count = 0;
+            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                if (virtualFile.getPath().endsWith(COMMON.RESOURCES) || virtualFile.getParent().getPath().endsWith(COMMON.TEST)) {
+                    continue;
+                }
+                Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+                String moduleName = Optional.ofNullable(module).map(Module::getName).map(t -> t.split(REGEX.DOT)).map(t -> t[0]).orElse(COMMON.BLANK_STRING);
+                if (moduleName.equals(directoryName)) {
+                    count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
+                }
+            }
+            if (0 != count) {
                 data.setLocationString(count + StringUtil.toString(data.getLocationString()));
-                lineCountMap.put(module.getName(), data);
-            });
+                lineCountMap.put(directoryName, data);
+            }
         }
     }
 
