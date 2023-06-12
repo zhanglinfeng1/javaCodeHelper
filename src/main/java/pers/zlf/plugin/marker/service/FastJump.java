@@ -58,7 +58,7 @@ public abstract class FastJump {
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(), project);
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             String virtualFilePath = virtualFile.getPath();
-            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES)) {
+            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES) || virtualFile.getParent().getPath().endsWith(COMMON.TEST)) {
                 continue;
             }
             //controller跳转feign 固定true

@@ -13,7 +13,6 @@ public class COMMON {
     /** 通用常量 */
     public static final String SUCCESS = "success";
     public static final String TRUE = "true";
-    public static final String RESOURCES = "resources";
     public static final String GET = "get";
     public static final String SET = "set";
     public static final String EN = "en";
@@ -95,5 +94,10 @@ public class COMMON {
     public static final List<String> JAVA_COMMENT_SUFFIX = List.of("*/");
     public static final List<String> XML_COMMENT_PREFIX = Arrays.asList("<!--", "<![CDATA[");
     public static final List<String> XML_COMMENT_SUFFIX = Arrays.asList("-->", "]]>");
+
+    /** test目录 */
+    public static final String TEST = "test";
+    /** resources目录 */
+    public static final String RESOURCES = "resources";
 
 }

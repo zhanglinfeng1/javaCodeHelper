@@ -405,10 +405,10 @@ public class MyPsiUtil {
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
             //java文件
             if (fileType.equalsIgnoreCase(CLASS_TYPE.JAVA_FILE_SUFFIX)) {
-                return totalCount + getLineCount(virtualFile, countComment, COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_PREFIX);
+                return totalCount + getLineCount(virtualFile, countComment, COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
             } else if (fileType.equalsIgnoreCase(CLASS_TYPE.XML_FILE_SUFFIX)) {
                 //xml 文件
-                return totalCount + getLineCount(virtualFile, countComment, new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_PREFIX);
+                return totalCount + getLineCount(virtualFile, countComment, new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
             }
         }
         return totalCount;
