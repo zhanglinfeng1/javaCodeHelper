@@ -95,6 +95,8 @@
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="MethodCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.MethodInspectionTool"/>
         <!-- 代码行数统计 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
+        <!-- 监听文件改动 -->
+        <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>
 
     <actions>

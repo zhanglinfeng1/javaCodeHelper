@@ -1,0 +1,121 @@
+package pers.zlf.plugin.monitoring;
+
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiTreeChangeEvent;
+import com.intellij.psi.PsiTreeChangeListener;
+import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.REGEX;
+import pers.zlf.plugin.factory.ConfigFactory;
+import pers.zlf.plugin.node.CodeLinesCountDecorator;
+import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.MyPsiUtil;
+import pers.zlf.plugin.util.StringUtil;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+/**
+ * @Author zhanglinfeng
+ * @Date create in 2023/6/12 10:17
+ */
+public class FileStartupActivity implements StartupActivity {
+
+    @Override
+    public void runActivity(@NotNull Project project) {
+        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+        List<String> fileTypeList = commonConfig.getFileTypeList();
+        boolean countComment = commonConfig.isCountComment();
+        //监控文件变化
+        PsiManager.getInstance(project).addPsiTreeChangeListener(
+                new PsiTreeChangeListener() {
+                    int lineCount = 0;
+
+                    @Override
+                    public void beforeChildAddition(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void beforeChildRemoval(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void beforeChildReplacement(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void beforeChildMovement(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void beforeChildrenChange(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                        Function<VirtualFile, Integer> function = virtualFile -> {
+                            lineCount = MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment);
+                            return 0;
+                        };
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), function);
+                    }
+
+                    @Override
+                    public void beforePropertyChange(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void childAdded(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
+                    }
+
+                    @Override
+                    public void childRemoved(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> -MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
+                    }
+
+                    @Override
+                    public void childReplaced(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void childrenChanged(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment) - lineCount);
+                        lineCount = 0;
+                    }
+
+                    @Override
+                    public void childMoved(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+
+                    @Override
+                    public void propertyChanged(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
+                    }
+                },
+                () -> {
+                });
+    }
+
+    private void updateLineCount(Project project, PsiFile psiFile, Function<VirtualFile, Integer> function) {
+        Optional.ofNullable(psiFile).map(PsiFile::getVirtualFile).ifPresent(virtualFile -> {
+            //行数变化
+            int lineCount = function.apply(virtualFile);
+            if (0 == lineCount) {
+                return;
+            }
+            //所属模块
+            String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+            Optional.ofNullable(CodeLinesCountDecorator.lineCountMap.get(moduleName)).ifPresent(data -> {
+                //更新行数
+                String comment = StringUtil.toString(data.getLocationString());
+                String oldTotalCount = StringUtil.getFirstMatcher(data.getLocationString(), REGEX.PARENTHESES);
+                String newTotalCount = String.valueOf((Integer.parseInt(oldTotalCount) + lineCount));
+                data.setLocationString(comment.replace(oldTotalCount, newTotalCount));
+            });
+        });
+    }
+
+}

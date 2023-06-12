@@ -158,7 +158,7 @@ public class MethodCompletion extends Completion {
             String currentMethodVariableTypeName = currentMethodVariableType.getInternalCanonicalText();
             //list 或者 set 类型
             Equals.of(PsiUtil.resolveClassInClassTypeOnly(currentMethodVariableType)).and(TypeUtil::isList).or(TypeUtil::isSet)
-                    .and(typeList.contains(StringUtil.getFirstMatcher(currentMethodVariableTypeName, REGEX.PARENTHESES).trim()))
+                    .and(typeList.contains(StringUtil.getFirstMatcher(currentMethodVariableTypeName, REGEX.ANGLE_BRACKETS).trim()))
                     .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + COMMON.STREAM_MAP_STR + endCode)));
             //数组类型
             Equals.of(currentMethodVariableType).and(TypeUtil::isSimpleArr).and(typeList.contains(currentMethodVariableTypeName.split(REGEX.LEFT_BRACKETS)[0]))
