@@ -12,7 +12,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.REGEX;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
@@ -53,14 +52,13 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
                 if (virtualFile.getPath().endsWith(COMMON.RESOURCES) || virtualFile.getParent().getPath().endsWith(COMMON.TEST)) {
                     continue;
                 }
-                Module module = ModuleUtil.findModuleForFile(virtualFile, project);
-                String moduleName = Optional.ofNullable(module).map(Module::getName).map(t -> t.split(REGEX.DOT)).map(t -> t[0]).orElse(COMMON.BLANK_STRING);
-                if (moduleName.equals(directoryName)) {
+                String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+                if (moduleName.startsWith(directoryName)) {
                     count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
                 }
             }
             if (0 != count) {
-                data.setLocationString(count + StringUtil.toString(data.getLocationString()));
+                data.setLocationString(COMMON.LEFT_PARENTHESES + count + COMMON.RIGHT_PARENTHESES + StringUtil.toString(data.getLocationString()));
                 lineCountMap.put(directoryName, data);
             }
         }
