@@ -55,9 +55,9 @@ public class CommonConfigDialog extends BaseDialog {
         defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING});
         fileTypeTable.setModel(defaultTableModel);
         fileTypeTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        fileTypeTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
         addFileTypeButton.addActionListener(e -> {
             defaultTableModel.addRow(new String[]{COMMON.BLANK_STRING});
-            fileTypeTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
             addMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);
         });
         deleteFileTypeButton.addActionListener(e -> Equals.of(fileTypeTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
@@ -83,6 +83,7 @@ public class CommonConfigDialog extends BaseDialog {
         Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(dateClassComboBox::setSelectedIndex);
         Optional.ofNullable(commonConfig.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
         List<String> fileTypeList = commonConfig.getFileTypeList();
+        defaultTableModel.getDataVector().clear();
         addMouseListener(addFileTypeButton, ICON_ENUM.ADD);
         if (CollectionUtil.isEmpty(fileTypeList)) {
             removeMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);

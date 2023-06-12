@@ -49,6 +49,12 @@ import java.util.stream.IntStream;
  */
 public class MyPsiUtil {
 
+    /**
+     * 判断类是不是feign
+     *
+     * @param psiClass 待判断的类
+     * @return boolean
+     */
     public static boolean isFeign(PsiClass psiClass) {
         if (null == psiClass || !psiClass.isInterface()) {
             return false;
@@ -56,6 +62,12 @@ public class MyPsiUtil {
         return psiClass.getAnnotation(ANNOTATION.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION.NETFLIX_FEIGN_CLIENT) != null;
     }
 
+    /**
+     * 判断类是不是Controller
+     *
+     * @param psiClass 待判断的类
+     * @return boolean
+     */
     public static boolean isController(PsiClass psiClass) {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
@@ -63,6 +75,13 @@ public class MyPsiUtil {
         return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(ANNOTATION.CONTROLLER_LIST::contains);
     }
 
+    /**
+     * 判断类是不是Controller
+     *
+     * @param psiClass              待判断的类
+     * @param gatewayModuleNameList 排除的模块
+     * @return boolean
+     */
     public static boolean isController(PsiClass psiClass, List<String> gatewayModuleNameList) {
         String filePath = Optional.ofNullable(psiClass).map(PsiClass::getContainingFile).map(PsiFile::getVirtualFile).map(VirtualFile::getPath).orElse(null);
         if (StringUtil.isEmpty(filePath) || gatewayModuleNameList.stream().anyMatch(filePath::contains)) {
@@ -368,14 +387,14 @@ public class MyPsiUtil {
     private static int dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment) {
         int totalCount = 0;
         if (virtualFile.isDirectory()) {
-            for(VirtualFile subFile : virtualFile.getChildren()){
+            for (VirtualFile subFile : virtualFile.getChildren()) {
                 totalCount = totalCount + dealDirectory(subFile, fileTypeList, countComment);
             }
             return totalCount;
         }
         String suffix = COMMON.DOT + virtualFile.getFileType().getName().toLowerCase();
         if (fileTypeList.stream().anyMatch(suffix::equalsIgnoreCase)) {
-            boolean comment = false;
+            boolean isComment = false;
             try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -386,7 +405,7 @@ public class MyPsiUtil {
                     if (countComment) {
                         totalCount++;
                         continue;
-                    }else if (comment){
+                    } else if (isComment) {
                         continue;
                     }
                     //java注释
@@ -395,11 +414,11 @@ public class MyPsiUtil {
                     }
                     //xml 注释
                     if (suffix.equalsIgnoreCase(CLASS_TYPE.XML_FILE_SUFFIX)) {
-                        if (COMMON.JAVA_COMMENT_PREFIX.stream().anyMatch(trimStr::startsWith)){
-                            comment = true;
+                        if (COMMON.JAVA_COMMENT_PREFIX.stream().anyMatch(trimStr::startsWith)) {
+                            isComment = true;
                         }
-                        if (COMMON.XML_COMMENT_SUFFIX.stream().anyMatch(trimStr::startsWith)){
-                            comment = false;
+                        if (COMMON.XML_COMMENT_SUFFIX.stream().anyMatch(trimStr::startsWith)) {
+                            isComment = false;
                         }
                         continue;
                     }

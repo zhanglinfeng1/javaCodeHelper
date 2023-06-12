@@ -34,7 +34,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    public void addMouseListener(JButton button, ICON_ENUM iconEnum) {
+    protected void addMouseListener(JButton button, ICON_ENUM iconEnum) {
         button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
@@ -47,7 +47,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    public void removeMouseListener(JButton button, ICON_ENUM iconEnum) {
+    protected void removeMouseListener(JButton button, ICON_ENUM iconEnum) {
         Container container = button.getParent();
         button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
         button.setBackground(container.getBackground());
@@ -60,7 +60,7 @@ public class BaseDialog {
      * @param textField   JTextField
      * @param defaultText 默认文本
      */
-    public void addFocusListener(JTextField textField, String defaultText) {
+    protected void addFocusListener(JTextField textField, String defaultText) {
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -89,7 +89,8 @@ public class BaseDialog {
         List<String> contentList = new ArrayList<>();
         for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
             final int rowNum = i;
-            contentList.add(Arrays.stream(columnNumArr).map(columnNum -> StringUtil.toString(defaultTableModel.getValueAt(rowNum, columnNum))).collect(Collectors.joining(COMMON.SEMICOLON)));
+            contentList.add(Arrays.stream(columnNumArr).map(columnNum -> defaultTableModel.getValueAt(rowNum, columnNum))
+                    .map(StringUtil::toString).filter(StringUtil::isNotEmpty).distinct().collect(Collectors.joining(COMMON.SEMICOLON)));
         }
         return contentList;
     }
