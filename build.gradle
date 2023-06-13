@@ -18,5 +18,4 @@ repositories {
 
 dependencies {
     implementation 'org.freemarker:freemarker:2.3.23'
-    implementation 'com.alibaba.fastjson2:fastjson2:2.0.8'
 }
