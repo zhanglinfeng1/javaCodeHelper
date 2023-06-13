@@ -9,7 +9,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -47,11 +46,9 @@ public class HttpUtil {
         conn.setConnectTimeout(REQUEST.SOCKET_TIMEOUT);
         conn.setRequestMethod(REQUEST.GET);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            InputStream is = conn.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             result = br.lines().collect(Collectors.joining());
             br.close();
-            is.close();
         }
         conn.disconnect();
         return result;

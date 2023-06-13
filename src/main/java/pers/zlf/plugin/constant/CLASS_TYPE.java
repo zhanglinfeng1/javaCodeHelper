@@ -18,7 +18,5 @@ public class CLASS_TYPE {
     public static final String TEST_FILE_SUFFIX = ".test";
     public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
     public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String", "Date", "Timestamp", "BigDecimal", "SimpleDateFormat", "Calendar", "LocalDate", "LocalTime", "LocalDateTime", "Logger");
-    public static final String JAVA_FILE_SUFFIX = ".java";
-    public static final String XML_FILE_SUFFIX = ".xml";
 
 }

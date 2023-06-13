@@ -41,15 +41,10 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             return;
         }
         if (node instanceof PsiDirectoryNode) {
-            //获取节点文件夹名
-            PsiDirectoryNode directoryNode = (PsiDirectoryNode) node;
-            String directoryName = directoryNode.getName();
-            if (StringUtil.isEmpty(directoryName)) {
-                return;
-            }
             //只处理根节点
-            String parentNodeName = Optional.ofNullable(directoryNode.getParent()).map(AbstractTreeNode::getName).orElse(COMMON.BLANK_STRING);
-            if (!directoryName.startsWith(parentNodeName)) {
+            String directoryName = node.getName();
+            String parentNodeName = Optional.ofNullable(node.getParent()).map(AbstractTreeNode::getName).orElse(COMMON.BLANK_STRING);
+            if (StringUtil.isEmpty(directoryName) || !directoryName.startsWith(parentNodeName)) {
                 return;
             }
             //按模块统计

@@ -1,5 +1,7 @@
 package pers.zlf.plugin.util;
 
+import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -383,12 +385,12 @@ public class MyPsiUtil {
             }
             return totalCount;
         }
-        String fileType = COMMON.DOT + virtualFile.getFileType().getName().toLowerCase();
+        String fileType = COMMON.DOT + virtualFile.getFileType().getName();
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
             //java文件
-            if (fileType.equalsIgnoreCase(CLASS_TYPE.JAVA_FILE_SUFFIX)) {
+            if (virtualFile.getFileType() instanceof JavaFileType) {
                 return totalCount + getLineCount(virtualFile, countComment, COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
-            } else if (fileType.equalsIgnoreCase(CLASS_TYPE.XML_FILE_SUFFIX)) {
+            } else if (virtualFile.getFileType() instanceof XmlFileType) {
                 //xml 文件
                 return totalCount + getLineCount(virtualFile, countComment, new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
             }
@@ -410,23 +412,18 @@ public class MyPsiUtil {
         int totalCount = 0;
         boolean isComment = false;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
-            String line;
-            while ((line = br.readLine()) != null ) {
-                String trimStr = line.trim();
-                if (trimStr.length() == 0) {
-                    continue;
-                }
-                //统计注释
-                if (countComment) {
-                    totalCount++;
-                    continue;
-                }
-                //不统计注释
-                if (commentPrefixList.stream().anyMatch(trimStr::startsWith)) {
+            List<String> lineList = br.lines().filter(StringUtil::isNotEmpty).collect(Collectors.toList());
+            //统计注释
+            if (countComment) {
+                return lineList.size();
+            }
+            //不统计注释
+            for (String line : lineList) {
+                if (commentPrefixList.stream().anyMatch(line::startsWith)) {
                     isComment = true;
-                } else if (commentSuffixList.stream().anyMatch(trimStr::endsWith)) {
+                } else if (commentSuffixList.stream().anyMatch(line::endsWith)) {
                     isComment = false;
-                } else if ((CollectionUtil.isEmpty(commentList) || commentList.stream().noneMatch(trimStr::startsWith)) && !isComment) {
+                } else if ((CollectionUtil.isEmpty(commentList) || commentList.stream().noneMatch(line::startsWith)) && !isComment) {
                     totalCount++;
                 }
             }
