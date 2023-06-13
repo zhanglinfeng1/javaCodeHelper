@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiTreeChangeEvent;
@@ -15,6 +14,7 @@ import pers.zlf.plugin.constant.REGEX;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -36,7 +36,7 @@ public class FileStartupActivity implements StartupActivity {
         //监控文件变化
         PsiManager.getInstance(project).addPsiTreeChangeListener(
                 new PsiTreeChangeListener() {
-                    int lineCount = 0;
+                    int oldLineCount = 0;
 
                     @Override
                     public void beforeChildAddition(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
@@ -56,11 +56,11 @@ public class FileStartupActivity implements StartupActivity {
 
                     @Override
                     public void beforeChildrenChange(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
-                        Function<VirtualFile, Integer> function = virtualFile -> {
-                            lineCount = MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment);
+                        Function<Integer, Integer> function = lineCount -> {
+                            oldLineCount = lineCount;
                             return 0;
                         };
-                        updateLineCount(project, psiTreeChangeEvent.getFile(), function);
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), fileTypeList, countComment, function);
                     }
 
                     @Override
@@ -69,12 +69,12 @@ public class FileStartupActivity implements StartupActivity {
 
                     @Override
                     public void childAdded(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
-                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), fileTypeList, countComment, lineCount -> lineCount);
                     }
 
                     @Override
                     public void childRemoved(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
-                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> -MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), fileTypeList, countComment, lineCount -> -lineCount);
                     }
 
                     @Override
@@ -83,8 +83,8 @@ public class FileStartupActivity implements StartupActivity {
 
                     @Override
                     public void childrenChanged(@NotNull PsiTreeChangeEvent psiTreeChangeEvent) {
-                        updateLineCount(project, psiTreeChangeEvent.getFile(), virtualFile -> MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment) - lineCount);
-                        lineCount = 0;
+                        updateLineCount(project, psiTreeChangeEvent.getFile(), fileTypeList, countComment, lineCount -> lineCount - oldLineCount);
+                        oldLineCount = 0;
                     }
 
                     @Override
@@ -99,20 +99,23 @@ public class FileStartupActivity implements StartupActivity {
                 });
     }
 
-    private void updateLineCount(Project project, PsiFile psiFile, Function<VirtualFile, Integer> function) {
+    private void updateLineCount(Project project, PsiFile psiFile, List<String> fileTypeList, boolean countComment, Function<Integer, Integer> function) {
+        if (CollectionUtil.isEmpty(fileTypeList)) {
+            return;
+        }
         Optional.ofNullable(psiFile).map(PsiFile::getVirtualFile).ifPresent(virtualFile -> {
-            //行数变化
-            int lineCount = function.apply(virtualFile);
-            if (0 == lineCount) {
-                return;
-            }
             //所属模块
             String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
             Optional.ofNullable(CodeLinesCountDecorator.lineCountMap.get(moduleName)).ifPresent(data -> {
+                //当前文件变化行数
+                int changedLineCount = function.apply(MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
+                if (changedLineCount == 0) {
+                    return;
+                }
                 //更新行数
                 String comment = StringUtil.toString(data.getLocationString());
                 String oldTotalCount = StringUtil.getFirstMatcher(data.getLocationString(), REGEX.PARENTHESES);
-                String newTotalCount = String.valueOf((Integer.parseInt(oldTotalCount) + lineCount));
+                String newTotalCount = String.valueOf((Integer.parseInt(oldTotalCount) + changedLineCount));
                 data.setLocationString(comment.replace(oldTotalCount, newTotalCount));
             });
         });
