@@ -2,8 +2,6 @@ package pers.zlf.plugin.action;
 
 import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,6 +27,7 @@ import pers.zlf.plugin.util.StringUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +79,7 @@ public class StatisticalContributionRateAction extends BasicAction {
             if (StringUtil.isEmpty(myEmail)) {
                 return;
             } else {
-                myEmailList = List.of(myEmail);
+                myEmailList = Collections.singletonList(myEmail);
             }
         }
         //开始统计
