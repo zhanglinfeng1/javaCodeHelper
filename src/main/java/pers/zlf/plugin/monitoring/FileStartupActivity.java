@@ -103,9 +103,10 @@ public class FileStartupActivity implements StartupActivity {
         if (CollectionUtil.isEmpty(fileTypeList)) {
             return;
         }
+        // TODO 直接获取 PresentationData
         Optional.ofNullable(psiFile).map(PsiFile::getVirtualFile).ifPresent(virtualFile -> {
             //所属模块
-            String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+            String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
             Optional.ofNullable(CodeLinesCountDecorator.lineCountMap.get(moduleName)).ifPresent(data -> {
                 //当前文件变化行数
                 int changedLineCount = function.apply(MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment));
@@ -115,10 +116,11 @@ public class FileStartupActivity implements StartupActivity {
                 //更新行数
                 String comment = StringUtil.toString(data.getLocationString());
                 String oldTotalCount = StringUtil.getFirstMatcher(data.getLocationString(), REGEX.PARENTHESES);
-                String newTotalCount = String.valueOf((Integer.parseInt(oldTotalCount) + changedLineCount));
-                data.setLocationString(comment.replace(oldTotalCount, newTotalCount));
+                String newTotalCount = COMMON.LEFT_PARENTHESES + (Integer.parseInt(oldTotalCount) + changedLineCount) + COMMON.RIGHT_PARENTHESES;
+                if (comment.contains(oldTotalCount)) {
+                    data.setLocationString(comment.replaceFirst(COMMON.LEFT_PARENTHESES + oldTotalCount + COMMON.RIGHT_PARENTHESES, newTotalCount));
+                }
             });
         });
     }
-
 }

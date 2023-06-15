@@ -22,7 +22,7 @@ public abstract class BasicAction extends AnAction {
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
         this.psiFile = event.getData(CommonDataKeys.PSI_FILE);
-        Equals.of(null != editor && null != project && check()).ifTrue(this::action);
+        Equals.of(null != project && check()).ifTrue(this::action);
     }
 
     public abstract boolean check();

@@ -21,6 +21,9 @@ public class TranslateAction extends BasicAction {
 
     @Override
     public boolean check() {
+        if (null == editor) {
+            return false;
+        }
         //获取选择内容
         this.selectionText = editor.getSelectionModel().getSelectedText();
         if (StringUtil.isEmpty(selectionText)) {

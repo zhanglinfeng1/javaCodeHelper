@@ -128,7 +128,7 @@ public class MethodCompletion extends Completion {
         }
         //当前变量类型的泛型类
         PsiClass psiClass = MyPsiUtil.getReferenceTypeClass(variableType);
-        if (null == psiClass) {
+        if (null == psiClass || TypeUtil.isSimpleType(psiClass.getName())) {
             return;
         }
         //变量类型存在

@@ -2,6 +2,7 @@ package pers.zlf.plugin.util;
 
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -30,6 +31,8 @@ import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
+import pers.zlf.plugin.pojo.CommentCheckResult;
+import pers.zlf.plugin.pojo.CommentFormat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -378,8 +381,8 @@ public class MyPsiUtil {
      * @return int
      */
     public static int getLineCount(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment) {
-        int totalCount = 0;
         if (virtualFile.isDirectory()) {
+            int totalCount = 0;
             for (VirtualFile subFile : virtualFile.getChildren()) {
                 totalCount = totalCount + getLineCount(subFile, fileTypeList, countComment);
             }
@@ -387,30 +390,38 @@ public class MyPsiUtil {
         }
         String fileType = COMMON.DOT + virtualFile.getFileType().getName();
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
-            //java文件
-            if (virtualFile.getFileType() instanceof JavaFileType) {
-                return totalCount + getLineCount(virtualFile, countComment, COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
-            } else if (virtualFile.getFileType() instanceof XmlFileType) {
-                //xml 文件
-                return totalCount + getLineCount(virtualFile, countComment, new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
-            }
+            CommentFormat commentFormat = getCommentFormat(virtualFile);
+            return getLineCount(virtualFile, countComment, commentFormat);
         }
-        return totalCount;
+        return 0;
+    }
+
+    /**
+     * 根据文件类型，获取注释格式
+     *
+     * @param virtualFile virtualFile
+     * @return CommentType
+     */
+    public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
+        //java文件
+        if (virtualFile.getFileType() instanceof JavaFileType) {
+            return new CommentFormat(COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
+        } else if (virtualFile.getFileType() instanceof XmlFileType) {
+            //xml 文件
+            return new CommentFormat(new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
+        }
+        return new CommentFormat();
     }
 
     /**
      * 统计代码行数
      *
-     * @param virtualFile       具体文件
-     * @param countComment      是否统计注释
-     * @param commentList       注释前缀
-     * @param commentPrefixList 注释段落前缀
-     * @param commentSuffixList 注释段落后缀
+     * @param virtualFile   具体文件
+     * @param countComment  是否统计注释
+     * @param commentFormat 注释格式
      * @return int
      */
-    private static int getLineCount(VirtualFile virtualFile, boolean countComment, List<String> commentList, List<String> commentPrefixList, List<String> commentSuffixList) {
-        int totalCount = 0;
-        boolean isComment = false;
+    private static int getLineCount(VirtualFile virtualFile, boolean countComment, CommentFormat commentFormat) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
             List<String> lineList = br.lines().filter(StringUtil::isNotEmpty).collect(Collectors.toList());
             //统计注释
@@ -418,17 +429,28 @@ public class MyPsiUtil {
                 return lineList.size();
             }
             //不统计注释
-            for (String line : lineList) {
-                if (commentPrefixList.stream().anyMatch(line::startsWith)) {
-                    isComment = true;
-                } else if (commentSuffixList.stream().anyMatch(line::endsWith)) {
-                    isComment = false;
-                } else if ((CollectionUtil.isEmpty(commentList) || commentList.stream().noneMatch(line::startsWith)) && !isComment) {
-                    totalCount++;
-                }
-            }
+            CommentCheckResult commentCheckResult = new CommentCheckResult();
+            return (int) lineList.stream().filter(line -> !StringUtil.isComment(line, commentFormat, commentCheckResult)).count();
         } catch (Exception ignored) {
         }
-        return totalCount;
+        return 0;
+    }
+
+    /**
+     * 根据VirtualFile 获取所属模块的名称
+     *
+     * @param virtualFile virtualFile
+     * @param project     project
+     * @return String
+     */
+    public static String getModuleNameByVirtualFile(VirtualFile virtualFile, Project project) {
+        String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+        if (moduleName.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX)) {
+            return moduleName.substring(0, moduleName.length() - 5);
+        }
+        if (moduleName.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)) {
+            return moduleName.substring(0, moduleName.length() - 4);
+        }
+        return moduleName;
     }
 }

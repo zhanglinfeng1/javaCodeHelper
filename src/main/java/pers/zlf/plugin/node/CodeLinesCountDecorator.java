@@ -6,6 +6,7 @@ import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -47,10 +48,16 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             if (StringUtil.isEmpty(directoryName) || !directoryName.startsWith(parentNodeName)) {
                 return;
             }
+            Module[] modules = ModuleManager.getInstance(project).getModules();
+
+            //全量统计只一次
+            if (lineCountMap.containsKey(directoryName)) {
+                return;
+            }
             //按模块统计
             int count = 0;
             for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+                String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
                 if (moduleName.startsWith(directoryName)) {
                     count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
                 }

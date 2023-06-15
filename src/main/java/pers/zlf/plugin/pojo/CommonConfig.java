@@ -28,10 +28,12 @@ public class CommonConfig {
     private List<String> moduleNameList = new ArrayList<>();
     /** api工具 */
     private Integer apiTool = COMMON.SWAGGER_API;
-    /** 代码行数统计文件类型 */
-    private List<String> fileTypeList = new ArrayList<>();
     /** 统计注释 */
     private boolean countComment = true;
+    /** 参与代码行数统计的文件类型 */
+    private List<String> fileTypeList = new ArrayList<>();
+    /** 参与统计的git邮箱 */
+    private List<String> gitEmailList = new ArrayList<>();
 
     public Integer getTranslateApi() {
         return translateApi;
@@ -119,5 +121,13 @@ public class CommonConfig {
 
     public void setCountComment(boolean countComment) {
         this.countComment = countComment;
+    }
+
+    public List<String> getGitEmailList() {
+        return gitEmailList;
+    }
+
+    public void setGitEmailList(List<String> gitEmailList) {
+        this.gitEmailList = gitEmailList;
     }
 }

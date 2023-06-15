@@ -33,6 +33,7 @@ public class COMMON {
     public static final String UNDERSCORE = "_";
     public static final String SPACE = " ";
     public static final String DOUBLE_QUOTATION = "\"";
+    public static final String PERCENT_SIGN = "%";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";
@@ -57,6 +58,7 @@ public class COMMON {
     /** 配置 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
     public static final String FAST_JUMP = "FastJump";
+    public static final String CODE_STATISTICS = "CodeStatistics";
     public static final String SELECT_MODULE = "Select module";
     public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
@@ -100,5 +102,8 @@ public class COMMON {
     public static final String TEST = "test";
     /** resources目录 */
     public static final String RESOURCES = "resources";
+    /** git目录 */
+    public static final String GIT = ".git";
+    
 
 }

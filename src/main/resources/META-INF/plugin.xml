@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
@@ -28,7 +28,8 @@
                 Continuously adding.<br />
             </li>
             <li>Code Statistics<br />
-                After the module in the project file tree, the total number of code lines for that module will be noted<br />
+                The total number of code lines for the module in the project view will be noted after the module<br />
+                Right click on the project and select Statistical Contribution Rate. It will calculate your contribution rate to the entire project based on git records<br />
                 Currently, comment judgment only supports .java and .xml files<br />
             </li>
             <li>Generate code according to the table creating SQL<br />
@@ -59,7 +60,8 @@
                 陆续新增中...<br />
             </li>
             <li>代码统计<br />
-                项目文件树中的模块后会备注上该模块的总代码行数<br />
+                项目视图的模块后会备注上该模块的总代码行数<br />
+                右击项目，选择Statistical Contribution Rate，会根据git记录统计自己对整个项目的贡献率<br />
                 目前注释判断仅支持.java、.xml文件<br />
             </li>
             <li>根据建表SQL生成代码<br />
@@ -89,6 +91,7 @@
         <!-- 配置面板 -->
         <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable"/>
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
+        <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->
@@ -100,16 +103,20 @@
     </extensions>
 
     <actions>
-        <group id="idea.plugins.action.JavaCodeHelper" text="JavaCodeHelper" popup="true" icon="/icon/logo.svg">
+        <group id="EditorLangPopupMenu.JavaCodeHelper" text="JavaCodeHelper" popup="true" icon="/icon/logo.svg">
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </group>
         <!-- 翻译 -->
-        <action id="idea.plugins.action.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate">
-            <add-to-group group-id="idea.plugins.action.JavaCodeHelper" anchor="first"/>
+        <action id="JavaCodeHelper.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate">
+            <add-to-group group-id="EditorLangPopupMenu.JavaCodeHelper" anchor="first"/>
         </action>
         <!-- 根据注释添加Swagger注解 -->
-        <action id="idea.plugins.action.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="AddApiAnnotation">
-            <add-to-group group-id="idea.plugins.action.JavaCodeHelper" anchor="after" relative-to-action="idea.plugins.action.TranslateAction"/>
+        <action id="JavaCodeHelper.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="Add ApiAnnotation">
+            <add-to-group group-id="EditorLangPopupMenu.JavaCodeHelper" anchor="after" relative-to-action="JavaCodeHelper.TranslateAction"/>
+        </action>
+        <!-- 根据git记录，统计代码贡献率 -->
+        <action id="JavaCodeHelper.StatisticalContributionRateAction" class="pers.zlf.plugin.action.StatisticalContributionRateAction" text="Statistical Contribution Rate" icon="/icon/logo.svg">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
     </actions>
 </idea-plugin>
