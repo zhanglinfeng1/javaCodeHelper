@@ -104,6 +104,9 @@ public class COMMON {
     public static final String RESOURCES = "resources";
     /** git目录 */
     public static final String GIT = ".git";
-    
+
+    /** git配置参数 */
+    public static final String USER = "user";
+    public static final String EMAIL = "email";
 
 }

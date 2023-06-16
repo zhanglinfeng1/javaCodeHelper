@@ -28,8 +28,8 @@
                 Continuously adding.<br />
             </li>
             <li>Code Statistics<br />
-                The total number of code lines for the module in the project view will be noted after the module<br />
-                Right click on the project and select Statistical Contribution Rate. It will calculate your contribution rate to the entire project based on git records<br />
+                Right click on any area of the project view and select '统计代码行数'. It will be calculated based on the total number of code lines in the module<br />
+                Right click on any area of the project view and select '统计贡献率'. The code contribution rate will be calculated based on the Git email. If there are many project files, the lag time will be longer (っ °Д °;)っ<br />
                 Currently, comment judgment only supports .java and .xml files<br />
             </li>
             <li>Generate code according to the table creating SQL<br />
@@ -60,8 +60,8 @@
                 陆续新增中...<br />
             </li>
             <li>代码统计<br />
-                项目视图的模块后会备注上该模块的总代码行数<br />
-                右击项目，选择Statistical Contribution Rate，会根据git记录统计自己对整个项目的贡献率<br />
+                右击项目视图任意区域，选择'统计代码行数'，会根据模块的总代码行数<br />
+                右击项目视图任意区域，选择'统计贡献率'，会根据git邮箱统计代码贡献率，项目文件多的话，卡顿时间较长 (っ °Д °;)っ<br />
                 目前注释判断仅支持.java、.xml文件<br />
             </li>
             <li>根据建表SQL生成代码<br />
@@ -96,10 +96,8 @@
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 代码检查 -->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="MethodCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.MethodInspectionTool"/>
-        <!-- 代码行数统计 -->
+        <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
-        <!-- 监听文件改动 -->
-        <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>
 
     <actions>
@@ -114,9 +112,13 @@
         <action id="JavaCodeHelper.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="Add ApiAnnotation">
             <add-to-group group-id="EditorLangPopupMenu.JavaCodeHelper" anchor="after" relative-to-action="JavaCodeHelper.TranslateAction"/>
         </action>
-        <!-- 根据git记录，统计代码贡献率 -->
-        <action id="JavaCodeHelper.StatisticalContributionRateAction" class="pers.zlf.plugin.action.StatisticalContributionRateAction" text="Statistical Contribution Rate" icon="/icon/logo.svg">
+        <!-- 统计代码行数 -->
+        <action id="JavaCodeHelper.CodeLineCountAction" class="pers.zlf.plugin.action.CodeLineCountAction" text="统计代码行数" icon="/icon/logo.svg">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+        <!-- 根据git记录，统计代码贡献率 -->
+        <action id="JavaCodeHelper.ContributionRateAction" class="pers.zlf.plugin.action.ContributionRateAction" text="统计贡献率" icon="/icon/logo.svg">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="JavaCodeHelper.CodeLineCountAction"/>
         </action>
     </actions>
 </idea-plugin>

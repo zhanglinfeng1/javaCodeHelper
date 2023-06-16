@@ -1,6 +1,5 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.ide.projectView.PresentationData;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
@@ -9,7 +8,6 @@ import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.MESSAGE;
@@ -27,6 +25,7 @@ import pers.zlf.plugin.util.StringUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.Optional;
  * @Author zhanglinfeng
  * @Date create in 2023/6/14 11:48
  */
-public class StatisticalContributionRateAction extends BasicAction {
+public class ContributionRateAction extends BasicAction {
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -55,17 +54,6 @@ public class StatisticalContributionRateAction extends BasicAction {
 
     @Override
     public boolean check() {
-        if (StringUtil.isEmpty(project.getBasePath())) {
-            return false;
-        }
-        bathPath = Path.of(project.getBasePath());
-        try {
-            //默认当前分支
-            repository = new FileRepositoryBuilder().setGitDir(new File(bathPath.resolve(COMMON.GIT).toString())).build();
-        } catch (IOException e) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(String.format(MESSAGE.NOT_EXIST, bathPath), COMMON.BLANK_STRING, Messages.getInformationIcon()));
-            return false;
-        }
         //获取配置
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         fileTypeList = commonConfig.getFileTypeList();
@@ -75,22 +63,12 @@ public class StatisticalContributionRateAction extends BasicAction {
         }
         myEmailList = commonConfig.getGitEmailList();
         countComment = commonConfig.isCountComment();
-        //没有配置取当前邮箱
-        if (CollectionUtil.isEmpty(myEmailList)) {
-            StoredConfig config = repository.getConfig();
-            String myEmail = config.getString("user", null, "email");
-            if (StringUtil.isEmpty(myEmail)) {
-                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.GIT_EMAIL_NOT_EXIST, COMMON.BLANK_STRING, Messages.getInformationIcon()));
-                return false;
-            } else {
-                myEmailList = Collections.singletonList(myEmail);
-            }
-        }
         return true;
     }
 
     @Override
     public void action() {
+        CodeLinesCountDecorator.contributionRateMap.clear();
         //开始统计
         Map<String, Integer> totalLineCountMap = new HashMap<>();
         Map<String, Integer> myLineCountMap = new HashMap<>();
@@ -99,7 +77,23 @@ public class StatisticalContributionRateAction extends BasicAction {
             myLineCount = 0;
             String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
             if (StringUtil.isEmpty(moduleName)) {
-                return;
+                continue;
+            }
+            bathPath = Paths.get(virtualFile.getPath().substring(0, virtualFile.getPath().indexOf(moduleName)), moduleName);
+            //默认当前分支
+            try {
+                String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
+                repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
+            } catch (IOException e) {
+                continue;
+            }
+            //没有配置取当前邮箱
+            if (CollectionUtil.isEmpty(myEmailList)) {
+                String myEmail = repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL);
+                if (StringUtil.isEmpty(myEmail)) {
+                    continue;
+                }
+                myEmailList = Collections.singletonList(myEmail);
             }
             this.dealDirectory(virtualFile, fileTypeList, countComment);
             totalLineCountMap.put(moduleName, totalLineCount + Optional.ofNullable(totalLineCountMap.get(moduleName)).orElse(0));
@@ -107,21 +101,14 @@ public class StatisticalContributionRateAction extends BasicAction {
         }
         //处理统计结果
         totalLineCountMap.forEach((moduleName, value) -> {
-            PresentationData data = CodeLinesCountDecorator.presentationDataMap.get(moduleName);
-            if (null == data) {
+            if (0 == value) {
                 return;
             }
-            int totalCount = value;
             int myCount = myLineCountMap.get(moduleName);
-            String newContributionRate = MathUtil.percentage(myCount, totalCount, 2) + COMMON.PERCENT_SIGN;
+            String contributionRate = MathUtil.percentage(myCount, value, 2) + COMMON.PERCENT_SIGN;
+            CodeLinesCountDecorator.contributionRateMap.put(moduleName, contributionRate);
             //更新贡献率行数
-            String comment = StringUtil.toString(data.getLocationString());
-            String oldContributionRate = StringUtil.getFirstMatcher(data.getLocationString(), REGEX.PERCENT_SIGN_IN_PARENTHESES) + COMMON.PERCENT_SIGN;
-            if (comment.contains(oldContributionRate)) {
-                data.setLocationString(comment.replaceFirst(oldContributionRate, newContributionRate));
-            } else {
-                data.setLocationString(COMMON.LEFT_PARENTHESES + newContributionRate + COMMON.RIGHT_PARENTHESES + comment);
-            }
+            CodeLinesCountDecorator.updateNode();
         });
     }
 

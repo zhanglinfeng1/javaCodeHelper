@@ -6,15 +6,12 @@ import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.HashMap;
@@ -27,8 +24,13 @@ import java.util.Optional;
  * @Date create in 2023/6/9 15:26
  */
 public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
+    /** 代码行数Map */
     public static Map<String, Integer> lineCountMap = new HashMap<>();
-    public static Map<String, PresentationData> presentationDataMap = new HashMap<>();
+    /** 贡献率Map */
+    public static Map<String, String> contributionRateMap = new HashMap<>();
+    /** 备注Map */
+    private static Map<String, PresentationData> presentationDataMap = new HashMap<>();
+    private static Map<String, String> locationStringMap = new HashMap<>();
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
@@ -46,29 +48,36 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             if (null == directoryName || !directoryName.startsWith(parentNodeName)) {
                 return;
             }
-            int count = 0;
-            //更新
-            if (lineCountMap.containsKey(directoryName)) {
-                count = lineCountMap.get(directoryName);
-            } else {
-                //按模块统计
-                for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                    String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
-                    if (moduleName.startsWith(directoryName)) {
-                        count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
-                    }
-                }
-            }
-            if (0 != count) {
-                data.setLocationString(COMMON.LEFT_PARENTHESES + count + COMMON.RIGHT_PARENTHESES + StringUtil.toString(data.getLocationString()));
-                lineCountMap.put(directoryName, count);
-                presentationDataMap.put(directoryName, data);
-            }
+            String locationString = StringUtil.toString(data.getLocationString());
+            locationStringMap.put(directoryName, locationString);
+            //更新备注
+            updateNode(directoryName, data, locationString);
+            presentationDataMap.put(directoryName, data);
         }
     }
 
     @Override
     public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
 
+    }
+
+    public static void updateNode() {
+        presentationDataMap.forEach(CodeLinesCountDecorator::updateNode);
+    }
+
+    private static void updateNode(String moduleName, PresentationData data) {
+        //更新备注
+        updateNode(moduleName, data, StringUtil.toString(locationStringMap.get(moduleName)));
+    }
+
+    private static void updateNode(String moduleName, PresentationData data, String locationString) {
+        //更新备注
+        if (lineCountMap.containsKey(moduleName)) {
+            locationString = COMMON.LEFT_PARENTHESES + lineCountMap.get(moduleName) + COMMON.RIGHT_PARENTHESES + locationString;
+        }
+        if (contributionRateMap.containsKey(moduleName)) {
+            locationString = COMMON.LEFT_PARENTHESES + contributionRateMap.get(moduleName) + COMMON.RIGHT_PARENTHESES + locationString;
+        }
+        data.setLocationString(locationString);
     }
 }
