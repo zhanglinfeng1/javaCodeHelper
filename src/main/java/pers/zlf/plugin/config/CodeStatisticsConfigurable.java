@@ -42,6 +42,9 @@ public class CodeStatisticsConfigurable implements Configurable {
         if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
             return true;
         }
+        if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
+            return false;
+        }
         return dialog.isCountComment() != commonConfig.isCountComment();
     }
 
@@ -50,6 +53,7 @@ public class CodeStatisticsConfigurable implements Configurable {
         commonConfig.setFileTypeList(dialog.getFileTypeList());
         commonConfig.setGitEmailList(dialog.getGitEmailList());
         commonConfig.setCountComment(dialog.isCountComment());
+        commonConfig.setRealTimeStatistics(dialog.isRealTimeStatistics());
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 

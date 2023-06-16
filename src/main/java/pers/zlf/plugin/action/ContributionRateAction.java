@@ -1,9 +1,14 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.pom.Navigatable;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
@@ -37,6 +42,8 @@ import java.util.Optional;
  * @Date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BasicAction {
+    /** 选中的模块 */
+    private Module module;
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -54,6 +61,10 @@ public class ContributionRateAction extends BasicAction {
 
     @Override
     public boolean check() {
+        module = Optional.ofNullable(event.getData(CommonDataKeys.VIRTUAL_FILE)).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
+        if (null == module) {
+            return false;
+        }
         //获取配置
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         fileTypeList = commonConfig.getFileTypeList();
@@ -68,11 +79,10 @@ public class ContributionRateAction extends BasicAction {
 
     @Override
     public void action() {
-        CodeLinesCountDecorator.contributionRateMap.clear();
         //开始统计
         Map<String, Integer> totalLineCountMap = new HashMap<>();
         Map<String, Integer> myLineCountMap = new HashMap<>();
-        for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+        for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
             totalLineCount = 0;
             myLineCount = 0;
             String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);

@@ -31,6 +31,7 @@ public class CodeStatisticsDialog extends BaseDialog {
     private JBTable gitEmailTable;
     private JButton addGitEmailButton;
     private JButton deleteGitEmailButton;
+    private JCheckBox realTimeStatisticsCheckBox;
     private DefaultTableModel gitEmailTableModel;
 
     public CodeStatisticsDialog() {
@@ -70,6 +71,7 @@ public class CodeStatisticsDialog extends BaseDialog {
         List<String> fileTypeList = commonConfig.getFileTypeList();
         List<String> gitEmailList = commonConfig.getGitEmailList();
         commentCheckBox.setSelected(commonConfig.isCountComment());
+        realTimeStatisticsCheckBox.setSelected(commonConfig.isRealTimeStatistics());
 
         defaultTableModel.getDataVector().clear();
         gitEmailTableModel.getDataVector().clear();
@@ -95,6 +97,10 @@ public class CodeStatisticsDialog extends BaseDialog {
 
     public boolean isCountComment() {
         return commentCheckBox.isSelected();
+    }
+
+    public boolean isRealTimeStatistics(){
+        return realTimeStatisticsCheckBox.isSelected();
     }
 
     public List<String> getFileTypeList() {

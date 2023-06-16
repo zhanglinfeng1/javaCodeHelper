@@ -30,6 +30,8 @@ public class CommonConfig {
     private Integer apiTool = COMMON.SWAGGER_API;
     /** 统计注释 */
     private boolean countComment = true;
+    /** 实时统计 */
+    private boolean realTimeStatistics = false;
     /** 参与代码行数统计的文件类型 */
     private List<String> fileTypeList = new ArrayList<>();
     /** 参与统计的git邮箱 */
@@ -129,5 +131,13 @@ public class CommonConfig {
 
     public void setGitEmailList(List<String> gitEmailList) {
         this.gitEmailList = gitEmailList;
+    }
+
+    public boolean isRealTimeStatistics() {
+        return realTimeStatistics;
+    }
+
+    public void setRealTimeStatistics(boolean realTimeStatistics) {
+        this.realTimeStatistics = realTimeStatistics;
     }
 }
