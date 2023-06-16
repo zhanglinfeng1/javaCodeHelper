@@ -8,5 +8,8 @@ public class MESSAGE {
     public static final String UNUSED_METHOD = "(JavaCodeHelp) Method %s is never used";
     public static final String TRANSLATION_CONFIGURATION = "Please configure first! File > Setting > Other Settings > JavaCodeHelp > 翻译配置";
     public static final String NOT_EXIST = "%s does not exist";
+    public static final String CODE_STATISTICAL_CONFIGURATION = "Please configure first! File > Setting > Other Settings > JavaCodeHelp > CodeStatistics > 参与统计的文件类型";
+    public static final String GIT_EMAIL_NOT_EXIST = "Git email does not exist";
+    public static final String CODE_STATISTICAL_WAIT_A_MOMENT = "Statistic in progress,Wait a moment";
 
 }

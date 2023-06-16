@@ -132,15 +132,15 @@ public class MyPsiUtil {
             return variableMap;
         }
         //获取代码块中的变量
-        Arrays.stream(codeBlock.getStatements()).filter(t -> t.getTextOffset() <= endOffset && t instanceof PsiDeclarationStatement).forEach(t -> {
+        Arrays.stream(codeBlock.getStatements()).filter(t -> t.getTextOffset() <= endOffset && t instanceof PsiDeclarationStatement).forEach(t ->
             variableMap.putAll(Arrays.stream(((PsiDeclarationStatement) t).getDeclaredElements()).map(p -> {
                 if (p instanceof PsiLocalVariable) {
                     return (PsiLocalVariable) p;
                 }
                 PsiElement psiElement = p.getFirstChild();
                 return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
-            }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)));
-        });
+            }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)))
+        );
         //方法参数
         Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
         return variableMap;
@@ -445,11 +445,8 @@ public class MyPsiUtil {
      */
     public static String getModuleNameByVirtualFile(VirtualFile virtualFile, Project project) {
         String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
-        if (moduleName.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX)) {
+        if (moduleName.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX) || moduleName.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)) {
             return moduleName.substring(0, moduleName.length() - 5);
-        }
-        if (moduleName.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)) {
-            return moduleName.substring(0, moduleName.length() - 4);
         }
         return moduleName;
     }

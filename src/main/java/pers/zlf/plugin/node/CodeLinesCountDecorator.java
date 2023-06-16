@@ -5,9 +5,6 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -30,7 +27,8 @@ import java.util.Optional;
  * @Date create in 2023/6/9 15:26
  */
 public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
-    public static Map<String, PresentationData> lineCountMap = new HashMap<>();
+    public static Map<String, Integer> lineCountMap = new HashMap<>();
+    public static Map<String, PresentationData> presentationDataMap = new HashMap<>();
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
@@ -45,26 +43,26 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             //只处理根节点
             String directoryName = node.getName();
             String parentNodeName = Optional.ofNullable(node.getParent()).map(AbstractTreeNode::getName).orElse(COMMON.BLANK_STRING);
-            if (StringUtil.isEmpty(directoryName) || !directoryName.startsWith(parentNodeName)) {
+            if (null == directoryName || !directoryName.startsWith(parentNodeName)) {
                 return;
             }
-            Module[] modules = ModuleManager.getInstance(project).getModules();
-
-            //全量统计只一次
-            if (lineCountMap.containsKey(directoryName)) {
-                return;
-            }
-            //按模块统计
             int count = 0;
-            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
-                if (moduleName.startsWith(directoryName)) {
-                    count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
+            //更新
+            if (lineCountMap.containsKey(directoryName)) {
+                count = lineCountMap.get(directoryName);
+            } else {
+                //按模块统计
+                for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                    String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
+                    if (moduleName.startsWith(directoryName)) {
+                        count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
+                    }
                 }
             }
             if (0 != count) {
                 data.setLocationString(COMMON.LEFT_PARENTHESES + count + COMMON.RIGHT_PARENTHESES + StringUtil.toString(data.getLocationString()));
-                lineCountMap.put(directoryName, data);
+                lineCountMap.put(directoryName, count);
+                presentationDataMap.put(directoryName, data);
             }
         }
     }

@@ -6,7 +6,6 @@ import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.DefaultCellEditor;
@@ -17,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,18 +98,10 @@ public class CodeStatisticsDialog extends BaseDialog {
     }
 
     public List<String> getFileTypeList() {
-        List<String> fileTypeList = new ArrayList<>();
-        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
-            fileTypeList.add(StringUtil.toString(defaultTableModel.getValueAt(i, 0)));
-        }
-        return fileTypeList;
+        return getTableContentList(defaultTableModel, 0);
     }
 
     public List<String> getGitEmailList() {
-        List<String> gitEmailList = new ArrayList<>();
-        for (int i = 0; i < gitEmailTableModel.getRowCount(); i++) {
-            gitEmailList.add(StringUtil.toString(gitEmailTableModel.getValueAt(i, 0)));
-        }
-        return gitEmailList;
+        return getTableContentList(gitEmailTableModel, 0);
     }
 }

@@ -5,6 +5,7 @@ import com.intellij.ui.JBColor;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -19,7 +20,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author zhanglinfeng
@@ -83,14 +83,14 @@ public class BaseDialog {
     /**
      * 获取表格内容
      *
+     * @param tableModel DefaultTableModel
+     * @param columnNum         列序号
      * @return List<String>
      */
-    public List<String> getTableContentList(Integer... columnNumArr) {
+    public List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
         List<String> contentList = new ArrayList<>();
-        for (int i = 0; i < defaultTableModel.getRowCount(); i++) {
-            final int rowNum = i;
-            contentList.add(Arrays.stream(columnNumArr).map(columnNum -> defaultTableModel.getValueAt(rowNum, columnNum))
-                    .map(StringUtil::toString).filter(StringUtil::isNotEmpty).distinct().collect(Collectors.joining(COMMON.SEMICOLON)));
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            Empty.of(tableModel.getValueAt(i, columnNum)).map(StringUtil::toString).ifPresent(contentList::add);
         }
         return contentList;
     }

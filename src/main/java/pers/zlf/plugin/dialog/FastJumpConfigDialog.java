@@ -96,9 +96,13 @@ public class FastJumpConfigDialog extends BaseDialog {
         return feignTextField.getText();
     }
 
+    public List<String> getModuleNameList(){
+        return getTableContentList(defaultTableModel, 0);
+    }
+
     private List<String> getOptionalList() {
         List<String> list = totalSelectList.stream().sorted().collect(Collectors.toList());
-        list.removeAll(getTableContentList(0));
+        list.removeAll(getModuleNameList());
         return list;
     }
 

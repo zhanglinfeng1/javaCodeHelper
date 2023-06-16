@@ -122,9 +122,6 @@ public class StringUtil {
             return true;
         }
         // 在段落注释中间 、 单行注释
-        if (commentCheckResult.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith))) {
-            return true;
-        }
-        return false;
+        return commentCheckResult.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith));
     }
 }

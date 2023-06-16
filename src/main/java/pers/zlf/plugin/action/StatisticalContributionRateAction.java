@@ -42,8 +42,12 @@ public class StatisticalContributionRateAction extends BasicAction {
     private Path bathPath;
     /** Git repository */
     private Repository repository;
+    /** 参与统计的文件类型 */
+    private List<String> fileTypeList;
+    /** 统计注释 */
+    private boolean countComment;
     /** Git 邮箱 */
-    private List<String> myEmailList ;
+    private List<String> myEmailList;
     /** 总行数 */
     private int totalLineCount = 0;
     /** 我的行数 */
@@ -62,26 +66,31 @@ public class StatisticalContributionRateAction extends BasicAction {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(String.format(MESSAGE.NOT_EXIST, bathPath), COMMON.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
-        return true;
-    }
-
-    @Override
-    public void action() {
         //获取配置
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        List<String> fileTypeList = commonConfig.getFileTypeList();
+        fileTypeList = commonConfig.getFileTypeList();
+        if (CollectionUtil.isEmpty(fileTypeList)) {
+            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+            return false;
+        }
         myEmailList = commonConfig.getGitEmailList();
-        boolean countComment = commonConfig.isCountComment();
+        countComment = commonConfig.isCountComment();
         //没有配置取当前邮箱
         if (CollectionUtil.isEmpty(myEmailList)) {
             StoredConfig config = repository.getConfig();
             String myEmail = config.getString("user", null, "email");
             if (StringUtil.isEmpty(myEmail)) {
-                return;
+                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.GIT_EMAIL_NOT_EXIST, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+                return false;
             } else {
                 myEmailList = Collections.singletonList(myEmail);
             }
         }
+        return true;
+    }
+
+    @Override
+    public void action() {
         //开始统计
         Map<String, Integer> totalLineCountMap = new HashMap<>();
         Map<String, Integer> myLineCountMap = new HashMap<>();
@@ -98,7 +107,7 @@ public class StatisticalContributionRateAction extends BasicAction {
         }
         //处理统计结果
         totalLineCountMap.forEach((moduleName, value) -> {
-            PresentationData data = CodeLinesCountDecorator.lineCountMap.get(moduleName);
+            PresentationData data = CodeLinesCountDecorator.presentationDataMap.get(moduleName);
             if (null == data) {
                 return;
             }
@@ -111,7 +120,7 @@ public class StatisticalContributionRateAction extends BasicAction {
             if (comment.contains(oldContributionRate)) {
                 data.setLocationString(comment.replaceFirst(oldContributionRate, newContributionRate));
             } else {
-                data.setLocationString(newContributionRate + comment);
+                data.setLocationString(COMMON.LEFT_PARENTHESES + newContributionRate + COMMON.RIGHT_PARENTHESES + comment);
             }
         });
     }

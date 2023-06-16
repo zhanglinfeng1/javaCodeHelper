@@ -7,7 +7,6 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
-import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
 

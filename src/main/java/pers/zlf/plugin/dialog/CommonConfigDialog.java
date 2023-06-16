@@ -2,26 +2,17 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
-import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.StringUtil;
-import pers.zlf.plugin.util.lambda.Equals;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
 import java.util.Optional;
 
 /**
