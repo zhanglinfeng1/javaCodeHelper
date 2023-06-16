@@ -43,7 +43,7 @@ public class CodeStatisticsConfigurable implements Configurable {
             return true;
         }
         if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
-            return false;
+            return true;
         }
         return dialog.isCountComment() != commonConfig.isCountComment();
     }
