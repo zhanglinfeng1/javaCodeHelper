@@ -28,7 +28,7 @@
                 Continuously adding.<br />
             </li>
             <li>Code Statistics<br />
-                Right click on any area of the project view and select '统计代码行数'. It will be calculated based on the total number of code lines in the module<br />
+                Right click on any area of the project view and select '统计代码行数' to calculate the total number of code lines for each module<br />
                 Right click on any file or folder in the project view, select '统计贡献率', and the code contribution rate of the module will be calculated based on the Git email. The lag time is relatively long (っ °Д °;)っ<br />
                 Currently, comment judgment only supports .java and .xml files<br />
             </li>
@@ -60,7 +60,7 @@
                 陆续新增中...<br />
             </li>
             <li>代码统计<br />
-                右击项目视图任意区域，选择'统计代码行数'，会根据模块的总代码行数<br />
+                右击项目视图任意区域，选择'统计代码行数'，会统计每个模块的总代码行数<br />
                 右击项目视图任意文件或文件夹，选择'统计贡献率'，会根据git邮箱统计该模块的代码贡献率，卡顿时间较长 (っ °Д °;)っ<br />
                 目前注释判断仅支持.java、.xml文件<br />
             </li>
