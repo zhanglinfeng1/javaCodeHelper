@@ -177,8 +177,6 @@
                 <constraints/>
                 <properties>
                   <minimumSize width="-1" height="-1"/>
-                  <preferredScrollableViewportSize width="40" height="20"/>
-                  <visibleRowCount value="4"/>
                 </properties>
               </component>
             </children>
