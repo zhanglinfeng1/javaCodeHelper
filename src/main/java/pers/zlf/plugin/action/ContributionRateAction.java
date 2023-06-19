@@ -5,10 +5,8 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
@@ -21,20 +19,19 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
-import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.MathUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -44,16 +41,12 @@ import java.util.Optional;
 public class ContributionRateAction extends BasicAction {
     /** 选中的模块 */
     private Module module;
+    /** 选中的模块名 */
+    private String moduleName;
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
     private Repository repository;
-    /** 参与统计的文件类型 */
-    private List<String> fileTypeList;
-    /** 统计注释 */
-    private boolean countComment;
-    /** Git 邮箱 */
-    private List<String> myEmailList;
     /** 总行数 */
     private int totalLineCount = 0;
     /** 我的行数 */
@@ -61,73 +54,59 @@ public class ContributionRateAction extends BasicAction {
 
     @Override
     public boolean check() {
+        //配置校验
+        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
+            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+            return false;
+        }
+        //选中文件的所属模块
         module = Optional.ofNullable(event.getData(CommonDataKeys.VIRTUAL_FILE)).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
         if (null == module) {
             return false;
         }
-        //获取配置
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        fileTypeList = commonConfig.getFileTypeList();
-        if (CollectionUtil.isEmpty(fileTypeList)) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
-            return false;
-        }
-        myEmailList = commonConfig.getGitEmailList();
-        countComment = commonConfig.isCountComment();
-        return true;
+        moduleName = MyPsiUtil.getModuleName(module);
+        return !StringUtil.isEmpty(moduleName);
     }
 
     @Override
     public void action() {
-        //开始统计
-        Map<String, Integer> totalLineCountMap = new HashMap<>();
-        Map<String, Integer> myLineCountMap = new HashMap<>();
-        for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
-            totalLineCount = 0;
-            myLineCount = 0;
-            String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
-            if (StringUtil.isEmpty(moduleName)) {
-                continue;
-            }
-            bathPath = Paths.get(virtualFile.getPath().substring(0, virtualFile.getPath().indexOf(moduleName)), moduleName);
-            //默认当前分支
-            try {
-                String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
-                repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
-            } catch (IOException e) {
-                continue;
-            }
-            //没有配置取当前邮箱
-            if (CollectionUtil.isEmpty(myEmailList)) {
-                String myEmail = repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL);
-                if (StringUtil.isEmpty(myEmail)) {
-                    continue;
-                }
-                myEmailList = Collections.singletonList(myEmail);
-            }
-            this.dealDirectory(virtualFile, fileTypeList, countComment);
-            totalLineCountMap.put(moduleName, totalLineCount + Optional.ofNullable(totalLineCountMap.get(moduleName)).orElse(0));
-            myLineCountMap.put(moduleName, myLineCount + Optional.ofNullable(myLineCountMap.get(moduleName)).orElse(0));
+        //获取配置
+        List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
+        boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
+        List<String> myEmailList = ConfigFactory.getInstance().getCommonConfig().getGitEmailList();
+        //默认当前分支
+        VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
+        String path = virtualFiles[0].getPath();
+        bathPath = Paths.get(path.substring(0, path.indexOf(module.getName())), moduleName);
+        try {
+            String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
+            repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
+        } catch (IOException e) {
+            return;
         }
-        //处理统计结果
-        totalLineCountMap.forEach((moduleName, value) -> {
-            if (0 == value) {
+        //没有配置取当前邮箱
+        if (CollectionUtil.isEmpty(myEmailList)) {
+            myEmailList = Empty.of(repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL)).map(Collections::singletonList).orElse(new ArrayList<>());
+            if (CollectionUtil.isEmpty(myEmailList)) {
                 return;
             }
-            int myCount = myLineCountMap.get(moduleName);
-            String contributionRate = MathUtil.percentage(myCount, value, 2) + COMMON.PERCENT_SIGN;
-            CodeLinesCountDecorator.contributionRateMap.put(moduleName, contributionRate);
-            //更新贡献率行数
-            CodeLinesCountDecorator.updateNode();
-        });
+        }
+        //统计模块的贡献率
+        totalLineCount = 0;
+        myLineCount = 0;
+        CodeLinesCountDecorator.clearContributionRate();
+        for (VirtualFile virtualFile : virtualFiles) {
+            this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
+        }
+        CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
+        //更新贡献率行数
+        CodeLinesCountDecorator.updateNode();
     }
 
-    private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment) {
+    private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment, List<String> myEmailList) {
         //处理文件夹
         if (virtualFile.isDirectory()) {
-            for (VirtualFile subFile : virtualFile.getChildren()) {
-                this.dealDirectory(subFile, fileTypeList, countComment);
-            }
+            Arrays.stream(virtualFile.getChildren()).forEach(subFile -> this.dealDirectory(subFile, fileTypeList, countComment, myEmailList));
             return;
         }
         //判断文件类型

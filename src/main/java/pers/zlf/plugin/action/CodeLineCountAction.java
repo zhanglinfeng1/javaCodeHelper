@@ -8,57 +8,44 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.MESSAGE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
-import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @Author zhanglinfeng
  * @Date create in 2023/6/14 11:48
  */
 public class CodeLineCountAction extends BasicAction {
-    /** 参与统计的文件类型 */
-    private List<String> fileTypeList;
-    /** 统计注释 */
-    private boolean countComment;
 
     @Override
     public boolean check() {
-        //获取配置
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        fileTypeList = commonConfig.getFileTypeList();
-        if (CollectionUtil.isEmpty(fileTypeList)) {
+        //配置校验
+        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
-        countComment = commonConfig.isCountComment();
         return true;
     }
 
     @Override
     public void action() {
-        Map<String, Integer> lineCountMap = new HashMap<>();
-        CodeLinesCountDecorator.lineCountMap.clear();
+        //获取配置
+        List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
+        boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
+        CodeLinesCountDecorator.clearLineCount();
         //按模块统计
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
             int count = MyPsiUtil.getLineCount(virtualFile, fileTypeList, countComment);
-            lineCountMap.put(moduleName, Optional.ofNullable(lineCountMap.get(moduleName)).map(t -> t + count).orElse(count));
+            if (count == 0) {
+                continue;
+            }
+            String moduleName = MyPsiUtil.getModuleNameByVirtualFile(virtualFile, project);
+            CodeLinesCountDecorator.updateLineCount(moduleName, count);
         }
         //处理统计结果
-        lineCountMap.forEach((moduleName, count) -> {
-            if (0 == count) {
-                return;
-            }
-            CodeLinesCountDecorator.lineCountMap.put(moduleName, count);
-            //更新代码行数
-            CodeLinesCountDecorator.updateNode();
-        });
+        CodeLinesCountDecorator.updateNode();
     }
 
 }

@@ -133,13 +133,13 @@ public class MyPsiUtil {
         }
         //获取代码块中的变量
         Arrays.stream(codeBlock.getStatements()).filter(t -> t.getTextOffset() <= endOffset && t instanceof PsiDeclarationStatement).forEach(t ->
-            variableMap.putAll(Arrays.stream(((PsiDeclarationStatement) t).getDeclaredElements()).map(p -> {
-                if (p instanceof PsiLocalVariable) {
-                    return (PsiLocalVariable) p;
-                }
-                PsiElement psiElement = p.getFirstChild();
-                return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
-            }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)))
+                variableMap.putAll(Arrays.stream(((PsiDeclarationStatement) t).getDeclaredElements()).map(p -> {
+                    if (p instanceof PsiLocalVariable) {
+                        return (PsiLocalVariable) p;
+                    }
+                    PsiElement psiElement = p.getFirstChild();
+                    return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
+                }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)))
         );
         //方法参数
         Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
@@ -382,11 +382,7 @@ public class MyPsiUtil {
      */
     public static int getLineCount(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment) {
         if (virtualFile.isDirectory()) {
-            int totalCount = 0;
-            for (VirtualFile subFile : virtualFile.getChildren()) {
-                totalCount = totalCount + getLineCount(subFile, fileTypeList, countComment);
-            }
-            return totalCount;
+            return Arrays.stream(virtualFile.getChildren()).mapToInt(subFile -> getLineCount(subFile, fileTypeList, countComment)).sum();
         }
         String fileType = COMMON.DOT + virtualFile.getFileType().getName();
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
@@ -444,7 +440,17 @@ public class MyPsiUtil {
      * @return String
      */
     public static String getModuleNameByVirtualFile(VirtualFile virtualFile, Project project) {
-        String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+        return getModuleName(ModuleUtil.findModuleForFile(virtualFile, project));
+    }
+
+    /**
+     * 获取模块的名称
+     *
+     * @param module 模块
+     * @return String
+     */
+    public static String getModuleName(Module module) {
+        String moduleName = Optional.ofNullable(module).map(Module::getName).orElse(COMMON.BLANK_STRING);
         if (moduleName.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX) || moduleName.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)) {
             return moduleName.substring(0, moduleName.length() - 5);
         }
