@@ -65,6 +65,7 @@ public class ContributionRateAction extends BasicAction {
             return false;
         }
         moduleName = MyPsiUtil.getModuleName(module);
+        bathPath = MyPsiUtil.getCurrentModulePath(module);
         return !StringUtil.isEmpty(moduleName);
     }
 
@@ -75,9 +76,6 @@ public class ContributionRateAction extends BasicAction {
         boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
         List<String> myEmailList = ConfigFactory.getInstance().getCommonConfig().getGitEmailList();
         //默认当前分支
-        VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
-        String path = virtualFiles[0].getPath();
-        bathPath = Paths.get(path.substring(0, path.indexOf(module.getName())), moduleName);
         try {
             String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
             repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
@@ -95,7 +93,7 @@ public class ContributionRateAction extends BasicAction {
         totalLineCount = 0;
         myLineCount = 0;
         CodeLinesCountDecorator.clearContributionRate();
-        for (VirtualFile virtualFile : virtualFiles) {
+        for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
             this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
         }
         CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
@@ -126,16 +124,12 @@ public class ContributionRateAction extends BasicAction {
                 return;
             }
             CommentCheckResult commentCheckResult = new CommentCheckResult();
-            CommentFormat commentFormat = MyPsiUtil.getCommentFormat(virtualFile);
+            CommentFormat commentFormat = CodeLineCountAction.getCommentFormat(virtualFile);
             RawText rawText = result.getResultContents();
             for (int i = 0; i < rawText.size(); i++) {
                 String line = rawText.getString(i);
-                //空行不统计
-                if (StringUtil.isEmpty(line)) {
-                    continue;
-                }
-                // 不统计注释且当前行是注释
-                if (!countComment && StringUtil.isComment(line, commentFormat, commentCheckResult)) {
+                //空行不统计、不统计注释且当前行是注释
+                if (StringUtil.isEmpty(line) || (!countComment && StringUtil.isComment(line, commentFormat, commentCheckResult))) {
                     continue;
                 }
                 totalLineCount++;

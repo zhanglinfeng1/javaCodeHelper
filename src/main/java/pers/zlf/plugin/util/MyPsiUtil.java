@@ -1,7 +1,5 @@
 package pers.zlf.plugin.util;
 
-import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -31,12 +29,9 @@ import pers.zlf.plugin.constant.ANNOTATION;
 import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REGEX;
-import pers.zlf.plugin.pojo.CommentCheckResult;
-import pers.zlf.plugin.pojo.CommentFormat;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -289,27 +284,17 @@ public class MyPsiUtil {
     /**
      * 获取当前模块路径
      *
-     * @param virtualFile VirtualFile
-     * @param project     Project
+     * @param module 模块
      * @return 模块路径
      */
-    public static String getCurrentModulePath(VirtualFile virtualFile, Project project) {
-        return Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(ModuleRootManager::getInstance).map(ModuleRootManager::getContentRoots)
-                .map(virtualFiles -> virtualFiles[0]).map(VirtualFile::getPath).orElse(COMMON.BLANK_STRING);
-    }
-
-    /**
-     * 查找PsiClass
-     *
-     * @param element       同项目元素
-     * @param classFullName class全名
-     * @return Optional<PsiClass>
-     */
-    public static Optional<PsiClass> findClassByFullName(PsiElement element, String classFullName) {
-        if (StringUtil.isEmpty(classFullName) || null == element) {
-            return Optional.empty();
+    public static Path getCurrentModulePath(Module module) {
+        if (null == module) {
+            return null;
         }
-        return Optional.ofNullable(JavaPsiFacade.getInstance(element.getProject()).findClass(classFullName, element.getResolveScope()));
+        VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
+        String path = virtualFiles[0].getPath();
+        String moduleName = getModuleName(module);
+        return Paths.get(path.substring(0, path.indexOf(module.getName())), moduleName);
     }
 
     /**
@@ -373,73 +358,13 @@ public class MyPsiUtil {
     }
 
     /**
-     * 统计代码行数
-     *
-     * @param virtualFile  文件或文件夹
-     * @param fileTypeList 文件类型
-     * @param countComment 是否统计注释
-     * @return int
-     */
-    public static int getLineCount(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment) {
-        if (virtualFile.isDirectory()) {
-            return Arrays.stream(virtualFile.getChildren()).mapToInt(subFile -> getLineCount(subFile, fileTypeList, countComment)).sum();
-        }
-        String fileType = COMMON.DOT + virtualFile.getFileType().getName();
-        if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
-            CommentFormat commentFormat = getCommentFormat(virtualFile);
-            return getLineCount(virtualFile, countComment, commentFormat);
-        }
-        return 0;
-    }
-
-    /**
-     * 根据文件类型，获取注释格式
-     *
-     * @param virtualFile virtualFile
-     * @return CommentType
-     */
-    public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
-        //java文件
-        if (virtualFile.getFileType() instanceof JavaFileType) {
-            return new CommentFormat(COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
-        } else if (virtualFile.getFileType() instanceof XmlFileType) {
-            //xml 文件
-            return new CommentFormat(new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
-        }
-        return new CommentFormat();
-    }
-
-    /**
-     * 统计代码行数
-     *
-     * @param virtualFile   具体文件
-     * @param countComment  是否统计注释
-     * @param commentFormat 注释格式
-     * @return int
-     */
-    private static int getLineCount(VirtualFile virtualFile, boolean countComment, CommentFormat commentFormat) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
-            List<String> lineList = br.lines().filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-            //统计注释
-            if (countComment) {
-                return lineList.size();
-            }
-            //不统计注释
-            CommentCheckResult commentCheckResult = new CommentCheckResult();
-            return (int) lineList.stream().filter(line -> !StringUtil.isComment(line, commentFormat, commentCheckResult)).count();
-        } catch (Exception ignored) {
-        }
-        return 0;
-    }
-
-    /**
      * 根据VirtualFile 获取所属模块的名称
      *
      * @param virtualFile virtualFile
      * @param project     project
      * @return String
      */
-    public static String getModuleNameByVirtualFile(VirtualFile virtualFile, Project project) {
+    public static String getModuleName(VirtualFile virtualFile, Project project) {
         return getModuleName(ModuleUtil.findModuleForFile(virtualFile, project));
     }
 

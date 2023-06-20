@@ -5,15 +5,21 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
+import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CodeStatisticsInfo;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
+import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +54,16 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
+                if (commonConfig.isRealTimeStatistics()){
+                    int count = 0;
+                    for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                        String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+                        if (moduleName.startsWith(directoryName)) {
+                            count = count + CodeLineCountAction.getLineCount(virtualFile);
+                        }
+                    }
+                    codeStatisticsInfo.setLineCount(count);
+                }
                 codeStatisticsInfoMap.put(directoryName, codeStatisticsInfo);
             }
             codeStatisticsInfo.dealPresentationData(data);
@@ -70,10 +86,15 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /**
      * 更新代码行数
      *
-     * @param moduleName 模块名
-     * @param lineCount  代码行数
+     * @param project     项目
+     * @param virtualFile 文件
+     * @param lineCount   代码行数
      */
-    public static void updateLineCount(String moduleName, int lineCount) {
+    public static void updateLineCount(Project project, VirtualFile virtualFile, int lineCount) {
+        if (lineCount == 0) {
+            return;
+        }
+        String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
         Optional.ofNullable(codeStatisticsInfoMap.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
     }
 

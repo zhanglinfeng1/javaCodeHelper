@@ -10,11 +10,11 @@ import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,6 @@ public class FileStartupActivity implements StartupActivity {
     public void runActivity(@NotNull Project project) {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         List<String> fileTypeList = commonConfig.getFileTypeList();
-        boolean countComment = commonConfig.isCountComment();
         //监听文件变化
         VirtualFileManager.getInstance().addAsyncFileListener(events -> new AsyncFileListener.ChangeApplier() {
                     private Map<String, Integer> fileLineCountMap = new HashMap<>();
@@ -47,7 +46,7 @@ public class FileStartupActivity implements StartupActivity {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
-                                fileLineCountMap.put(vFileEvent.getFile().getPath(), MyPsiUtil.getLineCount(vFileEvent.getFile(), fileTypeList, countComment));
+                                fileLineCountMap.put(vFileEvent.getFile().getPath(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
                         }
                     }
@@ -63,22 +62,15 @@ public class FileStartupActivity implements StartupActivity {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {
-                                int count = MyPsiUtil.getLineCount(vFileEvent.getFile(), fileTypeList, countComment);
-                                if (count != 0) {
-                                    String moduleName = MyPsiUtil.getModuleNameByVirtualFile(vFileEvent.getFile(), project);
-                                    CodeLinesCountDecorator.updateLineCount(moduleName, -count);
-                                }
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
                                 Integer oldCount = fileLineCountMap.get(vFileEvent.getFile().getPath());
                                 if (null == oldCount) {
                                     continue;
                                 }
-                                int changeCount = MyPsiUtil.getLineCount(vFileEvent.getFile(), fileTypeList, countComment) - oldCount;
-                                if (changeCount != 0) {
-                                    String moduleName = MyPsiUtil.getModuleNameByVirtualFile(vFileEvent.getFile(), project);
-                                    CodeLinesCountDecorator.updateLineCount(moduleName, changeCount);
-                                }
+                                int changeCount = CodeLineCountAction.getLineCount(vFileEvent.getFile()) - oldCount;
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), changeCount);
                             }
                         }
                     }

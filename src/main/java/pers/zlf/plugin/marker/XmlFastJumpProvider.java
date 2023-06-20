@@ -26,7 +26,7 @@ public class XmlFastJumpProvider extends AbstractLineMarkerProvider<XmlFile> {
     @Override
     public void dealPsiElement() {
         Optional.ofNullable(XmlUtil.getRootTagByName(element, XML.MAPPER))
-                .ifPresent(t -> MyPsiUtil.findClassByFullName(element, t.getAttributeValue(XML.NAMESPACE))
+                .ifPresent(t -> MyPsiUtil.findClassByFullName(element.getResolveScope(), t.getAttributeValue(XML.NAMESPACE))
                         .map(c -> Arrays.stream(c.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2)))
                         .filter(map -> !map.isEmpty())
                         .ifPresent(methodMap -> XmlUtil.findTags(t, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT)
