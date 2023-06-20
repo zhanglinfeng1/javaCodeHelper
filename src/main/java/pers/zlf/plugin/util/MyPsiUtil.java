@@ -294,7 +294,7 @@ public class MyPsiUtil {
         VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
         String path = virtualFiles[0].getPath();
         String moduleName = getModuleName(module);
-        return Paths.get(path.substring(0, path.indexOf(module.getName())), moduleName);
+        return Paths.get(path.substring(0, path.indexOf(moduleName)), moduleName);
     }
 
     /**
