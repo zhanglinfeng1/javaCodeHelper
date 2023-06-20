@@ -13,6 +13,7 @@ import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -43,7 +44,12 @@ public class CodeLineCountAction extends BasicAction {
         CodeLinesCountDecorator.clearLineCount();
         //按模块统计
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            CodeLinesCountDecorator.updateLineCount(project, virtualFile, getLineCount(virtualFile));
+            int count = getLineCount(virtualFile);
+            if (count == 0) {
+                continue;
+            }
+            String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
+            CodeLinesCountDecorator.updateLineCount(moduleName, count);
         }
         //处理统计结果
         CodeLinesCountDecorator.updateNode();
