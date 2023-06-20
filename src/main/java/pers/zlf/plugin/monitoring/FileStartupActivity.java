@@ -15,7 +15,6 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
-import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,11 +62,7 @@ public class FileStartupActivity implements StartupActivity {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {
-                                int count = CodeLineCountAction.getLineCount(vFileEvent.getFile());
-                                if (count != 0) {
-                                    String moduleName = MyPsiUtil.getModuleName(vFileEvent.getFile(), project);
-                                    CodeLinesCountDecorator.updateLineCount(moduleName, -count);
-                                }
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
                                 Integer oldCount = fileLineCountMap.get(vFileEvent.getFile().getPath());
@@ -75,10 +70,7 @@ public class FileStartupActivity implements StartupActivity {
                                     continue;
                                 }
                                 int changeCount = CodeLineCountAction.getLineCount(vFileEvent.getFile()) - oldCount;
-                                if (changeCount != 0) {
-                                    String moduleName = MyPsiUtil.getModuleName(vFileEvent.getFile(), project);
-                                    CodeLinesCountDecorator.updateLineCount(moduleName, changeCount);
-                                }
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), changeCount);
                             }
                         }
                     }

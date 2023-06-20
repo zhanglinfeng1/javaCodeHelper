@@ -19,6 +19,7 @@ import pers.zlf.plugin.pojo.CodeStatisticsInfo;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
+import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,10 +86,15 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /**
      * 更新代码行数
      *
-     * @param moduleName 模块名
-     * @param lineCount  代码行数
+     * @param project     项目
+     * @param virtualFile 文件
+     * @param lineCount   代码行数
      */
-    public static void updateLineCount(String moduleName, int lineCount) {
+    public static void updateLineCount(Project project, VirtualFile virtualFile, int lineCount) {
+        if (lineCount == 0) {
+            return;
+        }
+        String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
         Optional.ofNullable(codeStatisticsInfoMap.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
     }
 
