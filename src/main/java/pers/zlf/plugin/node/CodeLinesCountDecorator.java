@@ -5,11 +5,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.constant.COMMON;
@@ -18,8 +14,6 @@ import pers.zlf.plugin.pojo.CodeStatisticsInfo;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
-import pers.zlf.plugin.util.MyPsiUtil;
-import pers.zlf.plugin.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,22 +44,13 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             if (null == directoryName || !directoryName.startsWith(parentNodeName)) {
                 return;
             }
-            //记录原始备注
-            CodeStatisticsInfo codeStatisticsInfo = Optional.ofNullable(codeStatisticsInfoMap.get(directoryName)).orElse(new CodeStatisticsInfo(directoryName, StringUtil.toString(data.getLocationString())));
-            //实时统计
-            if (commonConfig.isRealTimeStatistics()) {
-                int count = 0;
-                for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                    String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
-                    if (moduleName.startsWith(directoryName)) {
-                        count = count + MyPsiUtil.getLineCount(virtualFile, fileTypeList, commonConfig.isCountComment());
-                    }
-                }
-                codeStatisticsInfo.setLineCount(count);
+            //处理备注
+            CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryName);
+            if (null == codeStatisticsInfo) {
+                codeStatisticsInfo = new CodeStatisticsInfo();
+                codeStatisticsInfoMap.put(directoryName, codeStatisticsInfo);
             }
-            codeStatisticsInfo.setData(data);
-            codeStatisticsInfoMap.put(directoryName, codeStatisticsInfo);
-            //更新备注
+            codeStatisticsInfo.dealPresentationData(data);
             updateNode(codeStatisticsInfo);
         }
     }

@@ -1,14 +1,13 @@
 package pers.zlf.plugin.pojo;
 
 import com.intellij.ide.projectView.PresentationData;
+import pers.zlf.plugin.util.StringUtil;
 
 /**
  * @Author zhanglinfeng
  * @Date create in 2023/6/19 15:41
  */
 public class CodeStatisticsInfo {
-    /** 模块名 */
-    private String moduleName;
     /** 备注对象 */
     private PresentationData data;
     /** 旧备注 */
@@ -19,22 +18,6 @@ public class CodeStatisticsInfo {
     private int totalGitLineCount;
     /** 我提交git的行数 */
     private int myGitLineCount;
-
-    public CodeStatisticsInfo() {
-    }
-
-    public CodeStatisticsInfo(String moduleName, String oldLocationString) {
-        this.moduleName = moduleName;
-        this.oldLocationString = oldLocationString;
-    }
-
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
 
     public PresentationData getData() {
         return data;
@@ -76,4 +59,8 @@ public class CodeStatisticsInfo {
         this.myGitLineCount = myGitLineCount;
     }
 
+    public void dealPresentationData(PresentationData data) {
+        this.data = data;
+        this.oldLocationString = StringUtil.toString(data.getLocationString());
+    }
 }

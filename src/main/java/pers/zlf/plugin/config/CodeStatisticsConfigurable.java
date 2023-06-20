@@ -1,8 +1,10 @@
 package pers.zlf.plugin.config;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
+import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -10,6 +12,7 @@ import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
+import java.util.Arrays;
 
 /**
  * @Author zhanglinfeng
@@ -50,6 +53,10 @@ public class CodeStatisticsConfigurable implements Configurable {
 
     @Override
     public void apply() {
+        // 改为实时统计后，立即执行一次
+        if (!commonConfig.isRealTimeStatistics() && dialog.isRealTimeStatistics()) {
+            Arrays.stream(ProjectManager.getInstance().getOpenProjects()).forEach(CodeLineCountAction::countCodeLines);
+        }
         commonConfig.setFileTypeList(dialog.getFileTypeList());
         commonConfig.setGitEmailList(dialog.getGitEmailList());
         commonConfig.setCountComment(dialog.isCountComment());

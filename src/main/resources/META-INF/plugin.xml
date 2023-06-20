@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.9.0</version>
+    <version>1.9.1</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="182.5107.41"/>
     <description><![CDATA[
@@ -98,6 +98,8 @@
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="MethodCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.MethodInspectionTool"/>
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
+        <!-- 监听文件改动 -->
+        <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>
 
     <actions>
