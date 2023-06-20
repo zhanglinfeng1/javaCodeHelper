@@ -99,16 +99,6 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     }
 
     /**
-     * 贡献率清零
-     */
-    public static void clearContributionRate() {
-        codeStatisticsInfoMap.values().forEach(t -> {
-            t.setTotalGitLineCount(0);
-            t.setMyGitLineCount(0);
-        });
-    }
-
-    /**
      * 更新代码贡献率
      *
      * @param moduleName 模块名

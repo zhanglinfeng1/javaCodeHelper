@@ -92,7 +92,6 @@ public class ContributionRateAction extends BasicAction {
         //统计模块的贡献率
         totalLineCount = 0;
         myLineCount = 0;
-        CodeLinesCountDecorator.clearContributionRate();
         for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
             this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
         }
