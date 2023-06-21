@@ -91,7 +91,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param lineCount   代码行数
      */
     public static void updateLineCount(Project project, VirtualFile virtualFile, int lineCount) {
-        if (lineCount == 0) {
+        if (lineCount == 0 || !project.isOpen()) {
             return;
         }
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
