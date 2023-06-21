@@ -3,8 +3,6 @@ package pers.zlf.plugin.marker.service;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -25,7 +23,6 @@ import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -58,8 +55,7 @@ public abstract class FastJump {
         }
         //当前模块路径
         Project project = psiClass.getProject();
-        Module module = ModuleUtil.findModuleForFile(psiClass.getContainingFile().getVirtualFile(), project);
-        String currentModulePath = Optional.ofNullable(MyPsiUtil.getCurrentModulePath(module)).map(Path::toString).orElse(COMMON.BLANK_STRING);
+        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(),project).toString();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             String virtualFilePath = virtualFile.getPath();
             if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES) || virtualFile.getParent().getPath().endsWith(COMMON.TEST)) {

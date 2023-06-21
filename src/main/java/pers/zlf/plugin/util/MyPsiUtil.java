@@ -1,9 +1,6 @@
 package pers.zlf.plugin.util;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -284,17 +281,25 @@ public class MyPsiUtil {
     /**
      * 获取当前模块路径
      *
-     * @param module 模块
+     * @param virtualFile 模块文件
+     * @param project     项目
      * @return 模块路径
      */
-    public static Path getCurrentModulePath(Module module) {
-        if (null == module) {
-            return null;
-        }
-        VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
-        Path filePath = Paths.get(virtualFiles[0].getPath());
-        Path projectPath = Paths.get(Optional.ofNullable(module.getProject().getBasePath()).orElse(COMMON.BLANK_STRING));
+    public static Path getCurrentModulePath(VirtualFile virtualFile, Project project) {
+        Path filePath = Paths.get(virtualFile.getPath());
+        Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(COMMON.BLANK_STRING));
         return getSameDirectoryPath(projectPath, filePath);
+    }
+
+    /**
+     * 根据VirtualFile 获取所属模块的名称
+     *
+     * @param virtualFile virtualFile
+     * @param project     project
+     * @return String
+     */
+    public static String getModuleName(VirtualFile virtualFile, Project project) {
+        return getCurrentModulePath(virtualFile, project).getFileName().toString();
     }
 
     /**
@@ -372,28 +377,4 @@ public class MyPsiUtil {
         return commentMap;
     }
 
-    /**
-     * 根据VirtualFile 获取所属模块的名称
-     *
-     * @param virtualFile virtualFile
-     * @param project     project
-     * @return String
-     */
-    public static String getModuleName(VirtualFile virtualFile, Project project) {
-        return getModuleName(ModuleUtil.findModuleForFile(virtualFile, project));
-    }
-
-    /**
-     * 获取模块的名称
-     *
-     * @param module 模块
-     * @return String
-     */
-    public static String getModuleName(Module module) {
-        String moduleName = Optional.ofNullable(module).map(Module::getName).orElse(COMMON.BLANK_STRING);
-        if (moduleName.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX) || moduleName.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)) {
-            return moduleName.substring(0, moduleName.length() - 5);
-        }
-        return moduleName;
-    }
 }

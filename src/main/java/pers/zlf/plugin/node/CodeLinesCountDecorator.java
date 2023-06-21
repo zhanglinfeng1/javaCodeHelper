@@ -4,9 +4,6 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -49,19 +46,19 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
         if (node instanceof PsiDirectoryNode) {
             //只处理根节点
             Path directoryPath = Paths.get(Optional.ofNullable(node.getVirtualFile()).map(VirtualFile::getPath).orElse(COMMON.BLANK_STRING));
-            Path projectPath = Paths.get(Optional.ofNullable(node.getProject().getBasePath()).orElse(COMMON.BLANK_STRING));
-            if (null == node.getName() || null == node.getVirtualFile()|| StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
+            Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(COMMON.BLANK_STRING));
+            if (null == node.getName() || null == node.getVirtualFile() || StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
                 return;
             }
-            String directoryModuleName = Optional.ofNullable(ModuleUtil.findModuleForFile(node.getVirtualFile(), project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+            String directoryModuleName = MyPsiUtil.getModuleName(node.getVirtualFile(), project);
             //处理备注
             CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryModuleName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
-                if (commonConfig.isRealTimeStatistics()){
+                if (commonConfig.isRealTimeStatistics()) {
                     int count = 0;
                     for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                        String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
+                        String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
                         if (moduleName.startsWith(directoryModuleName)) {
                             count = count + CodeLineCountAction.getLineCount(virtualFile);
                         }

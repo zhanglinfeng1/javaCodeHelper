@@ -60,12 +60,13 @@ public class ContributionRateAction extends BasicAction {
             return false;
         }
         //选中文件的所属模块
-        module = Optional.ofNullable(event.getData(CommonDataKeys.VIRTUAL_FILE)).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
+        VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
+        module = Optional.ofNullable(virtualFile).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
         if (null == module) {
             return false;
         }
-        moduleName = MyPsiUtil.getModuleName(module);
-        bathPath = MyPsiUtil.getCurrentModulePath(module);
+        moduleName = MyPsiUtil.getModuleName(virtualFile, project);
+        bathPath = MyPsiUtil.getCurrentModulePath(virtualFile, project);
         return !StringUtil.isEmpty(moduleName);
     }
 

@@ -4,14 +4,15 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.table.JBTable;
-import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
@@ -20,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +44,9 @@ public class FastJumpConfigDialog extends BaseDialog {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             Module[] modules = ModuleManager.getInstance(project).getModules();
-            totalSelectList.addAll(Arrays.stream(modules).map(Module::getName).filter(t -> !t.endsWith(CLASS_TYPE.MAIN_FILE_SUFFIX) && !t.endsWith(CLASS_TYPE.TEST_FILE_SUFFIX)).collect(Collectors.toSet()));
+            for (Module module : modules) {
+                totalSelectList.add(MyPsiUtil.getModuleName(ModuleRootManager.getInstance(module).getContentRoots()[0], project));
+            }
         }
         defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING}) {
             @Override
