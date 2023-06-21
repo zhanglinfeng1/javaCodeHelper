@@ -20,7 +20,10 @@ import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
+import pers.zlf.plugin.util.StringUtil;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,26 +48,27 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
         }
         if (node instanceof PsiDirectoryNode) {
             //只处理根节点
-            String directoryName = node.getName();
-            String parentNodeName = Optional.ofNullable(node.getParent()).map(AbstractTreeNode::getName).orElse(COMMON.BLANK_STRING);
-            if (null == directoryName || !directoryName.startsWith(parentNodeName)) {
+            Path directoryPath = Paths.get(Optional.ofNullable(node.getVirtualFile()).map(VirtualFile::getPath).orElse(COMMON.BLANK_STRING));
+            Path projectPath = Paths.get(Optional.ofNullable(node.getProject().getBasePath()).orElse(COMMON.BLANK_STRING));
+            if (null == node.getName() || null == node.getVirtualFile()|| StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
                 return;
             }
+            String directoryModuleName = Optional.ofNullable(ModuleUtil.findModuleForFile(node.getVirtualFile(), project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
             //处理备注
-            CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryName);
+            CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryModuleName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
                 if (commonConfig.isRealTimeStatistics()){
                     int count = 0;
                     for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
                         String moduleName = Optional.ofNullable(ModuleUtil.findModuleForFile(virtualFile, project)).map(Module::getName).orElse(COMMON.BLANK_STRING);
-                        if (moduleName.startsWith(directoryName)) {
+                        if (moduleName.startsWith(directoryModuleName)) {
                             count = count + CodeLineCountAction.getLineCount(virtualFile);
                         }
                     }
                     codeStatisticsInfo.setLineCount(count);
                 }
-                codeStatisticsInfoMap.put(directoryName, codeStatisticsInfo);
+                codeStatisticsInfoMap.put(directoryModuleName, codeStatisticsInfo);
             }
             codeStatisticsInfo.dealPresentationData(data);
             updateNode(codeStatisticsInfo);

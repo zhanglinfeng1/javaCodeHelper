@@ -292,10 +292,25 @@ public class MyPsiUtil {
             return null;
         }
         VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
-        String path = virtualFiles[0].getPath();
-        String moduleName = getModuleName(module);
-        return Paths.get(path.substring(0, path.indexOf(moduleName)), moduleName);
+        Path filePath = Paths.get(virtualFiles[0].getPath());
+        Path projectPath = Paths.get(Optional.ofNullable(module.getProject().getBasePath()).orElse(COMMON.BLANK_STRING));
+        return getSameDirectoryPath(projectPath, filePath);
     }
+
+    /**
+     * 获取同文件夹下的路径
+     *
+     * @param path1 路径1
+     * @param path2 路径2
+     * @return Path
+     */
+    public static Path getSameDirectoryPath(Path path1, Path path2) {
+        if (path1.getParent().equals(path2.getParent())) {
+            return path2;
+        }
+        return getSameDirectoryPath(path1, path2.getParent());
+    }
+
 
     /**
      * 查找PsiClass
