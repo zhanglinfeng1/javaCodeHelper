@@ -1,5 +1,5 @@
 # 功能简介
-idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流想法、反馈BUG
+intellij idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流想法、反馈BUG
 
 ## 代码补全
 构造方法内，补全字段赋值<br />
@@ -8,6 +8,7 @@ idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流�
 ## 快捷跳转
 feign与controller的快捷跳转<br />
 sql与java的快捷跳转<br />
+点击![image](src/main/resources/icon/logo.svg)即可跳转<br />
 
 ## 翻译
 目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
