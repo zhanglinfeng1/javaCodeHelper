@@ -30,7 +30,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +84,7 @@ public class ContributionRateAction extends BasicAction {
         }
         //没有配置取当前邮箱
         if (CollectionUtil.isEmpty(myEmailList)) {
-            myEmailList = Empty.of(repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL)).map(Collections::singletonList).orElse(new ArrayList<>());
+            myEmailList = Empty.of(repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL)).map(List::of).orElse(new ArrayList<>());
             if (CollectionUtil.isEmpty(myEmailList)) {
                 return;
             }

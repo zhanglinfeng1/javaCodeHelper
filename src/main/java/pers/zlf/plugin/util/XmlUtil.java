@@ -37,7 +37,7 @@ public class XmlUtil {
      */
     public static List<XmlTag> findTags(XmlTag rootTag, String... tagNames) {
         List<XmlTag> tagList = new ArrayList<>();
-        Arrays.stream(tagNames).forEach(t -> tagList.addAll(Arrays.asList(rootTag.findSubTags(t))));
+        Arrays.stream(tagNames).forEach(t -> tagList.addAll(List.of(rootTag.findSubTags(t))));
         return tagList;
     }
 

@@ -5,8 +5,9 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.pojo.BaiDuTransResult;
 import pers.zlf.plugin.util.HttpUtil;
 import pers.zlf.plugin.util.JsonUtil;
-import pers.zlf.plugin.util.UrlUtil;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -18,8 +19,7 @@ public class BaiDuTransApi {
     public String trans(String appid, String securityKey, String query, String from, String to) throws Exception {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + query + salt + securityKey);
-        // TODO 兼容低版本，没有使用URLEncoder
-        String urlStr = String.format(COMMON.BAIDU_TRANSLATE_URL, UrlUtil.encode(query), from, to, salt, sign, appid);
+        String urlStr = String.format(COMMON.BAIDU_TRANSLATE_URL, URLEncoder.encode(query, StandardCharsets.UTF_8), from, to, salt, sign, appid);
         String result = HttpUtil.get(urlStr);
         BaiDuTransResult transResult = JsonUtil.toObject(result, BaiDuTransResult.class);
         return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getError_msg()));

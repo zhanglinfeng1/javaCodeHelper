@@ -1,7 +1,5 @@
 package pers.zlf.plugin.constant;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +36,7 @@ public class COMMON {
     /** FreeMark模板 */
     public static final String TEMPLATE_SUFFIX = ".ftl";
     public static final String TEMPLATE_PATH = "templates";
-    public static final List<String> TEMPLATE_LIST = Arrays.asList(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
+    public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
 
     /** 数据库 */
     public static final String MYSQL = "mysql";
@@ -92,11 +90,11 @@ public class COMMON {
     public static final String FILL_CONSTRUCTOR = "fillConstructor";
 
     /** 注释前缀、后缀 */
-    public static final List<String> JAVA_COMMENT = Collections.singletonList("//");
-    public static final List<String> JAVA_COMMENT_PREFIX = Collections.singletonList("/*");
-    public static final List<String> JAVA_COMMENT_SUFFIX = Collections.singletonList("*/");
-    public static final List<String> XML_COMMENT_PREFIX = Arrays.asList("<!--", "<![CDATA[");
-    public static final List<String> XML_COMMENT_SUFFIX = Arrays.asList("-->", "]]>");
+    public static final List<String> JAVA_COMMENT = List.of("//");
+    public static final List<String> JAVA_COMMENT_PREFIX = List.of("/*");
+    public static final List<String> JAVA_COMMENT_SUFFIX = List.of("*/");
+    public static final List<String> XML_COMMENT_PREFIX = List.of("<!--", "<![CDATA[");
+    public static final List<String> XML_COMMENT_SUFFIX = List.of("-->", "]]>");
 
     /** test目录 */
     public static final String TEST = "test";

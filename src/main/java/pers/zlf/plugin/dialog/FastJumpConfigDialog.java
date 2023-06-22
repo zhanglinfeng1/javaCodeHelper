@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +57,7 @@ public class FastJumpConfigDialog extends BaseDialog {
         moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(COMMON.SELECT_MODULE)
-                .setMovable(true).setItemChosenCallback(value -> this.addCallback(Collections.singletonList(value))).createPopup().showUnderneathOf(addModuleButton)));
+                .setMovable(true).setItemChosenCallback(value -> this.addCallback(List.of(value))).createPopup().showUnderneathOf(addModuleButton)));
 
         deleteModuleButton.addActionListener(e -> {
             int rowNum = moduleTable.getSelectedRow();

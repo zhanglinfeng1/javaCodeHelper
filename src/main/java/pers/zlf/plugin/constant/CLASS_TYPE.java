@@ -1,6 +1,5 @@
 package pers.zlf.plugin.constant;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ public class CLASS_TYPE {
     public static final String INTELLIJ_IDEA_RULEZZZ = "IntellijIdeaRulezzz";
     public static final String VOID = "void";
     public static final String CLASS_FILE_SUFFIX = ".class";
-    public static final List<String> BASIC_TYPE_LIST = Arrays.asList("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
-    public static final List<String> COMMON_TYPE_LIST = Arrays.asList("String", "Date", "Timestamp", "BigDecimal", "SimpleDateFormat", "Calendar", "LocalDate", "LocalTime", "LocalDateTime", "Logger");
+    public static final List<String> BASIC_TYPE_LIST = List.of("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
+    public static final List<String> COMMON_TYPE_LIST = List.of("String", "Date", "Timestamp", "BigDecimal", "SimpleDateFormat", "Calendar", "LocalDate", "LocalTime", "LocalDateTime", "Logger");
 
 }
