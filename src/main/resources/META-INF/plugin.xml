@@ -49,11 +49,11 @@
             <add-to-group group-id="EditorLangPopupMenu" anchor="after" relative-to-action="Generate"/>
         </group>
         <!-- 翻译 -->
-        <action id="JavaCodeHelper.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="Translate">
+        <action id="JavaCodeHelper.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="翻译">
             <add-to-group group-id="EditorLangPopupMenu.JavaCodeHelper" anchor="first"/>
         </action>
         <!-- 根据注释添加Swagger注解 -->
-        <action id="JavaCodeHelper.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="Add ApiAnnotation">
+        <action id="JavaCodeHelper.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="添加接口文档注解">
             <add-to-group group-id="EditorLangPopupMenu.JavaCodeHelper" anchor="after" relative-to-action="JavaCodeHelper.TranslateAction"/>
         </action>
         <!-- 统计代码行数 -->
