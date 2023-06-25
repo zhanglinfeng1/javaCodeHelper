@@ -65,6 +65,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
                     }
                     codeStatisticsInfo.setLineCount(count);
                 }
+                codeStatisticsInfo.setProjectName(project.getName());
                 codeStatisticsInfoMap.put(directoryModuleName, codeStatisticsInfo);
             }
             codeStatisticsInfo.dealPresentationData(data);
