@@ -39,27 +39,16 @@ public class CodeStatisticsConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        boolean isModified = false;
-        boolean reCount = false;
         if (!CollectionUtil.equals(dialog.getFileTypeList(), commonConfig.getFileTypeList())) {
-            isModified = true;
-            reCount = true;
-        } else if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
-            isModified = true;
-        } else if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
-            isModified = true;
-            reCount = true;
-        } else if (dialog.isCountComment() != commonConfig.isCountComment()) {
-            isModified = true;
-            reCount = true;
+            return true;
         }
-        //重新统计
-        if (reCount) {
-            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-                CodeLineCountAction.countCodeLines(project);
-            }
+        if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
+            return true;
         }
-        return isModified;
+        if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
+            return true;
+        }
+        return dialog.isCountComment() != commonConfig.isCountComment();
     }
 
     @Override
@@ -69,6 +58,10 @@ public class CodeStatisticsConfigurable implements Configurable {
         commonConfig.setCountComment(dialog.isCountComment());
         commonConfig.setRealTimeStatistics(dialog.isRealTimeStatistics());
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
+        // 重新统计
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            CodeLineCountAction.countCodeLines(project);
+        }
     }
 
     @Override
