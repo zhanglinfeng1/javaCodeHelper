@@ -47,7 +47,7 @@ public class FastJumpConfigDialog extends BaseDialog {
             for (Module module : modules) {
                 VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
                 if (virtualFiles.length > 0) {
-                    totalSelectList.add(MyPsiUtil.getModuleName(ModuleRootManager.getInstance(module).getContentRoots()[0], project));
+                    totalSelectList.add(MyPsiUtil.getModuleName(virtualFiles[0], project));
                 }
             }
         }

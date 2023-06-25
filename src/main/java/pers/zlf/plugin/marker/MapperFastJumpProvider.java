@@ -14,8 +14,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.xml.XmlFile;
 import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.CLASS_TYPE;
+import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.XML;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.XmlUtil;
@@ -61,7 +61,7 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
             Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && ANNOTATION.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isPresent()) {
                 PsiAnnotation annotation = annotationOptional.get();
-                String className = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.TYPE).replace(CLASS_TYPE.CLASS_FILE_SUFFIX, COMMON.BLANK_STRING);
+                String className = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.TYPE).replace(CLASS_TYPE.CLASS_FILE, COMMON.BLANK_STRING);
                 PsiClass[] psiClassArr = Optional.ofNullable(psiClassMap.get(className)).orElseGet(() -> {
                     PsiClass[] searchResultArr = cache.getClassesByName(className, searchScope);
                     psiClassMap.put(className, searchResultArr);

@@ -35,35 +35,12 @@ public class CodeStatisticsDialog extends BaseDialog {
     private DefaultTableModel gitEmailTableModel;
 
     public CodeStatisticsDialog() {
+        //文具类型
         defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING});
-        fileTypeTable.setModel(defaultTableModel);
-        fileTypeTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fileTypeTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
-        addFileTypeButton.addActionListener(e -> {
-            defaultTableModel.addRow(new String[]{COMMON.BLANK_STRING});
-            addMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);
-        });
-        deleteFileTypeButton.addActionListener(e -> Equals.of(fileTypeTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
-            defaultTableModel.removeRow(rowNum);
-            if (fileTypeTable.getRowCount() == 0) {
-                removeMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);
-            }
-        }));
-
+        initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
+        //git账号
         gitEmailTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING});
-        gitEmailTable.setModel(gitEmailTableModel);
-        gitEmailTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        gitEmailTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
-        addGitEmailButton.addActionListener(e -> {
-            gitEmailTableModel.addRow(new String[]{COMMON.BLANK_STRING});
-            addMouseListener(deleteGitEmailButton, ICON_ENUM.REMOVE);
-        });
-        deleteGitEmailButton.addActionListener(e -> Equals.of(gitEmailTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
-            gitEmailTableModel.removeRow(rowNum);
-            if (gitEmailTable.getRowCount() == 0) {
-                removeMouseListener(deleteGitEmailButton, ICON_ENUM.REMOVE);
-            }
-        }));
+        initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
     }
 
     public void reset() {
@@ -109,5 +86,21 @@ public class CodeStatisticsDialog extends BaseDialog {
 
     public List<String> getGitEmailList() {
         return getTableContentList(gitEmailTableModel, 0);
+    }
+
+    private void initTable(DefaultTableModel tableModel, JBTable jbTable, JButton addButton, JButton deleteButton) {
+        jbTable.setModel(tableModel);
+        jbTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jbTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
+        addButton.addActionListener(e -> {
+            tableModel.addRow(new String[]{COMMON.BLANK_STRING});
+            addMouseListener(deleteButton, ICON_ENUM.REMOVE);
+        });
+        deleteButton.addActionListener(e -> Equals.of(jbTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
+            tableModel.removeRow(rowNum);
+            if (jbTable.getRowCount() == 0) {
+                removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+            }
+        }));
     }
 }
