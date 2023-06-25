@@ -1,8 +1,11 @@
 package pers.zlf.plugin.config;
 
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
+import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -36,16 +39,27 @@ public class CodeStatisticsConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
+        boolean isModified = false;
+        boolean reCount = false;
         if (!CollectionUtil.equals(dialog.getFileTypeList(), commonConfig.getFileTypeList())) {
-            return true;
+            isModified = true;
+            reCount = true;
+        } else if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
+            isModified = true;
+        } else if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
+            isModified = true;
+            reCount = true;
+        } else if (dialog.isCountComment() != commonConfig.isCountComment()) {
+            isModified = true;
+            reCount = true;
         }
-        if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
-            return true;
+        //重新统计
+        if (reCount) {
+            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+                CodeLineCountAction.countCodeLines(project);
+            }
         }
-        if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
-            return true;
-        }
-        return dialog.isCountComment() != commonConfig.isCountComment();
+        return isModified;
     }
 
     @Override

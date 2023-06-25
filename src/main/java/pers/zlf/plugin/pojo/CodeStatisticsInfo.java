@@ -8,6 +8,8 @@ import pers.zlf.plugin.util.StringUtil;
  * @Date create in 2023/6/19 15:41
  */
 public class CodeStatisticsInfo {
+    /** 项目名 */
+    private String projectName;
     /** 备注对象 */
     private PresentationData data;
     /** 旧备注 */
@@ -18,6 +20,14 @@ public class CodeStatisticsInfo {
     private int totalGitLineCount;
     /** 我提交git的行数 */
     private int myGitLineCount;
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
     public PresentationData getData() {
         return data;

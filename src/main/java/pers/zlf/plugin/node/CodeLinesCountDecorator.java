@@ -79,9 +79,11 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
 
     /**
      * 代码行数清零
+     *
+     * @param projectName 项目名
      */
-    public static void clearLineCount() {
-        codeStatisticsInfoMap.values().forEach(t -> t.setLineCount(0));
+    public static void clearLineCount(String projectName) {
+        codeStatisticsInfoMap.values().stream().filter(t -> projectName.equals(t.getProjectName())).forEach(t -> t.setLineCount(0));
     }
 
     /**

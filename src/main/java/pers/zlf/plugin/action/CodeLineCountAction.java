@@ -1,6 +1,7 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -40,7 +41,17 @@ public class CodeLineCountAction extends BasicAction {
 
     @Override
     public void action() {
-        CodeLinesCountDecorator.clearLineCount();
+        countCodeLines(project);
+    }
+
+    /**
+     * 统计项目的代码行数
+     *
+     * @param project 文件或文件夹
+     */
+    public static void countCodeLines(Project project) {
+        String projectName = project.getName();
+        CodeLinesCountDecorator.clearLineCount(projectName);
         //按模块统计
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             CodeLinesCountDecorator.updateLineCount(project, virtualFile, getLineCount(virtualFile));
