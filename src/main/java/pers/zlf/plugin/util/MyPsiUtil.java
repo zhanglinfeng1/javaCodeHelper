@@ -310,6 +310,9 @@ public class MyPsiUtil {
      * @return Path
      */
     public static Path getSameDirectoryPath(Path path1, Path path2) {
+        if (path1 == null || path2 == null || path1.getParent() == null || path2.getParent() == null) {
+            return Path.of(COMMON.BLANK_STRING);
+        }
         if (path1.getParent().equals(path2.getParent())) {
             return path2;
         }

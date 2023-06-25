@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.ICON_ENUM;
@@ -44,7 +45,10 @@ public class FastJumpConfigDialog extends BaseDialog {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             Module[] modules = ModuleManager.getInstance(project).getModules();
             for (Module module : modules) {
-                totalSelectList.add(MyPsiUtil.getModuleName(ModuleRootManager.getInstance(module).getContentRoots()[0], project));
+                VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
+                if (virtualFiles.length > 0) {
+                    totalSelectList.add(MyPsiUtil.getModuleName(ModuleRootManager.getInstance(module).getContentRoots()[0], project));
+                }
             }
         }
         defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING}) {

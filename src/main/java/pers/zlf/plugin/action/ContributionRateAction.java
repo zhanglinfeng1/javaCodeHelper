@@ -1,6 +1,5 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -59,7 +58,6 @@ public class ContributionRateAction extends BasicAction {
             return false;
         }
         //选中文件的所属模块
-        VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         module = Optional.ofNullable(virtualFile).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
         if (null == module) {
             return false;
