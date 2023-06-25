@@ -105,7 +105,7 @@ public class ContributionRateAction extends BasicAction {
             return;
         }
         //判断文件类型
-        String fileType = COMMON.DOT + virtualFile.getFileType().getName();
+        String fileType = MyPsiUtil.getFileType(virtualFile);
         if (fileTypeList.stream().noneMatch(fileType::equalsIgnoreCase)) {
             return;
         }

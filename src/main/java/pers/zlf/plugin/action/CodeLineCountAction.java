@@ -1,11 +1,10 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import pers.zlf.plugin.constant.CLASS_TYPE;
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.MESSAGE;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -13,6 +12,7 @@ import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -52,7 +52,7 @@ public class CodeLineCountAction extends BasicAction {
     /**
      * 统计代码行数
      *
-     * @param virtualFile  文件或文件夹
+     * @param virtualFile 文件或文件夹
      * @return int
      */
     public static int getLineCount(VirtualFile virtualFile) {
@@ -61,7 +61,7 @@ public class CodeLineCountAction extends BasicAction {
         if (virtualFile.isDirectory()) {
             return Arrays.stream(virtualFile.getChildren()).mapToInt(CodeLineCountAction::getLineCount).sum();
         }
-        String fileType = COMMON.DOT + virtualFile.getFileType().getName();
+        String fileType = MyPsiUtil.getFileType(virtualFile);
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
             CommentFormat commentFormat = getCommentFormat(virtualFile);
             return getLineCount(virtualFile, commentFormat);
@@ -76,14 +76,15 @@ public class CodeLineCountAction extends BasicAction {
      * @return CommentType
      */
     public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
-        //java文件
-        if (virtualFile.getFileType() instanceof JavaFileType) {
-            return new CommentFormat(COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
-        } else if (virtualFile.getFileType() instanceof XmlFileType) {
-            //xml 文件
-            return new CommentFormat(new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
+        String fileType = MyPsiUtil.getFileType(virtualFile);
+        switch (fileType) {
+            case CLASS_TYPE.JAVA_FILE:
+                return new CommentFormat(COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
+            case CLASS_TYPE.XML_FILE:
+                return new CommentFormat(new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
+            default:
+                return new CommentFormat();
         }
-        return new CommentFormat();
     }
 
     /**

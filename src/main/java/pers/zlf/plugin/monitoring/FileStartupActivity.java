@@ -11,10 +11,12 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.action.CodeLineCountAction;
+import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.PathUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,9 @@ public class FileStartupActivity implements StartupActivity {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
                                 continue;
                             }
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), COMMON.IDEA)) {
+                                continue;
+                            }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
                                 fileLineCountMap.put(vFileEvent.getFile().getPath(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
@@ -59,6 +64,9 @@ public class FileStartupActivity implements StartupActivity {
                         }
                         for (VFileEvent vFileEvent : events) {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
+                                continue;
+                            }
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), COMMON.IDEA)) {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {

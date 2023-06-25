@@ -380,4 +380,17 @@ public class MyPsiUtil {
         return commentMap;
     }
 
+    /**
+     * 获取文件类型
+     *
+     * @param virtualFile virtualFile
+     * @return String
+     */
+    public static String getFileType(VirtualFile virtualFile) {
+        String[] val = virtualFile.getName().split(REGEX.DOT);
+        if (val.length > 1) {
+            return COMMON.DOT + val[val.length - 1];
+        }
+        return COMMON.DOT + virtualFile.getFileType().getName();
+    }
 }
