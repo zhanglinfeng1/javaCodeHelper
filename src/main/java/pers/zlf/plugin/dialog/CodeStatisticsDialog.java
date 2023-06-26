@@ -36,10 +36,10 @@ public class CodeStatisticsDialog extends BaseDialog {
 
     public CodeStatisticsDialog() {
         //文具类型
-        defaultTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING});
+        defaultTableModel = new DefaultTableModel(null, new String[]{"参与统计的文件类型"});
         initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
         //git账号
-        gitEmailTableModel = new DefaultTableModel(null, new String[]{COMMON.BLANK_STRING});
+        gitEmailTableModel = new DefaultTableModel(null, new String[]{"参与统计贡献率的git邮箱(默认当前邮箱)"});
         initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
     }
 

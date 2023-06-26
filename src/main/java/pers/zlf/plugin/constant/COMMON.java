@@ -12,8 +12,6 @@ public class COMMON {
     /** 通用常量 */
     public static final String SUCCESS = "success";
     public static final String TRUE = "true";
-    public static final String GET = "get";
-    public static final String SET = "set";
     public static final String EN = "en";
     public static final String ZH = "zh";
     public static final String BLANK_STRING = "";
@@ -55,8 +53,8 @@ public class COMMON {
 
     /** 配置 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
-    public static final String FAST_JUMP = "FastJump";
-    public static final String CODE_STATISTICS = "CodeStatistics";
+    public static final String FAST_JUMP = "快捷跳转";
+    public static final String CODE_STATISTICS = "代码统计";
     public static final String SELECT_MODULE = "Select module";
     public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
@@ -67,6 +65,8 @@ public class COMMON {
 
     /** 用于拼接的字符串 */
     public static final String THIS_STR = "this.";
+    public static final String GET = "get";
+    public static final String SET = "set";
     public static final String EQ_STR = " = ";
     public static final String END_STR = "();";
     public static final String COMMA_STR = ", ";
