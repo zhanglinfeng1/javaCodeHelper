@@ -16,7 +16,6 @@ import pers.zlf.plugin.constant.MESSAGE;
 import pers.zlf.plugin.constant.REGEX;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
-import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -120,13 +119,12 @@ public class ContributionRateAction extends BasicAction {
             if (null == result) {
                 return;
             }
-            CommentCheckResult commentCheckResult = new CommentCheckResult();
             CommentFormat commentFormat = CodeLineCountAction.getCommentFormat(virtualFile);
             RawText rawText = result.getResultContents();
             for (int i = 0; i < rawText.size(); i++) {
                 String line = rawText.getString(i);
                 //空行不统计、不统计注释且当前行是注释
-                if (StringUtil.isEmpty(line) || (!countComment && StringUtil.isComment(line, commentFormat, commentCheckResult))) {
+                if (StringUtil.isEmpty(line) || (!countComment && StringUtil.isComment(line, commentFormat))) {
                     continue;
                 }
                 totalLineCount++;

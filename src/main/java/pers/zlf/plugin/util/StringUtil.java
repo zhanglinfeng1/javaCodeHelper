@@ -1,7 +1,6 @@
 package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
 
 import java.util.Collection;
@@ -107,21 +106,20 @@ public class StringUtil {
      *
      * @param line               待判断行
      * @param commentFormat      注释格式
-     * @param commentCheckResult 段落注释校验结果
      * @return boolean
      */
-    public static boolean isComment(String line, CommentFormat commentFormat, CommentCheckResult commentCheckResult) {
+    public static boolean isComment(String line, CommentFormat commentFormat) {
         // 前缀匹配
         if (CollectionUtil.isNotEmpty(commentFormat.getCommentPrefixList()) && commentFormat.getCommentPrefixList().stream().anyMatch(line::startsWith)) {
-            commentCheckResult.setParagraphComment(true);
+            commentFormat.setParagraphComment(true);
             return true;
         }
         // 后缀匹配
         if (CollectionUtil.isNotEmpty(commentFormat.getCommentSuffixList()) && commentFormat.getCommentSuffixList().stream().anyMatch(line::endsWith)) {
-            commentCheckResult.setParagraphComment(false);
+            commentFormat.setParagraphComment(false);
             return true;
         }
         // 在段落注释中间 、 单行注释
-        return commentCheckResult.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith));
+        return commentFormat.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith));
     }
 }

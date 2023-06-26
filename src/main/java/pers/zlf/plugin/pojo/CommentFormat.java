@@ -7,6 +7,8 @@ import java.util.List;
  * @Date create in 2023/6/15 13:49
  */
 public class CommentFormat {
+    /** 段落注释 */
+    private boolean paragraphComment;
     /** 注释前缀 */
     private List<String> commentList;
     /** 注释段落前缀 */
@@ -15,12 +17,22 @@ public class CommentFormat {
     private List<String> commentSuffixList;
 
     public CommentFormat() {
+        this.paragraphComment = false;
     }
 
     public CommentFormat(List<String> commentList, List<String> commentPrefixList, List<String> commentSuffixList) {
+        this.paragraphComment = false;
         this.commentList = commentList;
         this.commentPrefixList = commentPrefixList;
         this.commentSuffixList = commentSuffixList;
+    }
+
+    public boolean isParagraphComment() {
+        return paragraphComment;
+    }
+
+    public void setParagraphComment(boolean paragraphComment) {
+        this.paragraphComment = paragraphComment;
     }
 
     public List<String> getCommentList() {

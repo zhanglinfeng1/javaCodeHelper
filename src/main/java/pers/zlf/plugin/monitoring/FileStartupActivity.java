@@ -70,7 +70,7 @@ public class FileStartupActivity implements StartupActivity {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {
-                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), -CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
                                 Integer oldCount = fileLineCountMap.get(vFileEvent.getFile().getPath());

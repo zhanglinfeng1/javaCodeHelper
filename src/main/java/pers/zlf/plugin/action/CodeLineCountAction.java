@@ -10,7 +10,6 @@ import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.MESSAGE;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
-import pers.zlf.plugin.pojo.CommentCheckResult;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -115,8 +114,7 @@ public class CodeLineCountAction extends BasicAction {
                 return lineList.size();
             }
             //不统计注释
-            CommentCheckResult commentCheckResult = new CommentCheckResult();
-            return (int) lineList.stream().filter(line -> !StringUtil.isComment(line, commentFormat, commentCheckResult)).count();
+            return (int) lineList.stream().filter(line -> !StringUtil.isComment(line, commentFormat)).count();
         } catch (Exception ignored) {
         }
         return 0;
