@@ -110,12 +110,10 @@ public class ContributionRateAction extends BasicAction {
         }
         //处理文件
         try {
-            BlameCommand blameCommand = new BlameCommand(repository);
             //相对路径
             String filePath = bathPath.relativize(Paths.get(virtualFile.getPath())).toString();
             filePath = filePath.replaceAll(REGEX.BACKSLASH, COMMON.SLASH);
-            blameCommand.setFilePath(filePath);
-            BlameResult result = blameCommand.call();
+            BlameResult result = new BlameCommand(repository).setFilePath(filePath).call();
             if (null == result) {
                 return;
             }
