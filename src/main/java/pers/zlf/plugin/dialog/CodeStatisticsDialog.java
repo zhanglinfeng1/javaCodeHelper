@@ -32,7 +32,7 @@ public class CodeStatisticsDialog extends BaseDialog {
     private JButton addGitEmailButton;
     private JButton deleteGitEmailButton;
     private JCheckBox realTimeStatisticsCheckBox;
-    private DefaultTableModel gitEmailTableModel;
+    private final DefaultTableModel gitEmailTableModel;
 
     public CodeStatisticsDialog() {
         //文具类型

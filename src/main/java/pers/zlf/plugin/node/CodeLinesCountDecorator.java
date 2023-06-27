@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /** 代码统计Map */
-    private static Map<String, CodeStatisticsInfo> codeStatisticsInfoMap = new HashMap<>();
+    private static final Map<String, CodeStatisticsInfo> codeStatisticsInfoMap = new HashMap<>();
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {

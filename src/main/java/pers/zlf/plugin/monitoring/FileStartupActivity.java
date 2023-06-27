@@ -34,7 +34,7 @@ public class FileStartupActivity implements StartupActivity {
         List<String> fileTypeList = commonConfig.getFileTypeList();
         //监听文件变化
         VirtualFileManager.getInstance().addAsyncFileListener(events -> new AsyncFileListener.ChangeApplier() {
-                    private Map<String, Integer> fileLineCountMap = new HashMap<>();
+                    private final Map<String, Integer> fileLineCountMap = new HashMap<>();
 
                     @Override
                     public void beforeVfsChange() {

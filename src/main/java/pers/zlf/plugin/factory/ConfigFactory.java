@@ -14,7 +14,7 @@ public class ConfigFactory {
     private CommonConfig commonConfig;
 
     private ConfigFactory() {
-        //TODO 兼容老版本，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
+        //TODO 兼容老版本2019.2.4，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
         commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
     }
 

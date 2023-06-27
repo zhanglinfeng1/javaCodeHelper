@@ -42,7 +42,7 @@ public class TemplateFactory {
         configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), COMMON.TEMPLATE_PATH);
     }
 
-    public static TemplateFactory getInstance() throws Exception {
+    public static TemplateFactory getInstance() {
         if (templateFactory == null) {
             synchronized (TemplateFactory.class) {
                 Equals.of(templateFactory == null).ifTrue(() -> templateFactory = new TemplateFactory());
@@ -51,7 +51,7 @@ public class TemplateFactory {
         return templateFactory;
     }
 
-    public void init(String fullPath, String packagePath, TableInfo tableInfo) throws Exception {
+    public void init(String fullPath, String packagePath, TableInfo tableInfo) {
         getInstance();
         this.tableInfo = tableInfo;
         this.tableInfo.setPackagePath(packagePath);
