@@ -68,10 +68,10 @@ public class AddApiAnnotationAction extends BasicAction {
     }
 
     private void addSwaggerForController(PsiClass psiClass) {
-        addApiAnnotation(new ControllerApi(), psiClass, psiClass.getAnnotations(), psiClass.getModifierList(), psiClass.getName());
+        addApiAnnotation(new ControllerApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiMethod method : psiClass.getMethods()) {
             Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
-            addApiAnnotation(new MethodApi(), method, method.getAnnotations(), method.getModifierList(), method.getName());
+            addApiAnnotation(new MethodApi(), method, method.getModifierList(), method.getName());
             for (PsiParameter parameter : method.getParameterList().getParameters()) {
                 Map<String, PsiAnnotation> parameterAnnotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
                 String parameterComment = Empty.of(parameterCommentMap.get(parameter.getName())).orElse(parameter.getName());
@@ -80,7 +80,7 @@ public class AddApiAnnotationAction extends BasicAction {
                     switch (entry.getKey()) {
                         case ANNOTATION.REQUEST_ATTRIBUTE:
                         case ANNOTATION.REQUEST_HEADER:
-                            addApiAnnotation(new IgnoreApi(), parameter, parameter.getAnnotations(), parameter.getModifierList(), parameterComment);
+                            addApiAnnotation(new IgnoreApi(), parameter, parameter.getModifierList(), parameterComment);
                             break;
                         case ANNOTATION.REQUEST_PARAM:
                         case ANNOTATION.REQUEST_PART:
@@ -89,7 +89,7 @@ public class AddApiAnnotationAction extends BasicAction {
                             ParameterApi parameterApi = new ParameterApi();
                             String required = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.REQUIRED);
                             parameterApi.setRequired(required.equals(COMMON.TRUE));
-                            addApiAnnotation(parameterApi, parameter, parameter.getAnnotations(), parameter.getModifierList(), parameterComment);
+                            addApiAnnotation(parameterApi, parameter, parameter.getModifierList(), parameterComment);
                             break;
                         default:
                             break;
@@ -103,15 +103,14 @@ public class AddApiAnnotationAction extends BasicAction {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return;
         }
-        addApiAnnotation(new ModelApi(), psiClass, psiClass.getAnnotations(), psiClass.getModifierList(), psiClass.getName());
+        addApiAnnotation(new ModelApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiField field : psiClass.getFields()) {
-            addApiAnnotation(new FieldApi(), field, field.getAnnotations(), field.getModifierList(), field.getName());
+            addApiAnnotation(new FieldApi(), field, field.getModifierList(), field.getName());
         }
     }
 
-    private void addApiAnnotation(BasicApi basicApi, PsiElement psiElement, PsiAnnotation[] annotationArr, PsiModifierList modifierList, String psiElementName) {
-        boolean addApiAnnotations = Arrays.stream(annotationArr).noneMatch(a -> basicApi.qualifiedName.equals(a.getQualifiedName()));
-        if (addApiAnnotations && null != modifierList) {
+    private void addApiAnnotation(BasicApi basicApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
+        if (null != modifierList && !modifierList.hasAnnotation(basicApi.qualifiedName)) {
             basicApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
             importClassSet.add(basicApi.qualifiedName);
             annotationMap.put(modifierList, basicApi.toString());
