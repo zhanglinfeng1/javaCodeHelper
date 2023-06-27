@@ -10,14 +10,13 @@ import pers.zlf.plugin.factory.ConfigFactory;
  * @Date create in 2023/4/24 16:22
  */
 public abstract class BasicApi {
-    public final Integer apiType = ConfigFactory.getInstance().getCommonConfig().getApiTool();
-    public final String name;
-    public String qualifiedName;
+    protected final String name;
+    private String qualifiedName;
     private String value;
-    public boolean required;
+    private boolean required;
 
     public BasicApi() {
-        if (COMMON.SWAGGER_API.equals(apiType)) {
+        if (COMMON.SWAGGER_API.equals(ConfigFactory.getInstance().getCommonConfig().getApiTool())) {
             qualifiedName = getSwaggerApi();
         }
         String[] annotationPathArr = this.qualifiedName.split(REGEX.DOT);
@@ -30,12 +29,12 @@ public abstract class BasicApi {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
     public void setRequired(boolean required) {
         this.required = required;
+    }
+
+    public String getQualifiedName() {
+        return qualifiedName;
     }
 
     public String toString() {

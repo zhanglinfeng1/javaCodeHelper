@@ -2,6 +2,7 @@ package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.COMMON;
 import pers.zlf.plugin.constant.REQUEST;
+import pers.zlf.plugin.pojo.ResponseResult;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -36,7 +37,7 @@ public class HttpUtil {
         }
     };
 
-    public static String get(String urlStr) throws Exception {
+    public static <T extends ResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
         String result = COMMON.BLANK_STRING;
         SSLContext sslcontext = SSLContext.getInstance("TLS");
         sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
@@ -51,6 +52,8 @@ public class HttpUtil {
             br.close();
         }
         conn.disconnect();
-        return result;
+        T t = JsonUtil.toObject(result, cls);
+        t.setResponseCode(conn.getResponseCode());
+        return t;
     }
 }

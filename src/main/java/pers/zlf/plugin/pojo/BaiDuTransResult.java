@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * @Author zhanglinfeng
  * @Date create in 2022/10/14 9:53
  */
-public class BaiDuTransResult {
+public class BaiDuTransResult extends ResponseResult{
     private String error_code;
     private String error_msg;
     private List<Detail> trans_result;

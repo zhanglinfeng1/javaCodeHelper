@@ -11,10 +11,10 @@ import com.intellij.psi.PsiFile;
 import pers.zlf.plugin.util.lambda.Equals;
 
 public abstract class BasicAction extends AnAction {
-    public Editor editor;
-    public Project project;
-    public PsiFile psiFile;
-    public VirtualFile virtualFile;
+    protected Editor editor;
+    protected Project project;
+    protected PsiFile psiFile;
+    protected VirtualFile virtualFile;
 
     @Override
     public void actionPerformed(AnActionEvent event) {

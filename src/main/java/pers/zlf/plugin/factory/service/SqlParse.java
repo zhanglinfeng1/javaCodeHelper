@@ -10,7 +10,7 @@ import pers.zlf.plugin.pojo.TableInfo;
  * @Date create in 2022/10/18 9:54
  */
 public abstract class SqlParse {
-    public TableInfo tableInfo;
+    protected TableInfo tableInfo;
 
     public abstract TableInfo getTableInfo(String sqlStr);
 

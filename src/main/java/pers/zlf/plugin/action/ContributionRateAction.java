@@ -36,10 +36,6 @@ import java.util.Optional;
  * @Date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BasicAction {
-    /** 选中的模块 */
-    private Module module;
-    /** 选中的模块名 */
-    private String moduleName;
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -56,14 +52,19 @@ public class ContributionRateAction extends BasicAction {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
-        //选中文件的所属模块
-        module = Optional.ofNullable(virtualFile).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
-        if (null == module) {
+        //项目路径
+        bathPath = MyPsiUtil.getCurrentModulePath(virtualFile, project);
+        if (StringUtil.isEmpty(bathPath.toString()) || StringUtil.isEmpty(bathPath.getFileName().toString())) {
             return false;
         }
-        moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-        bathPath = MyPsiUtil.getCurrentModulePath(virtualFile, project);
-        return !StringUtil.isEmpty(moduleName);
+        //默认当前分支
+        try {
+            String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
+            repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -72,13 +73,6 @@ public class ContributionRateAction extends BasicAction {
         List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
         boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
         List<String> myEmailList = ConfigFactory.getInstance().getCommonConfig().getGitEmailList();
-        //默认当前分支
-        try {
-            String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
-            repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
-        } catch (IOException e) {
-            return;
-        }
         //没有配置取当前邮箱
         if (CollectionUtil.isEmpty(myEmailList)) {
             myEmailList = Empty.of(repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL)).map(List::of).orElse(new ArrayList<>());
@@ -89,10 +83,14 @@ public class ContributionRateAction extends BasicAction {
         //统计模块的贡献率
         totalLineCount = 0;
         myLineCount = 0;
+        Module module = Optional.ofNullable(virtualFile).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
+        if (null == module) {
+            return;
+        }
         for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
             this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
         }
-        CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
+        CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
         //更新贡献率行数
         CodeLinesCountDecorator.updateNode();
     }

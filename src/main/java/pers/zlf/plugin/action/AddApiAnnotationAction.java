@@ -110,9 +110,9 @@ public class AddApiAnnotationAction extends BasicAction {
     }
 
     private void addApiAnnotation(BasicApi basicApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
-        if (null != modifierList && !modifierList.hasAnnotation(basicApi.qualifiedName)) {
+        if (null != modifierList && !modifierList.hasAnnotation(basicApi.getQualifiedName())) {
             basicApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
-            importClassSet.add(basicApi.qualifiedName);
+            importClassSet.add(basicApi.getQualifiedName());
             annotationMap.put(modifierList, basicApi.toString());
         }
     }

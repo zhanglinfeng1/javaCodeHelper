@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 public abstract class FastJump {
     /** 处理结果 */
-    public Map<String, MappingAnnotation> map;
+    private Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
     private final String filterFolderName;
 

@@ -20,17 +20,17 @@ import java.util.Optional;
  */
 public abstract class Completion {
     /** 当前元素 */
-    public PsiElement currentElement;
+    protected PsiElement currentElement;
     /** 当前文本 */
-    public String currentText;
+    protected String currentText;
     /** 当前方法 */
-    public PsiMethod currentMethod;
+    protected PsiMethod currentMethod;
     /** 当前方法所在类 */
-    public PsiClass currentMethodClass;
+    protected PsiClass currentMethodClass;
     /** 是否是新行 */
-    public boolean isNewLine;
+    protected boolean isNewLine;
     /** 自动补全List */
-    public List<LookupElementBuilder> returnList = new ArrayList<>();
+    protected List<LookupElementBuilder> returnList = new ArrayList<>();
 
     public Completion(PsiMethod currentMethod, PsiElement psiElement) {
         this.currentElement = psiElement;
