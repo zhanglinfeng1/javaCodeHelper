@@ -38,7 +38,7 @@ public class FileStartupActivity implements StartupActivity {
 
                     @Override
                     public void beforeVfsChange() {
-                        AsyncFileListener.ChangeApplier.super.afterVfsChange();
+                        AsyncFileListener.ChangeApplier.super.beforeVfsChange();
                         if (!commonConfig.isRealTimeStatistics() || CollectionUtil.isEmpty(fileTypeList)) {
                             return;
                         }
