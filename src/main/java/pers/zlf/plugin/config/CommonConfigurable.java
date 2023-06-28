@@ -50,6 +50,9 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getApiTool().equals(commonConfig.getApiTool())) {
             return true;
         }
+        if (dialog.isEnableCodeCompletion() != commonConfig.isEnableCodeCompletion()) {
+            return true;
+        }
         return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
     }
 
@@ -61,6 +64,7 @@ public class CommonConfigurable implements Configurable {
         commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
         commonConfig.setDateClassType(dialog.getDateClassType());
         commonConfig.setApiTool(dialog.getApiTool());
+        commonConfig.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
         ConfigFactory.getInstance().setCommonConfig(commonConfig);
     }
 

@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class CommonConfigDialog extends BaseDialog {
     private JButton downloadButton;
     private JComboBox<String> dateClassComboBox;
     private JComboBox<String> apiToolComboBox;
+    private JRadioButton codeCompletionEnableButton;
+    private JRadioButton codeCompletionDisabledButton;
 
     public CommonConfigDialog() {
         addFocusListener(customTemplatesPathField, Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
@@ -86,4 +89,7 @@ public class CommonConfigDialog extends BaseDialog {
         return apiToolComboBox.getSelectedIndex();
     }
 
+    public boolean isEnableCodeCompletion(){
+        return codeCompletionEnableButton.isSelected();
+    }
 }

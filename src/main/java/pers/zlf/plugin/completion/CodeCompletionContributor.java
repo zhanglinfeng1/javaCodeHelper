@@ -11,6 +11,7 @@ import pers.zlf.plugin.completion.service.BaseCompletion;
 import pers.zlf.plugin.completion.service.impl.ConstructorCompletion;
 import pers.zlf.plugin.completion.service.impl.MethodCompletion;
 import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.factory.ConfigFactory;
 
 import java.util.Optional;
 
@@ -23,6 +24,11 @@ public class CodeCompletionContributor extends CompletionContributor {
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
+            return;
+        }
+        //未开启代码补全
+        boolean enableCodeCompletion = ConfigFactory.getInstance().getCommonConfig().isEnableCodeCompletion();
+        if (!enableCodeCompletion) {
             return;
         }
         //当前光标所在的方法

@@ -28,6 +28,8 @@ public class CommonConfig {
     private List<String> moduleNameList = new ArrayList<>();
     /** api工具 */
     private Integer apiTool = Common.SWAGGER_API;
+    /** 开启代码补全 */
+    private boolean enableCodeCompletion = true;
     /** 统计注释 */
     private boolean countComment = true;
     /** 实时统计 */
@@ -139,5 +141,13 @@ public class CommonConfig {
 
     public void setRealTimeStatistics(boolean realTimeStatistics) {
         this.realTimeStatistics = realTimeStatistics;
+    }
+
+    public boolean isEnableCodeCompletion() {
+        return enableCodeCompletion;
+    }
+
+    public void setEnableCodeCompletion(boolean enableCodeCompletion) {
+        this.enableCodeCompletion = enableCodeCompletion;
     }
 }
