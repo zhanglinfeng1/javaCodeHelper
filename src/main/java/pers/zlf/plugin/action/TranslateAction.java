@@ -21,7 +21,7 @@ public class TranslateAction extends BasicAction {
 
     @Override
     public boolean check() {
-        if (null == editor) {
+        if (null == editor || !psiFile.isWritable()) {
             return false;
         }
         //获取选择内容
@@ -54,8 +54,7 @@ public class TranslateAction extends BasicAction {
                 }
                 Empty.of(translateResult).map(t -> COMMON.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(editor.getSelectionModel().getSelectionEnd(), t)));
             } catch (Exception e) {
-                String errorMessage = COMMON.TRANSLATE_MAP.get(commonConfig.getTranslateApi()) + COMMON.SPACE + COMMON.COLON + COMMON.SPACE + e.getMessage();
-                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(errorMessage, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(e.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon()));
             }
         });
     }

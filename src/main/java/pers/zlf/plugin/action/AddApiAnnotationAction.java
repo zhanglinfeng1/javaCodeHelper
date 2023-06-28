@@ -45,7 +45,7 @@ public class AddApiAnnotationAction extends BasicAction {
 
     @Override
     public boolean check() {
-        if (psiFile instanceof PsiJavaFile) {
+        if (psiFile.isWritable() && psiFile instanceof PsiJavaFile) {
             psiJavaFile = (PsiJavaFile) psiFile;
             return true;
         }
