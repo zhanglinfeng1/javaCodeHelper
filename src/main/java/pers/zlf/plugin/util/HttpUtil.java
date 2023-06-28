@@ -1,8 +1,8 @@
 package pers.zlf.plugin.util;
 
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.REQUEST;
-import pers.zlf.plugin.pojo.ResponseResult;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Request;
+import pers.zlf.plugin.pojo.BaseResponseResult;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,8 +17,8 @@ import java.security.cert.X509Certificate;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/12/22 18:14
+ * @author zhanglinfeng
+ * @date create in 2022/12/22 18:14
  */
 public class HttpUtil {
     private static final TrustManager X_509_TRUST_MANAGER = new X509TrustManager() {
@@ -37,15 +37,15 @@ public class HttpUtil {
         }
     };
 
-    public static <T extends ResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
-        String result = COMMON.BLANK_STRING;
+    public static <T extends BaseResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
+        String result = Common.BLANK_STRING;
         SSLContext sslcontext = SSLContext.getInstance("TLS");
         sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         Equals.of(conn instanceof HttpsURLConnection).ifTrue(() -> ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory()));
-        conn.setConnectTimeout(REQUEST.SOCKET_TIMEOUT);
-        conn.setRequestMethod(REQUEST.GET);
+        conn.setConnectTimeout(Request.SOCKET_TIMEOUT);
+        conn.setRequestMethod(Request.GET);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             result = br.lines().collect(Collectors.joining());

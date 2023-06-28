@@ -6,8 +6,8 @@ import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.lambda.Equals;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/9 10:33
+ * @author zhanglinfeng
+ * @date create in 2022/10/9 10:33
  */
 public class ConfigFactory {
     private static volatile ConfigFactory configFactory;

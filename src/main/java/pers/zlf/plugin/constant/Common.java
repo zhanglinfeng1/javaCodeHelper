@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/8 17:52
+ * @author zhanglinfeng
+ * @date create in 2022/9/8 17:52
  */
-public class COMMON {
+public class Common {
     /** 通用常量 */
     public static final String SUCCESS = "success";
     public static final String TRUE = "true";

@@ -2,7 +2,7 @@ package pers.zlf.plugin.pojo;
 
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMethod;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/28 10:42
+ * @author zhanglinfeng
+ * @date create in 2022/9/28 10:42
  */
 public class MappingAnnotation {
     private String url;
@@ -64,6 +64,6 @@ public class MappingAnnotation {
 
     @Override
     public String toString() {
-        return Arrays.stream(this.url.split(COMMON.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.SLASH)) + COMMON.UNDERSCORE + this.method;
+        return Arrays.stream(this.url.split(Common.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SLASH)) + Common.UNDERSCORE + this.method;
     }
 }

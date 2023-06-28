@@ -3,10 +3,10 @@ package pers.zlf.plugin.constant;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/26 16:27
+ * @author zhanglinfeng
+ * @date create in 2022/9/26 16:27
  */
-public class ANNOTATION {
+public class Annotation {
     /** feign注解 */
     public static final String OPEN_FEIGN_CLIENT = "org.springframework.cloud.openfeign.FeignClient";
     public static final String NETFLIX_FEIGN_CLIENT = "org.springframework.cloud.netflix.feign.FeignClient";

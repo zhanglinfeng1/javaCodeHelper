@@ -1,16 +1,16 @@
 package pers.zlf.plugin.pojo;
 
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/14 9:53
+ * @author zhanglinfeng
+ * @date create in 2022/10/14 9:53
  */
-public class BaiDuTransResult extends ResponseResult{
+public class BaiDuTransResult extends BaseResponseResult {
     private String error_code;
     private String error_msg;
     private List<Detail> trans_result;
@@ -40,7 +40,7 @@ public class BaiDuTransResult extends ResponseResult{
     }
 
     public String getResult() {
-        return Optional.ofNullable(this.trans_result).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(COMMON.SEMICOLON))).orElse(null);
+        return Optional.ofNullable(this.trans_result).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(Common.SEMICOLON))).orElse(null);
     }
 
     private static class Detail {

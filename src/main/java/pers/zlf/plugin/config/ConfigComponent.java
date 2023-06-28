@@ -6,16 +6,16 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.CommonConfig;
 
 import java.util.Objects;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/4 8:18
+ * @author zhanglinfeng
+ * @date create in 2022/10/4 8:18
  */
-@State(name = COMMON.JAVA_CODE_HELP, storages = {@Storage("javaCodeHelpConfig.xml")})
+@State(name = Common.JAVA_CODE_HELP, storages = {@Storage("javaCodeHelpConfig.xml")})
 public class ConfigComponent implements PersistentStateComponent<CommonConfig> {
 
     private final CommonConfig commonConfig = new CommonConfig();

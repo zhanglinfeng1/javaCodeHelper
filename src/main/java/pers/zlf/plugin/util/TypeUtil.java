@@ -2,14 +2,14 @@ package pers.zlf.plugin.util;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.CLASS_TYPE;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.ClassType;
 
 import java.util.Arrays;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/8 17:37
+ * @author zhanglinfeng
+ * @date create in 2022/9/8 17:37
  */
 public class TypeUtil {
 
@@ -20,7 +20,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isList(PsiClass psiClass) {
-        return judgmentType(psiClass, CLASS_TYPE.LIST);
+        return judgmentType(psiClass, ClassType.LIST);
     }
 
     /**
@@ -30,7 +30,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSet(PsiClass psiClass) {
-        return judgmentType(psiClass, CLASS_TYPE.SET);
+        return judgmentType(psiClass, ClassType.SET);
     }
 
     /**
@@ -41,8 +41,8 @@ public class TypeUtil {
      */
     public static boolean isSimpleArr(PsiType psiType) {
         String str = psiType.getPresentableText();
-        int firstIndex = str.indexOf(COMMON.LEFT_BRACKETS);
-        return firstIndex != -1 && firstIndex == str.lastIndexOf(COMMON.LEFT_BRACKETS);
+        int firstIndex = str.indexOf(Common.LEFT_BRACKETS);
+        return firstIndex != -1 && firstIndex == str.lastIndexOf(Common.LEFT_BRACKETS);
     }
 
     /**
@@ -69,6 +69,6 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSimpleType(String typeStr) {
-        return CLASS_TYPE.BASIC_TYPE_LIST.contains(typeStr) || CLASS_TYPE.COMMON_TYPE_LIST.contains(typeStr);
+        return ClassType.BASIC_TYPE_LIST.contains(typeStr) || ClassType.COMMON_TYPE_LIST.contains(typeStr);
     }
 }

@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.action.CodeLineCountAction;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/12 10:17
+ * @author zhanglinfeng
+ * @date create in 2023/6/12 10:17
  */
 public class FileStartupActivity implements StartupActivity {
 
@@ -34,7 +34,7 @@ public class FileStartupActivity implements StartupActivity {
         List<String> fileTypeList = commonConfig.getFileTypeList();
         //监听文件变化
         VirtualFileManager.getInstance().addAsyncFileListener(events -> new AsyncFileListener.ChangeApplier() {
-                    private final Map<String, Integer> fileLineCountMap = new HashMap<>();
+                    private final Map<String, Integer> fileLineCountMap = new HashMap<>(2);
 
                     @Override
                     public void beforeVfsChange() {
@@ -47,7 +47,7 @@ public class FileStartupActivity implements StartupActivity {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
                                 continue;
                             }
-                            if (PathUtil.contain(vFileEvent.getFile().getPath(), COMMON.IDEA)) {
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.IDEA)) {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
@@ -66,7 +66,7 @@ public class FileStartupActivity implements StartupActivity {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
                                 continue;
                             }
-                            if (PathUtil.contain(vFileEvent.getFile().getPath(), COMMON.IDEA)) {
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.IDEA)) {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {

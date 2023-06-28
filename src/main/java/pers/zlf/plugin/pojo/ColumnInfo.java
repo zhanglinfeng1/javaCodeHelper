@@ -1,14 +1,14 @@
 package pers.zlf.plugin.pojo;
 
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/8 10:34
+ * @author zhanglinfeng
+ * @date create in 2022/9/8 10:34
  */
 public class ColumnInfo {
     /** sql原始字段名 */
@@ -31,7 +31,7 @@ public class ColumnInfo {
 
     public ColumnInfo(String sqlColumnName) {
         this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(COMMON.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
+        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(Common.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
         this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
     }
 

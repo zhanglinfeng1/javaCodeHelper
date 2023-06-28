@@ -11,9 +11,9 @@ import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.MESSAGE;
-import pers.zlf.plugin.constant.REGEX;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentFormat;
@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/14 11:48
+ * @author zhanglinfeng
+ * @date create in 2023/6/14 11:48
  */
-public class ContributionRateAction extends BasicAction {
+public class ContributionRateAction extends BaseAction {
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -49,7 +49,7 @@ public class ContributionRateAction extends BasicAction {
     public boolean check() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
         //项目路径
@@ -59,7 +59,7 @@ public class ContributionRateAction extends BasicAction {
         }
         //默认当前分支
         try {
-            String gitPath = Paths.get(bathPath.toString(), COMMON.GIT).toString();
+            String gitPath = Paths.get(bathPath.toString(), Common.GIT).toString();
             repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
         } catch (IOException e) {
             return false;
@@ -75,7 +75,7 @@ public class ContributionRateAction extends BasicAction {
         List<String> myEmailList = ConfigFactory.getInstance().getCommonConfig().getGitEmailList();
         //没有配置取当前邮箱
         if (CollectionUtil.isEmpty(myEmailList)) {
-            myEmailList = Empty.of(repository.getConfig().getString(COMMON.USER, null, COMMON.EMAIL)).map(List::of).orElse(new ArrayList<>());
+            myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
             if (CollectionUtil.isEmpty(myEmailList)) {
                 return;
             }
@@ -110,7 +110,7 @@ public class ContributionRateAction extends BasicAction {
         try {
             //相对路径
             String filePath = bathPath.relativize(Paths.get(virtualFile.getPath())).toString();
-            filePath = filePath.replaceAll(REGEX.BACKSLASH, COMMON.SLASH);
+            filePath = filePath.replaceAll(Regex.BACKSLASH, Common.SLASH);
             BlameResult result = new BlameCommand(repository).setFilePath(filePath).call();
             if (null == result) {
                 return;

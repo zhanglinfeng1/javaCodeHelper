@@ -1,20 +1,21 @@
 package pers.zlf.plugin.pojo.annotation;
 
-import pers.zlf.plugin.constant.ANNOTATION;
+import pers.zlf.plugin.constant.Annotation;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/4/24 16:22
+ * @author zhanglinfeng
+ * @date create in 2023/4/24 16:22
  */
-public class ControllerApi extends BasicApi {
+public class ControllerApi extends BaseApi {
 
     @Override
     public String getSwaggerApi() {
-        return ANNOTATION.SWAGGER_API;
+        return Annotation.SWAGGER_API;
     }
 
+    @Override
     public String toString() {
-        return super.toString().replaceFirst(ANNOTATION.VALUE, ANNOTATION.TAGS);
+        return super.toString().replaceFirst(Annotation.VALUE, Annotation.TAGS);
     }
 
 }

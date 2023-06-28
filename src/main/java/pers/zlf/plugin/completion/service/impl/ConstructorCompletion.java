@@ -10,8 +10,8 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
-import pers.zlf.plugin.completion.service.Completion;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.completion.service.BaseCompletion;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;
@@ -20,10 +20,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/16 19:02
+ * @author zhanglinfeng
+ * @date create in 2022/10/16 19:02
  */
-public class ConstructorCompletion extends Completion {
+public class ConstructorCompletion extends BaseCompletion {
 
     public ConstructorCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         super(currentMethod, psiElement);
@@ -35,10 +35,10 @@ public class ConstructorCompletion extends Completion {
             return;
         }
         //构造方法的方法体
-        String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(COMMON.BLANK_STRING);
+        String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(Common.BLANK_STRING);
         StringBuilder fillStr = new StringBuilder();
         //待处理的变量
-        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(COMMON.THIS_STR + f.getName()))
+        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(Common.THIS_STR + f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         loop:
@@ -49,7 +49,7 @@ public class ConstructorCompletion extends Completion {
             String parameterName = parameter.getName();
             PsiType parameterType = parameter.getType();
             if (parameterType.getInternalCanonicalText().equals(fieldMap.get(parameterName))) {
-                fillStr.append(COMMON.THIS_STR).append(parameterName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.SEMICOLON);
+                fillStr.append(Common.THIS_STR).append(parameterName).append(Common.EQ_STR).append(parameterName).append(Common.SEMICOLON);
                 fieldMap.remove(parameterName);
                 continue;
             }
@@ -64,13 +64,13 @@ public class ConstructorCompletion extends Completion {
                 }
                 String fieldName = field.getName();
                 if (field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
-                    fillStr.append(COMMON.THIS_STR).append(fieldName).append(COMMON.EQ_STR).append(parameterName).append(COMMON.DOT).append(COMMON.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(COMMON.END_STR);
+                    fillStr.append(Common.THIS_STR).append(fieldName).append(Common.EQ_STR).append(parameterName).append(Common.DOT).append(Common.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(Common.END_STR);
                     fieldMap.remove(fieldName);
                 }
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
-            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText(COMMON.FILL_CONSTRUCTOR)
+            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText(Common.FILL_CONSTRUCTOR)
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
     }

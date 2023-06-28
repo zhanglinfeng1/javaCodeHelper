@@ -3,8 +3,8 @@ package pers.zlf.plugin.util;
 import java.util.Collection;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/2/13 10:36
+ * @author zhanglinfeng
+ * @date create in 2023/2/13 10:36
  */
 public class CollectionUtil {
 

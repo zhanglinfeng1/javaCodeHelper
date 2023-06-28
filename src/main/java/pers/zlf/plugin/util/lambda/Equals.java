@@ -5,8 +5,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/1/13 14:17
+ * @author zhanglinfeng
+ * @date create in 2023/1/13 14:17
  */
 public final class Equals<T> {
     private Boolean run;

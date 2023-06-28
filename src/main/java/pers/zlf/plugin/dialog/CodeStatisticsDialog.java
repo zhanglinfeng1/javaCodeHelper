@@ -1,8 +1,8 @@
 package pers.zlf.plugin.dialog;
 
 import com.intellij.ui.table.JBTable;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON_ENUM;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/15 15:16
+ * @author zhanglinfeng
+ * @date create in 2023/6/15 15:16
  */
 public class CodeStatisticsDialog extends BaseDialog {
     private JPanel panel;
@@ -52,19 +52,19 @@ public class CodeStatisticsDialog extends BaseDialog {
 
         defaultTableModel.getDataVector().clear();
         gitEmailTableModel.getDataVector().clear();
-        addMouseListener(addFileTypeButton, ICON_ENUM.ADD);
+        addMouseListener(addFileTypeButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(fileTypeList)) {
-            removeMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);
+            removeMouseListener(deleteFileTypeButton, IconEnum.REMOVE);
         } else {
             fileTypeList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
-            addMouseListener(deleteFileTypeButton, ICON_ENUM.REMOVE);
+            addMouseListener(deleteFileTypeButton, IconEnum.REMOVE);
         }
-        addMouseListener(addGitEmailButton, ICON_ENUM.ADD);
+        addMouseListener(addGitEmailButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(gitEmailList)) {
-            removeMouseListener(deleteGitEmailButton, ICON_ENUM.REMOVE);
+            removeMouseListener(deleteGitEmailButton, IconEnum.REMOVE);
         } else {
             gitEmailList.forEach(value -> gitEmailTableModel.addRow(new String[]{value}));
-            addMouseListener(deleteGitEmailButton, ICON_ENUM.REMOVE);
+            addMouseListener(deleteGitEmailButton, IconEnum.REMOVE);
         }
     }
 
@@ -93,13 +93,13 @@ public class CodeStatisticsDialog extends BaseDialog {
         jbTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jbTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JTextField()));
         addButton.addActionListener(e -> {
-            tableModel.addRow(new String[]{COMMON.BLANK_STRING});
-            addMouseListener(deleteButton, ICON_ENUM.REMOVE);
+            tableModel.addRow(new String[]{Common.BLANK_STRING});
+            addMouseListener(deleteButton, IconEnum.REMOVE);
         });
         deleteButton.addActionListener(e -> Equals.of(jbTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
             tableModel.removeRow(rowNum);
             if (jbTable.getRowCount() == 0) {
-                removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+                removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         }));
     }

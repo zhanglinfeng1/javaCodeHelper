@@ -3,8 +3,8 @@ package pers.zlf.plugin.pojo;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/15 13:49
+ * @author zhanglinfeng
+ * @date create in 2023/6/15 13:49
  */
 public class CommentFormat {
     /** 段落注释 */

@@ -3,10 +3,10 @@ package pers.zlf.plugin.constant;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/16 10:29
+ * @author zhanglinfeng
+ * @date create in 2022/10/16 10:29
  */
-public class CLASS_TYPE {
+public class ClassType {
     public static final String LIST = "List";
     public static final String SET = "Set";
     public static final String ARRAYS_PATH = "java.util.Arrays";

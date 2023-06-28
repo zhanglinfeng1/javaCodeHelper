@@ -5,16 +5,16 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
 
 import java.util.Collection;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/1/10 16:35
+ * @author zhanglinfeng
+ * @date create in 2023/1/10 16:35
  */
-public abstract class AbstractLineMarkerProvider<T> extends RelatedItemLineMarkerProvider {
+public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerProvider {
 
     public Collection<? super RelatedItemLineMarkerInfo<?>> result;
     public T element;
@@ -28,12 +28,21 @@ public abstract class AbstractLineMarkerProvider<T> extends RelatedItemLineMarke
         }
     }
 
+    /**
+     * 校验元素
+     *
+     * @param element element
+     * @return boolean
+     */
     public abstract boolean checkPsiElement(PsiElement element);
 
+    /**
+     * 处理元素
+     */
     public abstract void dealPsiElement();
 
     public void addLineMarker(PsiElement targets, PsiElement element) {
-        result.add(NavigationGutterIconBuilder.create(ICON.LOGO).setTargets(targets).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(element));
+        result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
     public void addLineMarkerBoth(PsiElement targets, PsiElement element) {

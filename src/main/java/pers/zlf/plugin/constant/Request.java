@@ -3,10 +3,10 @@ package pers.zlf.plugin.constant;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/12/8 15:49
+ * @author zhanglinfeng
+ * @date create in 2022/12/8 15:49
  */
-public class REQUEST {
+public class Request {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";

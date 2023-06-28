@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.action.CodeLineCountAction;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CodeStatisticsInfo;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -27,12 +27,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/9 15:26
+ * @author zhanglinfeng
+ * @date create in 2023/6/9 15:26
  */
 public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /** 代码统计Map */
-    private static final Map<String, CodeStatisticsInfo> codeStatisticsInfoMap = new HashMap<>();
+    private static final Map<String, CodeStatisticsInfo> STATISTICS_MAP = new HashMap<>();
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
@@ -45,14 +45,14 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
         }
         if (node instanceof PsiDirectoryNode) {
             //只处理根节点
-            Path directoryPath = Paths.get(Optional.ofNullable(node.getVirtualFile()).map(VirtualFile::getPath).orElse(COMMON.BLANK_STRING));
-            Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(COMMON.BLANK_STRING));
+            Path directoryPath = Paths.get(Optional.ofNullable(node.getVirtualFile()).map(VirtualFile::getPath).orElse(Common.BLANK_STRING));
+            Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
             if (null == node.getName() || null == node.getVirtualFile() || StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
                 return;
             }
             String directoryModuleName = MyPsiUtil.getModuleName(node.getVirtualFile(), project);
             //处理备注
-            CodeStatisticsInfo codeStatisticsInfo = codeStatisticsInfoMap.get(directoryModuleName);
+            CodeStatisticsInfo codeStatisticsInfo = STATISTICS_MAP.get(directoryModuleName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
                 if (commonConfig.isRealTimeStatistics()) {
@@ -66,7 +66,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
                     codeStatisticsInfo.setLineCount(count);
                 }
                 codeStatisticsInfo.setProjectName(project.getName());
-                codeStatisticsInfoMap.put(directoryModuleName, codeStatisticsInfo);
+                STATISTICS_MAP.put(directoryModuleName, codeStatisticsInfo);
             }
             codeStatisticsInfo.dealPresentationData(data);
             updateNode(codeStatisticsInfo);
@@ -84,7 +84,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param projectName 项目名
      */
     public static void clearLineCount(String projectName) {
-        codeStatisticsInfoMap.values().stream().filter(t -> projectName.equals(t.getProjectName())).forEach(t -> t.setLineCount(0));
+        STATISTICS_MAP.values().stream().filter(t -> projectName.equals(t.getProjectName())).forEach(t -> t.setLineCount(0));
     }
 
     /**
@@ -99,7 +99,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             return;
         }
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-        Optional.ofNullable(codeStatisticsInfoMap.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
+        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
     }
 
     /**
@@ -110,7 +110,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param myCount    我提交的行数
      */
     public static void updateContributionRate(String moduleName, int totalCount, int myCount) {
-        Optional.ofNullable(codeStatisticsInfoMap.get(moduleName)).ifPresent(t -> {
+        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> {
             t.setTotalGitLineCount(totalCount + t.getTotalGitLineCount());
             t.setMyGitLineCount(myCount + t.getMyGitLineCount());
         });
@@ -120,7 +120,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * 更新 代码行数和贡献率
      */
     public static void updateNode() {
-        codeStatisticsInfoMap.values().forEach(CodeLinesCountDecorator::updateNode);
+        STATISTICS_MAP.values().forEach(CodeLinesCountDecorator::updateNode);
     }
 
     /**
@@ -132,12 +132,12 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
         String locationString = codeStatisticsInfo.getOldLocationString();
         //代码行数
         if (0 != codeStatisticsInfo.getLineCount()) {
-            locationString = COMMON.LEFT_PARENTHESES + codeStatisticsInfo.getLineCount() + COMMON.RIGHT_PARENTHESES + locationString;
+            locationString = Common.LEFT_PARENTHESES + codeStatisticsInfo.getLineCount() + Common.RIGHT_PARENTHESES + locationString;
         }
         //贡献率
         if (0 != codeStatisticsInfo.getTotalGitLineCount()) {
-            String contributionRate = MathUtil.percentage(codeStatisticsInfo.getMyGitLineCount(), codeStatisticsInfo.getTotalGitLineCount(), 2) + COMMON.PERCENT_SIGN;
-            locationString = COMMON.LEFT_PARENTHESES + contributionRate + COMMON.RIGHT_PARENTHESES + locationString;
+            String contributionRate = MathUtil.percentage(codeStatisticsInfo.getMyGitLineCount(), codeStatisticsInfo.getTotalGitLineCount(), 2) + Common.PERCENT_SIGN;
+            locationString = Common.LEFT_PARENTHESES + contributionRate + Common.RIGHT_PARENTHESES + locationString;
         }
         codeStatisticsInfo.getData().setLocationString(locationString);
     }

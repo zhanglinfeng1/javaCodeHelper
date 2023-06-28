@@ -13,10 +13,10 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.xml.XmlFile;
-import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.CLASS_TYPE;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.XML;
+import pers.zlf.plugin.constant.Annotation;
+import pers.zlf.plugin.constant.ClassType;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Xml;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.XmlUtil;
 
@@ -29,10 +29,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/1/6 14:25
+ * @author zhanglinfeng
+ * @date create in 2023/1/6 14:25
  */
-public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> {
+public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     private String classFullName;
     private Map<String, PsiMethod> methodMap;
 
@@ -54,20 +54,20 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
     }
 
     private void addByAnnotation() {
-        Map<String, PsiClass[]> psiClassMap = new HashMap<>();
+        Map<String, PsiClass[]> psiClassMap = new HashMap<>(2);
         PsiShortNamesCache cache = PsiShortNamesCache.getInstance(element.getProject());
         GlobalSearchScope searchScope = element.getResolveScope();
         for (PsiMethod psiMethod : element.getMethods()) {
-            Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && ANNOTATION.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
+            Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && Annotation.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isPresent()) {
                 PsiAnnotation annotation = annotationOptional.get();
-                String className = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.TYPE).replace(CLASS_TYPE.CLASS_FILE, COMMON.BLANK_STRING);
+                String className = MyPsiUtil.getAnnotationValue(annotation, Annotation.TYPE).replace(ClassType.CLASS_FILE, Common.BLANK_STRING);
                 PsiClass[] psiClassArr = Optional.ofNullable(psiClassMap.get(className)).orElseGet(() -> {
                     PsiClass[] searchResultArr = cache.getClassesByName(className, searchScope);
                     psiClassMap.put(className, searchResultArr);
                     return searchResultArr;
                 });
-                Arrays.stream(psiClassArr).map(c -> Arrays.stream(c.getMethods()).filter(m -> MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.METHOD).equals(m.getName())).findAny())
+                Arrays.stream(psiClassArr).map(c -> Arrays.stream(c.getMethods()).filter(m -> MyPsiUtil.getAnnotationValue(annotation, Annotation.METHOD).equals(m.getName())).findAny())
                         .filter(Optional::isPresent).map(Optional::get).findAny().ifPresent(t -> addLineMarkerBoth(t, psiMethod));
             }
         }
@@ -83,7 +83,7 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
         PsiManager manager = PsiManager.getInstance(project);
         Optional.ofNullable(element.getContainingFile()).map(PsiFile::getVirtualFile).map(virtualFile -> ModuleUtil.findModuleForFile(virtualFile, project))
                 .map(ModuleRootManager::getInstance).map(ModuleRootManager::getSourceRoots)
-                .ifPresent(virtualFiles -> Arrays.stream(virtualFiles).filter(virtualFile -> virtualFile.getPath().endsWith(COMMON.RESOURCES))
+                .ifPresent(virtualFiles -> Arrays.stream(virtualFiles).filter(virtualFile -> virtualFile.getPath().endsWith(Common.RESOURCES))
                         .map(manager::findDirectory).filter(Objects::nonNull).forEach(this::findXml));
     }
 
@@ -92,9 +92,9 @@ public class MapperFastJumpProvider extends AbstractLineMarkerProvider<PsiClass>
         Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::findXml);
         //文件
         Arrays.stream(psiDirectory.getFiles()).filter(f -> f instanceof XmlFile)
-                .map(f -> XmlUtil.getRootTagByName((XmlFile) f, XML.MAPPER))
-                .filter(rootTag -> null != rootTag && classFullName.equals(rootTag.getAttributeValue(XML.NAMESPACE)))
-                .map(rootTag -> XmlUtil.findTags(rootTag, XML.INSERT, XML.UPDATE, XML.DELETE, XML.SELECT))
-                .forEach(rootTagList -> rootTagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(XML.ID)).map(methodMap::get).ifPresent(m -> addLineMarker(tag, m))));
+                .map(f -> XmlUtil.getRootTagByName((XmlFile) f, Xml.MAPPER))
+                .filter(rootTag -> null != rootTag && classFullName.equals(rootTag.getAttributeValue(Xml.NAMESPACE)))
+                .map(rootTag -> XmlUtil.findTags(rootTag, Xml.INSERT, Xml.UPDATE, Xml.DELETE, Xml.SELECT))
+                .forEach(rootTagList -> rootTagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(m -> addLineMarker(tag, m))));
     }
 }

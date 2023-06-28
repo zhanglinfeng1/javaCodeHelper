@@ -2,7 +2,7 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 import java.util.Optional;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/4 14:03
+ * @author zhanglinfeng
+ * @date create in 2022/10/4 14:03
  */
 public class CommonConfigDialog extends BaseDialog {
     private JPanel panel;
@@ -30,13 +30,13 @@ public class CommonConfigDialog extends BaseDialog {
     private JComboBox<String> apiToolComboBox;
 
     public CommonConfigDialog() {
-        addFocusListener(customTemplatesPathField, COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(customTemplatesPathField, Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         downloadButton.addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().download();
-                Messages.showMessageDialog(COMMON.SUCCESS, COMMON.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(Common.SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), COMMON.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
             }
         });
     }
@@ -48,7 +48,7 @@ public class CommonConfigDialog extends BaseDialog {
         String customTemplatesPath = commonConfig.getCustomTemplatesPath();
         if (StringUtil.isEmpty(customTemplatesPath)) {
             customTemplatesPathField.setForeground(JBColor.GRAY);
-            customTemplatesPathField.setText(COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
+            customTemplatesPathField.setText(Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         } else {
             customTemplatesPathField.setText(customTemplatesPath);
         }
@@ -75,7 +75,7 @@ public class CommonConfigDialog extends BaseDialog {
 
     public String getCustomTemplatesPath() {
         String path = customTemplatesPathField.getText();
-        return COMMON.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? COMMON.BLANK_STRING : path;
+        return Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? Common.BLANK_STRING : path;
     }
 
     public Integer getDateClassType() {

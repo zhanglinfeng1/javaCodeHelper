@@ -12,9 +12,9 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.search.GlobalSearchScope;
-import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.pojo.annotation.BasicApi;
+import pers.zlf.plugin.constant.Annotation;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.pojo.annotation.BaseApi;
 import pers.zlf.plugin.pojo.annotation.ControllerApi;
 import pers.zlf.plugin.pojo.annotation.FieldApi;
 import pers.zlf.plugin.pojo.annotation.IgnoreApi;
@@ -35,10 +35,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/4/24 15:26
+ * @author zhanglinfeng
+ * @date create in 2023/4/24 15:26
  */
-public class AddApiAnnotationAction extends BasicAction {
+public class AddApiAnnotationAction extends BaseAction {
     private PsiJavaFile psiJavaFile;
     private Set<String> importClassSet;
     private Map<PsiModifierList, String> annotationMap;
@@ -54,8 +54,8 @@ public class AddApiAnnotationAction extends BasicAction {
 
     @Override
     public void action() {
-        importClassSet = new HashSet<>();
-        annotationMap = new HashMap<>();
+        importClassSet = new HashSet<>(2);
+        annotationMap = new HashMap<>(2);
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             Equals.of(psiClass).and(MyPsiUtil::isController).then(this::addSwaggerForController, this::addSwaggerForModel);
         }
@@ -78,17 +78,17 @@ public class AddApiAnnotationAction extends BasicAction {
                 for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {
                     PsiAnnotation annotation = entry.getValue();
                     switch (entry.getKey()) {
-                        case ANNOTATION.REQUEST_ATTRIBUTE:
-                        case ANNOTATION.REQUEST_HEADER:
+                        case Annotation.REQUEST_ATTRIBUTE:
+                        case Annotation.REQUEST_HEADER:
                             addApiAnnotation(new IgnoreApi(), parameter, parameter.getModifierList(), parameterComment);
                             break;
-                        case ANNOTATION.REQUEST_PARAM:
-                        case ANNOTATION.REQUEST_PART:
-                        case ANNOTATION.PATH_VARIABLE:
-                        case ANNOTATION.REQUEST_BODY:
+                        case Annotation.REQUEST_PARAM:
+                        case Annotation.REQUEST_PART:
+                        case Annotation.PATH_VARIABLE:
+                        case Annotation.REQUEST_BODY:
                             ParameterApi parameterApi = new ParameterApi();
-                            String required = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.REQUIRED);
-                            parameterApi.setRequired(required.equals(COMMON.TRUE));
+                            String required = MyPsiUtil.getAnnotationValue(annotation, Annotation.REQUIRED);
+                            parameterApi.setRequired(required.equals(Common.TRUE));
                             addApiAnnotation(parameterApi, parameter, parameter.getModifierList(), parameterComment);
                             break;
                         default:
@@ -109,11 +109,11 @@ public class AddApiAnnotationAction extends BasicAction {
         }
     }
 
-    private void addApiAnnotation(BasicApi basicApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
-        if (null != modifierList && !modifierList.hasAnnotation(basicApi.getQualifiedName())) {
-            basicApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
-            importClassSet.add(basicApi.getQualifiedName());
-            annotationMap.put(modifierList, basicApi.toString());
+    private void addApiAnnotation(BaseApi baseApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
+        if (null != modifierList && !modifierList.hasAnnotation(baseApi.getQualifiedName())) {
+            baseApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
+            importClassSet.add(baseApi.getQualifiedName());
+            annotationMap.put(modifierList, baseApi.toString());
         }
     }
 

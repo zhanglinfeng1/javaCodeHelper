@@ -5,7 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
@@ -26,20 +26,20 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/13 17:01
+ * @author zhanglinfeng
+ * @date create in 2022/9/13 17:01
  */
 public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
-    private static final Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
+    private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_23);
     /** 解析后的表信息 */
     private TableInfo tableInfo;
     /** 全路径 */
     private String fullPath;
 
     private TemplateFactory() {
-        configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-        configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), COMMON.TEMPLATE_PATH);
+        CONFIGURATION.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
+        CONFIGURATION.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), Common.TEMPLATE_PATH);
     }
 
     public static TemplateFactory getInstance() {
@@ -55,7 +55,7 @@ public class TemplateFactory {
         getInstance();
         this.tableInfo = tableInfo;
         this.tableInfo.setPackagePath(packagePath);
-        this.fullPath = fullPath + (fullPath.endsWith(COMMON.DOUBLE_BACKSLASH) ? COMMON.BLANK_STRING : COMMON.DOUBLE_BACKSLASH);
+        this.fullPath = fullPath + (fullPath.endsWith(Common.DOUBLE_BACKSLASH) ? Common.BLANK_STRING : Common.DOUBLE_BACKSLASH);
     }
 
     public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
@@ -66,17 +66,17 @@ public class TemplateFactory {
             File file = new File(customTemplatesPath);
             Equals.of(file.exists()).ifFalseThrow(() -> new Exception("Custom template path error"));
             Equals.of(file.isDirectory()).ifFalseThrow(() -> new Exception("Non folder path"));
-            configuration.setDirectoryForTemplateLoading(file);
+            CONFIGURATION.setDirectoryForTemplateLoading(file);
             for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
                 String name = subFile.getName();
-                if (name.endsWith(COMMON.TEMPLATE_SUFFIX)) {
-                    templateList.add(configuration.getTemplate(name));
+                if (name.endsWith(Common.TEMPLATE_SUFFIX)) {
+                    templateList.add(CONFIGURATION.getTemplate(name));
                 }
             }
             Empty.of(templateList).ifEmptyThrow(() -> new Exception("The custom template does not exist"));
         } else {
-            for (String templateName : COMMON.TEMPLATE_LIST) {
-                templateList.add(configuration.getTemplate(templateName));
+            for (String templateName : Common.TEMPLATE_LIST) {
+                templateList.add(CONFIGURATION.getTemplate(templateName));
             }
         }
         Equals.of(new File(this.fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception("Failed to create path"));
@@ -84,7 +84,7 @@ public class TemplateFactory {
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateList) {
-            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(COMMON.TEMPLATE_SUFFIX, COMMON.BLANK_STRING);
+            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(Common.TEMPLATE_SUFFIX, Common.BLANK_STRING);
             try {
                 template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {
@@ -96,9 +96,9 @@ public class TemplateFactory {
     public void download() throws IOException {
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
         if (null != virtualFile) {
-            for (String templateName : COMMON.TEMPLATE_LIST) {
-                Template template = configuration.getTemplate(templateName);
-                FileWriter file = new FileWriter(virtualFile.getPath() + COMMON.DOUBLE_BACKSLASH + template.getName(), true);
+            for (String templateName : Common.TEMPLATE_LIST) {
+                Template template = CONFIGURATION.getTemplate(templateName);
+                FileWriter file = new FileWriter(virtualFile.getPath() + Common.DOUBLE_BACKSLASH + template.getName(), true);
                 //TODO 寻找替换方法
                 file.append(template.getRootTreeNode().toString());
                 file.flush();

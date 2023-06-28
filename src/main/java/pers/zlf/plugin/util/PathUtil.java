@@ -3,8 +3,8 @@ package pers.zlf.plugin.util;
 import java.nio.file.Path;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/25 16:18
+ * @author zhanglinfeng
+ * @date create in 2023/6/25 16:18
  */
 public class PathUtil {
 

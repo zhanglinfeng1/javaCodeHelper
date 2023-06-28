@@ -1,6 +1,6 @@
 package pers.zlf.plugin.pojo;
 
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author: zhanglinfeng
- * @Date: create in 2022/9/8 10:34
+ * @author: zhanglinfeng
+ * @date: create in 2022/9/8 10:34
  */
 public class TableInfo {
     /** 作者 */
@@ -35,7 +35,7 @@ public class TableInfo {
     }
 
     public TableInfo(String sqlTableName) {
-        String tableName = Arrays.stream(sqlTableName.split(COMMON.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        String tableName = Arrays.stream(sqlTableName.split(Common.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.sqlTableName = sqlTableName;
         this.tableName = tableName;

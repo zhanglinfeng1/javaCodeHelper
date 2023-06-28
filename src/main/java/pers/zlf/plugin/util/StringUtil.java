@@ -1,6 +1,6 @@
 package pers.zlf.plugin.util;
 
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.CommentFormat;
 
 import java.util.Collection;
@@ -9,13 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/9 9:51
+ * @author zhanglinfeng
+ * @date create in 2022/9/9 9:51
  */
 public class StringUtil {
 
     public static String toString(Object obj) {
-        return Optional.ofNullable(obj).orElse(COMMON.BLANK_STRING).toString();
+        return Optional.ofNullable(obj).orElse(Common.BLANK_STRING).toString();
     }
 
     public static boolean isEmpty(Object obj) {
@@ -78,7 +78,7 @@ public class StringUtil {
      */
     public static String getFirstMatcher(String str, String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
-        return m.find() ? m.group(1) : COMMON.BLANK_STRING;
+        return m.find() ? m.group(1) : Common.BLANK_STRING;
     }
 
     /**

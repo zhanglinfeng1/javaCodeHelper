@@ -6,7 +6,7 @@ import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.action.CodeLineCountAction;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -15,8 +15,8 @@ import pers.zlf.plugin.util.CollectionUtil;
 import javax.swing.JComponent;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/2/13 10:36
+ * @author zhanglinfeng
+ * @date create in 2023/2/13 10:36
  */
 public class CodeStatisticsConfigurable implements Configurable {
     /** 配置参数 */
@@ -27,7 +27,7 @@ public class CodeStatisticsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return COMMON.CODE_STATISTICS;
+        return Common.CODE_STATISTICS;
     }
 
     @Nullable

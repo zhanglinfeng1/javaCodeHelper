@@ -4,8 +4,8 @@ import com.intellij.ide.projectView.PresentationData;
 import pers.zlf.plugin.util.StringUtil;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/19 15:41
+ * @author zhanglinfeng
+ * @date create in 2023/6/19 15:41
  */
 public class CodeStatisticsInfo {
     /** 项目名 */

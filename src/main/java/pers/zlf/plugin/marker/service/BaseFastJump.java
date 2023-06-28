@@ -12,12 +12,12 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
-import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.COMMON_ENUM;
-import pers.zlf.plugin.constant.COMMON_ENUM_TYPE;
-import pers.zlf.plugin.constant.ICON;
-import pers.zlf.plugin.constant.REQUEST;
+import pers.zlf.plugin.constant.Annotation;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.CommonEnum;
+import pers.zlf.plugin.constant.CommonEnumType;
+import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.Request;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -32,22 +32,22 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/17 16:34
+ * @author zhanglinfeng
+ * @date create in 2022/10/17 16:34
  */
-public abstract class FastJump {
+public abstract class BaseFastJump {
     /** 处理结果 */
     private Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
     private final String filterFolderName;
 
-    public FastJump(String filterFolderName) {
+    public BaseFastJump(String filterFolderName) {
         this.filterFolderName = filterFolderName;
     }
 
     public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass) {
         //获取类的注解路径
-        String classUrl = this.getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
+        String classUrl = this.getMappingUrl(psiClass.getAnnotation(Annotation.REQUEST_MAPPING));
         //获取方法的注解
         map = Arrays.stream(psiClass.getMethods()).map(method -> this.getMappingAnnotation(classUrl, method)).filter(Objects::nonNull).collect(Collectors.toMap(MappingAnnotation::toString, Function.identity(), (k1, k2) -> k2));
         if (map.isEmpty()) {
@@ -58,7 +58,9 @@ public abstract class FastJump {
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(),project).toString();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
             String virtualFilePath = virtualFile.getPath();
-            if ((StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath)) || virtualFilePath.endsWith(COMMON.RESOURCES) || virtualFile.getParent().getPath().endsWith(COMMON.TEST)) {
+            boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
+            boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
+            if (currentModule || resourcesFile) {
                 continue;
             }
             //controller跳转feign 固定true
@@ -67,22 +69,40 @@ public abstract class FastJump {
                 Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
         }
-        map.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(ICON.LOGO)
-                .setTargets(t.getTargetList()).setTooltipText(COMMON.BLANK_STRING).createLineMarkerInfo(t.getPsiAnnotation())));
+        map.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(Icon.LOGO)
+                .setTargets(t.getTargetList()).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(t.getPsiAnnotation())));
     }
 
     public String getMappingUrl(PsiAnnotation annotation) {
         if (null == annotation) {
-            return COMMON.BLANK_STRING;
+            return Common.BLANK_STRING;
         }
-        String url = MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.VALUE);
-        return Empty.of(url).orElse(MyPsiUtil.getAnnotationValue(annotation, ANNOTATION.PATH));
+        String url = MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE);
+        return Empty.of(url).orElse(MyPsiUtil.getAnnotationValue(annotation, Annotation.PATH));
     }
 
+    /**
+     * 是否需要添加跳转
+     *
+     * @param virtualFilePath 文件路径
+     * @return boolean
+     */
     public abstract boolean jump(String virtualFilePath);
 
+    /**
+     * 校验类是否符合跳转要求
+     *
+     * @param psiClass psiClass
+     * @return boolean
+     */
     public abstract boolean checkClass(PsiClass psiClass);
 
+    /**
+     * 获取类注解上的请求路径
+     *
+     * @param psiClass psiClass
+     * @return String
+     */
     public abstract String getClassUrl(PsiClass psiClass);
 
     private void dealDirectory(PsiDirectory psiDirectory) {
@@ -115,19 +135,19 @@ public abstract class FastJump {
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
         for (PsiAnnotation psiAnnotation : psiMethod.getAnnotations()) {
             String annotationName = psiAnnotation.getQualifiedName();
-            if (null == annotationName || !ANNOTATION.MAPPING_LIST.contains(annotationName)) {
+            if (null == annotationName || !Annotation.MAPPING_LIST.contains(annotationName)) {
                 continue;
             }
             //请求方式
-            String method = Empty.of(COMMON_ENUM.select(COMMON_ENUM_TYPE.REQUEST_TYPE, annotationName)).map(COMMON_ENUM::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, ANNOTATION.METHOD));
-            Optional<String> optional = REQUEST.TYPE_LIST.stream().filter(method::contains).findAny();
+            String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD));
+            Optional<String> optional = Request.TYPE_LIST.stream().filter(method::contains).findAny();
             if (optional.isPresent()) {
                 method = optional.get();
             }
             if (StringUtil.isNotEmpty(method)) {
                 //请求路径
                 String methodUrl = getMappingUrl(psiAnnotation);
-                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + COMMON.SLASH + methodUrl, method) : null;
+                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + Common.SLASH + methodUrl, method) : null;
             }
         }
         return null;

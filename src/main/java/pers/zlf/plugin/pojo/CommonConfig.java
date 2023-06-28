@@ -1,17 +1,17 @@
 package pers.zlf.plugin.pojo;
 
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/5 9:03
+ * @author zhanglinfeng
+ * @date create in 2022/10/5 9:03
  */
 public class CommonConfig {
     /** 翻译api */
-    private Integer translateApi = COMMON.BAIDU_TRANSLATE;
+    private Integer translateApi = Common.BAIDU_TRANSLATE;
     /** 翻译api appId */
     private String appId;
     /** 翻译api secretKey */
@@ -19,7 +19,7 @@ public class CommonConfig {
     /** 自定义模板文件夹 */
     private String customTemplatesPath;
     /** Java日期类 */
-    private Integer dateClassType = COMMON.DATE_CLASS_TYPE;
+    private Integer dateClassType = Common.DATE_CLASS_TYPE;
     /** controller所在文件夹名 */
     private String controllerFolderName;
     /** feign所在文件夹名 */
@@ -27,7 +27,7 @@ public class CommonConfig {
     /** 网关模块名 */
     private List<String> moduleNameList = new ArrayList<>();
     /** api工具 */
-    private Integer apiTool = COMMON.SWAGGER_API;
+    private Integer apiTool = Common.SWAGGER_API;
     /** 统计注释 */
     private boolean countComment = true;
     /** 实时统计 */

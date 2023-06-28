@@ -3,7 +3,7 @@ package pers.zlf.plugin.config;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -11,8 +11,8 @@ import pers.zlf.plugin.pojo.CommonConfig;
 import javax.swing.JComponent;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/5 9:10
+ * @author zhanglinfeng
+ * @date create in 2022/10/5 9:10
  */
 public class CommonConfigurable implements Configurable {
     /** 配置参数 */
@@ -23,7 +23,7 @@ public class CommonConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return COMMON.JAVA_CODE_HELP;
+        return Common.JAVA_CODE_HELP;
     }
 
     @Nullable

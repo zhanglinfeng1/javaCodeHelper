@@ -1,10 +1,10 @@
 package pers.zlf.plugin.constant;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/12/2 15:55
+ * @author zhanglinfeng
+ * @date create in 2022/12/2 15:55
  */
-public class REGEX {
+public class Regex {
     public static final String SQL_REPLACE = "[',`]";
     public static final String SPACE = "\\s+";
     public static final String APOSTROPHE = "'(.*?)'";

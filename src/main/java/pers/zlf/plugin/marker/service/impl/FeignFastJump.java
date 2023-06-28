@@ -1,18 +1,18 @@
 package pers.zlf.plugin.marker.service.impl;
 
 import com.intellij.psi.PsiClass;
-import pers.zlf.plugin.constant.ANNOTATION;
+import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.marker.service.FastJump;
+import pers.zlf.plugin.marker.service.BaseFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/17 16:35
+ * @author zhanglinfeng
+ * @date create in 2022/10/17 16:35
  */
-public class FeignFastJump extends FastJump {
+public class FeignFastJump extends BaseFastJump {
 
     public FeignFastJump() {
         super(ConfigFactory.getInstance().getCommonConfig().getControllerFolderName());
@@ -31,6 +31,6 @@ public class FeignFastJump extends FastJump {
 
     @Override
     public String getClassUrl(PsiClass psiClass) {
-        return getMappingUrl(psiClass.getAnnotation(ANNOTATION.REQUEST_MAPPING));
+        return getMappingUrl(psiClass.getAnnotation(Annotation.REQUEST_MAPPING));
     }
 }

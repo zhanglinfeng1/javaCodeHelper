@@ -1,10 +1,10 @@
 package pers.zlf.plugin.constant;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/1/10 10:30
+ * @author zhanglinfeng
+ * @date create in 2023/1/10 10:30
  */
-public class XML {
+public class Xml {
     public static final String MAPPER = "mapper";
     public static final String NAMESPACE = "namespace";
     public static final String SELECT = "select";

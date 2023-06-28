@@ -2,8 +2,8 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON_ENUM;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/2/15 15:24
+ * @author zhanglinfeng
+ * @date create in 2023/2/15 15:24
  */
 public class BaseDialog {
     protected DefaultTableModel defaultTableModel;
@@ -34,7 +34,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    protected void addMouseListener(JButton button, ICON_ENUM iconEnum) {
+    protected void addMouseListener(JButton button, IconEnum iconEnum) {
         button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
@@ -47,7 +47,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    protected void removeMouseListener(JButton button, ICON_ENUM iconEnum) {
+    protected void removeMouseListener(JButton button, IconEnum iconEnum) {
         Container container = button.getParent();
         button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
         button.setBackground(container.getBackground());
@@ -65,7 +65,7 @@ public class BaseDialog {
             @Override
             public void focusGained(FocusEvent e) {
                 if (defaultText.equals(textField.getText())) {
-                    textField.setText(COMMON.BLANK_STRING);
+                    textField.setText(Common.BLANK_STRING);
                     textField.setForeground(JBColor.BLACK);
                 }
             }

@@ -3,7 +3,7 @@ package pers.zlf.plugin.config;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
@@ -12,8 +12,8 @@ import pers.zlf.plugin.util.CollectionUtil;
 import javax.swing.JComponent;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/2/13 10:36
+ * @author zhanglinfeng
+ * @date create in 2023/2/13 10:36
  */
 public class FastJumpConfigurable implements Configurable {
     /** 配置参数 */
@@ -24,7 +24,7 @@ public class FastJumpConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return COMMON.FAST_JUMP;
+        return Common.FAST_JUMP;
     }
 
     @Nullable

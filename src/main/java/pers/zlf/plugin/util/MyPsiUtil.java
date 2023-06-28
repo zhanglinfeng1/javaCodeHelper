@@ -22,10 +22,10 @@ import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
-import pers.zlf.plugin.constant.ANNOTATION;
-import pers.zlf.plugin.constant.CLASS_TYPE;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.REGEX;
+import pers.zlf.plugin.constant.Annotation;
+import pers.zlf.plugin.constant.ClassType;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Regex;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,8 +41,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/26 16:25
+ * @author zhanglinfeng
+ * @date create in 2022/9/26 16:25
  */
 public class MyPsiUtil {
 
@@ -56,7 +56,7 @@ public class MyPsiUtil {
         if (null == psiClass || !psiClass.isInterface()) {
             return false;
         }
-        return psiClass.getAnnotation(ANNOTATION.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(ANNOTATION.NETFLIX_FEIGN_CLIENT) != null;
+        return psiClass.getAnnotation(Annotation.OPEN_FEIGN_CLIENT) != null || psiClass.getAnnotation(Annotation.NETFLIX_FEIGN_CLIENT) != null;
     }
 
     /**
@@ -69,7 +69,7 @@ public class MyPsiUtil {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
-        return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(ANNOTATION.CONTROLLER_LIST::contains);
+        return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(Annotation.CONTROLLER_LIST::contains);
     }
 
     /**
@@ -96,18 +96,18 @@ public class MyPsiUtil {
      */
     public static String getAnnotationValue(PsiAnnotation annotation, String attributeName) {
         if (null == annotation) {
-            return COMMON.BLANK_STRING;
+            return Common.BLANK_STRING;
         }
         PsiAnnotationMemberValue value = annotation.findAttributeValue(attributeName);
         if (value == null) {
-            return COMMON.BLANK_STRING;
+            return Common.BLANK_STRING;
         }
         //TODO 获取实际值
         String attributeValue = value.getText();
-        if (attributeValue.startsWith(COMMON.LEFT_BRACE)) {
+        if (attributeValue.startsWith(Common.LEFT_BRACE)) {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
-        return attributeValue.replaceAll(REGEX.DOUBLE_QUOTES, COMMON.BLANK_STRING).trim();
+        return attributeValue.replaceAll(Regex.DOUBLE_QUOTES, Common.BLANK_STRING).trim();
     }
 
     /**
@@ -157,20 +157,20 @@ public class MyPsiUtil {
      * @return 处理后的变量名
      */
     public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
-        variableName = variableName.replace(CLASS_TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
+        variableName = variableName.replace(ClassType.INTELLIJ_IDEA_RULEZZZ, Common.BLANK_STRING);
         String basicTypeName = psiType.getPresentableText();
-        String suggestedVariableName = COMMON.BLANK_STRING;
-        if (basicTypeName.contains(COMMON.LESS_THAN_SIGN)) {
-            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, REGEX.ANGLE_BRACKETS).split(COMMON.COMMA);
+        String suggestedVariableName = Common.BLANK_STRING;
+        if (basicTypeName.contains(Common.LESS_THAN_SIGN)) {
+            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, Regex.ANGLE_BRACKETS).split(Common.COMMA);
             suggestedVariableName = suggestedVariableNames[suggestedVariableNames.length - 1].trim();
-            basicTypeName = basicTypeName.split(COMMON.LESS_THAN_SIGN)[0];
-        } else if (basicTypeName.contains(COMMON.LEFT_BRACKETS)) {
-            suggestedVariableName = basicTypeName.split(REGEX.LEFT_BRACKETS)[0];
-            basicTypeName = COMMON.S_STR;
+            basicTypeName = basicTypeName.split(Common.LESS_THAN_SIGN)[0];
+        } else if (basicTypeName.contains(Common.LEFT_BRACKETS)) {
+            suggestedVariableName = basicTypeName.split(Regex.LEFT_BRACKETS)[0];
+            basicTypeName = Common.S_STR;
         } else if (TypeUtil.isSimpleType(basicTypeName)) {
-            basicTypeName = COMMON.BLANK_STRING;
+            basicTypeName = Common.BLANK_STRING;
         }
-        suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? COMMON.BLANK_STRING : StringUtil.toLowerCaseFirst(suggestedVariableName)) + basicTypeName;
+        suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? Common.BLANK_STRING : StringUtil.toLowerCaseFirst(suggestedVariableName)) + basicTypeName;
         if (suggestedVariableName.contains(variableName)) {
             variableName = suggestedVariableName;
         } else if (StringUtil.toLowerCaseFirst(basicTypeName).contains(variableName)) {
@@ -287,7 +287,7 @@ public class MyPsiUtil {
      */
     public static Path getCurrentModulePath(VirtualFile virtualFile, Project project) {
         Path filePath = Paths.get(virtualFile.getPath());
-        Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(COMMON.BLANK_STRING));
+        Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
         return getSameDirectoryPath(projectPath, filePath);
     }
 
@@ -311,7 +311,7 @@ public class MyPsiUtil {
      */
     public static Path getSameDirectoryPath(Path path1, Path path2) {
         if (path1 == null || path2 == null || path1.getParent() == null || path2.getParent() == null) {
-            return Path.of(COMMON.BLANK_STRING);
+            return Path.of(Common.BLANK_STRING);
         }
         if (path1.getParent().equals(path2.getParent())) {
             return path2;
@@ -341,11 +341,11 @@ public class MyPsiUtil {
      * @return 注释
      */
     public static String getComment(PsiElement element) {
-        StringBuilder comment = new StringBuilder(COMMON.BLANK_STRING);
+        StringBuilder comment = new StringBuilder(Common.BLANK_STRING);
         for (PsiElement childrenElement : element.getChildren()) {
             if (childrenElement instanceof PsiDocComment) {
                 PsiDocComment docComment = (PsiDocComment) childrenElement;
-                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining()).replaceAll(REGEX.WRAP, COMMON.SPACE));
+                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining()).replaceAll(Regex.WRAP, Common.SPACE));
             } else if (childrenElement instanceof PsiComment) {
                 comment.append(childrenElement.getText());
             }
@@ -360,7 +360,7 @@ public class MyPsiUtil {
      * @return 注释
      */
     public static Map<String, String> getParamComment(PsiElement element) {
-        Map<String, String> commentMap = new HashMap<>();
+        Map<String, String> commentMap = new HashMap<>(2);
         for (PsiElement childrenElement : element.getChildren()) {
             if (childrenElement instanceof PsiDocComment) {
                 PsiDocComment docComment = (PsiDocComment) childrenElement;
@@ -370,7 +370,7 @@ public class MyPsiUtil {
                         String paramComment = paramName;
                         if (dataElementArr.length != 0) {
                             paramComment = IntStream.range(1, dataElementArr.length - 1).mapToObj(i -> dataElementArr[i].getText())
-                                    .filter(StringUtil::isNotEmpty).collect(Collectors.joining(COMMON.COMMA));
+                                    .filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.COMMA));
                         }
                         commentMap.put(paramName, paramComment);
                     });
@@ -387,10 +387,10 @@ public class MyPsiUtil {
      * @return String
      */
     public static String getFileType(VirtualFile virtualFile) {
-        String[] val = virtualFile.getName().split(REGEX.DOT);
+        String[] val = virtualFile.getName().split(Regex.DOT);
         if (val.length > 1) {
-            return COMMON.DOT + val[val.length - 1];
+            return Common.DOT + val[val.length - 1];
         }
-        return COMMON.DOT + virtualFile.getFileType().getName();
+        return Common.DOT + virtualFile.getFileType().getName();
     }
 }

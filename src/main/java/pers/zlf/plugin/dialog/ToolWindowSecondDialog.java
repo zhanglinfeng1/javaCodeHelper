@@ -1,8 +1,8 @@
 package pers.zlf.plugin.dialog;
 
 import com.intellij.ui.table.JBTable;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.ICON_ENUM;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
@@ -24,8 +24,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/20 10:33
+ * @author zhanglinfeng
+ * @date create in 2022/9/20 10:33
  */
 public class ToolWindowSecondDialog extends BaseDialog {
     private JPanel contentPane;
@@ -41,19 +41,19 @@ public class ToolWindowSecondDialog extends BaseDialog {
 
     public ToolWindowSecondDialog() {
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        defaultTableModel = new DefaultTableModel(null, COMMON.QUERY_COLUMN_TABLE_HEADER);
+        defaultTableModel = new DefaultTableModel(null, Common.QUERY_COLUMN_TABLE_HEADER);
         columnTable.setModel(defaultTableModel);
 
         addButton.addActionListener(e -> {
-            defaultTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), COMMON.SELECT_OPTIONS[0]});
+            defaultTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
             columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(COMMON.SELECT_OPTIONS)));
+            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.SELECT_OPTIONS)));
         });
         deleteButton.addActionListener(e -> Equals.of(columnTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
             defaultTableModel.removeRow(rowNum);
             if (columnTable.getRowCount() == 0) {
-                removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+                removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         }));
     }
@@ -61,11 +61,11 @@ public class ToolWindowSecondDialog extends BaseDialog {
     public void initColumn(TableInfo tableInfo) {
         columnInfoList = tableInfo.getColumnList();
         columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
-        addMouseListener(addButton, ICON_ENUM.ADD);
+        addMouseListener(addButton, IconEnum.ADD);
         if (columnTable.getRowCount() == 0) {
-            removeMouseListener(deleteButton, ICON_ENUM.REMOVE);
+            removeMouseListener(deleteButton, IconEnum.REMOVE);
         }else {
-            addMouseListener(deleteButton, ICON_ENUM.REMOVE);
+            addMouseListener(deleteButton, IconEnum.REMOVE);
         }
         defaultTableModel.getDataVector().clear();
         columnTable.getModel().addTableModelListener(e -> {

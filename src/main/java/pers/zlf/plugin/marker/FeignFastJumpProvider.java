@@ -8,10 +8,10 @@ import pers.zlf.plugin.marker.service.impl.FeignFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/9/26 18:08
+ * @author zhanglinfeng
+ * @date create in 2022/9/26 18:08
  */
-public class FeignFastJumpProvider extends AbstractLineMarkerProvider<PsiClass> {
+public class FeignFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public boolean checkPsiElement(PsiElement element) {

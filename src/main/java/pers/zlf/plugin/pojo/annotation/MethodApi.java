@@ -1,15 +1,15 @@
 package pers.zlf.plugin.pojo.annotation;
 
-import pers.zlf.plugin.constant.ANNOTATION;
+import pers.zlf.plugin.constant.Annotation;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/4/24 16:22
+ * @author zhanglinfeng
+ * @date create in 2023/4/24 16:22
  */
-public class MethodApi extends BasicApi {
+public class MethodApi extends BaseApi {
 
     @Override
     public String getSwaggerApi() {
-        return ANNOTATION.SWAGGER_API_OPERATION;
+        return Annotation.SWAGGER_API_OPERATION;
     }
 }

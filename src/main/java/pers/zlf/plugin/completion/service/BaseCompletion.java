@@ -5,8 +5,8 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.CLASS_TYPE;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/16 19:04
+ * @author zhanglinfeng
+ * @date create in 2022/10/16 19:04
  */
-public abstract class Completion {
+public abstract class BaseCompletion {
     /** 当前元素 */
     protected final PsiElement currentElement;
     /** 当前文本 */
@@ -32,15 +32,18 @@ public abstract class Completion {
     /** 自动补全List */
     protected final List<LookupElementBuilder> returnList = new ArrayList<>();
 
-    public Completion(PsiMethod currentMethod, PsiElement psiElement) {
+    public BaseCompletion(PsiMethod currentMethod, PsiElement psiElement) {
         this.currentElement = psiElement;
-        this.currentText = psiElement.getText().replace(CLASS_TYPE.INTELLIJ_IDEA_RULEZZZ, COMMON.BLANK_STRING);
+        this.currentText = psiElement.getText().replace(ClassType.INTELLIJ_IDEA_RULEZZZ, Common.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();
-        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> COMMON.SEMICOLON.equals(t.getText()) || COMMON.LEFT_BRACE.equals(t.getText())).orElse(false);
+        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.LEFT_BRACE.equals(t.getText())).orElse(false);
         Equals.of(StringUtil.isNotEmpty(currentText) && null != currentMethodClass).ifTrue(this::init);
     }
 
+    /**
+     * 处理补全内容
+     */
     public abstract void init();
 
     public List<LookupElementBuilder> getLookupElement() {

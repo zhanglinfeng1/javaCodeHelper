@@ -5,9 +5,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import pers.zlf.plugin.constant.CLASS_TYPE;
-import pers.zlf.plugin.constant.COMMON;
-import pers.zlf.plugin.constant.MESSAGE;
+import pers.zlf.plugin.constant.ClassType;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentFormat;
@@ -23,16 +23,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2023/6/14 11:48
+ * @author zhanglinfeng
+ * @date create in 2023/6/14 11:48
  */
-public class CodeLineCountAction extends BasicAction {
+public class CodeLineCountAction extends BaseAction {
 
     @Override
     public boolean check() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(MESSAGE.CODE_STATISTICAL_CONFIGURATION, COMMON.BLANK_STRING, Messages.getInformationIcon()));
+            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
         return true;
@@ -88,10 +88,10 @@ public class CodeLineCountAction extends BasicAction {
     public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
         String fileType = MyPsiUtil.getFileType(virtualFile);
         switch (fileType) {
-            case CLASS_TYPE.JAVA_FILE:
-                return new CommentFormat(COMMON.JAVA_COMMENT, COMMON.JAVA_COMMENT_PREFIX, COMMON.JAVA_COMMENT_SUFFIX);
-            case CLASS_TYPE.XML_FILE:
-                return new CommentFormat(new ArrayList<>(), COMMON.XML_COMMENT_PREFIX, COMMON.XML_COMMENT_SUFFIX);
+            case ClassType.JAVA_FILE:
+                return new CommentFormat(Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
+            case ClassType.XML_FILE:
+                return new CommentFormat(new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
             default:
                 return new CommentFormat();
         }

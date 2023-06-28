@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/12/22 17:51
+ * @author zhanglinfeng
+ * @date create in 2022/12/22 17:51
  */
 public class ThreadPoolFactory {
     public static final ThreadPoolExecutor TRANS_POOL = new ThreadPoolExecutor(3, 6, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),

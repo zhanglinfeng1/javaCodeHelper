@@ -1,16 +1,16 @@
 package pers.zlf.plugin.marker.service.impl;
 
 import com.intellij.psi.PsiClass;
-import pers.zlf.plugin.constant.COMMON;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.marker.service.FastJump;
+import pers.zlf.plugin.marker.service.BaseFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
 
 /**
- * @Author zhanglinfeng
- * @Date create in 2022/10/17 16:51
+ * @author zhanglinfeng
+ * @date create in 2022/10/17 16:51
  */
-public class ControllerFastJump extends FastJump {
+public class ControllerFastJump extends BaseFastJump {
 
     public ControllerFastJump() {
         super(ConfigFactory.getInstance().getCommonConfig().getFeignFolderName());
@@ -28,6 +28,6 @@ public class ControllerFastJump extends FastJump {
 
     @Override
     public String getClassUrl(PsiClass psiClass) {
-        return COMMON.BLANK_STRING;
+        return Common.BLANK_STRING;
     }
 }

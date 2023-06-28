@@ -10,7 +10,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import pers.zlf.plugin.util.lambda.Equals;
 
-public abstract class BasicAction extends AnAction {
+/**
+ * @author zhanglinfeng
+ * @date create in 2022/12/28 9:54
+ */
+public abstract class BaseAction extends AnAction {
     protected Editor editor;
     protected Project project;
     protected PsiFile psiFile;
@@ -26,8 +30,16 @@ public abstract class BasicAction extends AnAction {
         Equals.of(null != project && check()).ifTrue(this::action);
     }
 
+    /**
+     * 校验是否执行action
+     *
+     * @return boolean
+     */
     public abstract boolean check();
 
+    /**
+     * 具体执行内容
+     */
     public abstract void action();
 
 }
