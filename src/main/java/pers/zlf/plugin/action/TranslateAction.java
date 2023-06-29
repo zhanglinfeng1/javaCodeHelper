@@ -1,7 +1,9 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.Messages;
+import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.api.BaiDuTransApi;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
@@ -20,10 +22,13 @@ public class TranslateAction extends BaseAction {
     private String selectionText;
 
     @Override
+    public void update(@NotNull AnActionEvent event) {
+        init(event);
+        event.getPresentation().setVisible(null != editor && psiFile.isWritable());
+    }
+
+    @Override
     public boolean check() {
-        if (null == editor || !psiFile.isWritable()) {
-            return false;
-        }
         //获取选择内容
         this.selectionText = editor.getSelectionModel().getSelectedText();
         if (StringUtil.isEmpty(selectionText)) {

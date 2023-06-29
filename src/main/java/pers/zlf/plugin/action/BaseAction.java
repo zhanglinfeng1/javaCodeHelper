@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.util.lambda.Equals;
 
 /**
@@ -21,13 +22,17 @@ public abstract class BaseAction extends AnAction {
     protected VirtualFile virtualFile;
 
     @Override
-    public void actionPerformed(AnActionEvent event) {
+    public void actionPerformed(@NotNull AnActionEvent event) {
         //获取当前的编辑器对象
+        init(event);
+        Equals.of(null != project && check()).ifTrue(this::action);
+    }
+
+    protected void init(AnActionEvent event) {
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
         this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         this.psiFile = event.getData(CommonDataKeys.PSI_FILE);
-        Equals.of(null != project && check()).ifTrue(this::action);
     }
 
     /**
@@ -35,7 +40,9 @@ public abstract class BaseAction extends AnAction {
      *
      * @return boolean
      */
-    public abstract boolean check();
+    public boolean check() {
+        return true;
+    }
 
     /**
      * 具体执行内容

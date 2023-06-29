@@ -62,6 +62,7 @@ public class ContributionRateAction extends BaseAction {
             String gitPath = Paths.get(bathPath.toString(), Common.GIT).toString();
             repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
         } catch (IOException e) {
+            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.NO_GIT, Common.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
         return true;

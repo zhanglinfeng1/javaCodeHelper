@@ -6,6 +6,8 @@ package pers.zlf.plugin.constant;
  */
 public class Message {
     public static final String UNUSED_METHOD = "(JavaCodeHelp) Method %s is never used";
-    public static final String TRANSLATION_CONFIGURATION = "Please configure first! File > Setting > Other Settings > JavaCodeHelp > 翻译配置";
-    public static final String CODE_STATISTICAL_CONFIGURATION = "Please configure first! File > Setting > Other Settings > JavaCodeHelp > CodeStatistics > 参与统计的文件类型";
+    public static final String TRANSLATION_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 翻译配置";
+    public static final String CODE_STATISTICAL_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > CodeStatistics > 参与统计的文件类型";
+    public static final String NO_GIT = "请使用Git控制项目版本";
+
 }

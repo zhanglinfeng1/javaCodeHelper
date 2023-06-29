@@ -1,5 +1,6 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -12,6 +13,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.annotation.BaseApi;
@@ -44,16 +46,14 @@ public class AddApiAnnotationAction extends BaseAction {
     private Map<PsiModifierList, String> annotationMap;
 
     @Override
-    public boolean check() {
-        if (psiFile.isWritable() && psiFile instanceof PsiJavaFile) {
-            psiJavaFile = (PsiJavaFile) psiFile;
-            return true;
-        }
-        return false;
+    public void update(@NotNull AnActionEvent event) {
+        init(event);
+        event.getPresentation().setVisible(psiFile instanceof PsiJavaFile && psiFile.isWritable());
     }
 
     @Override
     public void action() {
+        psiJavaFile = (PsiJavaFile) psiFile;
         importClassSet = new HashSet<>(2);
         annotationMap = new HashMap<>(2);
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
