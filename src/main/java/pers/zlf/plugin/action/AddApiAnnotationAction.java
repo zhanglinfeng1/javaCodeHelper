@@ -1,6 +1,5 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -13,7 +12,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.annotation.BaseApi;
@@ -46,13 +44,18 @@ public class AddApiAnnotationAction extends BaseAction {
     private Map<PsiModifierList, String> annotationMap;
 
     @Override
-    public void update(@NotNull AnActionEvent event) {
-        init(event);
-        event.getPresentation().setVisible(psiFile instanceof PsiJavaFile && psiFile.isWritable());
+    public boolean isVisible() {
+        boolean visible = psiFile instanceof PsiJavaFile && psiFile.isWritable();
+        if (visible) {
+            PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+            PsiClass psiClass = psiJavaFile.getClasses()[0];
+            visible = !psiClass.isInterface() && !psiClass.isAnnotationType() && !psiClass.isEnum();
+        }
+        return visible;
     }
 
     @Override
-    public void action() {
+    public void execute() {
         psiJavaFile = (PsiJavaFile) psiFile;
         importClassSet = new HashSet<>(2);
         annotationMap = new HashMap<>(2);
@@ -100,9 +103,6 @@ public class AddApiAnnotationAction extends BaseAction {
     }
 
     private void addSwaggerForModel(PsiClass psiClass) {
-        if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
-            return;
-        }
         addApiAnnotation(new ModelApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiField field : psiClass.getFields()) {
             addApiAnnotation(new FieldApi(), field, field.getModifierList(), field.getName());

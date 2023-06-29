@@ -24,29 +24,39 @@ public abstract class BaseAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         //获取当前的编辑器对象
-        init(event);
-        Equals.of(null != project && check()).ifTrue(this::action);
+        Equals.of(isExecute()).ifTrue(this::execute);
     }
 
-    protected void init(AnActionEvent event) {
+    @Override
+    public void update(@NotNull AnActionEvent event) {
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
         this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         this.psiFile = event.getData(CommonDataKeys.PSI_FILE);
+        event.getPresentation().setVisible(null != project && isVisible());
     }
 
     /**
-     * 校验是否执行action
+     * 校验是否显示
      *
      * @return boolean
      */
-    public boolean check() {
+    public boolean isVisible() {
+        return true;
+    }
+
+    /**
+     * 校验是否执行 execute方法
+     *
+     * @return boolean
+     */
+    public boolean isExecute() {
         return true;
     }
 
     /**
      * 具体执行内容
      */
-    public abstract void action();
+    public abstract void execute();
 
 }

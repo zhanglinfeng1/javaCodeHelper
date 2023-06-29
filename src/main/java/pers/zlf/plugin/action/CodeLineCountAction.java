@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class CodeLineCountAction extends BaseAction {
 
     @Override
-    public boolean check() {
+    public boolean isExecute() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
@@ -39,7 +39,7 @@ public class CodeLineCountAction extends BaseAction {
     }
 
     @Override
-    public void action() {
+    public void execute() {
         countCodeLines(project);
     }
 

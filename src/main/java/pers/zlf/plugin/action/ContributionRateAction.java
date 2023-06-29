@@ -46,7 +46,7 @@ public class ContributionRateAction extends BaseAction {
     private int myLineCount = 0;
 
     @Override
-    public boolean check() {
+    public boolean isExecute() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
@@ -69,7 +69,7 @@ public class ContributionRateAction extends BaseAction {
     }
 
     @Override
-    public void action() {
+    public void execute() {
         //获取配置
         List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
         boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
