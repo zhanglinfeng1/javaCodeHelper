@@ -1,5 +1,6 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -36,6 +37,8 @@ import java.util.Optional;
  * @date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BaseAction {
+    /** 选中的文件 */
+    private VirtualFile virtualFile;
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -47,6 +50,7 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     public boolean isExecute() {
+        this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));

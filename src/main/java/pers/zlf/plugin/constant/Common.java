@@ -19,7 +19,6 @@ public class Common {
     public static final String SLASH = "/";
     public static final String DOT = ".";
     public static final String COMMA = ",";
-    public static final String COLON = ":";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
     public static final String LEFT_BRACKETS = "[";
@@ -79,6 +78,9 @@ public class Common {
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;
     public static final String BAIDU_TRANSLATE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
+    public static final Map<Integer, String> TRANSLATE_MAP = new HashMap<>() {{
+        put(BAIDU_TRANSLATE, "百度翻译");
+    }};
 
     /** Api工具 */
     public static final Integer SWAGGER_API = 0;

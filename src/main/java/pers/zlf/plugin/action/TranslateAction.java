@@ -1,7 +1,11 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.util.ui.JBUI;
 import pers.zlf.plugin.api.BaiDuTransApi;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
@@ -9,7 +13,6 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.pojo.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
-import pers.zlf.plugin.util.lambda.Empty;
 
 /**
  * @author zhanglinfeng
@@ -21,7 +24,7 @@ public class TranslateAction extends BaseAction {
 
     @Override
     public boolean isVisible() {
-        return null != editor && null != psiFile && psiFile.isWritable();
+        return null != editor;
     }
 
     @Override
@@ -54,7 +57,13 @@ public class TranslateAction extends BaseAction {
                 if (Common.BAIDU_TRANSLATE.equals(commonConfig.getTranslateApi())) {
                     translateResult = new BaiDuTransApi().trans(commonConfig.getAppId(), commonConfig.getSecretKey(), selectionText, from, to);
                 }
-                Empty.of(translateResult).map(t -> Common.SPACE + t).ifPresent(t -> WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(editor.getSelectionModel().getSelectionEnd(), t)));
+                if (StringUtil.isNotEmpty(translateResult)) {
+                    String title = Common.TRANSLATE_MAP.get(commonConfig.getTranslateApi());
+                    JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
+                    String finalTranslateResult = translateResult;
+                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(finalTranslateResult, null, JBUI.CurrentTheme.NotificationInfo.backgroundColor(), null)
+                            .setTitle(title).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
+                }
             } catch (Exception e) {
                 WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));
             }

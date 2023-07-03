@@ -1,5 +1,6 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -7,6 +8,7 @@ import com.intellij.psi.PsiAnnotationOwner;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
@@ -39,15 +41,17 @@ import java.util.stream.Collectors;
  * @date create in 2023/4/24 15:26
  */
 public class AddApiAnnotationAction extends BaseAction {
+
     private PsiJavaFile psiJavaFile;
     private Set<String> importClassSet;
     private Map<PsiModifierList, String> annotationMap;
 
     @Override
     public boolean isVisible() {
+        PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
         boolean visible = psiFile instanceof PsiJavaFile && psiFile.isWritable();
         if (visible) {
-            PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+            psiJavaFile = (PsiJavaFile) psiFile;
             PsiClass psiClass = psiJavaFile.getClasses()[0];
             visible = !psiClass.isInterface() && !psiClass.isAnnotationType() && !psiClass.isEnum();
         }
@@ -56,7 +60,6 @@ public class AddApiAnnotationAction extends BaseAction {
 
     @Override
     public void execute() {
-        psiJavaFile = (PsiJavaFile) psiFile;
         importClassSet = new HashSet<>(2);
         annotationMap = new HashMap<>(2);
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
