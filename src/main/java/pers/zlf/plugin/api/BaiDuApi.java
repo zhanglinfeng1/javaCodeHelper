@@ -21,20 +21,20 @@ public class BaiDuApi extends BaseApi {
     private String securityKey;
 
     @Override
-    boolean checkTrans() {
+    protected boolean checkTrans() {
         this.appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
         this.securityKey = ConfigFactory.getInstance().getCommonConfig().getSecretKey();
         return StringUtil.isNotEmpty(this.appid) && StringUtil.isNotEmpty(this.securityKey);
     }
 
     @Override
-    public String requestTransApi() throws Exception {
+    protected String requestTransApi() throws Exception {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + text + salt + securityKey);
         String urlStr = String.format(Common.BAIDU_TRANSLATE_URL, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);
         HttpURLConnection httpURLConnection = HttpUtil.getConnection(urlStr);
         BaiDuTransResult transResult = HttpUtil.get(httpURLConnection, BaiDuTransResult.class);
-        return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getError_msg()));
+        return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getErrorMsg()));
     }
 
 }

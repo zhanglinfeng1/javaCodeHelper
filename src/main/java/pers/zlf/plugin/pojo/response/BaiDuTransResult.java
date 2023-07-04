@@ -1,5 +1,6 @@
 package pers.zlf.plugin.pojo.response;
 
+import com.google.gson.annotations.SerializedName;
 import pers.zlf.plugin.constant.Common;
 
 import java.util.List;
@@ -11,36 +12,39 @@ import java.util.stream.Collectors;
  * @date create in 2022/10/14 9:53
  */
 public class BaiDuTransResult extends ResponseResult {
-    private String error_code;
-    private String error_msg;
-    private List<Detail> trans_result;
+    @SerializedName("error_code")
+    private String errorCode;
+    @SerializedName("error_msg")
+    private String errorMsg;
+    @SerializedName("trans_result")
+    private List<Detail> transResult;
 
-    public String getError_code() {
-        return error_code;
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public void setError_code(String error_code) {
-        this.error_code = error_code;
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
-    public String getError_msg() {
-        return error_msg;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void setError_msg(String error_msg) {
-        this.error_msg = error_msg;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 
-    public List<Detail> getTrans_result() {
-        return trans_result;
+    public List<Detail> getTransResult() {
+        return transResult;
     }
 
-    public void setTrans_result(List<Detail> trans_result) {
-        this.trans_result = trans_result;
+    public void setTransResult(List<Detail> transResult) {
+        this.transResult = transResult;
     }
 
     public String getResult() {
-        return Optional.ofNullable(this.trans_result).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(Common.SEMICOLON))).orElse(null);
+        return Optional.ofNullable(this.transResult).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(Common.SEMICOLON))).orElse(null);
     }
 
     private static class Detail {

@@ -30,8 +30,8 @@ public abstract class BaseApi {
         return Common.BLANK_STRING;
     }
 
-    abstract boolean checkTrans();
+    protected abstract boolean checkTrans();
 
-    abstract String requestTransApi() throws Exception;
+    protected abstract String requestTransApi() throws Exception;
 
 }
