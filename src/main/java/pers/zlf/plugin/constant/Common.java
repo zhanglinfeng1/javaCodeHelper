@@ -78,11 +78,8 @@ public class Common {
     public static final String ZH = "zh";
     public static final Integer BAIDU_TRANSLATE = 0;
     public static final String BAIDU_TRANSLATE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
-    public static final Integer ALI_TRANSLATE = 1;
-    public static final String ALI_TRANSLATE_URL = "https://mt.aliyuncs.com/?";
     public static final Map<Integer, String> TRANSLATE_MAP = new HashMap<>() {{
         put(BAIDU_TRANSLATE, "百度翻译");
-        put(ALI_TRANSLATE, "阿里翻译");
     }};
 
     /** Api工具 */
