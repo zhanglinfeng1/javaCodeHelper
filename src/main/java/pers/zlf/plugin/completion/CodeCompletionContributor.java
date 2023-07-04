@@ -7,9 +7,9 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.completion.service.BaseCompletion;
-import pers.zlf.plugin.completion.service.impl.ConstructorCompletion;
-import pers.zlf.plugin.completion.service.impl.MethodCompletion;
+import pers.zlf.plugin.completion.code.BaseCompletion;
+import pers.zlf.plugin.completion.code.ConstructorCompletion;
+import pers.zlf.plugin.completion.code.MethodCompletion;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.factory.ConfigFactory;
 

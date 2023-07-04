@@ -1,9 +1,8 @@
-package pers.zlf.plugin.marker.service.impl;
+package pers.zlf.plugin.marker.feign;
 
 import com.intellij.psi.PsiClass;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.marker.service.BaseFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
 
 import java.util.List;

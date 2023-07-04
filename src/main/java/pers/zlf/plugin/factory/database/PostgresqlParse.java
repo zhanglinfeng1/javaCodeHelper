@@ -1,8 +1,7 @@
-package pers.zlf.plugin.factory.service.impl;
+package pers.zlf.plugin.factory.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
-import pers.zlf.plugin.factory.service.BaseSqlParse;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
 

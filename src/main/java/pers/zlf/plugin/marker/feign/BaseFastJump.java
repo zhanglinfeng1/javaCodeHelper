@@ -1,4 +1,4 @@
-package pers.zlf.plugin.marker.service;
+package pers.zlf.plugin.marker.feign;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;

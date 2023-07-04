@@ -2,8 +2,7 @@ package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Request;
-import pers.zlf.plugin.pojo.BaseResponseResult;
-import pers.zlf.plugin.util.lambda.Equals;
+import pers.zlf.plugin.pojo.response.ResponseResult;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -21,6 +20,8 @@ import java.util.stream.Collectors;
  * @date create in 2022/12/22 18:14
  */
 public class HttpUtil {
+    private static final String TLS = "TLS";
+
     private static final TrustManager X_509_TRUST_MANAGER = new X509TrustManager() {
 
         @Override
@@ -37,14 +38,20 @@ public class HttpUtil {
         }
     };
 
-    public static <T extends BaseResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
-        String result = Common.BLANK_STRING;
-        SSLContext sslcontext = SSLContext.getInstance("TLS");
-        sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
+    public static HttpURLConnection getConnection(String urlStr) throws Exception {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        Equals.of(conn instanceof HttpsURLConnection).ifTrue(() -> ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory()));
+        if (conn instanceof HttpsURLConnection) {
+            SSLContext sslcontext = SSLContext.getInstance(TLS);
+            sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
+            ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
+        }
         conn.setConnectTimeout(Request.SOCKET_TIMEOUT);
+        return conn;
+    }
+
+    public static <T extends ResponseResult> T get(HttpURLConnection conn, Class<T> cls) throws Exception {
+        String result = Common.BLANK_STRING;
         conn.setRequestMethod(Request.GET);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

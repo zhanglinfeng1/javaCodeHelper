@@ -1,10 +1,10 @@
-package pers.zlf.plugin.pojo;
+package pers.zlf.plugin.pojo.response;
 
 /**
  * @author zhanglinfeng
  * @date create in 2023/6/27 11:06
  */
-public abstract class BaseResponseResult {
+public class ResponseResult {
     /** 请求响应码*/
     private int responseCode;
 

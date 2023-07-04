@@ -1,4 +1,4 @@
-package pers.zlf.plugin.completion.service.impl;
+package pers.zlf.plugin.completion.code;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
@@ -12,7 +12,6 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiUtil;
-import pers.zlf.plugin.completion.service.BaseCompletion;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.constant.ClassType;

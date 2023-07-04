@@ -1,4 +1,4 @@
-package pers.zlf.plugin.pojo;
+package pers.zlf.plugin.pojo.response;
 
 import pers.zlf.plugin.constant.Common;
 
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2022/10/14 9:53
  */
-public class BaiDuTransResult extends BaseResponseResult {
+public class BaiDuTransResult extends ResponseResult {
     private String error_code;
     private String error_msg;
     private List<Detail> trans_result;

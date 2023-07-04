@@ -1,4 +1,4 @@
-package pers.zlf.plugin.completion.service;
+package pers.zlf.plugin.completion.code;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;

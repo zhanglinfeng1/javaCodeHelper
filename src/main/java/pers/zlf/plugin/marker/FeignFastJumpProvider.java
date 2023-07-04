@@ -3,8 +3,8 @@ package pers.zlf.plugin.marker;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.marker.service.impl.ControllerFastJump;
-import pers.zlf.plugin.marker.service.impl.FeignFastJump;
+import pers.zlf.plugin.marker.feign.ControllerFastJump;
+import pers.zlf.plugin.marker.feign.FeignFastJump;
 import pers.zlf.plugin.util.MyPsiUtil;
 
 /**

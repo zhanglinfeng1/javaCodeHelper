@@ -12,7 +12,8 @@ sql与java的快捷跳转<br />
 点击![image](src/main/resources/icon/logo.svg)即可跳转<br />
 
 ## 翻译
-目前仅支持百度翻译，需申请百度翻译平台账号，每月免费翻译100万字符<br />
+目前仅支持中译英，英译中<br />
+支持百度翻译、阿里翻译<br />
 在idea中配置账号后，选中待翻译文本，右击选择JavaCodeHelp > Translate<br />
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 

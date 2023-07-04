@@ -12,8 +12,6 @@ public class Common {
     /** 通用常量 */
     public static final String SUCCESS = "success";
     public static final String TRUE = "true";
-    public static final String EN = "en";
-    public static final String ZH = "zh";
     public static final String BLANK_STRING = "";
     public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
@@ -76,10 +74,15 @@ public class Common {
     public static final String S_STR = "s";
 
     /** 翻译 */
+    public static final String EN = "en";
+    public static final String ZH = "zh";
     public static final Integer BAIDU_TRANSLATE = 0;
     public static final String BAIDU_TRANSLATE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
+    public static final Integer ALI_TRANSLATE = 1;
+    public static final String ALI_TRANSLATE_URL = "https://mt.aliyuncs.com/?";
     public static final Map<Integer, String> TRANSLATE_MAP = new HashMap<>() {{
         put(BAIDU_TRANSLATE, "百度翻译");
+        put(ALI_TRANSLATE, "阿里翻译");
     }};
 
     /** Api工具 */
