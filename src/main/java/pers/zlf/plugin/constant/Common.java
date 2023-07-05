@@ -52,7 +52,7 @@ public class Common {
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
-    public static final String SELECT_MODULE = "Select module";
+    public static final String SELECT_MODULE = "选择模块";
     public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{
         put(DATE_CLASS_TYPE, "Date");
@@ -86,7 +86,7 @@ public class Common {
     public static final Integer SWAGGER_API = 0;
 
     /** 构造方法补全提示 */
-    public static final String FILL_CONSTRUCTOR = "fillConstructor";
+    public static final String FILL_CONSTRUCTOR = "补全构造方法";
 
     /** 注释前缀、后缀 */
     public static final List<String> JAVA_COMMENT = List.of("//");
