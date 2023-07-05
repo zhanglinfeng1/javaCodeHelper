@@ -7,7 +7,6 @@ import pers.zlf.plugin.pojo.response.BaiDuTransResult;
 import pers.zlf.plugin.util.HttpUtil;
 import pers.zlf.plugin.util.StringUtil;
 
-import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -32,8 +31,7 @@ public class BaiDuApi extends BaseApi {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + text + salt + securityKey);
         String urlStr = String.format(Common.BAIDU_TRANSLATE_URL, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);
-        HttpURLConnection httpURLConnection = HttpUtil.getConnection(urlStr);
-        BaiDuTransResult transResult = HttpUtil.get(httpURLConnection, BaiDuTransResult.class);
+        BaiDuTransResult transResult = HttpUtil.get(urlStr, BaiDuTransResult.class);
         return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getErrorMsg()));
     }
 

@@ -38,20 +38,9 @@ public class HttpUtil {
         }
     };
 
-    public static HttpURLConnection getConnection(String urlStr) throws Exception {
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        if (conn instanceof HttpsURLConnection) {
-            SSLContext sslcontext = SSLContext.getInstance(TLS);
-            sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
-            ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
-        }
-        conn.setConnectTimeout(Request.SOCKET_TIMEOUT);
-        return conn;
-    }
-
-    public static <T extends ResponseResult> T get(HttpURLConnection conn, Class<T> cls) throws Exception {
+    public static <T extends ResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
         String result = Common.BLANK_STRING;
+        HttpURLConnection conn = getConnection(urlStr);
         conn.setRequestMethod(Request.GET);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -62,5 +51,17 @@ public class HttpUtil {
         T t = JsonUtil.toObject(result, cls);
         t.setResponseCode(conn.getResponseCode());
         return t;
+    }
+
+    private static HttpURLConnection getConnection(String urlStr) throws Exception {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        if (conn instanceof HttpsURLConnection) {
+            SSLContext sslcontext = SSLContext.getInstance(TLS);
+            sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);
+            ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
+        }
+        conn.setConnectTimeout(Request.SOCKET_TIMEOUT);
+        return conn;
     }
 }

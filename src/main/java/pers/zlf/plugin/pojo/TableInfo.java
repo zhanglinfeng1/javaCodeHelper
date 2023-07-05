@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author: zhanglinfeng
- * @date: create in 2022/9/8 10:34
+ * @author zhanglinfeng
+ * @date create in 2022/9/8 10:34
  */
 public class TableInfo {
     /** 作者 */

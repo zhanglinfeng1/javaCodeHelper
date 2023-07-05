@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author: zhanglinfeng
- * @date: create in 2022/8/26 18:20
+ * @author zhanglinfeng
+ * @date create in 2022/8/26 18:20
  */
 public class SqlFactory implements ToolWindowFactory {
     private final Map<String, BaseSqlParse> sqlParseMap = new HashMap<>() {{
