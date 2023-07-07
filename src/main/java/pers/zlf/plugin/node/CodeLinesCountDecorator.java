@@ -43,11 +43,11 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
         if (CollectionUtil.isEmpty(fileTypeList) || project == null) {
             return;
         }
-        if (node instanceof PsiDirectoryNode) {
+        if (node instanceof PsiDirectoryNode && null != node.getVirtualFile()) {
             //只处理根节点
             Path directoryPath = Paths.get(Optional.ofNullable(node.getVirtualFile()).map(VirtualFile::getPath).orElse(Common.BLANK_STRING));
             Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
-            if (null == node.getName() || null == node.getVirtualFile() || StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
+            if (StringUtil.isEmpty(directoryPath.toString()) || !(directoryPath.getParent().equals(projectPath.getParent()))) {
                 return;
             }
             String directoryModuleName = MyPsiUtil.getModuleName(node.getVirtualFile(), project);
