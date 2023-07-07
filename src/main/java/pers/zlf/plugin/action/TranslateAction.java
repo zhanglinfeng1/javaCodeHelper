@@ -2,10 +2,10 @@ package pers.zlf.plugin.action;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.util.ui.JBUI;
 import pers.zlf.plugin.api.BaiDuApi;
 import pers.zlf.plugin.api.BaseApi;
 import pers.zlf.plugin.constant.Common;
@@ -43,7 +43,7 @@ public class TranslateAction extends BaseAction {
                 if (StringUtil.isNotEmpty(translateResult)) {
                     String title = Common.TRANSLATE_MAP.get(ConfigFactory.getInstance().getCommonConfig().getTranslateApi());
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
-                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, JBUI.CurrentTheme.NotificationInfo.backgroundColor(), null)
+                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
                             .setTitle(title).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
