@@ -1,5 +1,5 @@
 # 功能简介
-intellij idea 中搜索插件 Java Code Helper。用于学习插件开发。欢迎交流想法、反馈BUG
+intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
 最低版本192.6817.14(2019.2.3)
 
 ## 代码补全
@@ -61,6 +61,10 @@ feign中方法未被调用，方法名置灰<br />
         ${columnType}           java字段类型
 
 # 版本改动
+<ul>1.9.3
+    <li>[优化]代码优化</li>
+    <li>[BUG]代码补全未带参数</li>
+</ul>
 <ul>1.9.2
     <li>[优化]代码优化、配置优化</li>
     <li>[BUG]删除文件时，实时统计错误</li>

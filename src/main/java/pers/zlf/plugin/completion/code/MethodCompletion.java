@@ -18,6 +18,7 @@ import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.TypeUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class MethodCompletion extends BaseCompletion {
             }
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
-            Optional.ofNullable(this.getParamNameList(psiParameterArr)).map(list -> new StringBuilder(Common.END_STR).insert(1, String.join(Common.COMMA_STR, list)))
+            Empty.of(this.getParamNameList(psiParameterArr)).map(list -> new StringBuilder(Common.END_STR).insert(1, String.join(Common.COMMA_STR, list)))
                     .ifPresent(t -> returnList.add(LookupElementBuilder.create(code + fieldMethod.getName() + t).withPresentableText(code + fieldMethod.getName())));
         }
     }
