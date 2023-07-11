@@ -99,7 +99,10 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             return;
         }
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
+        CodeStatisticsInfo codeStatisticsInfo = STATISTICS_MAP.get(moduleName);
+        if (null != codeStatisticsInfo && 0 != codeStatisticsInfo.getLineCount()) {
+            codeStatisticsInfo.setLineCount(lineCount + codeStatisticsInfo.getLineCount());
+        }
     }
 
     /**
@@ -110,10 +113,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param myCount    我提交的行数
      */
     public static void updateContributionRate(String moduleName, int totalCount, int myCount) {
-        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> {
-            t.setTotalGitLineCount(totalCount + t.getTotalGitLineCount());
-            t.setMyGitLineCount(myCount + t.getMyGitLineCount());
-        });
+        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> t.setContributionRate(MathUtil.percentage(myCount, totalCount, 2) + Common.PERCENT_SIGN));
     }
 
     /**
@@ -135,9 +135,8 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             locationString = Common.LEFT_PARENTHESES + codeStatisticsInfo.getLineCount() + Common.RIGHT_PARENTHESES + locationString;
         }
         //贡献率
-        if (0 != codeStatisticsInfo.getTotalGitLineCount()) {
-            String contributionRate = MathUtil.percentage(codeStatisticsInfo.getMyGitLineCount(), codeStatisticsInfo.getTotalGitLineCount(), 2) + Common.PERCENT_SIGN;
-            locationString = Common.LEFT_PARENTHESES + contributionRate + Common.RIGHT_PARENTHESES + locationString;
+        if (StringUtil.isNotEmpty(codeStatisticsInfo.getContributionRate())) {
+            locationString = Common.LEFT_PARENTHESES + codeStatisticsInfo.getContributionRate() + Common.RIGHT_PARENTHESES + locationString;
         }
         codeStatisticsInfo.getData().setLocationString(locationString);
     }

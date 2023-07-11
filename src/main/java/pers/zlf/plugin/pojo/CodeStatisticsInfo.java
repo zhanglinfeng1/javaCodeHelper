@@ -16,10 +16,8 @@ public class CodeStatisticsInfo {
     private String oldLocationString;
     /** 代码行数 */
     private int lineCount;
-    /** 根据git记录统计的总行数 */
-    private int totalGitLineCount;
-    /** 我提交git的行数 */
-    private int myGitLineCount;
+    /** 贡献率 */
+    private String contributionRate;
 
     public String getProjectName() {
         return projectName;
@@ -53,20 +51,12 @@ public class CodeStatisticsInfo {
         this.lineCount = lineCount;
     }
 
-    public int getTotalGitLineCount() {
-        return totalGitLineCount;
+    public String getContributionRate() {
+        return contributionRate;
     }
 
-    public void setTotalGitLineCount(int totalGitLineCount) {
-        this.totalGitLineCount = totalGitLineCount;
-    }
-
-    public int getMyGitLineCount() {
-        return myGitLineCount;
-    }
-
-    public void setMyGitLineCount(int myGitLineCount) {
-        this.myGitLineCount = myGitLineCount;
+    public void setContributionRate(String contributionRate) {
+        this.contributionRate = contributionRate;
     }
 
     public void dealPresentationData(PresentationData data) {

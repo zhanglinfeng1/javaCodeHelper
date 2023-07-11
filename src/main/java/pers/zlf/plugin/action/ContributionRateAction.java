@@ -95,9 +95,11 @@ public class ContributionRateAction extends BaseAction {
         for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
             this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
         }
-        CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
-        //更新贡献率行数
-        CodeLinesCountDecorator.updateNode();
+        if (totalLineCount != 0) {
+            CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
+            //更新贡献率行数
+            CodeLinesCountDecorator.updateNode();
+        }
     }
 
     private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment, List<String> myEmailList) {
