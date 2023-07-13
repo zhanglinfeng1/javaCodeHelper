@@ -73,7 +73,6 @@
             <properties>
               <borderPainted value="false"/>
               <contentAreaFilled value="false"/>
-              <icon value="general/add_dark.png"/>
               <text value=""/>
             </properties>
           </component>
@@ -93,7 +92,6 @@
             <properties>
               <borderPainted value="false"/>
               <contentAreaFilled value="false"/>
-              <icon value="general/remove_dark.png"/>
               <text value=""/>
             </properties>
           </component>
