@@ -36,8 +36,6 @@
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
-        <!-- 代码检查feign方法是否被调用，高版本idea已自带 -->
-        <!-- <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="MethodCheck" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.MethodInspectionTool"/> -->
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
         <!-- 监听文件改动 -->
