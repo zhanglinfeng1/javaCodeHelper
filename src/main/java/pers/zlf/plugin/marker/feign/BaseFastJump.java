@@ -58,6 +58,7 @@ public abstract class BaseFastJump {
         Project project = psiClass.getProject();
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(),project).toString();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+            //排除当前模块，排除资源文件路径
             String virtualFilePath = PathUtil.format(virtualFile.getPath());
             boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
             boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
@@ -66,7 +67,7 @@ public abstract class BaseFastJump {
             }
             //controller跳转feign 固定true
             //feign跳转controller 需排除配置的模块
-            if (jump(virtualFilePath)) {
+            if (jump(project, virtualFile)) {
                 Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
             }
         }
@@ -85,10 +86,11 @@ public abstract class BaseFastJump {
     /**
      * 是否需要添加跳转
      *
-     * @param virtualFilePath 文件路径
+     * @param project     文件所在项目
+     * @param virtualFile VirtualFile文件
      * @return boolean
      */
-    public abstract boolean jump(String virtualFilePath);
+    public abstract boolean jump(Project project, VirtualFile virtualFile);
 
     /**
      * 校验类是否符合跳转要求

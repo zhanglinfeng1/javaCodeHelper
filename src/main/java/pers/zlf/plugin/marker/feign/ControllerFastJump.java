@@ -1,5 +1,7 @@
 package pers.zlf.plugin.marker.feign;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -16,7 +18,7 @@ public class ControllerFastJump extends BaseFastJump {
     }
 
     @Override
-    public boolean jump(String virtualFilePath) {
+    public boolean jump(Project project, VirtualFile virtualFile) {
         return true;
     }
 

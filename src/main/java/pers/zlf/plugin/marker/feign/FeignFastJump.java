@@ -1,5 +1,7 @@
 package pers.zlf.plugin.marker.feign;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -18,9 +20,10 @@ public class FeignFastJump extends BaseFastJump {
     }
 
     @Override
-    public boolean jump(String virtualFilePath) {
+    public boolean jump(Project project, VirtualFile virtualFile) {
+        String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
         List<String> gatewayModuleNameList = ConfigFactory.getInstance().getCommonConfig().getModuleNameList();
-        return gatewayModuleNameList.stream().noneMatch(virtualFilePath::contains);
+        return gatewayModuleNameList.stream().noneMatch(moduleName::equals);
     }
 
     @Override
