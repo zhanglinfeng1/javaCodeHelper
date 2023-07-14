@@ -99,10 +99,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             return;
         }
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-        CodeStatisticsInfo codeStatisticsInfo = STATISTICS_MAP.get(moduleName);
-        if (null != codeStatisticsInfo && 0 != codeStatisticsInfo.getLineCount()) {
-            codeStatisticsInfo.setLineCount(lineCount + codeStatisticsInfo.getLineCount());
-        }
+        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> t.setLineCount(lineCount + t.getLineCount()));
     }
 
     /**
