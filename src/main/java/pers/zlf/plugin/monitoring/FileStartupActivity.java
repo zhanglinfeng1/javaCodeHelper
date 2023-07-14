@@ -47,7 +47,7 @@ public class FileStartupActivity implements StartupActivity {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
                                 continue;
                             }
-                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.IDEA)) {
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.DOT_IDEA)) {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
@@ -66,7 +66,7 @@ public class FileStartupActivity implements StartupActivity {
                             if (null == vFileEvent.getFile() || vFileEvent.getFile().isDirectory()) {
                                 continue;
                             }
-                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.IDEA)) {
+                            if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.DOT_IDEA)) {
                                 continue;
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {

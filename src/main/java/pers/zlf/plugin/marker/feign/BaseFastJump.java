@@ -20,6 +20,7 @@ import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.Request;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
+import pers.zlf.plugin.util.PathUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
@@ -57,7 +58,7 @@ public abstract class BaseFastJump {
         Project project = psiClass.getProject();
         String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(),project).toString();
         for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            String virtualFilePath = virtualFile.getPath();
+            String virtualFilePath = PathUtil.format(virtualFile.getPath());
             boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
             boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
             if (currentModule || resourcesFile) {

@@ -100,9 +100,9 @@ public class Common {
     /** resources目录 */
     public static final String RESOURCES = "resources";
     /** git目录 */
-    public static final String GIT = ".git";
+    public static final String DOT_GIT = ".git";
     /** idea目录 */
-    public static final String IDEA = ".idea";
+    public static final String DOT_IDEA = ".idea";
 
     /** git配置参数 */
     public static final String USER = "user";

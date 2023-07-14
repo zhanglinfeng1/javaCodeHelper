@@ -11,7 +11,6 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -80,8 +79,11 @@ public class MyPsiUtil {
      * @return boolean
      */
     public static boolean isController(PsiClass psiClass, List<String> gatewayModuleNameList) {
-        String filePath = Optional.ofNullable(psiClass).map(PsiClass::getContainingFile).map(PsiFile::getVirtualFile).map(VirtualFile::getPath).orElse(null);
-        if (StringUtil.isEmpty(filePath) || gatewayModuleNameList.stream().anyMatch(filePath::contains)) {
+        if (null == psiClass) {
+            return false;
+        }
+        String moduleName = getModuleName(psiClass.getContainingFile().getVirtualFile(), psiClass.getProject());
+        if (StringUtil.isEmpty(moduleName) || gatewayModuleNameList.stream().anyMatch(moduleName::equals)) {
             return false;
         }
         return isController(psiClass);
