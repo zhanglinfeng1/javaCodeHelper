@@ -21,7 +21,7 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-        if (checkPsiElement(element)) {
+        if (checkPsiElement(element) && element.isWritable()) {
             this.result = result;
             this.element = (T) element;
             dealPsiElement();
