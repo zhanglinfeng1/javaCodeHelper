@@ -25,6 +25,7 @@ import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -288,7 +289,11 @@ public class MyPsiUtil {
      * @return 模块路径
      */
     public static Path getCurrentModulePath(VirtualFile virtualFile, Project project) {
-        Path filePath = Paths.get(virtualFile.getPath());
+        String filePathStr = Empty.of(virtualFile).map(VirtualFile::getPath).orElse(Common.BLANK_STRING);
+        Path filePath = Paths.get(filePathStr);
+        if (StringUtil.isEmpty(filePathStr)) {
+            return filePath;
+        }
         Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
         return getSameDirectoryPath(projectPath, filePath);
     }
