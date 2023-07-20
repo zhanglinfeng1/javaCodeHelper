@@ -61,13 +61,13 @@ public class AddApiAnnotationAction extends BaseAction {
             PsiClass psiClass = psiJavaFile.getClasses()[0];
             visible = !psiClass.isInterface() && !psiClass.isAnnotationType() && !psiClass.isEnum();
         }
-        selectionStart = editor.getSelectionModel().getSelectionStart();
-        selectionEnd = editor.getSelectionModel().getSelectionEnd();
         return visible;
     }
 
     @Override
     public void execute() {
+        selectionStart = editor.getSelectionModel().getSelectionStart();
+        selectionEnd = editor.getSelectionModel().getSelectionEnd();
         importClassSet = new HashSet<>(2);
         annotationMap = new HashMap<>(2);
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
