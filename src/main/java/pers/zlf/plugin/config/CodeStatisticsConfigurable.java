@@ -9,7 +9,7 @@ import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
@@ -20,7 +20,7 @@ import javax.swing.JComponent;
  */
 public class CodeStatisticsConfigurable implements Configurable {
     /** 配置参数 */
-    private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+    private final CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
     /** 配置界面 */
     private final CodeStatisticsDialog dialog = new CodeStatisticsDialog();
 
@@ -39,28 +39,38 @@ public class CodeStatisticsConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!CollectionUtil.equals(dialog.getFileTypeList(), commonConfig.getFileTypeList())) {
+        if (!CollectionUtil.equals(dialog.getFileTypeList(), config.getFileTypeList())) {
             return true;
         }
-        if (!CollectionUtil.equals(dialog.getGitEmailList(), commonConfig.getGitEmailList())) {
+        if (!CollectionUtil.equals(dialog.getGitEmailList(), config.getGitEmailList())) {
             return true;
         }
-        if (dialog.isRealTimeStatistics() != commonConfig.isRealTimeStatistics()) {
+        if (dialog.isRealTimeStatistics() != config.isRealTimeStatistics()) {
             return true;
         }
-        return dialog.isCountComment() != commonConfig.isCountComment();
+        if (dialog.isCountEmptyLine() != config.isCountEmptyLine()) {
+            return true;
+        }
+        if (dialog.isCountKeyword() != config.isCountKeyword()) {
+            return true;
+        }
+        return dialog.isCountComment() != config.isCountComment();
     }
 
     @Override
     public void apply() {
-        commonConfig.setFileTypeList(dialog.getFileTypeList());
-        commonConfig.setGitEmailList(dialog.getGitEmailList());
-        commonConfig.setCountComment(dialog.isCountComment());
-        commonConfig.setRealTimeStatistics(dialog.isRealTimeStatistics());
-        ConfigFactory.getInstance().setCommonConfig(commonConfig);
+        config.setFileTypeList(dialog.getFileTypeList());
+        config.setGitEmailList(dialog.getGitEmailList());
+        config.setCountComment(dialog.isCountComment());
+        config.setCountEmptyLine(dialog.isCountEmptyLine());
+        config.setCountKeyword(dialog.isCountKeyword());
+        config.setRealTimeStatistics(dialog.isRealTimeStatistics());
+        ConfigFactory.getInstance().setCodeStatisticsConfig(config);
         // 重新统计
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            CodeLineCountAction.countCodeLines(project);
+        if (config.isRealTimeStatistics()){
+            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+                CodeLineCountAction.countCodeLines(project);
+            }
         }
     }
 

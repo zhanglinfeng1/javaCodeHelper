@@ -49,6 +49,9 @@ public class Common {
     public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "e.g. C:\\zlf\\CustomTemplate";
 
     /** 配置 */
+    public static final String JAVA_CODE_HELP_CONFIG_XML = "javaCodeHelpConfig.xml";
+    public static final String FAST_JUMP_CONFIG_XML = "fastJumpConfig.xml";
+    public static final String CODE_STATISTICS_CONFIG_XML = "codeStatisticsConfig.xml";
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
@@ -108,4 +111,7 @@ public class Common {
     public static final String USER = "user";
     public static final String EMAIL = "email";
 
+    /** java关键字 */
+    public static final String PACKAGE = "package";
+    public static final String IMPORT = "import";
 }

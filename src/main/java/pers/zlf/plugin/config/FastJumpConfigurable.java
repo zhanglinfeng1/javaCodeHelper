@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 
 import javax.swing.JComponent;
@@ -17,7 +17,7 @@ import javax.swing.JComponent;
  */
 public class FastJumpConfigurable implements Configurable {
     /** 配置参数 */
-    private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+    private final FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
     /** 配置界面 */
     private final FastJumpConfigDialog dialog = new FastJumpConfigDialog();
 
@@ -36,21 +36,21 @@ public class FastJumpConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getControllerFolderName().equals(commonConfig.getControllerFolderName())) {
+        if (!dialog.getControllerFolderName().equals(config.getControllerFolderName())) {
             return true;
         }
-        if (!dialog.getFeignFolderName().equals(commonConfig.getFeignFolderName())) {
+        if (!dialog.getFeignFolderName().equals(config.getFeignFolderName())) {
             return true;
         }
-        return !CollectionUtil.equals(dialog.getModuleNameList(), commonConfig.getModuleNameList());
+        return !CollectionUtil.equals(dialog.getModuleNameList(), config.getModuleNameList());
     }
 
     @Override
     public void apply() {
-        commonConfig.setControllerFolderName(dialog.getControllerFolderName());
-        commonConfig.setFeignFolderName(dialog.getFeignFolderName());
-        commonConfig.setModuleNameList(dialog.getModuleNameList());
-        ConfigFactory.getInstance().setCommonConfig(commonConfig);
+        config.setControllerFolderName(dialog.getControllerFolderName());
+        config.setFeignFolderName(dialog.getFeignFolderName());
+        config.setModuleNameList(dialog.getModuleNameList());
+        ConfigFactory.getInstance().setFastJumpConfig(config);
     }
 
     @Override

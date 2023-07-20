@@ -14,7 +14,8 @@ import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.PathUtil;
 
@@ -30,8 +31,8 @@ public class FileStartupActivity implements StartupActivity {
 
     @Override
     public void runActivity(@NotNull Project project) {
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        List<String> fileTypeList = commonConfig.getFileTypeList();
+        CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
+        List<String> fileTypeList = config.getFileTypeList();
         //监听文件变化
         VirtualFileManager.getInstance().addAsyncFileListener(events -> new AsyncFileListener.ChangeApplier() {
                     private final Map<String, Integer> fileLineCountMap = new HashMap<>(2);
@@ -39,7 +40,7 @@ public class FileStartupActivity implements StartupActivity {
                     @Override
                     public void beforeVfsChange() {
                         AsyncFileListener.ChangeApplier.super.beforeVfsChange();
-                        if (!commonConfig.isRealTimeStatistics() || CollectionUtil.isEmpty(fileTypeList)) {
+                        if (!config.isRealTimeStatistics() || CollectionUtil.isEmpty(fileTypeList)) {
                             return;
                         }
                         fileLineCountMap.clear();
@@ -59,7 +60,7 @@ public class FileStartupActivity implements StartupActivity {
                     @Override
                     public void afterVfsChange() {
                         AsyncFileListener.ChangeApplier.super.afterVfsChange();
-                        if (!commonConfig.isRealTimeStatistics() || CollectionUtil.isEmpty(fileTypeList)) {
+                        if (!config.isRealTimeStatistics() || CollectionUtil.isEmpty(fileTypeList)) {
                             return;
                         }
                         for (VFileEvent vFileEvent : events) {

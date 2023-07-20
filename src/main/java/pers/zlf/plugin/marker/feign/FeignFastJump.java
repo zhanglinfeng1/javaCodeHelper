@@ -16,13 +16,13 @@ import java.util.List;
 public class FeignFastJump extends BaseFastJump {
 
     public FeignFastJump() {
-        super(ConfigFactory.getInstance().getCommonConfig().getControllerFolderName());
+        super(ConfigFactory.getInstance().getFastJumpConfig().getControllerFolderName());
     }
 
     @Override
     public boolean jump(Project project, VirtualFile virtualFile) {
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-        List<String> gatewayModuleNameList = ConfigFactory.getInstance().getCommonConfig().getModuleNameList();
+        List<String> gatewayModuleNameList = ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList();
         return gatewayModuleNameList.stream().noneMatch(moduleName::equals);
     }
 

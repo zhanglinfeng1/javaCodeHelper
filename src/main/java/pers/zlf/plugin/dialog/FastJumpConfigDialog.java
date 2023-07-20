@@ -11,7 +11,8 @@ import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
+import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.lambda.Empty;
@@ -41,7 +42,7 @@ public class FastJumpConfigDialog extends BaseDialog {
     private final Set<String> totalSelectList;
 
     public FastJumpConfigDialog() {
-        totalSelectList = new HashSet<>(ConfigFactory.getInstance().getCommonConfig().getModuleNameList());
+        totalSelectList = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             Module[] modules = ModuleManager.getInstance(project).getModules();
             for (Module module : modules) {
@@ -76,11 +77,11 @@ public class FastJumpConfigDialog extends BaseDialog {
     }
 
     public void reset() {
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        controllerTextField.setText(commonConfig.getControllerFolderName());
-        feignTextField.setText(commonConfig.getFeignFolderName());
+        FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
+        controllerTextField.setText(config.getControllerFolderName());
+        feignTextField.setText(config.getFeignFolderName());
         defaultTableModel.getDataVector().clear();
-        List<String> selectModuleList = commonConfig.getModuleNameList().stream().sorted().collect(Collectors.toList());
+        List<String> selectModuleList = config.getModuleNameList().stream().sorted().collect(Collectors.toList());
         addMouseListener(addModuleButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
             removeMouseListener(deleteModuleButton, IconEnum.REMOVE);

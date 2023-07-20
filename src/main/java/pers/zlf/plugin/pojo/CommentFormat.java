@@ -7,6 +7,8 @@ import java.util.List;
  * @date create in 2023/6/15 13:49
  */
 public class CommentFormat {
+    /** 文件类型 */
+    private String fileType;
     /** 段落注释 */
     private boolean paragraphComment;
     /** 注释前缀 */
@@ -20,7 +22,8 @@ public class CommentFormat {
         this.paragraphComment = false;
     }
 
-    public CommentFormat(List<String> commentList, List<String> commentPrefixList, List<String> commentSuffixList) {
+    public CommentFormat(String fileType, List<String> commentList, List<String> commentPrefixList, List<String> commentSuffixList) {
+        this.fileType = fileType;
         this.paragraphComment = false;
         this.commentList = commentList;
         this.commentPrefixList = commentPrefixList;
@@ -57,5 +60,13 @@ public class CommentFormat {
 
     public void setCommentSuffixList(List<String> commentSuffixList) {
         this.commentSuffixList = commentSuffixList;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }

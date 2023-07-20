@@ -15,7 +15,6 @@ public class ClassType {
     public static final String CLASS_FILE = ".class";
     public static final String JAVA_FILE = ".java";
     public static final String XML_FILE = ".xml";
-    public static final List<String> BASIC_TYPE_LIST = List.of("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character");
-    public static final List<String> COMMON_TYPE_LIST = List.of("String", "Date", "Timestamp", "BigDecimal", "SimpleDateFormat", "Calendar", "LocalDate", "LocalTime", "LocalDateTime", "Logger");
+    public static final List<String> BASIC_TYPE_LIST = List.of("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float", "Double", "Boolean", "Character", "String");
 
 }

@@ -1,8 +1,12 @@
 package pers.zlf.plugin.factory;
 
 import com.intellij.openapi.components.ServiceManager;
-import pers.zlf.plugin.config.ConfigComponent;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.config.CodeStatisticsConfigComponent;
+import pers.zlf.plugin.config.CommonConfigComponent;
+import pers.zlf.plugin.config.FastJumpConfigComponent;
+import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
+import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.lambda.Equals;
 
 /**
@@ -12,10 +16,14 @@ import pers.zlf.plugin.util.lambda.Equals;
 public class ConfigFactory {
     private static volatile ConfigFactory configFactory;
     private CommonConfig commonConfig;
+    private FastJumpConfig fastJumpConfig;
+    private CodeStatisticsConfig codeStatisticsConfig;
 
     private ConfigFactory() {
         //TODO 兼容老版本2019.2.4，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
-        commonConfig = ServiceManager.getService(ConfigComponent.class).getState();
+        commonConfig = ServiceManager.getService(CommonConfigComponent.class).getState();
+        fastJumpConfig = ServiceManager.getService(FastJumpConfigComponent.class).getState();
+        codeStatisticsConfig = ServiceManager.getService(CodeStatisticsConfigComponent.class).getState();
     }
 
     public static ConfigFactory getInstance() {
@@ -33,5 +41,29 @@ public class ConfigFactory {
 
     public void setCommonConfig(CommonConfig commonConfig) {
         this.commonConfig = commonConfig;
+    }
+
+    public static ConfigFactory getConfigFactory() {
+        return configFactory;
+    }
+
+    public static void setConfigFactory(ConfigFactory configFactory) {
+        ConfigFactory.configFactory = configFactory;
+    }
+
+    public FastJumpConfig getFastJumpConfig() {
+        return fastJumpConfig;
+    }
+
+    public void setFastJumpConfig(FastJumpConfig fastJumpConfig) {
+        this.fastJumpConfig = fastJumpConfig;
+    }
+
+    public CodeStatisticsConfig getCodeStatisticsConfig() {
+        return codeStatisticsConfig;
+    }
+
+    public void setCodeStatisticsConfig(CodeStatisticsConfig codeStatisticsConfig) {
+        this.codeStatisticsConfig = codeStatisticsConfig;
     }
 }

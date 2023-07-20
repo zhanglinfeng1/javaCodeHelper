@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 
 import javax.swing.JComponent;
 
@@ -16,7 +16,7 @@ import javax.swing.JComponent;
  */
 public class CommonConfigurable implements Configurable {
     /** 配置参数 */
-    private final CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
+    private final CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
     /** 配置界面 */
     private final CommonConfigDialog dialog = new CommonConfigDialog();
 
@@ -35,37 +35,37 @@ public class CommonConfigurable implements Configurable {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getTranslateApi().equals(commonConfig.getTranslateApi())) {
+        if (!dialog.getTranslateApi().equals(config.getTranslateApi())) {
             return true;
         }
-        if (!dialog.getAppId().equals(commonConfig.getAppId())) {
+        if (!dialog.getAppId().equals(config.getAppId())) {
             return true;
         }
-        if (!dialog.getSecurityKey().equals(commonConfig.getSecretKey())) {
+        if (!dialog.getSecurityKey().equals(config.getSecretKey())) {
             return true;
         }
-        if (!dialog.getDateClassType().equals(commonConfig.getDateClassType())) {
+        if (!dialog.getDateClassType().equals(config.getDateClassType())) {
             return true;
         }
-        if (!dialog.getApiTool().equals(commonConfig.getApiTool())) {
+        if (!dialog.getApiTool().equals(config.getApiTool())) {
             return true;
         }
-        if (dialog.isEnableCodeCompletion() != commonConfig.isEnableCodeCompletion()) {
+        if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
             return true;
         }
-        return !dialog.getCustomTemplatesPath().equals(commonConfig.getCustomTemplatesPath());
+        return !dialog.getCustomTemplatesPath().equals(config.getCustomTemplatesPath());
     }
 
     @Override
     public void apply() {
-        commonConfig.setTranslateApi(dialog.getTranslateApi());
-        commonConfig.setAppId(dialog.getAppId());
-        commonConfig.setSecretKey(dialog.getSecurityKey());
-        commonConfig.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
-        commonConfig.setDateClassType(dialog.getDateClassType());
-        commonConfig.setApiTool(dialog.getApiTool());
-        commonConfig.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
-        ConfigFactory.getInstance().setCommonConfig(commonConfig);
+        config.setTranslateApi(dialog.getTranslateApi());
+        config.setAppId(dialog.getAppId());
+        config.setSecretKey(dialog.getSecurityKey());
+        config.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
+        config.setDateClassType(dialog.getDateClassType());
+        config.setApiTool(dialog.getApiTool());
+        config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
+        ConfigFactory.getInstance().setCommonConfig(config);
     }
 
     @Override

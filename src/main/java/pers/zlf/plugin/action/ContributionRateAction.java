@@ -52,7 +52,7 @@ public class ContributionRateAction extends BaseAction {
     public boolean isExecute() {
         this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         //配置校验
-        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
+        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
@@ -75,9 +75,8 @@ public class ContributionRateAction extends BaseAction {
     @Override
     public void execute() {
         //获取配置
-        List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
-        boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
-        List<String> myEmailList = ConfigFactory.getInstance().getCommonConfig().getGitEmailList();
+        List<String> fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
+        List<String> myEmailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
         //没有配置取当前邮箱
         if (CollectionUtil.isEmpty(myEmailList)) {
             myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
@@ -93,7 +92,7 @@ public class ContributionRateAction extends BaseAction {
             return;
         }
         for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
-            this.dealDirectory(virtualFile, fileTypeList, countComment, myEmailList);
+            this.dealDirectory(virtualFile, fileTypeList, myEmailList);
         }
         if (totalLineCount != 0) {
             CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
@@ -102,10 +101,10 @@ public class ContributionRateAction extends BaseAction {
         }
     }
 
-    private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, boolean countComment, List<String> myEmailList) {
+    private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, List<String> myEmailList) {
         //处理文件夹
         if (virtualFile.isDirectory()) {
-            Arrays.stream(virtualFile.getChildren()).forEach(subFile -> this.dealDirectory(subFile, fileTypeList, countComment, myEmailList));
+            Arrays.stream(virtualFile.getChildren()).forEach(subFile -> this.dealDirectory(subFile, fileTypeList, myEmailList));
             return;
         }
         //判断文件类型
@@ -124,16 +123,14 @@ public class ContributionRateAction extends BaseAction {
             }
             CommentFormat commentFormat = CodeLineCountAction.getCommentFormat(virtualFile);
             RawText rawText = result.getResultContents();
-            for (int i = 0; i < rawText.size(); i++) {
-                String line = rawText.getString(i);
-                //空行不统计、不统计注释且当前行是注释
-                if (StringUtil.isEmpty(line) || (!countComment && StringUtil.isComment(line, commentFormat))) {
-                    continue;
-                }
-                totalLineCount++;
-                if (myEmailList.contains(result.getSourceAuthor(i).getEmailAddress())) {
-                    //自己提交的
-                    myLineCount++;
+            int length = rawText.size();
+            for (int i = 0; i < length; i++) {
+                if (CodeLineCountAction.count(rawText.getString(i), commentFormat)) {
+                    totalLineCount++;
+                    if (myEmailList.contains(result.getSourceAuthor(i).getEmailAddress())) {
+                        //自己提交的
+                        myLineCount++;
+                    }
                 }
             }
         } catch (Exception ignored) {

@@ -1,7 +1,7 @@
 <idea-plugin require-restart="true">
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.9.4</version>
+    <version>1.10.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="192.6817.14"/>
     <description><![CDATA[
@@ -29,7 +29,9 @@
         <!-- sql to java -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.factory.SqlFactory"/>
         <!-- 配置持久化 -->
-        <applicationService serviceImplementation="pers.zlf.plugin.config.ConfigComponent"/>
+        <applicationService serviceImplementation="pers.zlf.plugin.config.CommonConfigComponent"/>
+        <applicationService serviceImplementation="pers.zlf.plugin.config.FastJumpConfigComponent"/>
+        <applicationService serviceImplementation="pers.zlf.plugin.config.CodeStatisticsConfigComponent"/>
         <!-- 配置面板 -->
         <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable"/>
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
@@ -38,6 +40,11 @@
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
+        <!-- 代码检查 -->
+        <!-- feign方法是否被调用-->
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="feign中未被调用的方法" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.FeignMethodInspection"/>
+        <!-- 变量类检查，推荐使用新的类-->
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="推荐使用类" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.RecommendationClassInspection"/>
         <!-- 监听文件改动 -->
         <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>

@@ -14,7 +14,7 @@ import pers.zlf.plugin.util.MyPsiUtil;
 public class ControllerFastJump extends BaseFastJump {
 
     public ControllerFastJump() {
-        super(ConfigFactory.getInstance().getCommonConfig().getFeignFolderName());
+        super(ConfigFactory.getInstance().getFastJumpConfig().getFeignFolderName());
     }
 
     @Override

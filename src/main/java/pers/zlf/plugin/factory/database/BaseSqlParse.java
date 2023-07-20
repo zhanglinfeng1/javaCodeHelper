@@ -2,7 +2,7 @@ package pers.zlf.plugin.factory.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.pojo.TableInfo;
 
 /**

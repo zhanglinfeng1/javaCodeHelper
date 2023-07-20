@@ -4,7 +4,8 @@ import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -24,7 +25,6 @@ import java.util.List;
  */
 public class CodeStatisticsDialog extends BaseDialog {
     private JPanel panel;
-    private JCheckBox commentCheckBox;
     private JBTable fileTypeTable;
     private JButton deleteFileTypeButton;
     private JButton addFileTypeButton;
@@ -32,10 +32,13 @@ public class CodeStatisticsDialog extends BaseDialog {
     private JButton addGitEmailButton;
     private JButton deleteGitEmailButton;
     private JCheckBox realTimeStatisticsCheckBox;
+    private JCheckBox countEmptyLineCheckBox;
+    private JCheckBox countCommentCheckBox;
+    private JCheckBox countKeywordCheckBox;
     private final DefaultTableModel gitEmailTableModel;
 
     public CodeStatisticsDialog() {
-        //文具类型
+        //文件类型
         defaultTableModel = new DefaultTableModel(null, new String[]{"参与统计的文件类型"});
         initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
         //git账号
@@ -44,11 +47,13 @@ public class CodeStatisticsDialog extends BaseDialog {
     }
 
     public void reset() {
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        List<String> fileTypeList = commonConfig.getFileTypeList();
-        List<String> gitEmailList = commonConfig.getGitEmailList();
-        commentCheckBox.setSelected(commonConfig.isCountComment());
-        realTimeStatisticsCheckBox.setSelected(commonConfig.isRealTimeStatistics());
+        CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
+        List<String> fileTypeList = config.getFileTypeList();
+        List<String> gitEmailList = config.getGitEmailList();
+        realTimeStatisticsCheckBox.setSelected(config.isRealTimeStatistics());
+        countEmptyLineCheckBox.setSelected(config.isCountEmptyLine());
+        countCommentCheckBox.setSelected(config.isCountComment());
+        countKeywordCheckBox.setSelected(config.isCountKeyword());
 
         defaultTableModel.getDataVector().clear();
         gitEmailTableModel.getDataVector().clear();
@@ -73,11 +78,19 @@ public class CodeStatisticsDialog extends BaseDialog {
     }
 
     public boolean isCountComment() {
-        return commentCheckBox.isSelected();
+        return countCommentCheckBox.isSelected();
     }
 
-    public boolean isRealTimeStatistics(){
+    public boolean isRealTimeStatistics() {
         return realTimeStatisticsCheckBox.isSelected();
+    }
+
+    public boolean isCountEmptyLine() {
+        return countEmptyLineCheckBox.isSelected();
+    }
+
+    public boolean isCountKeyword() {
+        return countKeywordCheckBox.isSelected();
     }
 
     public List<String> getFileTypeList() {

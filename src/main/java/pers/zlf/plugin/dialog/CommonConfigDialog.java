@@ -5,7 +5,7 @@ import com.intellij.ui.JBColor;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
 
 import javax.swing.JButton;

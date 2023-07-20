@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng
@@ -31,7 +30,7 @@ public class CodeLineCountAction extends BaseAction {
     @Override
     public boolean isExecute() {
         //配置校验
-        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCommonConfig().getFileTypeList())) {
+        if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
             WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
             return false;
         }
@@ -67,14 +66,18 @@ public class CodeLineCountAction extends BaseAction {
      */
     public static int getLineCount(VirtualFile virtualFile) {
         //获取配置
-        List<String> fileTypeList = ConfigFactory.getInstance().getCommonConfig().getFileTypeList();
+        List<String> fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         if (virtualFile.isDirectory()) {
             return Arrays.stream(virtualFile.getChildren()).mapToInt(CodeLineCountAction::getLineCount).sum();
         }
         String fileType = MyPsiUtil.getFileType(virtualFile);
+        //是否为参与统计的文件类型
         if (fileTypeList.stream().anyMatch(fileType::equalsIgnoreCase)) {
             CommentFormat commentFormat = getCommentFormat(virtualFile);
-            return getLineCount(virtualFile, commentFormat);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
+                return (int) br.lines().filter(line -> count(line, commentFormat)).count();
+            } catch (Exception ignored) {
+            }
         }
         return 0;
     }
@@ -89,34 +92,37 @@ public class CodeLineCountAction extends BaseAction {
         String fileType = MyPsiUtil.getFileType(virtualFile);
         switch (fileType) {
             case ClassType.JAVA_FILE:
-                return new CommentFormat(Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
+                return new CommentFormat(ClassType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
             case ClassType.XML_FILE:
-                return new CommentFormat(new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
+                return new CommentFormat(ClassType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
             default:
                 return new CommentFormat();
         }
     }
 
     /**
-     * 统计代码行数
+     * 判断是否统计
      *
-     * @param virtualFile   具体文件
+     * @param lineValue     行内容
      * @param commentFormat 注释格式
-     * @return int
+     * @return boolean
      */
-    private static int getLineCount(VirtualFile virtualFile, CommentFormat commentFormat) {
-        //是否统计注释
-        boolean countComment = ConfigFactory.getInstance().getCommonConfig().isCountComment();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(virtualFile.getInputStream()))) {
-            List<String> lineList = br.lines().filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-            //统计注释
-            if (countComment) {
-                return lineList.size();
-            }
-            //不统计注释
-            return (int) lineList.stream().filter(line -> !StringUtil.isComment(line, commentFormat)).count();
-        } catch (Exception ignored) {
+    public static boolean count(String lineValue, CommentFormat commentFormat) {
+        //统计空行
+        if (StringUtil.isEmpty(lineValue)) {
+            return ConfigFactory.getInstance().getCodeStatisticsConfig().isCountEmptyLine();
         }
-        return 0;
+        //关键字统计
+        //java中的package、import
+        if (ClassType.JAVA_FILE.equals(commentFormat.getFileType())) {
+            if (lineValue.startsWith(Common.PACKAGE + Common.SPACE) || lineValue.startsWith(Common.IMPORT + Common.SPACE)) {
+                return ConfigFactory.getInstance().getCodeStatisticsConfig().isCountKeyword();
+            }
+        }
+        //注释统计
+        if (StringUtil.isComment(lineValue, commentFormat)) {
+            return ConfigFactory.getInstance().getCodeStatisticsConfig().isCountComment();
+        }
+        return true;
     }
 }

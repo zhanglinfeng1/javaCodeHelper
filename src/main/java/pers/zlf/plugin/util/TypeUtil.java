@@ -69,6 +69,6 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSimpleType(String typeStr) {
-        return ClassType.BASIC_TYPE_LIST.contains(typeStr) || ClassType.COMMON_TYPE_LIST.contains(typeStr);
+        return ClassType.BASIC_TYPE_LIST.contains(typeStr);
     }
 }

@@ -22,7 +22,7 @@ public class FeignFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     public void dealPsiElement() {
         if (MyPsiUtil.isFeign(element)) {
             new FeignFastJump().addLineMarker(result, element);
-        } else if (MyPsiUtil.isController(element, ConfigFactory.getInstance().getCommonConfig().getModuleNameList())) {
+        } else if (MyPsiUtil.isController(element, ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList())) {
             new ControllerFastJump().addLineMarker(result, element);
         }
     }

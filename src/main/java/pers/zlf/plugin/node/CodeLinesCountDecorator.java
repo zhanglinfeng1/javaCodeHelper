@@ -13,7 +13,8 @@ import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CodeStatisticsInfo;
-import pers.zlf.plugin.pojo.CommonConfig;
+import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -37,8 +38,8 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
         //获取配置
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        List<String> fileTypeList = commonConfig.getFileTypeList();
+        CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
+        List<String> fileTypeList = config.getFileTypeList();
         Project project = node.getProject();
         if (CollectionUtil.isEmpty(fileTypeList) || project == null) {
             return;
@@ -55,7 +56,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             CodeStatisticsInfo codeStatisticsInfo = STATISTICS_MAP.get(directoryModuleName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
-                if (commonConfig.isRealTimeStatistics()) {
+                if (config.isRealTimeStatistics()) {
                     int count = 0;
                     for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
                         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
