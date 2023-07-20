@@ -41,10 +41,16 @@ import java.util.stream.Collectors;
  * @date create in 2023/4/24 15:26
  */
 public class AddApiAnnotationAction extends BaseAction {
-
+    /** 当前文件 */
     private PsiJavaFile psiJavaFile;
+    /** 需要导入的类 */
     private Set<String> importClassSet;
+    /** 需要添加的类 */
     private Map<PsiModifierList, String> annotationMap;
+    /** 鼠标选中的起始位置 */
+    int selectionStart;
+    /** 鼠标选中的末尾位置 */
+    int selectionEnd;
 
     @Override
     public boolean isVisible() {
@@ -55,6 +61,8 @@ public class AddApiAnnotationAction extends BaseAction {
             PsiClass psiClass = psiJavaFile.getClasses()[0];
             visible = !psiClass.isInterface() && !psiClass.isAnnotationType() && !psiClass.isEnum();
         }
+        selectionStart = editor.getSelectionModel().getSelectionStart();
+        selectionEnd = editor.getSelectionModel().getSelectionEnd();
         return visible;
     }
 
@@ -73,6 +81,11 @@ public class AddApiAnnotationAction extends BaseAction {
         });
     }
 
+    /**
+     * Controller类添加注解
+     *
+     * @param psiClass PsiClass
+     */
     private void addSwaggerForController(PsiClass psiClass) {
         addApiAnnotation(new ControllerApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiMethod method : psiClass.getMethods()) {
@@ -105,6 +118,11 @@ public class AddApiAnnotationAction extends BaseAction {
         }
     }
 
+    /**
+     * 对象类添加注解
+     *
+     * @param psiClass PsiClass
+     */
     private void addSwaggerForModel(PsiClass psiClass) {
         addApiAnnotation(new ModelApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiField field : psiClass.getFields()) {
@@ -112,12 +130,36 @@ public class AddApiAnnotationAction extends BaseAction {
         }
     }
 
+    /**
+     * 添加注解
+     *
+     * @param baseApi        注解
+     * @param psiElement     元素
+     * @param modifierList   PsiModifierList
+     * @param psiElementName 元素名
+     */
     private void addApiAnnotation(BaseApi baseApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
-        if (null != modifierList && !modifierList.hasAnnotation(baseApi.getQualifiedName())) {
+        if (needAdd(psiElement) && null != modifierList && !modifierList.hasAnnotation(baseApi.getQualifiedName())) {
             baseApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
             importClassSet.add(baseApi.getQualifiedName());
             annotationMap.put(modifierList, baseApi.toString());
         }
     }
 
+    /**
+     * 是否需要添加注解
+     *
+     * @param psiElement PsiElement
+     * @return boolean
+     */
+    private boolean needAdd(PsiElement psiElement) {
+        if (selectionStart == selectionEnd) {
+            return true;
+        }
+        int psiElementStart = psiElement.getTextRange().getStartOffset();
+        int psiElementEnd = psiElement.getTextRange().getEndOffset();
+        boolean psiElementStartBetween = psiElementStart >= selectionStart && psiElementStart <= selectionEnd;
+        boolean psiElementEndBetween = psiElementEnd >= selectionStart && psiElementEnd <= selectionEnd;
+        return psiElementStartBetween || psiElementEndBetween;
+    }
 }
