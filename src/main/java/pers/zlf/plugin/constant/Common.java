@@ -55,6 +55,8 @@ public class Common {
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
+    public static final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型";
+    public static final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
     public static final String SELECT_MODULE = "选择模块";
     public static final Integer DATE_CLASS_TYPE = 0;
     public static final Map<Integer, String> DATE_TYPE_MAP = new HashMap<>() {{

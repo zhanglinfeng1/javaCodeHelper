@@ -5,7 +5,6 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
-import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -39,10 +38,10 @@ public class CodeStatisticsDialog extends BaseDialog {
 
     public CodeStatisticsDialog() {
         //文件类型
-        defaultTableModel = new DefaultTableModel(null, new String[]{"参与统计的文件类型"});
+        defaultTableModel = new DefaultTableModel(null, new String[]{Common.FILE_TYPE_TABLE_HEADER});
         initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
         //git账号
-        gitEmailTableModel = new DefaultTableModel(null, new String[]{"参与统计贡献率的git邮箱(默认当前邮箱)"});
+        gitEmailTableModel = new DefaultTableModel(null, new String[]{Common.GIT_EMAIL_TABLE_HEADER});
         initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
     }
 

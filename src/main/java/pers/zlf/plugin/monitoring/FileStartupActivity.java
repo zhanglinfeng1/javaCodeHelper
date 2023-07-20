@@ -15,7 +15,6 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
-import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.PathUtil;
 
