@@ -1,5 +1,5 @@
 # 功能简介
-intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
+intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
 最低版本192.6817.14(2019.2.3)
 
 ## 代码补全
