@@ -1,7 +1,5 @@
 package pers.zlf.plugin.marker.feign;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -16,7 +14,6 @@ import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.CommonEnum;
 import pers.zlf.plugin.constant.CommonEnumType;
-import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.Request;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -25,7 +22,6 @@ import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,33 +42,31 @@ public abstract class BaseFastJump {
         this.filterFolderName = filterFolderName;
     }
 
-    public void addLineMarker(Collection<? super RelatedItemLineMarkerInfo<?>> result, PsiClass psiClass) {
+    public Map<String, MappingAnnotation> getLineMarkerMap(PsiClass psiClass) {
         //获取类的注解路径
         String classUrl = this.getMappingUrl(psiClass.getAnnotation(Annotation.REQUEST_MAPPING));
         //获取方法的注解
         map = Arrays.stream(psiClass.getMethods()).map(method -> this.getMappingAnnotation(classUrl, method)).filter(Objects::nonNull).collect(Collectors.toMap(MappingAnnotation::toString, Function.identity(), (k1, k2) -> k2));
-        if (map.isEmpty()) {
-            return;
-        }
-        //当前模块路径
-        Project project = psiClass.getProject();
-        String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(),project).toString();
-        for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-            //排除当前模块，排除资源文件路径
-            String virtualFilePath = PathUtil.format(virtualFile.getPath());
-            boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
-            boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
-            if (currentModule || resourcesFile) {
-                continue;
+        if (!map.isEmpty()) {
+            //当前模块路径
+            Project project = psiClass.getProject();
+            String currentModulePath = MyPsiUtil.getCurrentModulePath(psiClass.getContainingFile().getVirtualFile(), project).toString();
+            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                //排除当前模块，排除资源文件路径
+                String virtualFilePath = PathUtil.format(virtualFile.getPath());
+                boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
+                boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
+                if (currentModule || resourcesFile) {
+                    continue;
+                }
+                //controller跳转feign 固定true
+                //feign跳转controller 需排除配置的模块
+                if (jump(project, virtualFile)) {
+                    Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
+                }
             }
-            //controller跳转feign 固定true
-            //feign跳转controller 需排除配置的模块
-            if (jump(project, virtualFile)) {
-                Optional.ofNullable(PsiManager.getInstance(project).findDirectory(virtualFile)).ifPresent(this::dealDirectory);
-            }
         }
-        map.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> result.add(NavigationGutterIconBuilder.create(Icon.LOGO)
-                .setTargets(t.getTargetList()).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(t.getPsiAnnotation())));
+        return map;
     }
 
     public String getMappingUrl(PsiAnnotation annotation) {

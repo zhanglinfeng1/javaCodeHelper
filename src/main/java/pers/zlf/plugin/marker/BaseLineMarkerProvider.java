@@ -9,6 +9,7 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author zhanglinfeng
@@ -41,11 +42,27 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
      */
     public abstract void dealPsiElement();
 
-    public void addLineMarker(PsiElement targets, PsiElement element) {
+    /**
+     * 添加跳转标识
+     *
+     * @param element 跳转元素
+     * @param targets 跳转目标
+     */
+    public void addLineMarker(PsiElement element, PsiElement targets) {
         result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
-    public void addLineMarkerBoth(PsiElement targets, PsiElement element) {
+    public void addLineMarker(PsiElement element, List<? extends PsiElement> targets) {
+        result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
+    }
+
+    /**
+     * 互相添加跳转标识
+     *
+     * @param element 跳转元素
+     * @param targets 跳转目标
+     */
+    public void addLineMarkerBoth(PsiElement element, PsiElement targets) {
         addLineMarker(targets, element);
         addLineMarker(element, targets);
     }

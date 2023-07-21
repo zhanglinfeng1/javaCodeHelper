@@ -3,9 +3,13 @@ package pers.zlf.plugin.marker;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.factory.ConfigFactory;
+import pers.zlf.plugin.marker.feign.BaseFastJump;
 import pers.zlf.plugin.marker.feign.ControllerFastJump;
 import pers.zlf.plugin.marker.feign.FeignFastJump;
+import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
+
+import java.util.Map;
 
 /**
  * @author zhanglinfeng
@@ -20,11 +24,18 @@ public class FeignFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public void dealPsiElement() {
+        //只处理controller和feign类
+        BaseFastJump baseFastJump;
         if (MyPsiUtil.isFeign(element)) {
-            new FeignFastJump().addLineMarker(result, element);
+            baseFastJump = new FeignFastJump();
         } else if (MyPsiUtil.isController(element, ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList())) {
-            new ControllerFastJump().addLineMarker(result, element);
+            baseFastJump = new ControllerFastJump();
+        } else {
+            return;
         }
+        //绑定跳转
+        Map<String, MappingAnnotation> lineMarkerMap = baseFastJump.getLineMarkerMap(element);
+        lineMarkerMap.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> addLineMarker(t.getPsiAnnotation(), t.getTargetList()));
     }
 
 }

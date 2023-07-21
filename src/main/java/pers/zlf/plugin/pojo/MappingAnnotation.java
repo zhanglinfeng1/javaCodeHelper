@@ -15,16 +15,20 @@ import java.util.stream.Collectors;
  * @date create in 2022/9/28 10:42
  */
 public class MappingAnnotation {
+    /** 请求路径 */
     private String url;
+    /** get、post、put、delete */
     private String method;
+    /** 跳转注解 */
     private PsiAnnotation psiAnnotation;
+    /** 跳转目标 */
     private List<PsiMethod> targetList;
 
     public MappingAnnotation() {
     }
 
-    public MappingAnnotation(PsiAnnotation psiMethod, String url, String method) {
-        this.psiAnnotation = psiMethod;
+    public MappingAnnotation(PsiAnnotation psiAnnotation, String url, String method) {
+        this.psiAnnotation = psiAnnotation;
         this.url = url;
         this.method = method;
         this.targetList = new ArrayList<>();

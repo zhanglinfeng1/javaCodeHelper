@@ -92,6 +92,9 @@ public class AddApiAnnotationAction extends BaseAction {
             Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
             addApiAnnotation(new MethodApi(), method, method.getModifierList(), method.getName());
             for (PsiParameter parameter : method.getParameterList().getParameters()) {
+                if (!needAdd(parameter)) {
+                    continue;
+                }
                 Map<String, PsiAnnotation> parameterAnnotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
                 String parameterComment = Empty.of(parameterCommentMap.get(parameter.getName())).orElse(parameter.getName());
                 for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {

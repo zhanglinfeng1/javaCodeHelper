@@ -95,6 +95,6 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                 .map(f -> XmlUtil.getRootTagByName((XmlFile) f, Xml.MAPPER))
                 .filter(rootTag -> null != rootTag && classFullName.equals(rootTag.getAttributeValue(Xml.NAMESPACE)))
                 .map(rootTag -> XmlUtil.findTags(rootTag, Xml.INSERT, Xml.UPDATE, Xml.DELETE, Xml.SELECT))
-                .forEach(rootTagList -> rootTagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(m -> addLineMarker(tag, m))));
+                .forEach(rootTagList -> rootTagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(m -> addLineMarker(m, tag))));
     }
 }
