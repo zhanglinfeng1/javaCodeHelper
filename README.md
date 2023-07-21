@@ -13,7 +13,7 @@ sql与java的快捷跳转<br />
 
 ## 翻译
 目前仅支持中译英，英译中<br />
-支持百度翻译、阿里翻译<br />
+目前仅支持百度翻译<br />
 在idea中配置账号后，选中待翻译文本，右击选择“翻译”<br />
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 
@@ -23,16 +23,15 @@ sql与java的快捷跳转<br />
 如果不选中代码块，会给整个类添加注解，代码过长时会有卡顿(っ °Д °;)っ
 
 ## 代码检查
-feign中方法未被调用，方法名置灰<br />
-推荐使用java8中的时间类<br />
-陆续新增中...
+具体见 File > Setting > Editor > Inspections > JavaCodeHelp<br />
+![image](src/main/resources/example/codeCheck.png)<br />
 
 ## 代码统计
 先配置统计的文件类型（例：.java）。配置路径：File > Setting > Other Settings > JavaCodeHelp > 代码统计<br />
 右击项目视图任意区域，选择'统计代码行数'，会统计每个模块的总代码行数<br />
 右击项目视图任意文件或文件夹，选择'统计贡献率'，会根据git邮箱统计该模块的代码贡献率，卡顿时间较长 (っ °Д °;)っ<br />
 目前注释判断仅支持.java、.xml文件<br />
-![image](src/main/resources/example/1.png)<br />
+![image](src/main/resources/example/codeStatistics.png)<br />
 
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
