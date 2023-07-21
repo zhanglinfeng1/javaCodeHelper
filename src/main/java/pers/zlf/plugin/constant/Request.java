@@ -11,7 +11,8 @@ public class Request {
     public static final String POST = "POST";
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
-    public static final List<String> TYPE_LIST = List.of(GET, POST, PUT, DELETE);
+    public static final String PATCH = "PATCH";
+    public static final List<String> TYPE_LIST = List.of(GET, POST, PUT, DELETE, PATCH);
 
     /** 超时时间 */
     public static final int SOCKET_TIMEOUT = 2000;

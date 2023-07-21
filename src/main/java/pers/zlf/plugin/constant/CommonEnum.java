@@ -11,7 +11,8 @@ public enum CommonEnum {
     POST_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.POST_MAPPING, Request.POST),
     PUT_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.PUT_MAPPING, Request.PUT),
     GET_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.GET_MAPPING, Request.GET),
-    DELETE_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.DELETE_MAPPING, Request.DELETE);
+    DELETE_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.DELETE_MAPPING, Request.DELETE),
+    PATCH_REQUEST(CommonEnumType.REQUEST_TYPE, Annotation.PATCH_MAPPING, Request.PATCH);
 
     private String type;
 

@@ -136,7 +136,7 @@ public abstract class BaseFastJump {
                 continue;
             }
             //请求方式
-            String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD));
+            String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD).toUpperCase());
             Optional<String> optional = Request.TYPE_LIST.stream().filter(method::contains).findAny();
             if (optional.isPresent()) {
                 method = optional.get();

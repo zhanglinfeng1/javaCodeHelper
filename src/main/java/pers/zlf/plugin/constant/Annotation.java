@@ -17,7 +17,8 @@ public class Annotation {
     public static final String GET_MAPPING = "org.springframework.web.bind.annotation.GetMapping";
     public static final String PUT_MAPPING = "org.springframework.web.bind.annotation.PutMapping";
     public static final String DELETE_MAPPING = "org.springframework.web.bind.annotation.DeleteMapping";
-    public static final List<String> MAPPING_LIST = List.of(REQUEST_MAPPING, POST_MAPPING, GET_MAPPING, PUT_MAPPING, DELETE_MAPPING);
+    public static final String PATCH_MAPPING = "org.springframework.web.bind.annotation.PatchMapping";
+    public static final List<String> MAPPING_LIST = List.of(REQUEST_MAPPING, POST_MAPPING, GET_MAPPING, PUT_MAPPING, DELETE_MAPPING, PATCH_MAPPING);
 
     /** controller注解 */
     public static final String CONTROLLER_1 = "org.springframework.web.bind.annotation.Controller";
