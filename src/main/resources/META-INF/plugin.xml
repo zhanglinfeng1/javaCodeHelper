@@ -44,7 +44,7 @@
         <!-- feign方法是否被调用-->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="feign中未被调用的方法" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.FeignMethodInspection"/>
         <!-- 变量类检查，推荐使用新的类-->
-        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="推荐使用类" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.RecommendationClassInspection"/>
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="一些可替代类的建议" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.RecommendationClassInspection"/>
         <!-- 监听文件改动 -->
         <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>
