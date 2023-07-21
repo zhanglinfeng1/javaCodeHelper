@@ -63,7 +63,8 @@ public class ConstructorCompletion extends BaseCompletion {
                 }
                 String fieldName = field.getName();
                 if (field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
-                    fillStr.append(Common.THIS_STR).append(fieldName).append(Common.EQ_STR).append(parameterName).append(Common.DOT).append(Common.GET).append(StringUtil.toUpperCaseFirst(fieldName)).append(Common.END_STR);
+                    fillStr.append(Common.THIS_STR).append(fieldName).append(Common.EQ_STR).append(parameterName).append(Common.DOT).append(Common.GET)
+                            .append(StringUtil.toUpperCaseFirst(fieldName)).append(String.format(Common.END_STR, Common.BLANK_STRING));
                     fieldMap.remove(fieldName);
                 }
             }

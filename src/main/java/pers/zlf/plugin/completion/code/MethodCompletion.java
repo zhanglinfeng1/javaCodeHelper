@@ -100,7 +100,7 @@ public class MethodCompletion extends BaseCompletion {
             }
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
-            Empty.of(this.getParamNameList(psiParameterArr)).map(list -> new StringBuilder(Common.END_STR).insert(1, String.join(Common.COMMA_STR, list)))
+            Empty.of(this.getParamNameList(psiParameterArr)).map(list -> String.format(Common.END_STR, String.join(Common.COMMA + Common.SPACE, list)))
                     .ifPresent(t -> returnList.add(LookupElementBuilder.create(code + fieldMethod.getName() + t).withPresentableText(code + fieldMethod.getName())));
         }
     }

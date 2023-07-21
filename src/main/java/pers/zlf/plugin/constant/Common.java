@@ -70,8 +70,7 @@ public class Common {
     public static final String GET = "get";
     public static final String SET = "set";
     public static final String EQ_STR = " = ";
-    public static final String END_STR = "();";
-    public static final String COMMA_STR = ", ";
+    public static final String END_STR = "(%s);";
     public static final String ARRAYS_STREAM_STR = "Arrays.stream(%s).map(";
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
