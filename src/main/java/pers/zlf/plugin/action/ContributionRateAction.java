@@ -1,7 +1,6 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -16,6 +15,7 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.factory.ConfigFactory;
+import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.CollectionUtil;
@@ -53,7 +53,7 @@ public class ContributionRateAction extends BaseAction {
         this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
+            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon());
             return false;
         }
         //项目路径
@@ -66,7 +66,7 @@ public class ContributionRateAction extends BaseAction {
             String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
             repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
         } catch (IOException e) {
-            WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(Message.NO_GIT, Common.BLANK_STRING, Messages.getInformationIcon()));
+            Messages.showMessageDialog(Message.NO_GIT, Common.BLANK_STRING, Messages.getInformationIcon());
             return false;
         }
         return true;
@@ -81,6 +81,7 @@ public class ContributionRateAction extends BaseAction {
         if (CollectionUtil.isEmpty(myEmailList)) {
             myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
             if (CollectionUtil.isEmpty(myEmailList)) {
+                Messages.showMessageDialog(Message.NO_GIT_EMAIL, Common.BLANK_STRING, Messages.getInformationIcon());
                 return;
             }
         }
@@ -91,14 +92,17 @@ public class ContributionRateAction extends BaseAction {
         if (null == module) {
             return;
         }
-        for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
-            this.dealDirectory(virtualFile, fileTypeList, myEmailList);
-        }
-        if (totalLineCount != 0) {
-            CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
-            //更新贡献率行数
-            CodeLinesCountDecorator.updateNode();
-        }
+        List<String> finalMyEmailList = myEmailList;
+        ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
+            for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
+                this.dealDirectory(virtualFile, fileTypeList, finalMyEmailList);
+            }
+            if (totalLineCount != 0) {
+                CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
+                //更新贡献率行数
+                CodeLinesCountDecorator.updateNode();
+            }
+        });
     }
 
     private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, List<String> myEmailList) {

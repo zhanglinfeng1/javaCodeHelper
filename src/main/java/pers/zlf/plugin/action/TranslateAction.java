@@ -1,7 +1,6 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -47,7 +46,7 @@ public class TranslateAction extends BaseAction {
                             .setTitle(title).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
-                WriteCommandAction.runWriteCommandAction(project, () -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));
+                ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));
             }
         });
     }

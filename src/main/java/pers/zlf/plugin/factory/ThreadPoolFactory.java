@@ -14,4 +14,6 @@ public class ThreadPoolFactory {
     public static final ThreadPoolExecutor TRANS_POOL = new ThreadPoolExecutor(3, 6, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
             new ThreadFactoryBuilder().setNameFormat("trans-pool-%d").build(),new ThreadPoolExecutor.AbortPolicy());
 
+    public static final ThreadPoolExecutor CODE_STATISTICS_POOL = new ThreadPoolExecutor(3, 12, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+            new ThreadFactoryBuilder().setNameFormat("codeStatistics-pool-%d").build(),new ThreadPoolExecutor.AbortPolicy());
 }
