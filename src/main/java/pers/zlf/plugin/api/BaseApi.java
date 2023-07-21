@@ -1,5 +1,6 @@
 package pers.zlf.plugin.api;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
@@ -26,7 +27,7 @@ public abstract class BaseApi {
         if (checkTrans()) {
             return requestTransApi();
         }
-        Messages.showMessageDialog(Message.TRANSLATION_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon());
+        ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(Message.TRANSLATION_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon()));
         return Common.BLANK_STRING;
     }
 
