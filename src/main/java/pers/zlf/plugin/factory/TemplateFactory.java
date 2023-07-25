@@ -5,6 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
@@ -31,6 +32,7 @@ import java.util.Objects;
  */
 public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
+    /** freemarker版本 */
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_23);
     /** 解析后的表信息 */
     private TableInfo tableInfo;
@@ -69,7 +71,7 @@ public class TemplateFactory {
             CONFIGURATION.setDirectoryForTemplateLoading(file);
             for (File subFile : Objects.requireNonNull(file.listFiles(), "The custom template does not exist")) {
                 String name = subFile.getName();
-                if (name.endsWith(Common.TEMPLATE_SUFFIX)) {
+                if (name.endsWith(ClassType.FREEMARKER_FILE)) {
                     templateList.add(CONFIGURATION.getTemplate(name));
                 }
             }
@@ -84,7 +86,7 @@ public class TemplateFactory {
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         for (Template template : templateList) {
-            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(Common.TEMPLATE_SUFFIX, Common.BLANK_STRING);
+            String filePath = this.fullPath + tableInfo.getTableName() + template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
             try {
                 template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
             } catch (Exception e) {

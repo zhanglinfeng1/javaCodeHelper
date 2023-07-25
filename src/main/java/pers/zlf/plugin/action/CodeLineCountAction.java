@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
@@ -119,7 +120,7 @@ public class CodeLineCountAction extends BaseAction {
         //关键字统计
         //java中的package、import
         if (ClassType.JAVA_FILE.equals(commentFormat.getFileType())) {
-            if (lineValue.startsWith(Common.PACKAGE + Common.SPACE) || lineValue.startsWith(Common.IMPORT + Common.SPACE)) {
+            if (lineValue.startsWith(Keyword.JAVA_PACKAGE + Common.SPACE) || lineValue.startsWith(Keyword.JAVA_IMPORT + Common.SPACE)) {
                 return ConfigFactory.getInstance().getCodeStatisticsConfig().isCountKeyword();
             }
         }

@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author zhanglinfeng
  * @date create in 2023/7/20 11:59
  */
-@State(name = Common.FAST_JUMP, storages = @Storage(Common.FAST_JUMP_CONFIG_XML))
+@State(name = Common.FAST_JUMP, storages = @Storage("fastJumpConfig.xml"))
 public class FastJumpConfigComponent implements PersistentStateComponent<FastJumpConfig> {
 
     private final FastJumpConfig config = new FastJumpConfig();

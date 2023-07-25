@@ -22,6 +22,8 @@ import java.awt.event.MouseEvent;
  * @date create in 2023/7/25 10:02
  */
 public class SwingUtil {
+    /** 复制选项 */
+    public static final String MENU_ITEM_COPY = "COPY";
 
     /**
      * 创建右键菜单
@@ -38,7 +40,7 @@ public class SwingUtil {
         if (SwingUtilities.isRightMouseButton(mouseEvent)) {
             JBPopupMenu menu = new JBPopupMenu();
             for (String menuItemKey : menuItemKeys) {
-                if (Common.MENU_ITEM_COPY.equals(menuItemKey)) {
+                if (MENU_ITEM_COPY.equals(menuItemKey)) {
                     menu.add(createCopyMenuItem(selectedText));
                 }
             }

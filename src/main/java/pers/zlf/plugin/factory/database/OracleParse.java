@@ -1,6 +1,7 @@
 package pers.zlf.plugin.factory.database;
 
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
@@ -31,7 +32,7 @@ public class OracleParse extends BaseSqlParse {
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : columnLineList) {
             List<String> valueList = Arrays.stream(line.split(Regex.SPACE)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-            if (!Common.CONSTRAINT.equalsIgnoreCase(valueList.get(0)) && !line.startsWith(Common.RIGHT_PARENTHESES)) {
+            if (!Keyword.SQL_CONSTRAINT.equalsIgnoreCase(valueList.get(0)) && !line.startsWith(Common.RIGHT_PARENTHESES)) {
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
                 columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));
@@ -42,10 +43,10 @@ public class OracleParse extends BaseSqlParse {
         Map<String, ColumnInfo> columnMap = columnList.stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
         List<String> commentLineList = Arrays.stream(sqlStr.substring(index).split(Regex.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(Regex.SPACE).length > 1).collect(Collectors.toList());
         for (String line : commentLineList) {
-            if (line.toUpperCase().startsWith(Common.COMMENT)) {
+            if (line.toLowerCase().startsWith(Keyword.SQL_COMMENT)) {
                 List<String> valueList = Arrays.stream(line.split(Regex.SPACE)).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
                 String comment = StringUtil.getFirstMatcher(valueList.get(valueList.size() - 1), Regex.APOSTROPHE);
-                if (Common.TABLE.equalsIgnoreCase(valueList.get(2))) {
+                if (Keyword.SQL_TABLE.equalsIgnoreCase(valueList.get(2))) {
                     tableInfo.setTableComment(comment);
                     continue;
                 }

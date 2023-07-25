@@ -1,6 +1,7 @@
 package pers.zlf.plugin.factory.database;
 
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
@@ -27,7 +28,7 @@ public class MysqlParse extends BaseSqlParse {
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : lineList) {
             List<String> valueList = Arrays.stream(line.split("[\\s]+(?=(([^']*[']){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING)).collect(Collectors.toList());
-            if (Common.COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
+            if (Keyword.SQL_COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
                 columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));

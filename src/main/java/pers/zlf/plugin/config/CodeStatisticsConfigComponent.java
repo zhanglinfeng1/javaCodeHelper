@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author zhanglinfeng
  * @date create in 2023/7/20 11:59
  */
-@State(name = Common.CODE_STATISTICS, storages = @Storage(Common.CODE_STATISTICS_CONFIG_XML))
+@State(name = Common.CODE_STATISTICS, storages = @Storage("codeStatisticsConfig.xml"))
 public class CodeStatisticsConfigComponent implements PersistentStateComponent<CodeStatisticsConfig> {
 
     private final CodeStatisticsConfig config = new CodeStatisticsConfig();

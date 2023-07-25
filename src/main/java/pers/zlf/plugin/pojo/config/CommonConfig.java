@@ -2,9 +2,6 @@ package pers.zlf.plugin.pojo.config;
 
 import pers.zlf.plugin.constant.Common;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author zhanglinfeng
  * @date create in 2022/10/5 9:03

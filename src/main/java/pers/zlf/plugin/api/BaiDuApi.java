@@ -19,10 +19,6 @@ public class BaiDuApi extends BaseApi {
     private String appid;
     private String securityKey;
 
-    public BaiDuApi() {
-        apiName = Common.BAIDU_TRANSLATE_CHINESE;
-    }
-
     @Override
     protected boolean checkTrans() {
         this.appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
@@ -37,6 +33,11 @@ public class BaiDuApi extends BaseApi {
         String urlStr = String.format(Common.BAIDU_TRANSLATE_URL, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);
         BaiDuTransResult transResult = HttpUtil.get(urlStr, BaiDuTransResult.class);
         return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getErrorMsg()));
+    }
+
+    @Override
+    public String getTranslateApiName() {
+        return Common.BAIDU_TRANSLATE_CHINESE;
     }
 
 }

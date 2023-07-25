@@ -15,13 +15,20 @@ import pers.zlf.plugin.util.SwingUtil;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhanglinfeng
  * @date create in 2022/9/17 19:18
  */
 public class TranslateAction extends BaseAction {
+    /** 选中的文本 */
     private String selectionText;
+    /** 翻译API */
+    private final Map<Integer, BaseApi> translateApiMap = new HashMap<>() {{
+        put(Common.BAIDU_TRANSLATE, new BaiDuApi());
+    }};
 
     @Override
     public boolean isVisible() {
@@ -32,13 +39,8 @@ public class TranslateAction extends BaseAction {
 
     @Override
     public void execute() {
-        Integer getTranslateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
-        BaseApi baseApi;
-        if (Common.BAIDU_TRANSLATE.equals(getTranslateApi)) {
-            baseApi = new BaiDuApi();
-        } else {
-            return;
-        }
+        Integer translateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
+        BaseApi baseApi = translateApiMap.get(translateApi);
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
             //请求翻译API
             try {
@@ -49,13 +51,13 @@ public class TranslateAction extends BaseAction {
                     ActionListener actionListener = e -> {
                         if (e.getSource() instanceof MouseEvent) {
                             MouseEvent mouseEvent = (MouseEvent) e.getSource();
-                            SwingUtil.createJBPopupMenu(mouseEvent, Common.MENU_ITEM_COPY);
+                            SwingUtil.createJBPopupMenu(mouseEvent, SwingUtil.MENU_ITEM_COPY);
                         }
                     };
                     //弹窗展示
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
                     ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
-                            .setTitle(baseApi.getApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
+                            .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
                 ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));

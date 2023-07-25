@@ -1,6 +1,8 @@
 package pers.zlf.plugin.constant;
 
 /**
+ * 弹窗提示文本
+ *
  * @author zhanglinfeng
  * @date create in 2023/5/10 10:13
  */

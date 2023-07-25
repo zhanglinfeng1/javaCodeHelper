@@ -26,9 +26,9 @@ import java.util.Optional;
  */
 public class SqlFactory implements ToolWindowFactory {
     private final Map<String, BaseSqlParse> sqlParseMap = new HashMap<>() {{
-        put(Common.MYSQL, new MysqlParse());
-        put(Common.ORACLE, new OracleParse());
-        put(Common.POSTGRESQL, new PostgresqlParse());
+        put("mysql", new MysqlParse());
+        put("oracle", new OracleParse());
+        put("postgresql", new PostgresqlParse());
     }};
 
     @Override
