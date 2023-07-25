@@ -45,8 +45,6 @@ public class TranslateAction extends BaseAction {
                 //翻译结果
                 String translateResult = baseApi.trans(selectionText);
                 if (StringUtil.isNotEmpty(translateResult)) {
-                    //配置中选择的翻译API
-                    String title = Common.TRANSLATE_MAP.get(ConfigFactory.getInstance().getCommonConfig().getTranslateApi());
                     //复制菜单
                     ActionListener actionListener = e -> {
                         if (e.getSource() instanceof MouseEvent) {
@@ -57,7 +55,7 @@ public class TranslateAction extends BaseAction {
                     //弹窗展示
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
                     ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
-                            .setTitle(title).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
+                            .setTitle(baseApi.getApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
                 ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));

@@ -19,6 +19,10 @@ public class BaiDuApi extends BaseApi {
     private String appid;
     private String securityKey;
 
+    public BaiDuApi() {
+        apiName = Common.BAIDU_TRANSLATE_CHINESE;
+    }
+
     @Override
     protected boolean checkTrans() {
         this.appid = ConfigFactory.getInstance().getCommonConfig().getAppId();

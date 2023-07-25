@@ -11,6 +11,8 @@ import pers.zlf.plugin.util.StringUtil;
  * @date create in 2023/7/4 11:43
  */
 public abstract class BaseApi {
+    /** api名 */
+    protected String apiName;
     /** 原文 */
     protected String text;
     /** 原文语言 */
@@ -35,4 +37,7 @@ public abstract class BaseApi {
 
     protected abstract String requestTransApi() throws Exception;
 
+    public String getApiName() {
+        return apiName;
+    }
 }
