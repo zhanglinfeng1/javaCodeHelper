@@ -16,13 +16,13 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.search.GlobalSearchScope;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.pojo.annotation.BaseApi;
-import pers.zlf.plugin.pojo.annotation.ControllerApi;
-import pers.zlf.plugin.pojo.annotation.FieldApi;
-import pers.zlf.plugin.pojo.annotation.IgnoreApi;
-import pers.zlf.plugin.pojo.annotation.MethodApi;
-import pers.zlf.plugin.pojo.annotation.ModelApi;
-import pers.zlf.plugin.pojo.annotation.ParameterApi;
+import pers.zlf.plugin.pojo.annotation.BaseAnnotation;
+import pers.zlf.plugin.pojo.annotation.ControllerAnnotation;
+import pers.zlf.plugin.pojo.annotation.FieldAnnotation;
+import pers.zlf.plugin.pojo.annotation.IgnoreAnnotation;
+import pers.zlf.plugin.pojo.annotation.MethodAnnotation;
+import pers.zlf.plugin.pojo.annotation.ModelAnnotation;
+import pers.zlf.plugin.pojo.annotation.ParameterAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
@@ -90,10 +90,10 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param psiClass PsiClass
      */
     private void addSwaggerForController(PsiClass psiClass) {
-        addApiAnnotation(new ControllerApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
+        addApiAnnotation(new ControllerAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiMethod method : psiClass.getMethods()) {
             Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
-            addApiAnnotation(new MethodApi(), method, method.getModifierList(), method.getName());
+            addApiAnnotation(new MethodAnnotation(), method, method.getModifierList(), method.getName());
             for (PsiParameter parameter : method.getParameterList().getParameters()) {
                 if (!needAdd(parameter)) {
                     continue;
@@ -105,16 +105,16 @@ public class AddApiAnnotationAction extends BaseAction {
                     switch (entry.getKey()) {
                         case Annotation.REQUEST_ATTRIBUTE:
                         case Annotation.REQUEST_HEADER:
-                            addApiAnnotation(new IgnoreApi(), parameter, parameter.getModifierList(), parameterComment);
+                            addApiAnnotation(new IgnoreAnnotation(), parameter, parameter.getModifierList(), parameterComment);
                             break;
                         case Annotation.REQUEST_PARAM:
                         case Annotation.REQUEST_PART:
                         case Annotation.PATH_VARIABLE:
                         case Annotation.REQUEST_BODY:
-                            ParameterApi parameterApi = new ParameterApi();
+                            ParameterAnnotation parameterAnnotation = new ParameterAnnotation();
                             String required = MyPsiUtil.getAnnotationValue(annotation, Annotation.REQUIRED);
-                            parameterApi.setRequired(required.equals(Common.TRUE));
-                            addApiAnnotation(parameterApi, parameter, parameter.getModifierList(), parameterComment);
+                            parameterAnnotation.setRequired(required.equals(Common.TRUE));
+                            addApiAnnotation(parameterAnnotation, parameter, parameter.getModifierList(), parameterComment);
                             break;
                         default:
                             break;
@@ -130,25 +130,25 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param psiClass PsiClass
      */
     private void addSwaggerForModel(PsiClass psiClass) {
-        addApiAnnotation(new ModelApi(), psiClass, psiClass.getModifierList(), psiClass.getName());
+        addApiAnnotation(new ModelAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
         for (PsiField field : psiClass.getFields()) {
-            addApiAnnotation(new FieldApi(), field, field.getModifierList(), field.getName());
+            addApiAnnotation(new FieldAnnotation(), field, field.getModifierList(), field.getName());
         }
     }
 
     /**
      * 添加注解
      *
-     * @param baseApi        注解
+     * @param baseAnnotation        注解
      * @param psiElement     元素
      * @param modifierList   PsiModifierList
      * @param psiElementName 元素名
      */
-    private void addApiAnnotation(BaseApi baseApi, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
-        if (needAdd(psiElement) && null != modifierList && !modifierList.hasAnnotation(baseApi.getQualifiedName())) {
-            baseApi.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
-            importClassSet.add(baseApi.getQualifiedName());
-            annotationMap.put(modifierList, baseApi.toString());
+    private void addApiAnnotation(BaseAnnotation baseAnnotation, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
+        if (needAdd(psiElement) && null != modifierList && !modifierList.hasAnnotation(baseAnnotation.getQualifiedName())) {
+            baseAnnotation.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
+            importClassSet.add(baseAnnotation.getQualifiedName());
+            annotationMap.put(modifierList, baseAnnotation.toString());
         }
     }
 

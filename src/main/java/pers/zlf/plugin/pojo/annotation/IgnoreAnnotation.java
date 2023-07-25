@@ -6,7 +6,7 @@ import pers.zlf.plugin.constant.Annotation;
  * @author zhanglinfeng
  * @date create in 2023/4/24 18:49
  */
-public class IgnoreApi extends BaseApi {
+public class IgnoreAnnotation extends BaseAnnotation {
 
     @Override
     public String getSwaggerApi() {

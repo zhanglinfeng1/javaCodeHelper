@@ -9,13 +9,13 @@ import pers.zlf.plugin.factory.ConfigFactory;
  * @author zhanglinfeng
  * @date create in 2023/4/24 16:22
  */
-public abstract class BaseApi {
+public abstract class BaseAnnotation {
     protected final String name;
     private String qualifiedName;
     private String value;
     private boolean required;
 
-    public BaseApi() {
+    public BaseAnnotation() {
         if (Common.SWAGGER_API.equals(ConfigFactory.getInstance().getCommonConfig().getApiTool())) {
             qualifiedName = getSwaggerApi();
         }
