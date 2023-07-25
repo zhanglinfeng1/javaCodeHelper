@@ -33,15 +33,15 @@ public class TranslateAction extends BaseAction {
     @Override
     public void execute() {
         Integer getTranslateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
+        BaseApi baseApi;
+        if (Common.BAIDU_TRANSLATE.equals(getTranslateApi)) {
+            baseApi = new BaiDuApi();
+        } else {
+            return;
+        }
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
             //请求翻译API
             try {
-                BaseApi baseApi;
-                if (Common.BAIDU_TRANSLATE.equals(getTranslateApi)) {
-                    baseApi = new BaiDuApi();
-                } else {
-                    return;
-                }
                 //翻译结果
                 String translateResult = baseApi.trans(selectionText);
                 if (StringUtil.isNotEmpty(translateResult)) {

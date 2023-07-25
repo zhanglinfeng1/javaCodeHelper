@@ -29,7 +29,7 @@ public abstract class BaseAction extends AnAction {
         this.event = event;
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
-        event.getPresentation().setVisible(null != project && isVisible());
+        event.getPresentation().setVisible(isVisible());
     }
 
     /**

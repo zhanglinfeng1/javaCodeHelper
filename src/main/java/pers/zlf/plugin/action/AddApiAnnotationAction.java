@@ -54,6 +54,9 @@ public class AddApiAnnotationAction extends BaseAction {
 
     @Override
     public boolean isVisible() {
+        if (null == project) {
+            return false;
+        }
         PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
         boolean visible = psiFile instanceof PsiJavaFile && psiFile.isWritable();
         if (visible) {

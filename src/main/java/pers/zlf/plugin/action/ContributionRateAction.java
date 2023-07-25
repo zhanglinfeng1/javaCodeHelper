@@ -49,6 +49,11 @@ public class ContributionRateAction extends BaseAction {
     private int myLineCount = 0;
 
     @Override
+    public boolean isVisible() {
+        return null != project;
+    }
+
+    @Override
     public boolean isExecute() {
         this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         //配置校验

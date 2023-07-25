@@ -27,6 +27,11 @@ import java.util.List;
 public class CodeLineCountAction extends BaseAction {
 
     @Override
+    public boolean isVisible() {
+        return null != project;
+    }
+
+    @Override
     public boolean isExecute() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
