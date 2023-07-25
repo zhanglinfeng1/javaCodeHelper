@@ -11,6 +11,10 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.SwingUtil;
+
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 /**
  * @author zhanglinfeng
@@ -38,16 +42,27 @@ public class TranslateAction extends BaseAction {
                 } else {
                     return;
                 }
+                //翻译结果
                 String translateResult = baseApi.trans(selectionText);
                 if (StringUtil.isNotEmpty(translateResult)) {
+                    //配置中选择的翻译API
                     String title = Common.TRANSLATE_MAP.get(ConfigFactory.getInstance().getCommonConfig().getTranslateApi());
+                    //复制菜单
+                    ActionListener actionListener = e -> {
+                        if (e.getSource() instanceof MouseEvent) {
+                            MouseEvent mouseEvent = (MouseEvent) e.getSource();
+                            SwingUtil.createJBPopupMenu(mouseEvent, Common.MENU_ITEM_COPY);
+                        }
+                    };
+                    //弹窗展示
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
                     ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
-                            .setTitle(title).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
+                            .setTitle(title).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
                 ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));
             }
         });
     }
+
 }

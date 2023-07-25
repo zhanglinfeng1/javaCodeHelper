@@ -47,6 +47,7 @@ public class Common {
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\javaCodeHelperFile";
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
     public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "e.g. C:\\zlf\\CustomTemplate";
+    public static final String MENU_ITEM_COPY = "COPY";
 
     /** 配置 */
     public static final String JAVA_CODE_HELP_CONFIG_XML = "javaCodeHelpConfig.xml";
