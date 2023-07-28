@@ -15,5 +15,6 @@ public class Icon {
     public static final javax.swing.Icon REMOVE_DARK = IconLoader.getIcon("/icon/removeDark.png", Icon.class);
     public static final javax.swing.Icon EDIT = IconLoader.getIcon("/icon/edit.png", Icon.class);
     public static final javax.swing.Icon EDIT_DARK = IconLoader.getIcon("/icon/editDark.png", Icon.class);
+    public static final javax.swing.Icon LOGO_GREY = IconLoader.getIcon("/icon/logoGrey.svg", Icon.class);
 
 }

@@ -32,6 +32,11 @@ public class Annotation {
     public static final String IBATIS_UPDATE_PROVIDER = "org.apache.ibatis.annotations.UpdateProvider";
     public static final String IBATIS_DELETE_PROVIDER = "org.apache.ibatis.annotations.DeleteProvider";
     public static final List<String> IBATIS_PROVIDER_LIST = List.of(IBATIS_SELECT_PROVIDER, IBATIS_INSERT_PROVIDER, IBATIS_UPDATE_PROVIDER, IBATIS_DELETE_PROVIDER);
+    public static final String IBATIS_SELECT = "org.apache.ibatis.annotations.Select";
+    public static final String IBATIS_INSERT = "org.apache.ibatis.annotations.Insert";
+    public static final String IBATIS_UPDATE = "org.apache.ibatis.annotations.Update";
+    public static final String IBATIS_DELETE = "org.apache.ibatis.annotations.Delete";
+    public static final List<String> IBATIS_LIST = List.of(IBATIS_SELECT, IBATIS_INSERT, IBATIS_UPDATE, IBATIS_DELETE);
 
     /** 注解常用属性 */
     public static final String VALUE = "value";
