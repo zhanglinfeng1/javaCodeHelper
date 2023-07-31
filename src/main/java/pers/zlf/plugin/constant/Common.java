@@ -27,9 +27,12 @@ public class Common {
     public static final String PERCENT_SIGN = "%";
     public static final String EN = "en";
     public static final String ZH = "zh";
+    public static final String SELECT = "select";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
+    public static final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
+    public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
     public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
 
     /** 占位符 */
@@ -68,6 +71,8 @@ public class Common {
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
     public static final String COLLECT_SET_STR = "::new).collect(Collectors.toSet());";
     public static final String S_STR = "s";
+    public static final String CONSTRUCTOR_FILL_STR1 = "this.%s=%s;";
+    public static final String CONSTRUCTOR_FILL_STR2 = "this.%s=%s.get%s();";
 
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "补全构造方法";

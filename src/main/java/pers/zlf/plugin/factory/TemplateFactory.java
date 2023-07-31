@@ -8,6 +8,7 @@ import freemarker.template.Template;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
@@ -21,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -135,5 +137,23 @@ public class TemplateFactory {
                 file.close();
             }
         }
+    }
+
+    /**
+     * 获取模版渲染后的内容
+     *
+     * @param templateName 模版名称
+     * @param map          模版数据
+     * @return String
+     */
+    public String getTemplateContent(String templateName, Map<String, ?> map) {
+        // 接收处理后的模版内容
+        StringWriter stringWriter = new StringWriter();
+        try {
+            Template template = configuration.getTemplate(templateName);
+            template.process(map, stringWriter);
+        } catch (Exception ignored) {
+        }
+        return stringWriter.toString().replaceAll(Regex.WRAP, Common.BLANK_STRING);
     }
 }

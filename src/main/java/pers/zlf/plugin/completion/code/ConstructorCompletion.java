@@ -36,19 +36,19 @@ public class ConstructorCompletion extends BaseCompletion {
         //构造方法的方法体
         String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(Common.BLANK_STRING);
         StringBuilder fillStr = new StringBuilder();
-        //待处理的变量
+        //待处理的变量 TODO 改用语法解析的方式
         Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(Common.THIS_STR + f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         loop:
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
-            if (fieldMap.isEmpty()){
+            if (fieldMap.isEmpty()) {
                 break;
             }
             String parameterName = parameter.getName();
             PsiType parameterType = parameter.getType();
             if (parameterType.getInternalCanonicalText().equals(fieldMap.get(parameterName))) {
-                fillStr.append(Common.THIS_STR).append(parameterName).append(Common.EQ_STR).append(parameterName).append(Common.SEMICOLON);
+                fillStr.append(String.format(Common.CONSTRUCTOR_FILL_STR1, parameterName, parameterName));
                 fieldMap.remove(parameterName);
                 continue;
             }
@@ -58,13 +58,12 @@ public class ConstructorCompletion extends BaseCompletion {
             }
             //构造方法的参数为对象类型，处理对象的变量
             for (PsiField field : parameterClass.getFields()) {
-                if (fieldMap.isEmpty()){
+                if (fieldMap.isEmpty()) {
                     break loop;
                 }
                 String fieldName = field.getName();
                 if (field.getType().getInternalCanonicalText().equals(fieldMap.get(fieldName))) {
-                    fillStr.append(Common.THIS_STR).append(fieldName).append(Common.EQ_STR).append(parameterName).append(Common.DOT).append(Common.GET)
-                            .append(StringUtil.toUpperCaseFirst(fieldName)).append(String.format(Common.END_STR, Common.BLANK_STRING));
+                    fillStr.append(String.format(Common.CONSTRUCTOR_FILL_STR2, fieldName, parameterName, StringUtil.toUpperCaseFirst(fieldName)));
                     fieldMap.remove(fieldName);
                 }
             }

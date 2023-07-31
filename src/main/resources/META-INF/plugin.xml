@@ -1,11 +1,12 @@
 <idea-plugin require-restart="true">
+    <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.10.0</version>
+    <version>1.11.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="192.6817.14"/>
     <description><![CDATA[
-        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
+        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com是、/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
         <p>Source code and function introduction：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a></p>
         <p>很蛋疼，官方要求必须英文开始</p>
         <p>用于学习插件开发。交流想法、反馈BUG ：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
@@ -13,7 +14,13 @@
     ]]>
     </description>
     <change-notes><![CDATA[
-        <p>See the <a href="https://gitee.com/zlfzh/javaCodeHelper#%E7%89%88%E6%9C%AC%E6%94%B9%E5%8A%A8" target="_blank">gitee</a> for more details and history</p>
+        <ul>
+            <li>[NEW]mapper找不到跳转时，可以点击灰色图标补全</li>
+            <li>[BUG]翻译弹窗异常</li>
+            <li>[优化]统计贡献率时不会卡顿</li>
+            <li>[优化]翻译结果框添加右击菜单</li>
+            <li>[优化]加快mapper中的跳转图标显示</li>
+        </ul>
     ]]>
     </change-notes>
 

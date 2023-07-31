@@ -37,6 +37,7 @@ public class Annotation {
     public static final String IBATIS_UPDATE = "org.apache.ibatis.annotations.Update";
     public static final String IBATIS_DELETE = "org.apache.ibatis.annotations.Delete";
     public static final List<String> IBATIS_LIST = List.of(IBATIS_SELECT, IBATIS_INSERT, IBATIS_UPDATE, IBATIS_DELETE);
+    public static final String IBATIS_PARAM = "org.apache.ibatis.annotations.Param";
 
     /** 注解常用属性 */
     public static final String VALUE = "value";

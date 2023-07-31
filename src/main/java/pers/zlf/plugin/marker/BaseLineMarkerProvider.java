@@ -1,9 +1,11 @@
 package pers.zlf.plugin.marker;
 
+import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
@@ -17,7 +19,7 @@ import java.util.List;
  */
 public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerProvider {
 
-    public Collection<? super RelatedItemLineMarkerInfo<?>> result;
+    private Collection<? super RelatedItemLineMarkerInfo<?>> result;
     public T element;
 
     @Override
@@ -35,12 +37,12 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
      * @param element element
      * @return boolean
      */
-    public abstract boolean checkPsiElement(PsiElement element);
+    protected abstract boolean checkPsiElement(PsiElement element);
 
     /**
      * 处理元素
      */
-    public abstract void dealPsiElement();
+    protected abstract void dealPsiElement();
 
     /**
      * 添加跳转标识
@@ -48,11 +50,11 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
      * @param element 跳转元素
      * @param targets 跳转目标
      */
-    public void addLineMarker(PsiElement element, PsiElement targets) {
+    protected void addLineMarker(PsiElement element, PsiElement targets) {
         result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
-    public void addLineMarker(PsiElement element, List<? extends PsiElement> targets) {
+    protected void addLineMarker(PsiElement element, List<? extends PsiElement> targets) {
         result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
@@ -62,8 +64,20 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
      * @param element 跳转元素
      * @param targets 跳转目标
      */
-    public void addLineMarkerBoth(PsiElement element, PsiElement targets) {
+    protected void addLineMarkerBoth(PsiElement element, PsiElement targets) {
         addLineMarker(targets, element);
         addLineMarker(element, targets);
     }
+
+    /**
+     * 处理图标点击事件
+     *
+     * @param method  待处理元素
+     * @param targets 跳转目标
+     * @param handler 具体处理方法
+     */
+    protected void addHandler(PsiMethod method, PsiElement targets, GutterIconNavigationHandler<PsiElement> handler) {
+        result.add(NavigationGutterIconBuilder.create(Icon.LOGO_GREY).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(method, handler));
+    }
+
 }
