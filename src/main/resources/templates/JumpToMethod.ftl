@@ -23,7 +23,9 @@ public String ${name}(Map<String,?> params){
         <#else>
                 if (null != ${parameter.name}) {
         </#if>
+        <#if sqlType != 'insert'>
                 sql.WHERE(" ");
+        </#if>
        }
 </#list>
         return sql.toString();
