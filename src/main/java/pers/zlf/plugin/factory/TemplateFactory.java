@@ -13,6 +13,7 @@ import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
+import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -24,9 +25,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng
@@ -154,6 +157,6 @@ public class TemplateFactory {
             template.process(map, stringWriter);
         } catch (Exception ignored) {
         }
-        return stringWriter.toString().replaceAll(Regex.WRAP, Common.BLANK_STRING);
+        return Arrays.stream(stringWriter.toString().split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.WRAP));
     }
 }

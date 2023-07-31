@@ -1,5 +1,9 @@
 package pers.zlf.plugin.util;
 
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
@@ -352,7 +356,9 @@ public class MyPsiUtil {
         for (PsiElement childrenElement : element.getChildren()) {
             if (childrenElement instanceof PsiDocComment) {
                 PsiDocComment docComment = (PsiDocComment) childrenElement;
-                comment.append(Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining()).replaceAll(Regex.WRAP, Common.SPACE));
+                String value = Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining());
+                value = Arrays.stream(value.split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SPACE));
+                comment.append(value);
             } else if (childrenElement instanceof PsiComment) {
                 comment.append(childrenElement.getText());
             }
@@ -400,4 +406,26 @@ public class MyPsiUtil {
         }
         return Common.DOT + virtualFile.getFileType().getName();
     }
+
+    /**
+     * 把编辑器移至psiElement
+     *
+     * @param psiElement 目标元素
+     * @param offset     偏移量
+     */
+    public static void moveToPsiElement(PsiElement psiElement, int offset) {
+        Project project = psiElement.getProject();
+        OpenFileDescriptor descriptor = new OpenFileDescriptor(project, psiElement.getContainingFile().getVirtualFile());
+        // 打开文件
+        Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
+        if (editor != null) {
+            // 移动到目标行
+            editor.getCaretModel().moveToOffset(psiElement.getTextRangeInParent().getEndOffset() + offset);
+            // 将目标行滚动到屏幕中央
+            editor.getScrollingModel().scrollToCaret(ScrollType.CENTER_DOWN);
+            // 移除如果有选择的内容
+            editor.getSelectionModel().removeSelection();
+        }
+    }
+
 }

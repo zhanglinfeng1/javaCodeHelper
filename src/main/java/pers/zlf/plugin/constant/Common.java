@@ -28,6 +28,7 @@ public class Common {
     public static final String EN = "en";
     public static final String ZH = "zh";
     public static final String SELECT = "select";
+    public static final String WRAP = "\n";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";

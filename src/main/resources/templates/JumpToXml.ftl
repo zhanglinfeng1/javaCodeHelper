@@ -1,19 +1,20 @@
 <#if sqlType == 'insert'>
         <insert id="${name}" useGeneratedKeys="true" keyProperty="id">
-                insert into
-                values()
+                INSERT INTO
+                VALUES()
 <#elseif sqlType == 'update'>
         <update id="${name}">
-                update set
+                UPDATE
+                SET
                 <where>
 <#elseif sqlType == 'delete'>
         <delete id="${name}">
-                delete from
+                DELETE FROM
                 <where>
 <#else>
         <select id="${name}" <#if (returnType?? && returnType != 'void')>resultType="${returnType}"</#if>>
-                select
-                from
+                SELECT
+                FROM
                 <where>
 </#if>
 <#if sqlType != 'insert'>
@@ -22,7 +23,7 @@
                 <if test="${parameter.name} != null and ${parameter.name} != ''">
                 <#elseif (parameter.type?contains('List') || parameter.type?contains('Set'))>
                 <if test="${parameter.name} != null and ${parameter.name}.size() > 0">
-                <foreach collection="${parameter.name}" item="item" open="in (" separator="," close=")"><#noparse>#{item}</#noparse></foreach>
+                <foreach collection="${parameter.name}" item="item" open="IN (" separator="," close=")"><#noparse>#{item}</#noparse></foreach>
                 <#else>
                 <if test="${parameter.name} != null">
                 </#if>
@@ -30,5 +31,4 @@
         </#list>
                 </where>
 </#if>
-
         </${sqlType}>
