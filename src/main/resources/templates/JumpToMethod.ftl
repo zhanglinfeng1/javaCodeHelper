@@ -13,6 +13,7 @@ public String ${name}(Map<String,?> params){
         sql.DELETE_FROM("");
 <#else>
         sql.SELECT("");
+        sql.FROM("");
 </#if>
 <#list parameterModelList as parameter>
         <#if parameter.type == 'String'>
