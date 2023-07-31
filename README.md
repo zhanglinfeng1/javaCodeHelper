@@ -10,7 +10,7 @@ intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
 feign与controller的快捷跳转<br />
 sql与java的快捷跳转<br />
 点击![image](src/main/resources/icon/logo.svg)即可跳转<br />
-点击![image](src/main/resources/icon/logoGrey.svg)即可创建sql实现的简易代码<br />
+点击![image](src/main/resources/icon/logoGrey.svg)即可生成简易的sql代码<br />
 
 ## 翻译
 目前仅支持中译英，英译中<br />
