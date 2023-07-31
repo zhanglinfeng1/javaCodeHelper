@@ -34,7 +34,6 @@ import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +61,8 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     private Map<String, PsiMethod> methodMap;
     /** 类所在项目 */
     private Project project;
+    /** 模版名称 */
+    private String templateName;
 
     @Override
     public boolean checkPsiElement(PsiElement element) {
@@ -74,13 +75,8 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public void dealPsiElement() {
-        //排除用注解实现的
-        Predicate<PsiMethod> predicate = psiMethod -> Arrays.stream(psiMethod.getAnnotations()).noneMatch(a -> null != a.getQualifiedName() && Annotation.IBATIS_LIST.contains(a.getQualifiedName()));
-        methodMap = Arrays.stream(element.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
-        if (methodMap.isEmpty()) {
-            return;
-        }
         project = element.getProject();
+        templateName = Common.JUMP_TO_XML_TEMPLATE;
         // 注解方式跳转,跳转至对应方法
         jumpToMethod();
         // xml方式跳转,跳转至对应xml
@@ -91,14 +87,13 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         Map<String, PsiClass[]> psiClassMap = new HashMap<>(4);
         PsiShortNamesCache cache = PsiShortNamesCache.getInstance(project);
         GlobalSearchScope searchScope = element.getResolveScope();
-        Iterator<Map.Entry<String, PsiMethod>> iterator = methodMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            PsiMethod psiMethod = iterator.next().getValue();
+        for (PsiMethod psiMethod : element.getMethods()) {
             //存在 xxxxProvider注解
             Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && Annotation.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isEmpty()) {
                 continue;
             }
+            templateName = Common.JUMP_TO_METHOD_TEMPLATE;
             //获取注解
             PsiAnnotation annotation = annotationOptional.get();
             //获取注解的type值
@@ -130,11 +125,16 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
             if (notFind) {
                 addMethodHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), psiClassArr[0]);
             }
-            iterator.remove();
         }
     }
 
     private void jumpToXml() {
+        if (templateName.equals(Common.JUMP_TO_METHOD_TEMPLATE)) {
+            return;
+        }
+        //排除用注解实现的
+        Predicate<PsiMethod> predicate = psiMethod -> Arrays.stream(psiMethod.getAnnotations()).noneMatch(a -> null != a.getQualifiedName() && Annotation.IBATIS_LIST.contains(a.getQualifiedName()));
+        methodMap = Arrays.stream(element.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
         if (methodMap.isEmpty()) {
             return;
         }
@@ -179,6 +179,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                 }
                 //处理未找到跳转的方法
                 methodMap.values().forEach(method -> addXmlHandler(method, mapperTag));
+                return;
             }
         }
     }
@@ -192,7 +193,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
      */
     private void addMethodHandler(PsiMethod psiMethod, String methodName, PsiClass psiClass) {
         Function<String, PsiMethod> function = code -> JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, psiClass);
-        addHandler(psiMethod, methodName, Common.JUMP_TO_METHOD_TEMPLATE, function, psiClass::add);
+        addHandler(psiMethod, methodName, function, psiClass::add);
     }
 
     /**
@@ -203,19 +204,18 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
      */
     private void addXmlHandler(PsiMethod psiMethod, XmlTag mapperTag) {
         Function<String, XmlTag> function = code -> XmlElementFactory.getInstance(project).createTagFromText(code);
-        addHandler(psiMethod, psiMethod.getName(), Common.JUMP_TO_XML_TEMPLATE, function, element -> mapperTag.addSubTag(element, false));
+        addHandler(psiMethod, psiMethod.getName(), function, element -> mapperTag.addSubTag(element, false));
     }
 
     /**
      * 创建方法代码
      *
-     * @param psiMethod    待补全的方法
-     * @param methodName   需要补全的方法名
-     * @param templateName 模版名称
-     * @param consumer     添加元素
-     * @param consumer     添加动作
+     * @param psiMethod  待补全的方法
+     * @param methodName 需要补全的方法名
+     * @param function   添加元素
+     * @param consumer   添加动作
      */
-    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, String methodName, String templateName, Function<String, T> function, Consumer<T> consumer) {
+    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, String methodName, Function<String, T> function, Consumer<T> consumer) {
         //模版数据
         PsiMethodModel methodModel = new PsiMethodModel(methodName, psiMethod.getReturnType());
         List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
