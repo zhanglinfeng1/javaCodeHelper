@@ -1,4 +1,4 @@
-public String ${name}(Map<?,?> params){
+public String ${name}(Map<String,?> params){
 <#list parameterModelList as parameter>
         ${parameter.type} ${parameter.name} = (${parameter.type}) params.get("${parameter.name}");
 </#list>
