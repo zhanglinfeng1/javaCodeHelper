@@ -44,7 +44,8 @@ public class SwingUtil {
                     menu.add(createCopyMenuItem(selectedText));
                 }
             }
-            JBPopupMenu.showByEvent(mouseEvent, menu);
+            // TODO 兼容      2020.2.4及以下不支持JBPopupMenu.showByEvent(mouseEvent, menu);
+            menu.show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
         }
     }
 
