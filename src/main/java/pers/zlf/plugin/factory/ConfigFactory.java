@@ -1,6 +1,6 @@
 package pers.zlf.plugin.factory;
 
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.application.ApplicationManager;
 import pers.zlf.plugin.config.CodeStatisticsConfigComponent;
 import pers.zlf.plugin.config.CommonConfigComponent;
 import pers.zlf.plugin.config.FastJumpConfigComponent;
@@ -20,10 +20,9 @@ public class ConfigFactory {
     private CodeStatisticsConfig codeStatisticsConfig;
 
     private ConfigFactory() {
-        //TODO 兼容老版本2019.2.4，后续使用ApplicationManager.getApplication().getService(ConfigComponent.class);
-        commonConfig = ServiceManager.getService(CommonConfigComponent.class).getState();
-        fastJumpConfig = ServiceManager.getService(FastJumpConfigComponent.class).getState();
-        codeStatisticsConfig = ServiceManager.getService(CodeStatisticsConfigComponent.class).getState();
+        commonConfig = ApplicationManager.getApplication().getService(CommonConfigComponent.class).getState();
+        fastJumpConfig = ApplicationManager.getApplication().getService(FastJumpConfigComponent.class).getState();
+        codeStatisticsConfig = ApplicationManager.getApplication().getService(CodeStatisticsConfigComponent.class).getState();
     }
 
     public static ConfigFactory getInstance() {
