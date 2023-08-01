@@ -2,9 +2,7 @@ package pers.zlf.plugin.marker;
 
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -16,12 +14,9 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.XmlElementFactory;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import pers.zlf.plugin.constant.Annotation;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Xml;
 import pers.zlf.plugin.factory.TemplateFactory;
@@ -61,6 +56,8 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     private Map<String, PsiMethod> methodMap;
     /** 类所在项目 */
     private Project project;
+    /** 找到xml文件 */
+    private boolean findXml;
     /** 模版名称 */
     private String templateName;
 
@@ -76,88 +73,70 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     @Override
     public void dealPsiElement() {
         project = element.getProject();
-        templateName = Common.JUMP_TO_XML_TEMPLATE;
+        templateName = null;
         // 注解方式跳转,跳转至对应方法
         jumpToMethod();
         // xml方式跳转,跳转至对应xml
         jumpToXml();
     }
 
+    /**
+     * 只从当前类的内部类查找跳转方法
+     */
     private void jumpToMethod() {
-        Map<String, PsiClass[]> psiClassMap = new HashMap<>(4);
-        PsiShortNamesCache cache = PsiShortNamesCache.getInstance(project);
-        GlobalSearchScope searchScope = element.getResolveScope();
+        PsiClass targetClass = Optional.of(element.getAllInnerClasses()).filter(t -> t.length > 0).map(t -> t[0]).orElse(null);
+        if (null == targetClass) {
+            return;
+        }
         for (PsiMethod psiMethod : element.getMethods()) {
             //存在 xxxxProvider注解
             Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && Annotation.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isEmpty()) {
                 continue;
             }
-            templateName = Common.JUMP_TO_METHOD_TEMPLATE;
             //获取注解
             PsiAnnotation annotation = annotationOptional.get();
-            //获取注解的type值
-            String className = MyPsiUtil.getAnnotationValue(annotation, Annotation.TYPE).replace(ClassType.CLASS_FILE, Common.BLANK_STRING);
             //获取注解的method值
             String methodValue = MyPsiUtil.getAnnotationValue(annotation, Annotation.METHOD);
-            //根据注解的type值查找PsiClass
-            PsiClass[] psiClassArr = Optional.ofNullable(psiClassMap.get(className)).orElseGet(() -> {
-                PsiClass[] searchResultArr = cache.getClassesByName(className, searchScope);
-                psiClassMap.put(className, searchResultArr);
-                return searchResultArr;
-            });
-            if (psiClassArr.length == 0) {
-                continue;
-            }
-            boolean notFind = true;
-            //正常都会在一个类中，不用反复循环。防止不正常的人(っ °Д °;)っ
-            loop:
-            for (PsiClass psiClass : psiClassArr) {
-                for (PsiMethod targetMethod : psiClass.getMethods()) {
-                    if (methodValue.equals(targetMethod.getName())) {
-                        addLineMarkerBoth(targetMethod, psiMethod);
-                        notFind = false;
-                        break loop;
-                    }
-                }
-            }
-            //生成代码
-            if (notFind) {
-                addMethodHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), psiClassArr[0]);
+            Optional<PsiMethod> targetMethod = Arrays.stream(targetClass.getMethods()).filter(method -> methodValue.equals(method.getName())).findAny();
+            if (targetMethod.isPresent()) {
+                //添加跳转
+                addLineMarkerBoth(targetMethod.get(), psiMethod);
+            } else {
+                //生成代码
+                templateName = Common.JUMP_TO_METHOD_TEMPLATE;
+                Function<String, PsiMethod> function = code -> JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, targetClass);
+                addHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), function, targetClass::add, targetClass);
             }
         }
     }
 
     private void jumpToXml() {
-        if (templateName.equals(Common.JUMP_TO_METHOD_TEMPLATE)) {
+        if (Common.JUMP_TO_METHOD_TEMPLATE.equals(templateName)) {
             return;
         }
+        templateName = Common.JUMP_TO_XML_TEMPLATE;
         //排除用注解实现的
         Predicate<PsiMethod> predicate = psiMethod -> Arrays.stream(psiMethod.getAnnotations()).noneMatch(a -> null != a.getQualifiedName() && Annotation.IBATIS_LIST.contains(a.getQualifiedName()));
         methodMap = Arrays.stream(element.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
         if (methodMap.isEmpty()) {
             return;
         }
+        findXml = false;
         classFullName = element.getQualifiedName();
         PsiManager manager = PsiManager.getInstance(project);
-        // mapper文件所在模块的资源文件
-        Optional.ofNullable(element.getContainingFile())
-                .map(PsiFile::getVirtualFile)
-                .map(virtualFile -> ModuleUtil.findModuleForFile(virtualFile, project))
-                .map(ModuleRootManager::getInstance)
-                .map(ModuleRootManager::getSourceRoots)
-                .ifPresent(virtualFiles -> {
-                    //处理resources目录下的文件
-                    for (VirtualFile virtualFile : virtualFiles) {
-                        if (virtualFile.getPath().endsWith(Common.RESOURCES)) {
-                            // 跳转目标所在的xml文件
-                            Optional.ofNullable(manager.findDirectory(virtualFile)).ifPresent(this::findXml);
-                        }
-                    }
-                });
+        // 查询跳转目标所在的xml文件
+        for (VirtualFile virtualFile : MyPsiUtil.getModuleSourceRoots(element)) {
+            if (virtualFile.getPath().endsWith(Common.RESOURCES)) {
+                Optional.ofNullable(manager.findDirectory(virtualFile)).ifPresent(this::findXml);
+            }
+        }
     }
 
     private void findXml(PsiDirectory psiDirectory) {
+        if (findXml) {
+            return;
+        }
         //文件夹
         Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::findXml);
         //文件
@@ -170,6 +149,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                     continue;
                 }
                 //寻找标签
+                findXml = true;
                 List<XmlTag> tagList = XmlUtil.findTags(mapperTag, Xml.INSERT, Xml.UPDATE, Xml.DELETE, Xml.SELECT);
                 for (XmlTag tag : tagList) {
                     Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(method -> {
@@ -178,33 +158,13 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                     });
                 }
                 //处理未找到跳转的方法
-                methodMap.values().forEach(method -> addXmlHandler(method, mapperTag));
+                methodMap.values().forEach(method -> {
+                    Function<String, XmlTag> function = code -> XmlElementFactory.getInstance(project).createTagFromText(code);
+                    addHandler(method, method.getName(), function, element -> mapperTag.addSubTag(element, false), mapperTag);
+                });
                 return;
             }
         }
-    }
-
-    /**
-     * 创建方法代码
-     *
-     * @param psiMethod  待补全的方法
-     * @param methodName 需要补全的方法名
-     * @param psiClass   目标文件
-     */
-    private void addMethodHandler(PsiMethod psiMethod, String methodName, PsiClass psiClass) {
-        Function<String, PsiMethod> function = code -> JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, psiClass);
-        addHandler(psiMethod, methodName, function, psiClass::add, psiClass);
-    }
-
-    /**
-     * 创建xml代码
-     *
-     * @param psiMethod 待补全的方法
-     * @param mapperTag mapper标签
-     */
-    private void addXmlHandler(PsiMethod psiMethod, XmlTag mapperTag) {
-        Function<String, XmlTag> function = code -> XmlElementFactory.getInstance(project).createTagFromText(code);
-        addHandler(psiMethod, psiMethod.getName(), function, element -> mapperTag.addSubTag(element, false), mapperTag);
     }
 
     /**
@@ -226,7 +186,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         //生成代码
         String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));
         T newElement = function.apply(code);
-        //TODO 低版本不兼容GutterIconNavigationHandler
+        //TODO 2021.2.3及以下版本不兼容GutterIconNavigationHandler
         GutterIconNavigationHandler<PsiElement> handler = (e, elt) -> ApplicationManager.getApplication().runWriteAction(() -> {
             consumer.accept(newElement);
             CodeStyleManager.getInstance(project).reformat(newElement);

@@ -4,7 +4,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
@@ -15,6 +17,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
@@ -419,13 +422,25 @@ public class MyPsiUtil {
         // 打开文件
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
         if (editor != null) {
-            // 移动到目标行
+            // 移动到元素
             editor.getCaretModel().moveToOffset(psiElement.getTextRangeInParent().getEndOffset() + offset);
-            // 将目标行滚动到屏幕中央
             editor.getScrollingModel().scrollToCaret(ScrollType.CENTER_DOWN);
-            // 移除如果有选择的内容
             editor.getSelectionModel().removeSelection();
         }
     }
 
+    /**
+     * 获取当前元素所在模块的资源文件
+     *
+     * @param element 元素
+     * @return VirtualFile[]
+     */
+    public static VirtualFile[] getModuleSourceRoots(PsiElement element) {
+        return Optional.ofNullable(element.getContainingFile())
+                .map(PsiFile::getVirtualFile)
+                .map(virtualFile -> ModuleUtil.findModuleForFile(virtualFile, element.getProject()))
+                .map(ModuleRootManager::getInstance)
+                .map(ModuleRootManager::getSourceRoots)
+                .orElse(new VirtualFile[0]);
+    }
 }
