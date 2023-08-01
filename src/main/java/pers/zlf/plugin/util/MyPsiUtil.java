@@ -423,7 +423,7 @@ public class MyPsiUtil {
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
         if (editor != null) {
             // 移动到元素
-            editor.getCaretModel().moveToOffset(psiElement.getTextRangeInParent().getEndOffset() + offset);
+            editor.getCaretModel().moveToOffset(psiElement.getStartOffsetInParent() + psiElement.getTextRange().getEndOffset() + offset);
             editor.getScrollingModel().scrollToCaret(ScrollType.CENTER_DOWN);
             editor.getSelectionModel().removeSelection();
         }

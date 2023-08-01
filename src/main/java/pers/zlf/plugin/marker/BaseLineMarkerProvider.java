@@ -4,12 +4,14 @@ import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
+import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -73,11 +75,11 @@ public abstract class BaseLineMarkerProvider<T> extends RelatedItemLineMarkerPro
      * 处理图标点击事件
      *
      * @param method  待处理元素
-     * @param targets 跳转目标
      * @param handler 具体处理方法
      */
-    protected void addHandler(PsiMethod method, PsiElement targets, GutterIconNavigationHandler<PsiElement> handler) {
-        result.add(NavigationGutterIconBuilder.create(Icon.LOGO_GREY).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(method, handler));
+    protected void addLineMarkerInfo(PsiMethod method, GutterIconNavigationHandler<PsiMethod> handler) {
+        //TODO 2020.1.4及以下版本不兼容
+        result.add(new RelatedItemLineMarkerInfo<>(method, method.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
     }
 
 }

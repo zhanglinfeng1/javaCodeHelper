@@ -183,16 +183,15 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         methodModel.setParameterModelList(modelList);
         Optional<String> sqlType = sqlTypeMap.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
         methodModel.setSqlType(sqlType.orElse(Common.SELECT));
-        //生成代码
-        String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));
-        T newElement = function.apply(code);
-        //TODO 2021.2.3及以下版本不兼容GutterIconNavigationHandler
-        GutterIconNavigationHandler<PsiElement> handler = (e, elt) -> ApplicationManager.getApplication().runWriteAction(() -> {
+        GutterIconNavigationHandler<PsiMethod> handler = (e, elt) -> ApplicationManager.getApplication().runWriteAction(() -> {
+            //生成代码
+            String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));
+            T newElement = function.apply(code);
             consumer.accept(newElement);
             CodeStyleManager.getInstance(project).reformat(newElement);
-            MyPsiUtil.moveToPsiElement(targetElement, -code.length());
+            MyPsiUtil.moveToPsiElement(targetElement, 0);
         });
-        addHandler(psiMethod, newElement, handler);
+        addLineMarkerInfo(psiMethod, handler);
     }
 
 }
