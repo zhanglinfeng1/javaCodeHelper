@@ -85,8 +85,8 @@ public class Common {
     public static final List<String> XML_COMMENT_PREFIX = List.of("<!--", "<![CDATA[");
     public static final List<String> XML_COMMENT_SUFFIX = List.of("-->", "]]>");
 
-    /** 目录 */
-    public static final String TEST = "test";
+    /** 目录名 */
+    public static final String JAVA = "java";
     public static final String RESOURCES = "resources";
     public static final String DOT_GIT = ".git";
     public static final String DOT_IDEA = ".idea";

@@ -55,8 +55,7 @@ public abstract class BaseFastJump {
                 //排除当前模块，排除资源文件路径
                 String virtualFilePath = PathUtil.format(virtualFile.getPath());
                 boolean currentModule = (StringUtil.isNotEmpty(currentModulePath) && virtualFilePath.startsWith(currentModulePath));
-                boolean resourcesFile = virtualFilePath.endsWith(Common.RESOURCES) || virtualFile.getParent().getPath().endsWith(Common.TEST);
-                if (currentModule || resourcesFile) {
+                if (currentModule || !virtualFilePath.endsWith(Common.JAVA)) {
                     continue;
                 }
                 //controller跳转feign 固定true
