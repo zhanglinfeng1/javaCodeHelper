@@ -27,7 +27,7 @@ public class FeignFastJump extends BaseFastJump {
     }
 
     @Override
-    public boolean checkClass(PsiClass psiClass) {
+    public boolean checkTargetClass(PsiClass psiClass) {
         return MyPsiUtil.isController(psiClass);
     }
 

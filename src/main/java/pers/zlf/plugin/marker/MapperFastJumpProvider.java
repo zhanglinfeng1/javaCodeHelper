@@ -72,7 +72,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public void dealPsiElement() {
-        project = element.getProject();
+        project = currentElement.getProject();
         templateName = null;
         // 注解方式跳转,跳转至对应方法
         jumpToMethod();
@@ -84,11 +84,11 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
      * 只从当前类的内部类查找跳转方法
      */
     private void jumpToMethod() {
-        PsiClass targetClass = Optional.of(element.getAllInnerClasses()).filter(t -> t.length > 0).map(t -> t[0]).orElse(null);
+        PsiClass targetClass = Optional.of(currentElement.getAllInnerClasses()).filter(t -> t.length > 0).map(t -> t[0]).orElse(null);
         if (null == targetClass) {
             return;
         }
-        for (PsiMethod psiMethod : element.getMethods()) {
+        for (PsiMethod psiMethod : currentElement.getMethods()) {
             //存在 xxxxProvider注解
             Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && Annotation.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
             if (annotationOptional.isEmpty()) {
@@ -118,15 +118,15 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         templateName = Common.JUMP_TO_XML_TEMPLATE;
         //排除用注解实现的
         Predicate<PsiMethod> predicate = psiMethod -> Arrays.stream(psiMethod.getAnnotations()).noneMatch(a -> null != a.getQualifiedName() && Annotation.IBATIS_LIST.contains(a.getQualifiedName()));
-        methodMap = Arrays.stream(element.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
+        methodMap = Arrays.stream(currentElement.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
         if (methodMap.isEmpty()) {
             return;
         }
         findXml = false;
-        classFullName = element.getQualifiedName();
+        classFullName = currentElement.getQualifiedName();
         PsiManager manager = PsiManager.getInstance(project);
         // 查询跳转目标所在的xml文件
-        for (VirtualFile virtualFile : MyPsiUtil.getModuleSourceRoots(element)) {
+        for (VirtualFile virtualFile : MyPsiUtil.getModuleSourceRoots(currentElement)) {
             if (virtualFile.getPath().endsWith(Common.RESOURCES)) {
                 Optional.ofNullable(manager.findDirectory(virtualFile)).ifPresent(this::findXml);
             }

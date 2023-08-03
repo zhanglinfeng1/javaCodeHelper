@@ -29,12 +29,12 @@ public class XmlFastJumpProvider extends BaseLineMarkerProvider<XmlFile> {
     @Override
     public void dealPsiElement() {
         // 判断是否是mapper.xml
-        XmlTag mapperTag = XmlUtil.getRootTagByName(element, Xml.MAPPER);
+        XmlTag mapperTag = XmlUtil.getRootTagByName(currentElement, Xml.MAPPER);
         if (null == mapperTag){
             return;
         }
         // 获取mapper.xml所绑定类的方法
-        Optional<Map<String, PsiMethod>> classMethodOptional = MyPsiUtil.findClassByFullName(element.getResolveScope(), mapperTag.getAttributeValue(Xml.NAMESPACE))
+        Optional<Map<String, PsiMethod>> classMethodOptional = MyPsiUtil.findClassByFullName(currentElement.getResolveScope(), mapperTag.getAttributeValue(Xml.NAMESPACE))
                 .map(c -> Arrays.stream(c.getMethods()).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2)))
                 .filter(map -> !map.isEmpty());
         if (classMethodOptional.isPresent()) {

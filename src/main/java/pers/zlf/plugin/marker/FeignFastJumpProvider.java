@@ -26,15 +26,15 @@ public class FeignFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
     public void dealPsiElement() {
         //只处理controller和feign类
         BaseFastJump baseFastJump;
-        if (MyPsiUtil.isFeign(element)) {
+        if (MyPsiUtil.isFeign(currentElement)) {
             baseFastJump = new FeignFastJump();
-        } else if (MyPsiUtil.isController(element, ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList())) {
+        } else if (MyPsiUtil.isController(currentElement, ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList())) {
             baseFastJump = new ControllerFastJump();
         } else {
             return;
         }
         //绑定跳转
-        Map<String, MappingAnnotation> lineMarkerMap = baseFastJump.getLineMarkerMap(element);
+        Map<String, MappingAnnotation> lineMarkerMap = baseFastJump.getLineMarkerMap(currentElement);
         lineMarkerMap.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> addLineMarker(t.getPsiAnnotation(), t.getTargetList()));
     }
 

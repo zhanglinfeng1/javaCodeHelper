@@ -22,6 +22,7 @@ import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -91,7 +92,7 @@ public abstract class BaseFastJump {
      * @param psiClass psiClass
      * @return boolean
      */
-    public abstract boolean checkClass(PsiClass psiClass);
+    public abstract boolean checkTargetClass(PsiClass psiClass);
 
     /**
      * 获取类注解上的请求路径
@@ -109,23 +110,23 @@ public abstract class BaseFastJump {
             return;
         }
         //筛选不存在内部类的java文件
-        Arrays.stream(psiDirectory.getFiles())
+        List<PsiClass> psiClassList = Arrays.stream(psiDirectory.getFiles())
                 .filter(f -> f.getFileType() instanceof JavaFileType)
                 .map(f -> ((PsiJavaFile) f).getClasses())
                 .filter(classes -> classes.length == 1)
                 .map(classes -> classes[0])
-                .filter(this::checkClass)
-                .forEach(psiClass -> {
-                    //处理类中的方法
-                    String classUrl = this.getClassUrl(psiClass);
-                    for (PsiMethod method : psiClass.getMethods()) {
-                        MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, method);
-                        if (null == mappingAnnotation) {
-                            continue;
-                        }
-                        Optional.ofNullable(map.get(mappingAnnotation.toString())).ifPresent(t -> t.getTargetList().add(method));
-                    }
-                });
+                .filter(this::checkTargetClass).collect(Collectors.toList());
+        //处理类中的方法
+        for (PsiClass psiClass : psiClassList) {
+            String classUrl = this.getClassUrl(psiClass);
+            for (PsiMethod method : psiClass.getMethods()) {
+                MappingAnnotation mappingAnnotation = this.getMappingAnnotation(classUrl, method);
+                if (null == mappingAnnotation) {
+                    continue;
+                }
+                Optional.ofNullable(map.get(mappingAnnotation.toString())).ifPresent(t -> t.getTargetList().add(method));
+            }
+        }
     }
 
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
@@ -145,6 +146,7 @@ public abstract class BaseFastJump {
                 String methodUrl = getMappingUrl(psiAnnotation);
                 return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + Common.SLASH + methodUrl, method) : null;
             }
+            return null;
         }
         return null;
     }

@@ -19,9 +19,10 @@ import java.util.List;
  * @date create in 2023/1/10 16:35
  */
 public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescriptor {
-
+    /** 处理结果 */
     private Collection<? super LineMarkerInfo<?>> result;
-    public T element;
+    /** 当前元素 */
+    public T currentElement;
 
     @Override
     public String getName() {
@@ -38,20 +39,11 @@ public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescri
         for(PsiElement element : elements){
             if (checkPsiElement(element) && element.isWritable()) {
                 this.result = result;
-                this.element = (T) element;
+                this.currentElement = (T) element;
                 dealPsiElement();
             }
         }
     }
-
-    //TODO 2020.1.4以上版本使用
-//    protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
-//        if (checkPsiElement(element) && element.isWritable()) {
-//            this.result = result;
-//            this.element = (T) element;
-//            dealPsiElement();
-//        }
-//    }
 
     /**
      * 校验元素
