@@ -37,7 +37,7 @@ public abstract class BaseCompletion {
         this.currentText = psiElement.getText().replace(ClassType.INTELLIJ_IDEA_RULEZZZ, Common.BLANK_STRING);
         this.currentMethod = currentMethod;
         this.currentMethodClass = currentMethod.getContainingClass();
-        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.LEFT_BRACE.equals(t.getText())).orElse(false);
+        this.isNewLine = Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(currentElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.RIGHT_BRACE.equals(t.getText())).orElse(false);
         Equals.of(StringUtil.isNotEmpty(currentText) && null != currentMethodClass).ifTrue(this::init);
     }
 
