@@ -1,3 +1,4 @@
+
 <#if sqlType == 'insert'>
         <insert id="${name}" useGeneratedKeys="true" keyProperty="id">
                 INSERT INTO
@@ -21,11 +22,16 @@
         <#list parameterModelList as parameter>
                 <#if parameter.type == 'String'>
                 <if test="${parameter.name} != null and ${parameter.name} != ''">
+                        AND xx = <#noparse>#{</#noparse>${parameter.name}}
                 <#elseif (parameter.type?contains('List') || parameter.type?contains('Set'))>
                 <if test="${parameter.name} != null and ${parameter.name}.size() > 0">
-                <foreach collection="${parameter.name}" item="item" open="IN (" separator="," close=")"><#noparse>#{item}</#noparse></foreach>
+                        xx IN
+                <foreach collection="${parameter.name}" item="item" open="(" separator="," close=")">
+                        <#noparse>#{item}</#noparse>
+                </foreach>
                 <#else>
                 <if test="${parameter.name} != null">
+                        AND xx = <#noparse>#{</#noparse>${parameter.name}}
                 </#if>
                 </if>
         </#list>
