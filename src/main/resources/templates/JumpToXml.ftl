@@ -25,7 +25,7 @@
                         AND xx = <#noparse>#{</#noparse>${parameter.name}}
                 <#elseif (parameter.type?contains('List') || parameter.type?contains('Set'))>
                 <if test="${parameter.name} != null and ${parameter.name}.size() > 0">
-                        xx IN
+                        AND xx IN
                 <foreach collection="${parameter.name}" item="item" open="(" separator="," close=")">
                         <#noparse>#{item}</#noparse>
                 </foreach>
