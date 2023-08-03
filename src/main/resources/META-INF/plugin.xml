@@ -2,9 +2,9 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.11.0</version>
+    <version>1.11.1</version>
     <vendor>zhanglinfeng</vendor>
-    <idea-version since-build="202.6948.69"/>
+    <idea-version since-build="193.5662.53"/>
     <description><![CDATA[
         <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com是、/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
         <p>Source code and function introduction：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a></p>
@@ -15,11 +15,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[NEW]mapper找不到跳转时，可以点击灰色图标补全</li>
-            <li>[BUG]翻译弹窗异常</li>
-            <li>[优化]统计贡献率时不会卡顿</li>
-            <li>[优化]翻译结果框添加右击菜单</li>
-            <li>[优化]加快mapper中的跳转图标显示</li>
+            <li>[优化]兼容版本193.5662.53(2019.3.1)~最新</li>
         </ul>
     ]]>
     </change-notes>
