@@ -17,6 +17,7 @@ public class Common {
     public static final String COMMA = ",";
     public static final String SEMICOLON = ";";
     public static final String LEFT_BRACE = "{";
+    public static final String RIGHT_BRACE = "}";
     public static final String LEFT_BRACKETS = "[";
     public static final String LEFT_PARENTHESES = "(";
     public static final String RIGHT_PARENTHESES = ")";
