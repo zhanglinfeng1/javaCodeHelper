@@ -1,4 +1,3 @@
-
 <#if sqlType == 'insert'>
         <insert id="${name}" useGeneratedKeys="true" keyProperty="id">
                 INSERT INTO
