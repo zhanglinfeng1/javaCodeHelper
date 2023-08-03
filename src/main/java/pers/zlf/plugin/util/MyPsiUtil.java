@@ -11,16 +11,21 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
+import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.javadoc.PsiDocComment;
@@ -36,6 +41,7 @@ import pers.zlf.plugin.util.lambda.Empty;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -133,16 +139,18 @@ public class MyPsiUtil {
         if (null == codeBlock) {
             return variableMap;
         }
-        //获取代码块中的变量
-        Arrays.stream(codeBlock.getStatements()).filter(t -> t.getTextOffset() <= endOffset && t instanceof PsiDeclarationStatement).forEach(t ->
-                variableMap.putAll(Arrays.stream(((PsiDeclarationStatement) t).getDeclaredElements()).map(p -> {
-                    if (p instanceof PsiLocalVariable) {
-                        return (PsiLocalVariable) p;
+        //获取代码块中的变量 TODO 当前所在位置的代码块
+        for (PsiStatement psiStatement : codeBlock.getStatements()) {
+            if (psiStatement.getTextOffset() <= endOffset && psiStatement instanceof PsiDeclarationStatement) {
+                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) psiStatement;
+                for (PsiElement psiElement : declarationStatement.getDeclaredElements()) {
+                    if (psiElement instanceof PsiLocalVariable) {
+                        PsiLocalVariable localVariable = (PsiLocalVariable) psiElement;
+                        variableMap.put(localVariable.getName(), localVariable.getType());
                     }
-                    PsiElement psiElement = p.getFirstChild();
-                    return psiElement instanceof PsiLocalVariable ? (PsiLocalVariable) psiElement : null;
-                }).filter(Objects::nonNull).collect(Collectors.toMap(PsiLocalVariable::getName, PsiLocalVariable::getType)))
-        );
+                }
+            }
+        }
         //方法参数
         Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
         return variableMap;
@@ -442,5 +450,36 @@ public class MyPsiUtil {
                 .map(ModuleRootManager::getInstance)
                 .map(ModuleRootManager::getSourceRoots)
                 .orElse(new VirtualFile[0]);
+    }
+
+    /**
+     * 获取类变量
+     *
+     * @param codeBlock PsiCodeBlock
+     * @return List<PsiField>
+     */
+    public static List<PsiField> getPsiFieldList(PsiCodeBlock codeBlock) {
+        List<PsiField> fieldList = new ArrayList<>();
+        if (codeBlock == null) {
+            return fieldList;
+        }
+        for (PsiStatement statement : codeBlock.getStatements()) {
+            if (!(statement instanceof PsiExpressionStatement)) {
+                continue;
+            }
+            PsiExpression expression = ((PsiExpressionStatement) statement).getExpression();
+            if (!(expression instanceof PsiAssignmentExpression)) {
+                continue;
+            }
+            PsiExpression leftExpression = ((PsiAssignmentExpression) expression).getLExpression();
+            if (!(leftExpression instanceof PsiReferenceExpression)) {
+                continue;
+            }
+            PsiElement resolvedElement = ((PsiReferenceExpression) leftExpression).resolve();
+            if (resolvedElement instanceof PsiField) {
+                fieldList.add((PsiField) resolvedElement);
+            }
+        }
+        return fieldList;
     }
 }

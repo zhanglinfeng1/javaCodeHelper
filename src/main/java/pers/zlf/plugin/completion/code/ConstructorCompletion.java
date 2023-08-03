@@ -2,7 +2,6 @@ package pers.zlf.plugin.completion.code;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
@@ -11,11 +10,12 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,13 +33,13 @@ public class ConstructorCompletion extends BaseCompletion {
         if (!isNewLine) {
             return;
         }
-        //构造方法的方法体
-        String currentMethodBodyStr = Optional.ofNullable(currentMethod.getBody()).map(PsiCodeBlock::getText).orElse(Common.BLANK_STRING);
-        StringBuilder fillStr = new StringBuilder();
-        //待处理的变量 TODO 改用语法解析的方式
-        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !currentMethodBodyStr.contains(Common.THIS_STR + f.getName()))
+        //已赋值字段
+        List<String> assignedFieldList = MyPsiUtil.getPsiFieldList(currentMethod.getBody()).stream().map(PsiField::getName).collect(Collectors.toList());
+        //待赋值字段
+        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !assignedFieldList.contains(f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
+        StringBuilder fillStr = new StringBuilder();
         loop:
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
             if (fieldMap.isEmpty()) {
