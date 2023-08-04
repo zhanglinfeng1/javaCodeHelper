@@ -74,7 +74,10 @@ public abstract class BaseFastJump {
             return Common.BLANK_STRING;
         }
         String url = MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE);
-        return Empty.of(url).orElse(MyPsiUtil.getAnnotationValue(annotation, Annotation.PATH));
+        if (StringUtil.isNotEmpty(url)) {
+            return url;
+        }
+        return MyPsiUtil.getAnnotationValue(annotation, Annotation.PATH);
     }
 
     /**
