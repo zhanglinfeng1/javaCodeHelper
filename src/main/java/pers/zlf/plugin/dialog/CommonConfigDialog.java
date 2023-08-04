@@ -31,6 +31,7 @@ public class CommonConfigDialog extends BaseDialog {
     private JComboBox<String> apiToolComboBox;
     private JRadioButton codeCompletionEnableButton;
     private JRadioButton codeCompletionDisabledButton;
+    private JTextField maxCodeCompletionLengthTextField;
 
     public CommonConfigDialog() {
         addFocusListener(customTemplatesPathField, Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
@@ -48,6 +49,7 @@ public class CommonConfigDialog extends BaseDialog {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(commonConfig.getAppId());
         securityKeyTextField.setText(commonConfig.getSecretKey());
+        maxCodeCompletionLengthTextField.setText(String.valueOf(commonConfig.getMaxCodeCompletionLength()));
         String customTemplatesPath = commonConfig.getCustomTemplatesPath();
         if (StringUtil.isEmpty(customTemplatesPath)) {
             customTemplatesPathField.setForeground(JBColor.GRAY);
@@ -89,7 +91,11 @@ public class CommonConfigDialog extends BaseDialog {
         return apiToolComboBox.getSelectedIndex();
     }
 
-    public boolean isEnableCodeCompletion(){
+    public boolean isEnableCodeCompletion() {
         return codeCompletionEnableButton.isSelected();
+    }
+
+    public Integer getMaxCodeCompletionLength() {
+        return Integer.parseInt(maxCodeCompletionLengthTextField.getText());
     }
 }

@@ -21,6 +21,8 @@ public class CommonConfig {
     private Integer apiTool = Common.SWAGGER_API;
     /** 开启代码补全 */
     private boolean enableCodeCompletion = true;
+    /** 最大代码补全展示数量 */
+    private int maxCodeCompletionLength = 10;
 
     public Integer getTranslateApi() {
         return translateApi;
@@ -76,5 +78,13 @@ public class CommonConfig {
 
     public void setEnableCodeCompletion(boolean enableCodeCompletion) {
         this.enableCodeCompletion = enableCodeCompletion;
+    }
+
+    public int getMaxCodeCompletionLength() {
+        return maxCodeCompletionLength;
+    }
+
+    public void setMaxCodeCompletionLength(int maxCodeCompletionLength) {
+        this.maxCodeCompletionLength = maxCodeCompletionLength;
     }
 }

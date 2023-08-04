@@ -53,6 +53,9 @@ public class CommonConfigurable implements Configurable {
         if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
             return true;
         }
+        if (!dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength())) {
+            return true;
+        }
         return !dialog.getCustomTemplatesPath().equals(config.getCustomTemplatesPath());
     }
 

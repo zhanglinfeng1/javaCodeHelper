@@ -1,5 +1,6 @@
 package pers.zlf.plugin.completion.code;
 
+import com.intellij.ConfigurableFactory;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
@@ -15,6 +16,7 @@ import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.constant.ClassType;
+import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.TypeUtil;
@@ -93,6 +95,9 @@ public class MethodCompletion extends BaseCompletion {
         List<String> setAndGetMethodList = Arrays.stream(psiClass.getFields()).map(f -> Common.SET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList());
         setAndGetMethodList.addAll(Arrays.stream(psiClass.getFields()).map(f -> Common.GET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList()));
         for (PsiMethod fieldMethod : methodArr) {
+            if (returnList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
+                return;
+            }
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
             //返回类型不一致、set或get方法
             if (setAndGetMethodList.contains(fieldMethod.getName()) || null == fieldMethodReturnType || !typeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
@@ -150,6 +155,9 @@ public class MethodCompletion extends BaseCompletion {
         }
         //方法内的所有变量
         for (Map.Entry<String, PsiType> entry : currentMethodVariableMap.entrySet()) {
+            if (returnList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
+                return;
+            }
             String currentMethodVariableName = entry.getKey();
             if (currentMethodVariableName.equals(variableName)) {
                 continue;
