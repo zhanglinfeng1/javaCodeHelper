@@ -1,4 +1,4 @@
-package pers.zlf.plugin.completion.code;
+package pers.zlf.plugin.completion;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiAssignmentExpression;
@@ -13,6 +13,7 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -26,19 +27,27 @@ import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng
- * @date create in 2022/10/16 19:02
+ * @date create in 2022/10/14 14:18
  */
-public class ConstructorCompletion extends BaseCompletion {
+public class ConstructorCompletionContributor extends BaseCompletionContributor {
+    /** 当前方法 */
+    private PsiMethod currentMethod;
+    /** 当前方法所在类 */
+    private PsiClass currentMethodClass;
 
-    public ConstructorCompletion(PsiMethod currentMethod, PsiElement psiElement) {
-        super(currentMethod, psiElement);
+    @Override
+    protected boolean check() {
+        //当前光标所在的方法
+        currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
+        if (null != currentMethod && currentMethod.isConstructor()) {
+            this.currentMethodClass = currentMethod.getContainingClass();
+            return null != currentMethodClass && MyPsiUtil.isNewLine(currentElement);
+        }
+        return false;
     }
 
     @Override
-    public void init() {
-        if (!isNewLine) {
-            return;
-        }
+    protected void completion() {
         //已赋值字段
         List<String> assignedFieldList = getAssignedFieldList(currentMethod.getBody());
         //待赋值字段
@@ -75,7 +84,7 @@ public class ConstructorCompletion extends BaseCompletion {
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
-            returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText(Common.FILL_CONSTRUCTOR)
+            addCompletionResult(LookupElementBuilder.create(fillStr.toString()).withPresentableText(Common.FILL_CONSTRUCTOR)
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
     }

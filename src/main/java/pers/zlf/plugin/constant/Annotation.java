@@ -43,9 +43,9 @@ public class Annotation {
     public static final String VALUE = "value";
     public static final String PATH = "path";
     public static final String METHOD = "method";
-    public static final String TYPE = "type";
     public static final String TAGS = "tags";
     public static final String REQUIRED = "required";
+    public static final String NAME = "name";
 
     /** api注解 */
     public static final String SPRINGFOX_API_IGNORE = "springfox.documentation.annotations.ApiIgnore";

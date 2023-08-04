@@ -29,6 +29,7 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.ClassType;
@@ -468,5 +469,15 @@ public class MyPsiUtil {
         }
         //获取元素
         return elementList;
+    }
+
+    /**
+     * 判断当前元素是否在新行
+     *
+     * @param psiElement 当前元素
+     * @return boolean
+     */
+    public static boolean isNewLine(PsiElement psiElement) {
+        return Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(psiElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.RIGHT_BRACE.equals(t.getText())).orElse(false);
     }
 }

@@ -15,7 +15,9 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[优化]兼容版本193.5662.53(2019.3.1)~最新</li>
+            <li>[新增]可配置代码补全最大展示数量</li>
+            <li>[优化]优化补全提示</li>
+            <li>[BUG]一些小BUG</li>
         </ul>
     ]]>
     </change-notes>
@@ -40,7 +42,9 @@
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable"/>
         <!-- 代码补全 -->
-        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.CodeCompletionContributor"/>
+        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.ConstructorCompletionContributor"/>
+        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.MethodCompletionContributor"/>
+        <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.ParameterCompletionContributor"/>
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
         <!-- 代码检查 -->

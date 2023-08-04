@@ -1,9 +1,7 @@
-package pers.zlf.plugin.completion.code;
+package pers.zlf.plugin.completion;
 
-import com.intellij.ConfigurableFactory;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiJavaFile;
@@ -12,10 +10,11 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
+import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -33,20 +32,33 @@ import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng
- * @date create in 2022/10/16 19:16
+ * @date create in 2022/10/14 14:18
  */
-public class MethodCompletion extends BaseCompletion {
+public class MethodCompletionContributor extends BaseCompletionContributor {
+    /** 当前方法 */
+    private PsiMethod currentMethod;
+    /** 当前方法所在类 */
+    private PsiClass currentMethodClass;
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> totalVariableMap;
+    /** 自动补全List */
+    private final List<LookupElementBuilder> builderList = new ArrayList<>();
 
-    public MethodCompletion(PsiMethod currentMethod, PsiElement psiElement) {
-        super(currentMethod, psiElement);
+    @Override
+    protected boolean check() {
+        //当前光标所在的方法
+        currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
+        if (null != currentMethod && !currentMethod.isConstructor()) {
+            this.currentMethodClass = currentMethod.getContainingClass();
+            return null != currentMethodClass;
+        }
+        return false;
     }
 
     @Override
-    public void init() {
+    protected void completion() {
         //当前方法内的变量
         currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
         currentMethodVariableMap.remove(currentText);
@@ -55,7 +67,7 @@ public class MethodCompletion extends BaseCompletion {
         totalVariableMap.putAll(currentMethodVariableMap);
         totalVariableMap.putAll(MyPsiUtil.getVariableMapFromClass(currentMethodClass));
         //在新的一行
-        if (isNewLine) {
+        if (MyPsiUtil.isNewLine(currentElement)) {
             //已有变量转化
             currentMethodVariableMap.entrySet().stream().filter(t -> t.getKey().contains(currentText))
                     .forEach(t -> addTransformation(t.getKey(), t.getValue(), t.getKey() + Common.EQ_STR));
@@ -76,6 +88,7 @@ public class MethodCompletion extends BaseCompletion {
                 addSameType(currentText, psiType.getInternalCanonicalText(), Common.BLANK_STRING);
             });
         }
+        builderList.forEach(this::addCompletionResult);
     }
 
     private void addSameType(String variableName, String typeName, String code) {
@@ -95,7 +108,7 @@ public class MethodCompletion extends BaseCompletion {
         List<String> setAndGetMethodList = Arrays.stream(psiClass.getFields()).map(f -> Common.SET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList());
         setAndGetMethodList.addAll(Arrays.stream(psiClass.getFields()).map(f -> Common.GET + StringUtil.toUpperCaseFirst(f.getName())).collect(Collectors.toList()));
         for (PsiMethod fieldMethod : methodArr) {
-            if (returnList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
+            if (builderList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
                 return;
             }
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
@@ -106,7 +119,7 @@ public class MethodCompletion extends BaseCompletion {
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
             Empty.of(this.getParamNameList(psiParameterArr)).map(list -> String.format(Common.END_STR, String.join(Common.COMMA + Common.SPACE, list)))
-                    .ifPresent(t -> returnList.add(LookupElementBuilder.create(code + fieldMethod.getName() + t).withPresentableText(code + fieldMethod.getName())));
+                    .ifPresent(t -> builderList.add(LookupElementBuilder.create(code + fieldMethod.getName() + t).withPresentableText(code + fieldMethod.getName())));
         }
     }
 
@@ -155,7 +168,7 @@ public class MethodCompletion extends BaseCompletion {
         }
         //方法内的所有变量
         for (Map.Entry<String, PsiType> entry : currentMethodVariableMap.entrySet()) {
-            if (returnList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
+            if (builderList.size() > ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength()) {
                 return;
             }
             String currentMethodVariableName = entry.getKey();
@@ -167,10 +180,10 @@ public class MethodCompletion extends BaseCompletion {
             //list 或者 set 类型
             Equals.of(PsiUtil.resolveClassInClassTypeOnly(currentMethodVariableType)).and(TypeUtil::isList).or(TypeUtil::isSet)
                     .and(typeList.contains(StringUtil.getFirstMatcher(currentMethodVariableTypeName, Regex.ANGLE_BRACKETS).trim()))
-                    .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + Common.STREAM_MAP_STR + endCode)));
+                    .ifTrue(() -> builderList.add(LookupElementBuilder.create(startCode + currentMethodVariableName + Common.STREAM_MAP_STR + endCode)));
             //数组类型
             Equals.of(currentMethodVariableType).and(TypeUtil::isSimpleArr).and(typeList.contains(currentMethodVariableTypeName.split(Regex.LEFT_BRACKETS)[0]))
-                    .ifTrue(() -> returnList.add(LookupElementBuilder.create(startCode + String.format(Common.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode)
+                    .ifTrue(() -> builderList.add(LookupElementBuilder.create(startCode + String.format(Common.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode)
                             .withInsertHandler((context, item) -> {
                                 PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
                                 MyPsiUtil.findClassByFullName(variableType.getResolveScope(), ClassType.ARRAYS_PATH).ifPresent(javaFile::importClass);

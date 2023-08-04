@@ -1,0 +1,48 @@
+package pers.zlf.plugin.completion;
+
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.util.PsiTreeUtil;
+import pers.zlf.plugin.constant.Annotation;
+import pers.zlf.plugin.util.MyPsiUtil;
+import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @author zhanglinfeng
+ * @date create in 2022/10/14 14:18
+ */
+public class ParameterCompletionContributor extends BaseCompletionContributor {
+    /** 当前参数 */
+    private PsiParameter parameter;
+
+    @Override
+    protected boolean check() {
+        //当前光标所在的方法
+        this.parameter = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiParameter.class);
+        return null != parameter;
+    }
+
+    @Override
+    protected void completion() {
+        List<String> annotationNameList = List.of(Annotation.REQUEST_PARAM, Annotation.REQUEST_PART, Annotation.PATH_VARIABLE, Annotation.REQUEST_ATTRIBUTE, Annotation.REQUEST_HEADER);
+        Optional<PsiAnnotation> annotationOptional = Arrays.stream(parameter.getAnnotations()).filter(a -> null != a.getQualifiedName() && annotationNameList.contains(a.getQualifiedName())).findAny();
+        if (annotationOptional.isEmpty()) {
+            return;
+        }
+        PsiAnnotation annotation = annotationOptional.get();
+        String completionText = Empty.of(MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE)).orElse(MyPsiUtil.getAnnotationValue(annotation, Annotation.NAME));
+        if (StringUtil.isEmpty(completionText)) {
+            return;
+        }
+        completionText = StringUtil.toHumpStyle(completionText);
+        if (completionText.contains(currentText)){
+            addCompletionResult(LookupElementBuilder.create(completionText).withPresentableText(completionText));
+        }
+    }
+}
