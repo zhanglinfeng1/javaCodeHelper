@@ -339,7 +339,7 @@
         </constraints>
         <properties/>
         <border type="empty">
-          <size top="0" left="0" bottom="0" right="0"/>
+          <size top="0" left="15" bottom="0" right="0"/>
         </border>
         <children>
           <hspacer id="81f02">
