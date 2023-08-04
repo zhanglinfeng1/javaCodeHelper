@@ -35,7 +35,10 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
             return;
         }
         PsiAnnotation annotation = annotationOptional.get();
-        String completionText = Empty.of(MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE)).orElse(MyPsiUtil.getAnnotationValue(annotation, Annotation.NAME));
+        String completionText = MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE);
+        if (StringUtil.isEmpty(completionText)) {
+            completionText = MyPsiUtil.getAnnotationValue(annotation, Annotation.NAME);
+        }
         Empty.of(completionText).map(StringUtil::toHumpStyle).ifPresent(this::addCompletionResult);
     }
 }
