@@ -1,11 +1,16 @@
 package pers.zlf.plugin.completion.code;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiUtil;
@@ -16,6 +21,7 @@ import pers.zlf.plugin.util.StringUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +40,7 @@ public class ConstructorCompletion extends BaseCompletion {
             return;
         }
         //已赋值字段
-        List<String> assignedFieldList = MyPsiUtil.getPsiFieldList(currentMethod.getBody()).stream().map(PsiField::getName).collect(Collectors.toList());
+        List<String> assignedFieldList = getAssignedFieldList(currentMethod.getBody());
         //待赋值字段
         Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !assignedFieldList.contains(f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
@@ -72,5 +78,28 @@ public class ConstructorCompletion extends BaseCompletion {
             returnList.add(LookupElementBuilder.create(fillStr.toString()).withPresentableText(Common.FILL_CONSTRUCTOR)
                     .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
         }
+    }
+
+    private List<String> getAssignedFieldList(PsiCodeBlock codeBlock) {
+        Function<PsiElement, List<PsiField>> function = element -> {
+            if (!(element instanceof PsiExpressionStatement)) {
+                return null;
+            }
+            PsiExpression expression = ((PsiExpressionStatement) element).getExpression();
+            if (!(expression instanceof PsiAssignmentExpression)) {
+                return null;
+            }
+            PsiExpression leftExpression = ((PsiAssignmentExpression) expression).getLExpression();
+            if (!(leftExpression instanceof PsiReferenceExpression)) {
+                return null;
+            }
+            PsiElement resolvedElement = ((PsiReferenceExpression) leftExpression).resolve();
+            if (resolvedElement instanceof PsiField) {
+                return List.of((PsiField) resolvedElement);
+            }
+            return null;
+        };
+        List<PsiField> assignedFieldList = MyPsiUtil.getElementFromPsiCodeBlock(codeBlock, function);
+        return assignedFieldList.stream().map(PsiField::getName).collect(Collectors.toList());
     }
 }

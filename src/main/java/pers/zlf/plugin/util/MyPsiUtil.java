@@ -11,20 +11,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
-import com.intellij.psi.PsiAssignmentExpression;
+import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -48,8 +45,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -124,36 +121,6 @@ public class MyPsiUtil {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
         return attributeValue.replaceAll(Regex.DOUBLE_QUOTES, Common.BLANK_STRING).trim();
-    }
-
-    /**
-     * 获取方法包含的变量
-     *
-     * @param psiMethod 方法
-     * @param endOffset 当前元素位置
-     * @return key:变量名 value:变量类型
-     */
-    public static Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
-        Map<String, PsiType> variableMap = new HashMap<>(16);
-        PsiCodeBlock codeBlock = psiMethod.getBody();
-        if (null == codeBlock) {
-            return variableMap;
-        }
-        //获取代码块中的变量 TODO 当前所在位置的代码块
-        for (PsiStatement psiStatement : codeBlock.getStatements()) {
-            if (psiStatement.getTextOffset() <= endOffset && psiStatement instanceof PsiDeclarationStatement) {
-                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) psiStatement;
-                for (PsiElement psiElement : declarationStatement.getDeclaredElements()) {
-                    if (psiElement instanceof PsiLocalVariable) {
-                        PsiLocalVariable localVariable = (PsiLocalVariable) psiElement;
-                        variableMap.put(localVariable.getName(), localVariable.getType());
-                    }
-                }
-            }
-        }
-        //方法参数
-        Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
-        return variableMap;
     }
 
     /**
@@ -453,33 +420,53 @@ public class MyPsiUtil {
     }
 
     /**
-     * 获取类变量
+     * 获取方法包含的变量
      *
-     * @param codeBlock PsiCodeBlock
-     * @return List<PsiField>
+     * @param psiMethod 方法
+     * @param endOffset 当前元素位置
+     * @return key:变量名 value:变量类型
      */
-    public static List<PsiField> getPsiFieldList(PsiCodeBlock codeBlock) {
-        List<PsiField> fieldList = new ArrayList<>();
+    public static Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
+        Map<String, PsiType> variableMap = new HashMap<>(16);
+        //方法参数
+        Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
+        //获取代码块中的变量
+        Function<PsiElement, List<PsiLocalVariable>> function = element -> {
+            List<PsiLocalVariable> localVariableList = new ArrayList<>();
+            if (element.getTextOffset() <= endOffset && element instanceof PsiDeclarationStatement) {
+                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) element;
+                Arrays.stream(declarationStatement.getDeclaredElements()).filter(t -> t instanceof PsiLocalVariable).map(t -> (PsiLocalVariable) t).forEach(localVariableList::add);
+            }
+            return localVariableList;
+        };
+        List<PsiLocalVariable> localVariableList = MyPsiUtil.getElementFromPsiCodeBlock(psiMethod.getBody(), function);
+        localVariableList.forEach(t -> variableMap.put(t.getName(), t.getType()));
+        return variableMap;
+    }
+
+    /**
+     * 获取代码块中的指定类型元素
+     *
+     * @param codeBlock 代码块
+     * @param function  具体逻辑
+     * @return List<T>
+     */
+    public static <T> List<T> getElementFromPsiCodeBlock(PsiCodeBlock codeBlock, Function<PsiElement, List<T>> function) {
+        List<T> elementList = new ArrayList<>();
         if (codeBlock == null) {
-            return fieldList;
+            return elementList;
         }
-        for (PsiStatement statement : codeBlock.getStatements()) {
-            if (!(statement instanceof PsiExpressionStatement)) {
-                continue;
-            }
-            PsiExpression expression = ((PsiExpressionStatement) statement).getExpression();
-            if (!(expression instanceof PsiAssignmentExpression)) {
-                continue;
-            }
-            PsiExpression leftExpression = ((PsiAssignmentExpression) expression).getLExpression();
-            if (!(leftExpression instanceof PsiReferenceExpression)) {
-                continue;
-            }
-            PsiElement resolvedElement = ((PsiReferenceExpression) leftExpression).resolve();
-            if (resolvedElement instanceof PsiField) {
-                fieldList.add((PsiField) resolvedElement);
+        for (PsiElement element : codeBlock.getChildren()) {
+            //获取元素
+            Optional.ofNullable(function.apply(element)).ifPresent(elementList::addAll);
+            if (element instanceof PsiStatement) {
+                PsiStatement statement = (PsiStatement) element;
+                //递归代码块
+                Arrays.stream(statement.getChildren()).filter(t -> t instanceof PsiBlockStatement)
+                        .map(t -> (PsiBlockStatement) t).forEach(blockStatement -> elementList.addAll(getElementFromPsiCodeBlock(blockStatement.getCodeBlock(), function)));
             }
         }
-        return fieldList;
+        //获取元素
+        return elementList;
     }
 }
