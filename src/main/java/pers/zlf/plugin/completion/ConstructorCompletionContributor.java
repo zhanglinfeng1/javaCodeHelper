@@ -1,6 +1,5 @@
 package pers.zlf.plugin.completion;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
@@ -84,8 +83,7 @@ public class ConstructorCompletionContributor extends BaseCompletionContributor 
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
-            addCompletionResult(LookupElementBuilder.create(fillStr.toString()).withPresentableText(Common.FILL_CONSTRUCTOR)
-                    .withInsertHandler((context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod)));
+            addCompletionResult(fillStr.toString(), Common.FILL_CONSTRUCTOR, (context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod));
         }
     }
 

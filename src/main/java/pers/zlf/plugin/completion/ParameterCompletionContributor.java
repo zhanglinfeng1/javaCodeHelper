@@ -1,6 +1,5 @@
 package pers.zlf.plugin.completion;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -37,12 +36,6 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
         }
         PsiAnnotation annotation = annotationOptional.get();
         String completionText = Empty.of(MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE)).orElse(MyPsiUtil.getAnnotationValue(annotation, Annotation.NAME));
-        if (StringUtil.isEmpty(completionText)) {
-            return;
-        }
-        completionText = StringUtil.toHumpStyle(completionText);
-        if (completionText.contains(currentText)){
-            addCompletionResult(LookupElementBuilder.create(completionText).withPresentableText(completionText));
-        }
+        Empty.of(completionText).map(StringUtil::toHumpStyle).ifPresent(this::addCompletionResult);
     }
 }

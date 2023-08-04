@@ -4,6 +4,8 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +14,8 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.StringUtil;
+
+import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -56,7 +60,12 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
      */
     protected abstract void completion();
 
-    protected void addCompletionResult(LookupElementBuilder builder) {
-        result.addElement(builder.withIcon(Icon.LOGO).withCaseSensitivity(true));
+    protected void addCompletionResult(String completionText) {
+        addCompletionResult(completionText, completionText, null);
+    }
+
+    protected void addCompletionResult(String completionText, String presentableText, InsertHandler<LookupElement> insertHandler) {
+        LookupElementBuilder builder = LookupElementBuilder.create(completionText).withPresentableText(presentableText).withIcon(Icon.LOGO).withCaseSensitivity(true);
+        result.addElement(Optional.ofNullable(insertHandler).map(builder::withInsertHandler).orElse(builder));
     }
 }
