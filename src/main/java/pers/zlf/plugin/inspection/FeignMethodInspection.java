@@ -1,7 +1,6 @@
 package pers.zlf.plugin.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
@@ -34,7 +33,7 @@ public class FeignMethodInspection extends AbstractBaseJavaLocalInspectionTool {
                     Optional.ofNullable(method.getNameIdentifier()).ifPresent(identifier -> {
                         PsiReference[] references = ReferencesSearch.search(method).toArray(new PsiReference[0]);
                         if (references.length == 0) {
-                            holder.registerProblem(identifier, String.format(Message.UNUSED_METHOD, method.getName()), ProblemHighlightType.LIKE_UNUSED_SYMBOL, (LocalQuickFix) null);
+                            holder.registerProblem(identifier, String.format(Message.UNUSED_METHOD, method.getName()), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
                         }
                     });
                 }

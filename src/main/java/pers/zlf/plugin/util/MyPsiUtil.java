@@ -15,11 +15,8 @@ import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiStatement;
@@ -122,16 +119,6 @@ public class MyPsiUtil {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
         return attributeValue.replaceAll(Regex.DOUBLE_QUOTES, Common.BLANK_STRING).trim();
-    }
-
-    /**
-     * 获取方法所在类的变量
-     *
-     * @param psiClass 类
-     * @return key:变量名 value:变量类型
-     */
-    public static Map<String, PsiType> getVariableMapFromClass(PsiClass psiClass) {
-        return Arrays.stream(psiClass.getFields()).collect(Collectors.toMap(PsiField::getName, PsiField::getType, (k1, k2) -> k2));
     }
 
     /**
@@ -421,31 +408,6 @@ public class MyPsiUtil {
     }
 
     /**
-     * 获取方法包含的变量
-     *
-     * @param psiMethod 方法
-     * @param endOffset 当前元素位置
-     * @return key:变量名 value:变量类型
-     */
-    public static Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
-        Map<String, PsiType> variableMap = new HashMap<>(16);
-        //方法参数
-        Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
-        //获取代码块中的变量
-        Function<PsiElement, List<PsiLocalVariable>> function = element -> {
-            List<PsiLocalVariable> localVariableList = new ArrayList<>();
-            if (element.getTextOffset() <= endOffset && element instanceof PsiDeclarationStatement) {
-                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) element;
-                Arrays.stream(declarationStatement.getDeclaredElements()).filter(t -> t instanceof PsiLocalVariable).map(t -> (PsiLocalVariable) t).forEach(localVariableList::add);
-            }
-            return localVariableList;
-        };
-        List<PsiLocalVariable> localVariableList = MyPsiUtil.getElementFromPsiCodeBlock(psiMethod.getBody(), function);
-        localVariableList.forEach(t -> variableMap.put(t.getName(), t.getType()));
-        return variableMap;
-    }
-
-    /**
      * 获取代码块中的指定类型元素
      *
      * @param codeBlock 代码块
@@ -478,6 +440,7 @@ public class MyPsiUtil {
      * @return boolean
      */
     public static boolean isNewLine(PsiElement psiElement) {
-        return Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(psiElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.RIGHT_BRACE.equals(t.getText())).orElse(false);
+        return Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(psiElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.LEFT_BRACE.equals(t.getText()) || Common.RIGHT_BRACE.equals(t.getText()))
+                .orElse(false);
     }
 }

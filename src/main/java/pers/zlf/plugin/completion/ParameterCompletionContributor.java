@@ -29,7 +29,7 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
 
     @Override
     protected void completion() {
-        List<String> annotationNameList = List.of(Annotation.REQUEST_PARAM, Annotation.REQUEST_PART, Annotation.PATH_VARIABLE, Annotation.REQUEST_ATTRIBUTE, Annotation.REQUEST_HEADER);
+        List<String> annotationNameList = List.of(Annotation.REQUEST_PARAM, Annotation.REQUEST_PART, Annotation.PATH_VARIABLE, Annotation.REQUEST_ATTRIBUTE, Annotation.REQUEST_HEADER, Annotation.IBATIS_PARAM);
         Optional<PsiAnnotation> annotationOptional = Arrays.stream(parameter.getAnnotations()).filter(a -> null != a.getQualifiedName() && annotationNameList.contains(a.getQualifiedName())).findAny();
         if (annotationOptional.isEmpty()) {
             return;

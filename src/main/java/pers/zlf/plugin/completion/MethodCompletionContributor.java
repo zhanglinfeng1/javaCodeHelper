@@ -3,6 +3,8 @@ package pers.zlf.plugin.completion;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDeclarationStatement;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiJavaFile;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,12 +65,12 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     protected void completion() {
         completionLength = ConfigFactory.getInstance().getCommonConfig().getMaxCodeCompletionLength();
         //当前方法内的变量
-        currentMethodVariableMap = MyPsiUtil.getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
+        currentMethodVariableMap = getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
         currentMethodVariableMap.remove(currentText);
         //当前类的变量
         totalVariableMap = new HashMap<>(16);
         totalVariableMap.putAll(currentMethodVariableMap);
-        totalVariableMap.putAll(MyPsiUtil.getVariableMapFromClass(currentMethodClass));
+        totalVariableMap.putAll(Arrays.stream(currentMethodClass.getFields()).collect(Collectors.toMap(PsiField::getName, PsiField::getType, (k1, k2) -> k2)));
         //在新的一行
         if (MyPsiUtil.isNewLine(currentElement)) {
             //已有变量转化
@@ -90,6 +93,31 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
                 addSameType(currentText, psiType.getInternalCanonicalText(), Common.BLANK_STRING);
             });
         }
+    }
+
+    /**
+     * 获取方法包含的变量
+     *
+     * @param psiMethod 方法
+     * @param endOffset 当前元素位置
+     * @return key:变量名 value:变量类型
+     */
+    private Map<String, PsiType> getVariableMapFromMethod(PsiMethod psiMethod, int endOffset) {
+        Map<String, PsiType> variableMap = new HashMap<>(16);
+        //方法参数
+        Arrays.stream(psiMethod.getParameterList().getParameters()).forEach(t -> variableMap.put(t.getName(), t.getType()));
+        //获取代码块中的变量
+        Function<PsiElement, List<PsiLocalVariable>> function = element -> {
+            List<PsiLocalVariable> localVariableList = new ArrayList<>();
+            if (element.getTextOffset() <= endOffset && element instanceof PsiDeclarationStatement) {
+                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) element;
+                Arrays.stream(declarationStatement.getDeclaredElements()).filter(t -> t instanceof PsiLocalVariable).map(t -> (PsiLocalVariable) t).forEach(localVariableList::add);
+            }
+            return localVariableList;
+        };
+        List<PsiLocalVariable> localVariableList = MyPsiUtil.getElementFromPsiCodeBlock(psiMethod.getBody(), function);
+        localVariableList.forEach(t -> variableMap.put(t.getName(), t.getType()));
+        return variableMap;
     }
 
     private void addSameType(String variableName, String typeName, String code) {
