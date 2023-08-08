@@ -182,7 +182,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
         methodModel.setParameterModelList(modelList);
         Optional<String> sqlType = sqlTypeMap.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
-        methodModel.setSqlType(sqlType.orElse(Common.SELECT));
+        methodModel.setSqlType(sqlType.orElse(Xml.SELECT));
         GutterIconNavigationHandler<PsiMethod> handler = (e, elt) -> ApplicationManager.getApplication().runWriteAction(() -> {
             //生成代码
             String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));

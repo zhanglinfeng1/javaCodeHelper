@@ -28,7 +28,6 @@ public class Common {
     public static final String PERCENT_SIGN = "%";
     public static final String EN = "en";
     public static final String ZH = "zh";
-    public static final String SELECT = "select";
     public static final String WRAP = "\n";
     public static final String HASH = "#";
 
