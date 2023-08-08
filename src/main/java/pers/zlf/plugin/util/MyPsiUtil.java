@@ -99,6 +99,17 @@ public class MyPsiUtil {
     }
 
     /**
+     * 查找指定注解
+     *
+     * @param annotations        带查找的注解
+     * @param annotationNameList 注解名
+     * @return 属性值
+     */
+    public static PsiAnnotation findAnnotation(PsiAnnotation[] annotations, List<String> annotationNameList) {
+        return Arrays.stream(annotations).filter(a -> null != a.getQualifiedName() && annotationNameList.contains(a.getQualifiedName())).findAny().orElse(null);
+    }
+
+    /**
      * 获取注解属性值
      *
      * @param annotation    注解

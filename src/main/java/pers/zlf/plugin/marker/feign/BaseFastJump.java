@@ -133,26 +133,22 @@ public abstract class BaseFastJump {
     }
 
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
-        for (PsiAnnotation psiAnnotation : psiMethod.getAnnotations()) {
-            String annotationName = psiAnnotation.getQualifiedName();
-            if (null == annotationName || !Annotation.MAPPING_LIST.contains(annotationName)) {
-                continue;
-            }
-            //请求方式
-            String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(Common.BLANK_STRING);
-            if (StringUtil.isEmpty(method)) {
-                method = MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD).toUpperCase();
-            }
-            Optional<String> optional = Request.TYPE_LIST.stream().filter(method::contains).findAny();
-            if (optional.isPresent()) {
-                method = optional.get();
-            }
-            if (StringUtil.isNotEmpty(method)) {
-                //请求路径
-                String methodUrl = getMappingUrl(psiAnnotation);
-                return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + Common.SLASH + methodUrl, method) : null;
-            }
+        //获取注解
+        PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(psiMethod.getAnnotations(), Annotation.MAPPING_LIST);
+        if (null == psiAnnotation) {
             return null;
+        }
+        String annotationName = psiAnnotation.getQualifiedName();
+        //请求方式
+        String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(Common.BLANK_STRING);
+        if (StringUtil.isEmpty(method)) {
+            method = MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD).toUpperCase();
+        }
+        method = Request.TYPE_LIST.stream().filter(method::contains).findAny().orElse(method);
+        if (StringUtil.isNotEmpty(method)) {
+            //请求路径
+            String methodUrl = getMappingUrl(psiAnnotation);
+            return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + Common.SLASH + methodUrl, method) : null;
         }
         return null;
     }

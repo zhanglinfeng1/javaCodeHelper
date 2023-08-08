@@ -90,12 +90,10 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         }
         for (PsiMethod psiMethod : currentElement.getMethods()) {
             //存在 xxxxProvider注解
-            Optional<PsiAnnotation> annotationOptional = Arrays.stream(psiMethod.getAnnotations()).filter(a -> null != a.getQualifiedName() && Annotation.IBATIS_PROVIDER_LIST.contains(a.getQualifiedName())).findAny();
-            if (annotationOptional.isEmpty()) {
+            PsiAnnotation annotation = MyPsiUtil.findAnnotation(psiMethod.getAnnotations(), Annotation.IBATIS_PROVIDER_LIST);
+            if (null == annotation) {
                 continue;
             }
-            //获取注解
-            PsiAnnotation annotation = annotationOptional.get();
             //获取注解的method值
             String methodValue = MyPsiUtil.getAnnotationValue(annotation, Annotation.METHOD);
             Optional<PsiMethod> targetMethod = Arrays.stream(targetClass.getMethods()).filter(method -> methodValue.equals(method.getName())).findAny();
@@ -117,7 +115,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         }
         templateName = Common.JUMP_TO_XML_TEMPLATE;
         //排除用注解实现的
-        Predicate<PsiMethod> predicate = psiMethod -> Arrays.stream(psiMethod.getAnnotations()).noneMatch(a -> null != a.getQualifiedName() && Annotation.IBATIS_LIST.contains(a.getQualifiedName()));
+        Predicate<PsiMethod> predicate = psiMethod -> null == MyPsiUtil.findAnnotation(psiMethod.getAnnotations(), Annotation.IBATIS_LIST);
         methodMap = Arrays.stream(currentElement.getMethods()).filter(predicate).collect(Collectors.toMap(PsiMethod::getName, Function.identity(), (k1, k2) -> k2));
         if (methodMap.isEmpty()) {
             return;

@@ -8,9 +8,7 @@ import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -30,11 +28,10 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
     @Override
     protected void completion() {
         List<String> annotationNameList = List.of(Annotation.REQUEST_PARAM, Annotation.REQUEST_PART, Annotation.PATH_VARIABLE, Annotation.REQUEST_ATTRIBUTE, Annotation.REQUEST_HEADER, Annotation.IBATIS_PARAM);
-        Optional<PsiAnnotation> annotationOptional = Arrays.stream(parameter.getAnnotations()).filter(a -> null != a.getQualifiedName() && annotationNameList.contains(a.getQualifiedName())).findAny();
-        if (annotationOptional.isEmpty()) {
+        PsiAnnotation annotation = MyPsiUtil.findAnnotation(parameter.getAnnotations(), annotationNameList);
+        if (null == annotation) {
             return;
         }
-        PsiAnnotation annotation = annotationOptional.get();
         String completionText = MyPsiUtil.getAnnotationValue(annotation, Annotation.VALUE);
         if (StringUtil.isEmpty(completionText)) {
             completionText = MyPsiUtil.getAnnotationValue(annotation, Annotation.NAME);

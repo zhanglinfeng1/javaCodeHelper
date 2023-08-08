@@ -5,8 +5,7 @@ import com.intellij.psi.PsiParameter;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.util.MyPsiUtil;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @author zhanglinfeng
@@ -20,12 +19,8 @@ public class PsiParameterModel {
     }
 
     public PsiParameterModel(PsiParameter parameter) {
-        Optional<PsiAnnotation> annotationOptional = Arrays.stream(parameter.getAnnotations()).filter(a -> Annotation.IBATIS_PARAM.equals(a.getQualifiedName())).findAny();
-        if (annotationOptional.isPresent()) {
-            this.name = MyPsiUtil.getAnnotationValue(annotationOptional.get(), Annotation.VALUE);
-        } else {
-            this.name = parameter.getName();
-        }
+        PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(parameter.getAnnotations(), List.of(Annotation.IBATIS_PARAM));
+        this.name = null == psiAnnotation ? parameter.getName() : MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.VALUE);
         this.type = parameter.getType().getPresentableText();
     }
 
