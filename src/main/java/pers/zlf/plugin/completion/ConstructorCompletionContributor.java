@@ -18,7 +18,6 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -50,7 +49,7 @@ public class ConstructorCompletionContributor extends BaseCompletionContributor 
         //已赋值字段
         List<String> assignedFieldList = getAssignedFieldList(currentMethod.getBody());
         //待赋值字段
-        Map<String, String> fieldMap = Arrays.stream(currentMethodClass.getFields()).filter(f -> !assignedFieldList.contains(f.getName()))
+        Map<String, String> fieldMap = MyPsiUtil.getPsiFieldList(currentMethodClass).stream().filter(f -> !assignedFieldList.contains(f.getName()))
                 .collect(Collectors.toMap(PsiField::getName, f -> f.getType().getInternalCanonicalText()));
         //构造方法的参数
         StringBuilder fillStr = new StringBuilder();
@@ -71,7 +70,7 @@ public class ConstructorCompletionContributor extends BaseCompletionContributor 
                 continue;
             }
             //构造方法的参数为对象类型，处理对象的变量
-            for (PsiField field : parameterClass.getFields()) {
+            for (PsiField field : MyPsiUtil.getPsiFieldList(parameterClass)) {
                 if (fieldMap.isEmpty()) {
                     break loop;
                 }

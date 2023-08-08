@@ -16,8 +16,10 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
@@ -454,5 +456,16 @@ public class MyPsiUtil {
     public static boolean isNewLine(PsiElement psiElement) {
         return Optional.ofNullable(PsiTreeUtil.prevVisibleLeaf(psiElement)).map(t -> Common.SEMICOLON.equals(t.getText()) || Common.LEFT_BRACE.equals(t.getText()) || Common.RIGHT_BRACE.equals(t.getText()))
                 .orElse(false);
+    }
+
+    /**
+     * 获取类的常规字段
+     *
+     * @param psiClass 类
+     * @return List<PsiField>
+     */
+    public static List<PsiField> getPsiFieldList(PsiClass psiClass) {
+        return Arrays.stream(psiClass.getFields()).filter(field -> !field.hasModifierProperty(PsiModifier.STATIC) && !field.hasModifierProperty(PsiModifier.FINAL) && !field.hasModifierProperty(PsiModifier.PUBLIC))
+                .collect(Collectors.toList());
     }
 }

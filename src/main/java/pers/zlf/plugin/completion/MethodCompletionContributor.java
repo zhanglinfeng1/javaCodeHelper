@@ -43,6 +43,8 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     private PsiMethod currentMethod;
     /** 当前方法所在类 */
     private PsiClass currentMethodClass;
+    /** 当前方法所在类 */
+    private List<PsiField> currentMethodClassFieldList;
     /** 当前方法包含的变量Map */
     private Map<String, PsiType> currentMethodVariableMap;
     /** 当前方法包含的变量Map */
@@ -68,9 +70,10 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         currentMethodVariableMap = getVariableMapFromMethod(currentMethod, currentElement.getTextOffset());
         currentMethodVariableMap.remove(currentText);
         //当前类的变量
+        currentMethodClassFieldList = MyPsiUtil.getPsiFieldList(currentMethodClass);
         totalVariableMap = new HashMap<>(16);
         totalVariableMap.putAll(currentMethodVariableMap);
-        totalVariableMap.putAll(Arrays.stream(currentMethodClass.getFields()).collect(Collectors.toMap(PsiField::getName, PsiField::getType, (k1, k2) -> k2)));
+        totalVariableMap.putAll(currentMethodClassFieldList.stream().collect(Collectors.toMap(PsiField::getName, PsiField::getType, (k1, k2) -> k2)));
         //在新的一行
         if (MyPsiUtil.isNewLine(currentElement)) {
             //已有变量转化
@@ -124,7 +127,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         //当前类的方法
         findFromClass(currentMethodClass, MyPsiUtil.getMethods(currentMethodClass, currentMethod, variableName), typeName, code + Common.THIS_STR);
         //方法所在类的变量
-        for (PsiField psiField : currentMethodClass.getFields()) {
+        for (PsiField psiField : currentMethodClassFieldList) {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
                 continue;
             }
@@ -135,7 +138,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
 
     private void findFromClass(PsiClass psiClass, PsiMethod[] methodArr, String typeName, String code) {
         List<String> setAndGetMethodList = Stream.of(Common.SET, Common.GET).flatMap(o1 ->
-                Arrays.stream(psiClass.getFields()).map(f -> StringUtil.toUpperCaseFirst(f.getName()))).collect(Collectors.toList());
+                MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).collect(Collectors.toList());
         for (PsiMethod fieldMethod : methodArr) {
             if (completionLength == 0) {
                 return;

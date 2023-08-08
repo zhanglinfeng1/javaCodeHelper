@@ -131,7 +131,7 @@ public class AddApiAnnotationAction extends BaseAction {
      */
     private void addSwaggerForModel(PsiClass psiClass) {
         addApiAnnotation(new ModelAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
-        for (PsiField field : psiClass.getFields()) {
+        for (PsiField field : MyPsiUtil.getPsiFieldList(psiClass)) {
             addApiAnnotation(new FieldAnnotation(), field, field.getModifierList(), field.getName());
         }
     }
