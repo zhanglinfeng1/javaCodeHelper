@@ -55,7 +55,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     @Override
     protected boolean check() {
         //当前光标所在的方法
-        currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
+        currentMethod = PsiTreeUtil.getParentOfType(currentElement, PsiMethod.class);
         if (null != currentMethod && !currentMethod.isConstructor()) {
             this.currentMethodClass = currentMethod.getContainingClass();
             return null != currentMethodClass;
@@ -222,7 +222,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
             } else if (TypeUtil.isSimpleArr(currentMethodVariableType)) {
                 //数组类型
                 if (typeList.contains(currentMethodVariableTypeName.split(Regex.LEFT_BRACKETS)[0])) {
-                    String completionText = startCode + currentMethodVariableName + Common.STREAM_MAP_STR + endCode;
+                    String completionText = startCode + String.format(Common.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode;
                     InsertHandler<LookupElement> insertHandler = (context, item) -> {
                         PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
                         MyPsiUtil.findClassByFullName(variableType.getResolveScope(), ClassType.ARRAYS_PATH).ifPresent(javaFile::importClass);

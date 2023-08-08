@@ -30,6 +30,7 @@ public class Common {
     public static final String ZH = "zh";
     public static final String SELECT = "select";
     public static final String WRAP = "\n";
+    public static final String HASH = "#";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";

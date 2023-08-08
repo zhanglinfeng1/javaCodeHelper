@@ -21,7 +21,7 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
     @Override
     protected boolean check() {
         //当前光标所在的方法
-        this.parameter = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiParameter.class);
+        this.parameter = PsiTreeUtil.getParentOfType(currentElement, PsiParameter.class);
         return null != parameter;
     }
 
