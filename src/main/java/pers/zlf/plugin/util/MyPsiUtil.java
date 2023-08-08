@@ -77,7 +77,8 @@ public class MyPsiUtil {
         if (psiClass.isInterface() || psiClass.isAnnotationType() || psiClass.isEnum()) {
             return false;
         }
-        return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(Annotation.CONTROLLER_LIST::contains);
+        List<String> controllerList = List.of(Annotation.CONTROLLER_1, Annotation.CONTROLLER_2, Annotation.REST_CONTROLLER);
+        return Arrays.stream(psiClass.getAnnotations()).map(PsiAnnotation::getQualifiedName).anyMatch(controllerList::contains);
     }
 
     /**

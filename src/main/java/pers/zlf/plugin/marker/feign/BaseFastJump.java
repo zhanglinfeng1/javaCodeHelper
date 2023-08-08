@@ -134,7 +134,8 @@ public abstract class BaseFastJump {
 
     private MappingAnnotation getMappingAnnotation(String classUrl, PsiMethod psiMethod) {
         //获取注解
-        PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(psiMethod.getAnnotations(), Annotation.MAPPING_LIST);
+        List<String> mappingList = List.of(Annotation.REQUEST_MAPPING, Annotation.POST_MAPPING, Annotation.GET_MAPPING, Annotation.PUT_MAPPING, Annotation.DELETE_MAPPING, Annotation.PATCH_MAPPING);
+        PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(psiMethod.getAnnotations(), mappingList);
         if (null == psiAnnotation) {
             return null;
         }
