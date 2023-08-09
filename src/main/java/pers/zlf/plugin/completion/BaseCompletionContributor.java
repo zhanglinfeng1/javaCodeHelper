@@ -22,15 +22,14 @@ import java.util.Optional;
  * @date create in 2023/8/4 15:21
  */
 public abstract class BaseCompletionContributor extends CompletionContributor {
-    /** 待补全元素 */
-    protected CompletionParameters parameters;
+    /** 原始位置元素 */
+    protected PsiElement originalPositionElement;
     /** 补全结果 */
-    protected CompletionResultSet result;
+    private CompletionResultSet result;
     /** 当前元素 */
     protected PsiElement currentElement;
     /** 当前文本 */
     protected String currentText;
-
     @Override
     public final void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
@@ -41,7 +40,7 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
         if (!enableCodeCompletion) {
             return;
         }
-        this.parameters = parameters;
+        this.originalPositionElement = parameters.getOriginalPosition();
         this.result = result;
         this.currentElement = parameters.getPosition();
         this.currentText = currentElement.getText().replace(ClassType.INTELLIJ_IDEA_RULEZZZ, Common.BLANK_STRING);
