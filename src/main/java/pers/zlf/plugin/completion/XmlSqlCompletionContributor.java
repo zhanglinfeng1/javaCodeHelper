@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 
 /**
  * @author zhanglinfeng
@@ -103,30 +105,21 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         PsiElement attribute = currentElement.getParent().getParent();
         String tagName = currentTag.getName();
         String attributeName = attribute.getFirstChild().getText();
-        boolean foreachTag = tagName.equals(Xml.FOREACH) && attributeName.equals(Xml.COLLECTION);
-        boolean ifTag = tagName.equals(Xml.IF) && attributeName.equals(Xml.TEST);
-        boolean resultTag = tagName.equals(Xml.RESULT) && attributeName.equals(Xml.PROPERTY);
-        boolean whenTag = tagName.equals(Xml.WHEN) && attributeName.equals(Xml.TEST);
-        if (foreachTag || ifTag || whenTag) {
+        BiPredicate<String, String> tagMatch = (t, u) -> tagName.equals(t) && attributeName.equals(u);
+        if (tagMatch.test(Xml.FOREACH, Xml.COLLECTION) || tagMatch.test(Xml.IF, Xml.TEST) || tagMatch.test(Xml.WHEN, Xml.TEST)) {
             completionVariable();
-        } else if (resultTag) {
+        } else if (tagMatch.test(Xml.RESULT, Xml.PROPERTY)) {
             XmlTag resultMapTag = currentTag.getParentTag();
             if (null == resultMapTag) {
                 return;
             }
-            PsiClass psiClass = MyPsiUtil.findClassByFullName(currentElement.getResolveScope(), resultMapTag.getAttributeValue(Xml.TYPE)).orElse(null);
-            if (null == psiClass) {
-                return;
-            }
-            MyPsiUtil.getPsiFieldList(psiClass).forEach(field -> completionTextList.add(field.getName()));
+            MyPsiUtil.findClassByFullName(currentElement.getResolveScope(), resultMapTag.getAttributeValue(Xml.TYPE))
+                    .ifPresent(psiClass -> MyPsiUtil.getPsiFieldList(psiClass).forEach(field -> completionTextList.add(field.getName())));
         }
     }
 
     private void dealForeachTag(XmlTag tag) {
-        if (CollectionUtil.isEmpty(completionTextList) || parameterMap.isEmpty()) {
-            return;
-        }
-        if (tag == null) {
+        if (tag == null || CollectionUtil.isEmpty(completionTextList) || parameterMap.isEmpty()) {
             return;
         }
         if (tag.getName().equals(Xml.FOREACH)) {
@@ -135,14 +128,10 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
             if (StringUtil.isEmpty(collection) || StringUtil.isEmpty(item)) {
                 return;
             }
-            PsiParameter parameter = parameterMap.get(collection);
-            if (null == parameter) {
-                return;
-            }
             completionTextList.remove(collection);
-            PsiClass psiClass = MyPsiUtil.getReferenceTypeClass(parameter.getType());
+            completionTextList.add(item);
+            PsiClass psiClass = Optional.ofNullable(parameterMap.get(collection)).map(PsiParameter::getType).map(MyPsiUtil::getReferenceTypeClass).orElse(null);
             if (null == psiClass || TypeUtil.isSimpleType(psiClass.getName())) {
-                completionTextList.add(item);
                 return;
             }
             MyPsiUtil.getPsiFieldList(psiClass).forEach(field -> completionTextList.add(item + Common.DOT + field.getName()));

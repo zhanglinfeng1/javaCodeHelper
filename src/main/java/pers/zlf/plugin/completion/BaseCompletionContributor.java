@@ -30,6 +30,7 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
     protected PsiElement currentElement;
     /** 当前文本 */
     protected String currentText;
+
     @Override
     public final void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         if (parameters.getCompletionType() != CompletionType.BASIC) {
