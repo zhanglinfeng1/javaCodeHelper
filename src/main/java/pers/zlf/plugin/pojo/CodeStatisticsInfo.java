@@ -16,6 +16,10 @@ public class CodeStatisticsInfo {
     private String oldLocationString;
     /** 代码行数 */
     private int lineCount;
+    /** 总git代码行数 */
+    private int totalGitLineCount;
+    /** 我的git代码行数 */
+    private int myGitLineCount;
     /** 贡献率 */
     private String contributionRate;
 
@@ -49,6 +53,22 @@ public class CodeStatisticsInfo {
 
     public void setLineCount(int lineCount) {
         this.lineCount = lineCount;
+    }
+
+    public int getTotalGitLineCount() {
+        return totalGitLineCount;
+    }
+
+    public void setTotalGitLineCount(int totalGitLineCount) {
+        this.totalGitLineCount = totalGitLineCount;
+    }
+
+    public int getMyGitLineCount() {
+        return myGitLineCount;
+    }
+
+    public void setMyGitLineCount(int myGitLineCount) {
+        this.myGitLineCount = myGitLineCount;
     }
 
     public String getContributionRate() {

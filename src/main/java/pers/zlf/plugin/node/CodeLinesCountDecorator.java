@@ -33,6 +33,8 @@ import java.util.Optional;
 public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /** 代码统计Map */
     private static final Map<String, CodeStatisticsInfo> STATISTICS_MAP = new HashMap<>();
+    /** 执行中 */
+    public static boolean contributionRateExecute = false;
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
@@ -103,6 +105,19 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     }
 
     /**
+     * 代码贡献率清零
+     *
+     * @param projectName 项目名
+     */
+    public static void clearContributionRate(String projectName) {
+        contributionRateExecute = true;
+        STATISTICS_MAP.values().stream().filter(t -> projectName.equals(t.getProjectName())).forEach(t -> {
+            t.setTotalGitLineCount(0);
+            t.setMyGitLineCount(0);
+        });
+    }
+
+    /**
      * 更新代码贡献率
      *
      * @param moduleName 模块名
@@ -110,7 +125,13 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param myCount    我提交的行数
      */
     public static void updateContributionRate(String moduleName, int totalCount, int myCount) {
-        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> t.setContributionRate(MathUtil.percentage(myCount, totalCount, 2) + Common.PERCENT_SIGN));
+        Optional.ofNullable(STATISTICS_MAP.get(moduleName)).ifPresent(t -> {
+            int totalGitLineCount = t.getTotalGitLineCount() + totalCount;
+            int myGitLineCount = t.getMyGitLineCount() + myCount;
+            t.setTotalGitLineCount(totalGitLineCount);
+            t.setMyGitLineCount(myGitLineCount);
+            t.setContributionRate(MathUtil.percentage(myGitLineCount, totalGitLineCount, 2) + Common.PERCENT_SIGN);
+        });
     }
 
     /**

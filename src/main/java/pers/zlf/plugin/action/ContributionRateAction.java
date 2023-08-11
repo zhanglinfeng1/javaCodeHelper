@@ -1,9 +1,6 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.eclipse.jgit.api.BlameCommand;
@@ -30,15 +27,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author zhanglinfeng
  * @date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BaseAction {
-    /** 选中的文件 */
-    private VirtualFile virtualFile;
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -55,23 +49,13 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     public boolean isExecute() {
-        this.virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
+        if (CodeLinesCountDecorator.contributionRateExecute){
+            Messages.showMessageDialog(Message.STATISTICS_IN_PROGRESS, Common.BLANK_STRING, Messages.getInformationIcon());
+            return false;
+        }
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
             Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon());
-            return false;
-        }
-        //项目路径
-        bathPath = MyPsiUtil.getCurrentModulePath(virtualFile, project);
-        if (StringUtil.isEmpty(bathPath.toString()) || StringUtil.isEmpty(bathPath.getFileName().toString())) {
-            return false;
-        }
-        //默认当前分支
-        try {
-            String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
-            repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
-        } catch (IOException e) {
-            Messages.showMessageDialog(Message.NO_GIT, Common.BLANK_STRING, Messages.getInformationIcon());
             return false;
         }
         return true;
@@ -81,32 +65,42 @@ public class ContributionRateAction extends BaseAction {
     public void execute() {
         //获取配置
         List<String> fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
-        List<String> myEmailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
-        //没有配置取当前邮箱
-        if (CollectionUtil.isEmpty(myEmailList)) {
-            myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
-            if (CollectionUtil.isEmpty(myEmailList)) {
-                Messages.showMessageDialog(Message.NO_GIT_EMAIL, Common.BLANK_STRING, Messages.getInformationIcon());
-                return;
-            }
-        }
-        //统计模块的贡献率
-        totalLineCount = 0;
-        myLineCount = 0;
-        Module module = Optional.ofNullable(virtualFile).map(t -> ModuleUtil.findModuleForFile(t, project)).orElse(null);
-        if (null == module) {
+        //获取项目路径
+        String projectPath = Empty.of(project.getBasePath()).map(Paths::get).map(Path::getParent).map(Path::toString).orElse(null);
+        if (StringUtil.isEmpty(projectPath)) {
             return;
         }
-        List<String> finalMyEmailList = myEmailList;
+        CodeLinesCountDecorator.clearContributionRate(project.getName());
         ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
-            for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
-                this.dealDirectory(virtualFile, fileTypeList, finalMyEmailList);
+            List<String> myEmailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
+            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                totalLineCount = 0;
+                myLineCount = 0;
+                //项目路径
+                String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
+                bathPath = Paths.get(projectPath, moduleName);
+                //默认当前分支
+                try {
+                    String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
+                    repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
+                } catch (IOException e) {
+                    continue;
+                }
+                //没有配置取当前邮箱
+                if (CollectionUtil.isEmpty(myEmailList)) {
+                    myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
+                    if (CollectionUtil.isEmpty(myEmailList)) {
+                        continue;
+                    }
+                }
+                this.dealDirectory(virtualFile, fileTypeList, myEmailList);
+                if (totalLineCount != 0) {
+                    CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
+                    //更新贡献率行数
+                    CodeLinesCountDecorator.updateNode();
+                }
             }
-            if (totalLineCount != 0) {
-                CodeLinesCountDecorator.updateContributionRate(bathPath.getFileName().toString(), totalLineCount, myLineCount);
-                //更新贡献率行数
-                CodeLinesCountDecorator.updateNode();
-            }
+            CodeLinesCountDecorator.contributionRateExecute = false;
         });
     }
 
