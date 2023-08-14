@@ -88,6 +88,9 @@ public class StringUtil {
      * @return String
      */
     public static String toHumpStyle(String str) {
+        if (!str.contains(Common.UNDERSCORE)) {
+            return str;
+        }
         StringBuilder result = new StringBuilder();
         char[] chars = str.toLowerCase().toCharArray();
         for (int i = 0; i < chars.length; i++) {
