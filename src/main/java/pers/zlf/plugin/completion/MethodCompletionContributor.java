@@ -55,7 +55,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     @Override
     protected boolean check() {
         //当前光标所在的方法
-        currentMethod = PsiTreeUtil.getParentOfType(originalPositionElement, PsiMethod.class);
+        currentMethod = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), PsiMethod.class);
         if (null != currentMethod && !currentMethod.isConstructor()) {
             this.currentMethodClass = currentMethod.getContainingClass();
             return null != currentMethodClass;

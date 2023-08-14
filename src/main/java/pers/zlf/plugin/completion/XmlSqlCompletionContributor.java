@@ -3,6 +3,7 @@ package pers.zlf.plugin.completion;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
@@ -49,13 +50,13 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         if (!(currentElement instanceof XmlToken)) {
             return false;
         }
-        XmlFile xmlFile = PsiTreeUtil.getParentOfType(currentElement, XmlFile.class);
-        if (null == xmlFile) {
-            return false;
+        PsiFile file = parameters.getOriginalFile();
+        if (file instanceof XmlFile) {
+            currentTag = PsiTreeUtil.getParentOfType(currentElement, XmlTag.class);
+            mapperTag = XmlUtil.getRootTagByName((XmlFile) file, Xml.MAPPER);
+            return null != currentTag && null != mapperTag;
         }
-        currentTag = PsiTreeUtil.getParentOfType(currentElement, XmlTag.class);
-        mapperTag = XmlUtil.getRootTagByName(xmlFile, Xml.MAPPER);
-        return null != currentTag && null != mapperTag;
+        return false;
     }
 
     @Override
