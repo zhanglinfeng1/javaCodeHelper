@@ -42,7 +42,7 @@ public class StringUtil {
             return str;
         }
         char[] ch = str.toCharArray();
-        if (ch[0] >= 65 && ch[0] <= 90) {
+        if (isUppercaseLetters(ch[0])) {
             ch[0] = (char) (ch[0] + 32);
         }
         return new String(ch);
@@ -59,7 +59,7 @@ public class StringUtil {
             return str;
         }
         char[] ch = str.toCharArray();
-        if (ch[0] >= 97 && ch[0] <= 122) {
+        if (isLowercaseLetters(ch[0])) {
             ch[0] = (char) (ch[0] - 32);
         }
         return new String(ch);
@@ -88,20 +88,21 @@ public class StringUtil {
      * @return String
      */
     public static String toHumpStyle(String str) {
-        if (!str.contains(Common.UNDERSCORE)) {
-            return str;
-        }
         StringBuilder result = new StringBuilder();
-        char[] chars = str.toLowerCase().toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            String charStr = String.valueOf(chars[i]);
-            if (chars[i] == 95) {
-                i++;
-                charStr = String.valueOf(chars[i]).toUpperCase();
+        boolean upperCase = false;
+        for (char aChar : str.toLowerCase().toCharArray()) {
+            String charStr = String.valueOf(aChar);
+            if (isNum(aChar) || isLowercaseLetters(aChar) || isUppercaseLetters(aChar)) {
+                if (upperCase) {
+                    charStr = String.valueOf(aChar).toUpperCase();
+                }
+                result.append(charStr);
+                upperCase = false;
+                continue;
             }
-            result.append(charStr);
+            upperCase = true;
         }
-        return result.toString();
+        return str.length() == result.length() ? toLowerCaseFirst(str) : result.toString();
     }
 
     /**
@@ -124,5 +125,35 @@ public class StringUtil {
         }
         // 在段落注释中间 、 单行注释
         return commentFormat.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith));
+    }
+
+    /**
+     * 判断是否为数字
+     *
+     * @param aChar char
+     * @return boolean
+     */
+    public static boolean isNum(char aChar) {
+        return aChar >= 48 && aChar <= 57;
+    }
+
+    /**
+     * 判断是否为小写字母
+     *
+     * @param aChar char
+     * @return boolean
+     */
+    public static boolean isLowercaseLetters(char aChar) {
+        return aChar >= 97 && aChar <= 122;
+    }
+
+    /**
+     * 判断是否为大写字母
+     *
+     * @param aChar char
+     * @return boolean
+     */
+    public static boolean isUppercaseLetters(char aChar) {
+        return aChar >= 65 && aChar <= 90;
     }
 }

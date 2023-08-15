@@ -8,7 +8,10 @@ import com.intellij.psi.PsiFile;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author zhanglinfeng
@@ -17,8 +20,12 @@ import java.util.List;
 public class ToolAction extends BaseAction {
     private final String UPPER_CASE = "大写";
     private final String LOWER_CASE = "小写";
-    private final String HUMP = "下划线转驼峰";
-
+    private final String HUMP = "转驼峰";
+    private final Map<String, Function<String, String>> functionMap = new HashMap<>() {{
+        put(UPPER_CASE, String::toUpperCase);
+        put(LOWER_CASE, String::toLowerCase);
+        put(HUMP, StringUtil::toHumpStyle);
+    }};
     /** 选中的文本的相关信息 */
     private SelectionModel selectionModel;
     /** 选中的文本 */
@@ -36,20 +43,7 @@ public class ToolAction extends BaseAction {
     public void execute() {
         JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(UPPER_CASE, LOWER_CASE, HUMP)).setTitle(Common.TOOL).setMovable(true)
                 .setItemChosenCallback(value -> {
-                    String result;
-                    switch (value) {
-                        case UPPER_CASE:
-                            result = selectionText.toUpperCase();
-                            break;
-                        case LOWER_CASE:
-                            result = selectionText.toLowerCase();
-                            break;
-                        case HUMP:
-                            result = StringUtil.toHumpStyle(selectionText);
-                            break;
-                        default:
-                            return;
-                    }
+                    String result = functionMap.get(value).apply(selectionText);
                     WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), result));
                 }).createPopup().showInBestPositionFor(editor);
     }
