@@ -2,6 +2,7 @@ package pers.zlf.plugin.completion;
 
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiParameter;
+import com.intellij.psi.impl.source.tree.java.ParameterElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -22,7 +23,10 @@ public class ParameterCompletionContributor extends BaseCompletionContributor {
     protected boolean check() {
         //当前光标所在的方法
         this.parameter = PsiTreeUtil.getParentOfType(currentElement, PsiParameter.class);
-        return null != parameter;
+        if (currentElement.getParent() instanceof ParameterElement) {
+            return null != parameter;
+        }
+        return false;
     }
 
     @Override
