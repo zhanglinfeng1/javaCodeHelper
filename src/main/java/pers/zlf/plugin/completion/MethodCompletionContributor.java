@@ -84,7 +84,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
             //当前元素是变量
             PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
-            String variableName = MyPsiUtil.dealVariableName(variable.getName(), variable.getType(), new ArrayList<>(currentMethodVariableMap.keySet()));
+            String variableName = MyPsiUtil.dealVariableName(currentText, variable.getType(), new ArrayList<>(currentMethodVariableMap.keySet()));
             //新建变量转化
             addTransformation(variableName, variable.getType(), variableName + Common.EQ_STR);
             //寻找变量的同类型方法,无参需判断参数名

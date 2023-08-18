@@ -1,6 +1,5 @@
 package pers.zlf.plugin.util;
 
-import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -144,7 +143,6 @@ public class MyPsiUtil {
      * @return 处理后的变量名
      */
     public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
-        variableName = variableName.replace(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED, Common.BLANK_STRING);
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = Common.BLANK_STRING;
         if (basicTypeName.contains(Common.LESS_THAN_SIGN)) {
