@@ -11,6 +11,7 @@ public class ClassType {
     public static final String SET = "Set";
     public static final String ARRAYS_PATH = "java.util.Arrays";
     public static final String OPTIONAL = "java.util.Optional";
+    public static final String COLLECTORS = "java.util.stream.Collectors";
     public static final String VOID = "void";
     public static final String JAVA_FILE = ".java";
     public static final String XML_FILE = ".xml";

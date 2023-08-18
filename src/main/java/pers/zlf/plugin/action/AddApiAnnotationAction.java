@@ -2,7 +2,6 @@ package pers.zlf.plugin.action;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationOwner;
 import com.intellij.psi.PsiClass;
@@ -13,7 +12,6 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
-import com.intellij.psi.search.GlobalSearchScope;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.annotation.BaseAnnotation;
@@ -31,7 +29,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -76,10 +73,8 @@ public class AddApiAnnotationAction extends BaseAction {
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             Equals.of(psiClass).and(MyPsiUtil::isController).then(this::addSwaggerForController, this::addSwaggerForModel);
         }
-        JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
-        GlobalSearchScope globalSearchScope = psiJavaFile.getResolveScope();
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            importClassSet.forEach(t -> Optional.ofNullable(javaPsiFacade.findClass(t, globalSearchScope)).ifPresent(psiJavaFile::importClass));
+            importClassSet.forEach(t -> MyPsiUtil.importClass(psiJavaFile, t));
             annotationMap.forEach(PsiAnnotationOwner::addAnnotation);
         });
     }

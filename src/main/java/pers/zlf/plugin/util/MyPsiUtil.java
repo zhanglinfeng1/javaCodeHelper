@@ -18,6 +18,7 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
@@ -466,4 +467,20 @@ public class MyPsiUtil {
         return Arrays.stream(psiClass.getFields()).filter(field -> !field.hasModifierProperty(PsiModifier.STATIC) && !field.hasModifierProperty(PsiModifier.FINAL) && !field.hasModifierProperty(PsiModifier.PUBLIC))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 导入类
+     *
+     * @param psiFile          所在文件
+     * @param classFullNameArr 待导入类
+     */
+    public static void importClass(PsiFile psiFile, String... classFullNameArr) {
+        if (psiFile instanceof PsiJavaFile) {
+            PsiJavaFile javaFile = (PsiJavaFile) psiFile;
+            for (String classFullName : classFullNameArr) {
+                MyPsiUtil.findClassByFullName(javaFile.getResolveScope(), classFullName).ifPresent(javaFile::importClass);
+            }
+        }
+    }
+
 }

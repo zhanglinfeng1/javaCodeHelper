@@ -223,10 +223,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
                 //数组类型
                 if (typeList.contains(currentMethodVariableTypeName.split(Regex.LEFT_BRACKETS)[0])) {
                     String completionText = startCode + String.format(Common.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode;
-                    InsertHandler<LookupElement> insertHandler = (context, item) -> {
-                        PsiJavaFile javaFile = (PsiJavaFile) currentMethodClass.getContainingFile();
-                        MyPsiUtil.findClassByFullName(variableType.getResolveScope(), ClassType.ARRAYS_PATH).ifPresent(javaFile::importClass);
-                    };
+                    InsertHandler<LookupElement> insertHandler = (context, item) -> MyPsiUtil.importClass(currentMethodClass.getContainingFile(), ClassType.ARRAYS_PATH, ClassType.COLLECTORS);
                     addCompletionResult(completionText, completionText, insertHandler);
                     completionLength--;
                 }

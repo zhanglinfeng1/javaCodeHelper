@@ -1,11 +1,8 @@
 package pers.zlf.plugin.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiBinaryExpression;
@@ -15,15 +12,14 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
 import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
-import com.siyeh.ig.psiutils.CommentTracker;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -61,7 +57,8 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                             String text = throwStatement.getText();
                             text = text.substring(5, text.length() - 1).trim();
                             PsiFile psiFile = statement.getContainingFile();
-                            holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, getQuickFix(psiFile, statement, String.format(Common.OPTIONAL_THROW, variableName, text)));
+                            Runnable runnable = () -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL);
+                            holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, new ReplaceQuickFix(Message.OPTIONAL_THROW_FIX_NAME, statement, String.format(Common.OPTIONAL_THROW, variableName, text), runnable));
                         }
                     }
                 }
@@ -79,32 +76,6 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             return leftOperand.getText();
         }
         return null;
-    }
-
-    private LocalQuickFix getQuickFix(PsiFile psiFile, PsiIfStatement statement, String text) {
-        return new LocalQuickFix() {
-            @NotNull
-            @Override
-            public String getName() {
-                return Message.OPTIONAL_THROW_FIX_NAME;
-            }
-
-            @NotNull
-            @Override
-            public String getFamilyName() {
-                return getName();
-            }
-
-            @Override
-            public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-                CommentTracker commentTracker = new CommentTracker();
-                commentTracker.replaceAndRestoreComments(statement, text);
-                if (psiFile instanceof PsiJavaFile) {
-                    PsiJavaFile javaFile = (PsiJavaFile) psiFile;
-                    MyPsiUtil.findClassByFullName(javaFile.getResolveScope(), ClassType.OPTIONAL).ifPresent(javaFile::importClass);
-                }
-            }
-        };
     }
 
 }
