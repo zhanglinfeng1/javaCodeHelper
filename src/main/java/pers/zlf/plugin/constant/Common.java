@@ -77,6 +77,7 @@ public class Common {
     public static final String S_STR = "s";
     public static final String CONSTRUCTOR_FILL_STR1 = "this.%s=%s;";
     public static final String CONSTRUCTOR_FILL_STR2 = "this.%s=%s.get%s();";
+    public static final String OPTIONAL_THROW = "Optional.ofNullable(%s).orElseThrow(() -> %s);";
 
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "补全构造方法";
