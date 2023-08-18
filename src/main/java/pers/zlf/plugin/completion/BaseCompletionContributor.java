@@ -41,7 +41,10 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
             return;
         }
         this.currentElement = parameters.getPosition();
-        this.currentText = currentElement.getText().split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)[0];
+        this.currentText = currentElement.getText();
+        if (this.currentText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) {
+            this.currentText = this.currentText.split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)[0];
+        }
         this.parameters = parameters;
         if (StringUtil.isNotEmpty(currentText) && check()) {
             this.result = result;
