@@ -30,6 +30,7 @@ public class Common {
     public static final String ZH = "zh";
     public static final String WRAP = "\n";
     public static final String HASH = "#";
+    public static final String DOLLAR = "$";
     public static final String TOOL = "tool";
 
     /** FreeMark模板 */
