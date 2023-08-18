@@ -10,6 +10,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.StringUtil;
@@ -42,7 +43,9 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
         }
         this.currentElement = parameters.getPosition();
         this.currentText = currentElement.getText();
-        if (this.currentText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) {
+        if (this.currentText.startsWith(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) {
+            this.currentText = Common.BLANK_STRING;
+        } else if (this.currentText.contains(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)) {
             this.currentText = this.currentText.split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)[0];
         }
         this.parameters = parameters;
