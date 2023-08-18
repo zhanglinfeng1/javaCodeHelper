@@ -47,7 +47,7 @@
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
         <!-- 代码检查 -->
-        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="Feign中未被调用的方法" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.FeignMethodInspection"/>
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="Feign" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.FeignMethodInspection"/>
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="一些可替代类的建议" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.RecommendationClassInspection"/>
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="Optional" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.OptionalInspection"/>
         <!-- 监听文件改动 -->
