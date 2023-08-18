@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.12.0</version>
+    <version>1.12.1</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="193.5662.53"/>
     <description><![CDATA[
@@ -15,11 +15,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[新增]可配置代码补全最大展示数量</li>
-            <li>[新增]sql变量的补全</li>
-            <li>[优化]优化补全提示</li>
-            <li>[优化]优化贡献率统计</li>
-            <li>[BUG]一些小BUG</li>
+            <li>[优化]优化补全</li>
         </ul>
     ]]>
     </change-notes>
@@ -51,10 +47,9 @@
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
         <!-- 代码检查 -->
-        <!-- feign方法是否被调用-->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="Feign中未被调用的方法" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.FeignMethodInspection"/>
-        <!-- 变量类检查，推荐使用新的类-->
         <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="一些可替代类的建议" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.RecommendationClassInspection"/>
+        <localInspection language="JAVA" level="WARNING" groupName="JavaCodeHelper" displayName="Optional" enabledByDefault="true" implementationClass="pers.zlf.plugin.inspection.OptionalInspection"/>
         <!-- 监听文件改动 -->
         <postStartupActivity implementation="pers.zlf.plugin.monitoring.FileStartupActivity"/>
     </extensions>
