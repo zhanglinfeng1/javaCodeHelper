@@ -4,13 +4,12 @@ import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.codeInsight.completion.CompletionUtilCore;
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.ClassType;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.StringUtil;
@@ -42,7 +41,7 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
             return;
         }
         this.currentElement = parameters.getPosition();
-        this.currentText = currentElement.getText().replace(ClassType.INTELLIJ_IDEA_RULEZZZ, Common.BLANK_STRING);
+        this.currentText = currentElement.getText().split(CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED)[0];
         this.parameters = parameters;
         if (StringUtil.isNotEmpty(currentText) && check()) {
             this.result = result;

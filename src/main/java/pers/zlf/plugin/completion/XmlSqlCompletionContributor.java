@@ -64,7 +64,8 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         completionTextList = new ArrayList<>();
         parameterMap = new HashMap<>();
         IElementType currentElementType = ((XmlToken) currentElement).getTokenType();
-        if (currentText.startsWith(Common.HASH + Common.LEFT_BRACE) && currentElementType == XmlTokenType.XML_DATA_CHARACTERS) {
+        boolean completionVariable = currentText.lastIndexOf(Common.HASH + Common.LEFT_BRACE) > currentText.lastIndexOf(Common.RIGHT_BRACE);
+        if (completionVariable && currentElementType == XmlTokenType.XML_DATA_CHARACTERS) {
             //补全变量
             completionVariable();
         } else if (currentElementType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
