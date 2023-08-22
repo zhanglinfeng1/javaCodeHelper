@@ -120,15 +120,11 @@ public class MyPsiUtil {
      * @return 属性值
      */
     public static String getAnnotationValue(PsiAnnotation annotation, String attributeName) {
-        if (null == annotation) {
-            return Common.BLANK_STRING;
-        }
-        PsiAnnotationMemberValue value = annotation.findAttributeValue(attributeName);
-        if (value == null) {
-            return Common.BLANK_STRING;
-        }
         //TODO 获取实际值
-        String attributeValue = value.getText();
+        String attributeValue = Optional.ofNullable(annotation)
+                .map(t -> t.findAttributeValue(attributeName))
+                .map(PsiAnnotationMemberValue::getText)
+                .map(String::trim).orElse(Common.BLANK_STRING);
         if (attributeValue.startsWith(Common.LEFT_BRACE)) {
             attributeValue = attributeValue.substring(1, attributeValue.length() - 1);
         }
@@ -309,7 +305,6 @@ public class MyPsiUtil {
         return getSameDirectoryPath(path1, path2.getParent());
     }
 
-
     /**
      * 查找PsiClass
      *
@@ -477,8 +472,9 @@ public class MyPsiUtil {
     public static void importClass(PsiFile psiFile, String... classFullNameArr) {
         if (psiFile instanceof PsiJavaFile) {
             PsiJavaFile javaFile = (PsiJavaFile) psiFile;
+            GlobalSearchScope globalSearchScope = javaFile.getResolveScope();
             for (String classFullName : classFullNameArr) {
-                MyPsiUtil.findClassByFullName(javaFile.getResolveScope(), classFullName).ifPresent(javaFile::importClass);
+                MyPsiUtil.findClassByFullName(globalSearchScope, classFullName).ifPresent(javaFile::importClass);
             }
         }
     }
