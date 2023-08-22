@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.siyeh.ig.psiutils.CommentTracker;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,8 @@ public class ReplaceQuickFix implements LocalQuickFix {
     @Override
     public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
         CommentTracker commentTracker = new CommentTracker();
-        commentTracker.replaceAndRestoreComments(psiElement, text);
+        PsiElement newElement = commentTracker.replaceAndRestoreComments(psiElement, text);
+        CodeStyleManager.getInstance(project).reformat(newElement);
         Optional.ofNullable(runnable).ifPresent(Runnable::run);
     }
 }

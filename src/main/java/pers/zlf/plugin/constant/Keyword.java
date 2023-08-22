@@ -9,6 +9,7 @@ package pers.zlf.plugin.constant;
 public class Keyword {
     public static final String JAVA_PACKAGE = "package";
     public static final String JAVA_IMPORT = "import";
+    public static final String JAVA_RETURN = "return";
     public static final String SQL_TABLE = "table";
     public static final String SQL_COMMENT = "comment";
     public static final String SQL_CONSTRAINT = "constraint";
