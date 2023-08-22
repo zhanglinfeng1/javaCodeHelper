@@ -32,6 +32,7 @@ public class Common {
     public static final String HASH = "#";
     public static final String DOLLAR = "$";
     public static final String TOOL = "tool";
+    public static final String DOUBLE_COLON = "::";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
@@ -78,6 +79,8 @@ public class Common {
     public static final String CONSTRUCTOR_FILL_STR1 = "this.%s=%s;";
     public static final String CONSTRUCTOR_FILL_STR2 = "this.%s=%s.get%s();";
     public static final String OPTIONAL_THROW = "Optional.ofNullable(%s).orElseThrow(() -> %s);";
+    public static final String OPTIONAL_MAP_THROW = "Optional.ofNullable(%s).map(%s).orElseThrow(() -> %s);";
+    public static final String LAMBDA_FILL_STR = "t->";
 
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "补全构造方法";

@@ -11,8 +11,15 @@ import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
+import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiJavaToken;
+import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiMethodCallExpression;
+import com.intellij.psi.PsiNewExpression;
+import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
@@ -27,6 +34,8 @@ import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -41,8 +50,10 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             @Override
             public void visitIfStatement(PsiIfStatement statement) {
                 PsiExpression condition = statement.getCondition();
+                PsiStatement thenStatement = statement.getThenBranch();
                 //二元表达式，单个if，无else分支
-                boolean simpleIfStatement = condition instanceof PsiBinaryExpression && statement.getParent() instanceof PsiCodeBlock && statement.getElseBranch() == null;
+                boolean simpleIfStatement = condition instanceof PsiBinaryExpression && statement.getParent() instanceof PsiCodeBlock
+                        && statement.getElseBranch() == null && thenStatement instanceof PsiBlockStatement;
                 if (!simpleIfStatement) {
                     return;
                 }
@@ -55,33 +66,23 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 if (StringUtil.isEmpty(variableName)) {
                     return;
                 }
-                PsiStatement thenStatement = statement.getThenBranch();
-                if (!(thenStatement instanceof PsiBlockStatement)) {
-                    return;
-                }
                 //获取处理代码块，且只有一个表达式
-                PsiCodeBlock psiThenBlock = ((PsiBlockStatement) thenStatement).getCodeBlock();
-                PsiStatement[] statements = psiThenBlock.getStatements();
+                PsiStatement[] statements = ((PsiBlockStatement) thenStatement).getCodeBlock().getStatements();
                 if (statements.length != 1 || !(statements[0] instanceof PsiThrowStatement)) {
                     return;
                 }
-                String replaceText = getReplaceText((PsiThrowStatement) statements[0], variableName);
-                PsiFile psiFile = statement.getContainingFile();
-                Runnable runnable = () -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL);
+                String throwText = statements[0].getText().trim();
+                if (throwText.length() < 6) {
+                    return;
+                }
+                throwText = throwText.substring(5, throwText.length() - 1).trim();
+                ReplaceQuickFix quickFix = getQuickFix(statement, variableName, throwText);
                 PsiElement nextElement = getNextElement(statement);
                 //简化return
                 if (nextElement instanceof PsiReturnStatement) {
-                    PsiReturnStatement returnStatement = (PsiReturnStatement) nextElement;
-                    String returnValue = Optional.ofNullable(returnStatement.getReturnValue()).map(PsiExpression::getText).orElse(Common.BLANK_STRING);
-                    if (returnValue.equals(variableName)) {
-                        replaceText = Keyword.JAVA_RETURN + Common.SPACE + replaceText;
-                        runnable = () -> {
-                            returnStatement.delete();
-                            MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL);
-                        };
-                    }
+                    simplifyReturn((PsiReturnStatement) nextElement, quickFix, variableName, throwText);
                 }
-                holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, new ReplaceQuickFix(Message.OPTIONAL_THROW_FIX_NAME, statement, replaceText, runnable));
+                holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, quickFix);
             }
         };
     }
@@ -98,10 +99,12 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         return null;
     }
 
-    private String getReplaceText(PsiThrowStatement throwStatement, String variableName) {
-        String throwText = throwStatement.getText().trim();
-        throwText = throwText.substring(5, throwText.length() - 1).trim();
-        return String.format(Common.OPTIONAL_THROW, variableName, throwText);
+    private ReplaceQuickFix getQuickFix(PsiIfStatement statement, String variableName, String throwText) {
+        String replaceText = String.format(Common.OPTIONAL_THROW, variableName, throwText);
+        PsiFile psiFile = statement.getContainingFile();
+        ReplaceQuickFix quickFix = new ReplaceQuickFix(Message.OPTIONAL_THROW_FIX_NAME, statement, replaceText);
+        quickFix.addFixRunnable(() -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL));
+        return quickFix;
     }
 
     private PsiElement getNextElement(PsiElement element) {
@@ -110,5 +113,44 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             return getNextElement(nextElement);
         }
         return nextElement;
+    }
+
+    private void simplifyReturn(PsiReturnStatement returnStatement, ReplaceQuickFix quickFix, String variableName, String throwText) {
+        PsiElement element = getChildrenElement(returnStatement.getChildren());
+        String elementText = Optional.ofNullable(element).map(PsiElement::getText).orElse(Common.BLANK_STRING);
+        String replaceText = Common.BLANK_STRING;
+        if (element instanceof PsiReferenceExpression || element instanceof PsiLiteralExpression) {
+            replaceText = variableName.equals(elementText) ? quickFix.getText() : String.format(Common.OPTIONAL_MAP_THROW, variableName, Common.LAMBDA_FILL_STR + elementText, throwText);
+        } else if (element instanceof PsiNewExpression) {
+            PsiNewExpression newExpression = (PsiNewExpression) element;
+            String parameterName = Optional.ofNullable(newExpression.getArgumentList())
+                    .map(PsiExpressionList::getExpressions)
+                    .filter(t -> t.length == 1)
+                    .map(t -> t[0].getText())
+                    .orElse(Common.BLANK_STRING);
+            if (parameterName.equals(variableName)) {
+                replaceText = Optional.ofNullable(newExpression.getClassReference())
+                        .map(PsiJavaCodeReferenceElement::getReferenceName)
+                        .map(t -> String.format(Common.OPTIONAL_MAP_THROW, variableName, t + Common.DOUBLE_COLON + Keyword.JAVA_NEW.toUpperCase(), throwText))
+                        .orElse(Common.BLANK_STRING);
+            }
+        } else if (element instanceof PsiMethodCallExpression) {
+            //TODO lambda简化
+        }
+        if (StringUtil.isNotEmpty(replaceText)) {
+            quickFix.setText(Keyword.JAVA_RETURN + Common.SPACE + replaceText);
+            quickFix.addFixRunnable(returnStatement::delete);
+        }
+    }
+
+    private PsiElement getChildrenElement(PsiElement[] elements) {
+        List<PsiElement> elementList = new ArrayList<>();
+        for (PsiElement element : elements) {
+            if (element instanceof PsiWhiteSpace || element instanceof PsiJavaToken) {
+                continue;
+            }
+            elementList.add(element);
+        }
+        return elementList.size() != 1 ? null : elementList.get(0);
     }
 }
