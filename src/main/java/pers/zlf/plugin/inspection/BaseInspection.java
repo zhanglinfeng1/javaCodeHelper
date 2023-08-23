@@ -65,6 +65,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         if (result == null) {
             result = Common.BLANK_STRING;
         } else {
+            quickFix.setText(Keyword.JAVA_RETURN + Common.SPACE);
             quickFix.addFixRunnable(returnStatement::delete);
         }
         return result;

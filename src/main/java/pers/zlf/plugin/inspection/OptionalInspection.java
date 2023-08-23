@@ -61,7 +61,8 @@ public class OptionalInspection extends BaseInspection {
                 if (nextElement instanceof PsiReturnStatement) {
                     mapText = simplifyReturn((PsiReturnStatement) nextElement, variableName, quickFix);
                 }
-                quickFix.setText(String.format(Common.OPTIONAL_THROW, variableName, mapText, throwText));
+                String replaceText = String.format(Common.OPTIONAL_THROW, variableName, mapText, throwText);
+                quickFix.setText(StringUtil.toString(quickFix.getText()) + replaceText);
                 holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, quickFix);
             }
         };

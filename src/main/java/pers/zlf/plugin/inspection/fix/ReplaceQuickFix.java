@@ -36,6 +36,10 @@ public class ReplaceQuickFix implements LocalQuickFix {
         this.text = text;
     }
 
+    public String getText() {
+        return text;
+    }
+
     public void addFixRunnable(Runnable runnable) {
         this.runnableList.add(runnable);
     }
