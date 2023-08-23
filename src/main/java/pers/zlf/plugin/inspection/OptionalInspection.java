@@ -1,6 +1,5 @@
 package pers.zlf.plugin.inspection;
 
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
@@ -13,11 +12,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiNewExpression;
-import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
@@ -26,22 +20,18 @@ import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
-import pers.zlf.plugin.util.MyExpressionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * @author zhanglinfeng
  * @date create in 2023/8/7 10:18
  */
-public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
+public class OptionalInspection extends BaseInspection {
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
@@ -69,11 +59,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 PsiElement nextElement = getNextElement(statement);
                 //简化return
                 if (nextElement instanceof PsiReturnStatement) {
-                    PsiReturnStatement returnStatement = (PsiReturnStatement) nextElement;
-                    mapText = simplifyReturn(returnStatement, variableName);
-                    if (StringUtil.isNotEmpty(mapText)) {
-                        quickFix.addFixRunnable(returnStatement::delete);
-                    }
+                    mapText = simplifyReturn((PsiReturnStatement) nextElement, variableName, quickFix);
                 }
                 quickFix.setText(String.format(Common.OPTIONAL_THROW, variableName, mapText, throwText));
                 holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, quickFix);
@@ -125,38 +111,4 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         }
         return nextElement;
     }
-
-    private String simplifyReturn(PsiReturnStatement returnStatement, String variableName) {
-        PsiExpression expression = returnStatement.getReturnValue();
-        String elementText = Optional.ofNullable(expression).map(PsiElement::getText).orElse(Common.BLANK_STRING);
-        //返回单个变量或常量
-        if (expression instanceof PsiReferenceExpression || expression instanceof PsiLiteralExpression) {
-            return variableName.equals(elementText) ? Common.BLANK_STRING : String.format(Common.MAP_COMMON_STR, elementText);
-        } else if (expression instanceof PsiNewExpression) {
-            //返回 new 对象
-            PsiNewExpression newExpression = (PsiNewExpression) expression;
-            String parameterName = MyExpressionUtil.getOnlyOneParameterName(newExpression.getArgumentList());
-            if (parameterName.equals(variableName)) {
-                return Optional.ofNullable(newExpression.getClassReference())
-                        .map(PsiJavaCodeReferenceElement::getReferenceName)
-                        .map(t -> String.format(Common.MAP_LAMBDA_STR, t, Keyword.JAVA_NEW.toUpperCase()))
-                        .orElse(Common.BLANK_STRING);
-            }
-        } else if (expression instanceof PsiMethodCallExpression) {
-            //调用方法
-            PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) expression;
-            String parameterName = MyExpressionUtil.getOnlyOneParameterName(methodCallExpression.getArgumentList());
-            if (parameterName.equals(variableName)) {
-                PsiReferenceExpression referenceExpression = methodCallExpression.getMethodExpression();
-                String[] expressionTextArr = referenceExpression.getQualifiedName().split(Regex.DOT);
-                if (expressionTextArr.length == 1) {
-                    return String.format(Common.MAP_LAMBDA_STR, Keyword.JAVA_THIS, expressionTextArr[0]);
-                } else if (expressionTextArr.length == 2) {
-                    return String.format(Common.MAP_LAMBDA_STR, expressionTextArr[0], expressionTextArr[1]);
-                }
-            }
-        }
-        return Common.BLANK_STRING;
-    }
-
 }
