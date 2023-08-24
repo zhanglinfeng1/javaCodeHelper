@@ -3,10 +3,13 @@ package pers.zlf.plugin.util;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.CommentFormat;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author zhanglinfeng
@@ -157,4 +160,25 @@ public class StringUtil {
     public static boolean isUppercaseLetters(char aChar) {
         return aChar >= 65 && aChar <= 90;
     }
+
+    /**
+     * 中文转unicode
+     *
+     * @param value 待处理字符串
+     * @return String
+     */
+    public static String unicodeEncode(String value) {
+        return IntStream.range(0, value.length()).map(value::charAt).mapToObj(c -> "\\u" + String.format("%04x", c)).collect(Collectors.joining());
+    }
+
+    /**
+     * unicode转中文
+     *
+     * @param value 待处理字符串
+     * @return String
+     */
+    public static String unicodeDecode(String value) {
+        return Arrays.stream(value.split("\\\\u")).filter(StringUtil::isNotEmpty).map(t -> StringUtil.toString((char) Integer.parseInt(t, 16))).collect(Collectors.joining());
+    }
+
 }

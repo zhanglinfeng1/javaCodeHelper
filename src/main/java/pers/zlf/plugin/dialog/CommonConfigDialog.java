@@ -1,12 +1,10 @@
 package pers.zlf.plugin.dialog;
 
 import com.intellij.openapi.ui.Messages;
-import com.intellij.ui.JBColor;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
-import pers.zlf.plugin.util.StringUtil;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,7 +32,6 @@ public class CommonConfigDialog extends BaseDialog {
     private JTextField maxCodeCompletionLengthTextField;
 
     public CommonConfigDialog() {
-        addFocusListener(customTemplatesPathField, Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
         downloadButton.addActionListener(e -> {
             try {
                 TemplateFactory.getInstance().download();
@@ -50,13 +47,8 @@ public class CommonConfigDialog extends BaseDialog {
         appIdTextField.setText(commonConfig.getAppId());
         securityKeyTextField.setText(commonConfig.getSecretKey());
         maxCodeCompletionLengthTextField.setText(String.valueOf(commonConfig.getMaxCodeCompletionLength()));
-        String customTemplatesPath = commonConfig.getCustomTemplatesPath();
-        if (StringUtil.isEmpty(customTemplatesPath)) {
-            customTemplatesPathField.setForeground(JBColor.GRAY);
-            customTemplatesPathField.setText(Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER);
-        } else {
-            customTemplatesPathField.setText(customTemplatesPath);
-        }
+        customTemplatesPathField.setText(commonConfig.getCustomTemplatesPath());
+
         Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
         Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(dateClassComboBox::setSelectedIndex);
         Optional.ofNullable(commonConfig.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
@@ -79,8 +71,7 @@ public class CommonConfigDialog extends BaseDialog {
     }
 
     public String getCustomTemplatesPath() {
-        String path = customTemplatesPathField.getText();
-        return Common.CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER.equals(path) ? Common.BLANK_STRING : path;
+        return customTemplatesPathField.getText();
     }
 
     public Integer getDateClassType() {

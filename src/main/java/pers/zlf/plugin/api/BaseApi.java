@@ -17,14 +17,18 @@ public abstract class BaseApi {
     protected String sourceLanguage;
     /** 译文语言 */
     protected String targetLanguage;
+    /** 英文 */
+    private final String EN = "en";
+    /** 英文 */
+    private final String ZH = "zh";
 
     public String trans(String text) throws Exception {
         this.text = text;
-        this.sourceLanguage = Common.ZH;
-        this.targetLanguage = Common.EN;
+        this.sourceLanguage = ZH;
+        this.targetLanguage = EN;
         if (StringUtil.isEnglish(this.text)) {
-            this.sourceLanguage = Common.EN;
-            this.targetLanguage = Common.ZH;
+            this.sourceLanguage = EN;
+            this.targetLanguage = ZH;
         }
         if (checkTrans()) {
             return requestTransApi();

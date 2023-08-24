@@ -110,6 +110,7 @@ public class GenerateCodeDialog extends BaseDialog {
     private void initSecondPanelButtonListener() {
         //添加
         addButton.addActionListener(e -> {
+            addMouseListener(deleteButton, IconEnum.REMOVE);
             defaultTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
             columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
@@ -157,11 +158,7 @@ public class GenerateCodeDialog extends BaseDialog {
         columnInfoList = tableInfo.getColumnList();
         columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
         addMouseListener(addButton, IconEnum.ADD);
-        if (columnTable.getRowCount() == 0) {
-            removeMouseListener(deleteButton, IconEnum.REMOVE);
-        } else {
-            addMouseListener(deleteButton, IconEnum.REMOVE);
-        }
+        removeMouseListener(deleteButton, IconEnum.REMOVE);
         defaultTableModel.getDataVector().clear();
         columnTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {

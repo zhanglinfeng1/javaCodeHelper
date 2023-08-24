@@ -12,8 +12,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.CommonEnum;
-import pers.zlf.plugin.constant.CommonEnumType;
 import pers.zlf.plugin.constant.Request;
 import pers.zlf.plugin.pojo.MappingAnnotation;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -22,6 +20,7 @@ import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,6 +37,14 @@ public abstract class BaseFastJump {
     private Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
     private final String filterFolderName;
+    /** 请求方式 */
+    private final Map<String, String> requestTypeMap = new HashMap<>() {{
+        put(Annotation.POST_MAPPING, Request.POST);
+        put(Annotation.PUT_MAPPING, Request.PUT);
+        put(Annotation.GET_MAPPING, Request.GET);
+        put(Annotation.DELETE_MAPPING, Request.DELETE);
+        put(Annotation.PATCH_MAPPING, Request.PATCH);
+    }};
 
     public BaseFastJump(String filterFolderName) {
         this.filterFolderName = filterFolderName;
@@ -141,7 +148,7 @@ public abstract class BaseFastJump {
         }
         String annotationName = psiAnnotation.getQualifiedName();
         //请求方式
-        String method = Empty.of(CommonEnum.select(CommonEnumType.REQUEST_TYPE, annotationName)).map(CommonEnum::getValue).orElse(Common.BLANK_STRING);
+        String method = Empty.of(requestTypeMap.get(annotationName)).orElse(Common.BLANK_STRING);
         if (StringUtil.isEmpty(method)) {
             method = MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD).toUpperCase();
         }

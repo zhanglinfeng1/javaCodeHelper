@@ -1,6 +1,7 @@
 package pers.zlf.plugin.window;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -16,7 +17,7 @@ import pers.zlf.plugin.dialog.GenerateCodeDialog;
 public class CodeToolWindow implements ToolWindowFactory {
 
     @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull com.intellij.openapi.wm.ToolWindow toolWindow) {
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         //常用工具窗口
         Content commonToolsContent = contentManager.getFactory().createContent(new CommonToolsDialog().getContent(), Common.COMMON_TOOLS, false);

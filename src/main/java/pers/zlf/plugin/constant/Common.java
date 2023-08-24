@@ -26,8 +26,6 @@ public class Common {
     public static final String SPACE = " ";
     public static final String DOUBLE_QUOTATION = "\"";
     public static final String PERCENT_SIGN = "%";
-    public static final String EN = "en";
-    public static final String ZH = "zh";
     public static final String WRAP = "\n";
     public static final String HASH = "#";
     public static final String DOLLAR = "$";
@@ -42,7 +40,6 @@ public class Common {
     /** 占位符 */
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\javaCodeHelperFile";
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
-    public static final String CUSTOMER_TEMPLATE_PATH_INPUT_PLACEHOLDER = "e.g. C:\\zlf\\CustomTemplate";
 
     /** 配置相关 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";
@@ -68,7 +65,6 @@ public class Common {
     public static final Integer SWAGGER_API = 0;
 
     /** 用于拼接的字符串 */
-    public static final String THIS_STR = "this.";
     public static final String GET = "get";
     public static final String SET = "set";
     public static final String EQ_STR = " = ";
@@ -77,7 +73,7 @@ public class Common {
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";
     public static final String COLLECT_SET_STR = "::new).collect(Collectors.toSet());";
-    public static final String S_STR = "s";
+    public static final String S_STR = "Arr";
     public static final String CONSTRUCTOR_FILL_STR1 = "this.%s=%s;";
     public static final String CONSTRUCTOR_FILL_STR2 = "this.%s=%s.get%s();";
     public static final String OPTIONAL_THROW = "Optional.ofNullable(%s)%s.orElseThrow(()->%s);";

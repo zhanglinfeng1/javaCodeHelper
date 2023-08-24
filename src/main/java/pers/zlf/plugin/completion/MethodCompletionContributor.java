@@ -17,6 +17,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -125,7 +126,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
 
     private void addSameType(String variableName, String typeName, String code) {
         //当前类的方法
-        findFromClass(currentMethodClass, MyPsiUtil.getMethods(currentMethodClass, currentMethod, variableName), typeName, code + Common.THIS_STR);
+        findFromClass(currentMethodClass, MyPsiUtil.getMethods(currentMethodClass, currentMethod, variableName), typeName, code + Keyword.JAVA_THIS + Common.DOT);
         //方法所在类的变量
         for (PsiField psiField : currentMethodClassFieldList) {
             if (StringUtil.isNotEmpty(variableName) && !psiField.getName().contains(variableName)) {
