@@ -1,4 +1,4 @@
-package pers.zlf.plugin.factory.database;
+package pers.zlf.plugin.dialog.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class MysqlParse extends BaseSqlParse {
 
     @Override
-    public TableInfo getTableInfo(String sqlStr) {
+    public TableInfo parseSql(String sqlStr) {
         List<String> lineList = Arrays.stream(sqlStr.split(Regex.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(Regex.SPACE).length > 1).collect(Collectors.toList());
         String[] sqlTableNameArr = lineList.get(0).split(Regex.SPACE)[2].split(Regex.DOT);
         String sqlTableName = sqlTableNameArr[sqlTableNameArr.length - 1].replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING);

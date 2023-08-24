@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.12.1</version>
+    <version>1.13.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="193.5662.53"/>
     <description><![CDATA[
@@ -15,7 +15,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[优化]优化补全</li>
+            <li>[NEW]常用工具窗口</li>
         </ul>
     ]]>
     </change-notes>
@@ -29,8 +29,8 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.FeignFastJumpProvider"/>
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.MapperFastJumpProvider"/>
         <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlFastJumpProvider"/>
-        <!-- sql to java -->
-        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.factory.SqlFactory"/>
+        <!-- 工具窗口 -->
+        <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.CodeToolWindow"/>
         <!-- 配置持久化 -->
         <applicationService serviceImplementation="pers.zlf.plugin.config.CommonConfigComponent"/>
         <applicationService serviceImplementation="pers.zlf.plugin.config.FastJumpConfigComponent"/>

@@ -38,6 +38,10 @@ sql与java的快捷跳转<br />
 目前注释判断仅支持.java、.xml文件<br />
 ![image](src/main/resources/example/codeStatistics.png)<br />
 
+## 常用工具
+1.选择文本后，右击选择“工具”![image](src/main/resources/example/rightClickTool.png)<br />
+2.打开 View > Tool Windows > JavaCodeHelp ![image](src/main/resources/example/toolWindow.png)<br />
+
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
 需要完整的建表语句加comment<br />

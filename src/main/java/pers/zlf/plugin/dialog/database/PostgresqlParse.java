@@ -1,4 +1,4 @@
-package pers.zlf.plugin.factory.database;
+package pers.zlf.plugin.dialog.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Regex;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class PostgresqlParse extends BaseSqlParse {
 
     @Override
-    public TableInfo getTableInfo(String sqlStr) {
+    public TableInfo parseSql(String sqlStr) {
         //表名
         List<String> lineList = Arrays.stream(sqlStr.split(Regex.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(Regex.SPACE).length > 1).collect(Collectors.toList());
         List<String> sqlTableNameList = Arrays.stream(lineList.get(0).split(Regex.SPACE)).map(s -> s.replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING))
@@ -26,7 +26,7 @@ public class PostgresqlParse extends BaseSqlParse {
             sqlTableName = sqlTableName.split(Regex.DOT)[1];
         }
         tableInfo = new TableInfo(sqlTableName);
-        TableInfo oracleTableInfo = new OracleParse().getTableInfo(sqlStr);
+        TableInfo oracleTableInfo = new OracleParse().parseSql(sqlStr);
         tableInfo.setTableComment(oracleTableInfo.getTableComment());
         tableInfo.setColumnList(oracleTableInfo.getColumnList());
         return tableInfo;

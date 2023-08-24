@@ -1,4 +1,4 @@
-package pers.zlf.plugin.factory.database;
+package pers.zlf.plugin.dialog.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class OracleParse extends BaseSqlParse {
 
     @Override
-    public TableInfo getTableInfo(String sqlStr) {
+    public TableInfo parseSql(String sqlStr) {
         int index = sqlStr.indexOf(Common.SEMICOLON);
         List<String> columnLineList = Arrays.stream(sqlStr.substring(0, index).split(Regex.WRAP)).filter(s -> StringUtil.isNotEmpty(s) && s.split(Regex.SPACE).length > 1).collect(Collectors.toList());
         String[] sqlTableNameArr = columnLineList.get(0).split(Regex.SPACE)[2].split(Regex.DOT);

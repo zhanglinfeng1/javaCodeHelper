@@ -49,6 +49,9 @@ public class Common {
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
     public static final String SELECT_MODULE = "选择模块";
+    public static final String GENERATE_CODE = "生成代码";
+    public static final String COMMON_TOOLS = "常用工具";
+
     /** java时间类型 */
     public static final Integer DATE_CLASS_TYPE = 0;
     /** 表头 */

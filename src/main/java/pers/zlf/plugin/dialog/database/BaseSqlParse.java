@@ -1,4 +1,4 @@
-package pers.zlf.plugin.factory.database;
+package pers.zlf.plugin.dialog.database;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -28,9 +28,9 @@ public abstract class BaseSqlParse {
      * @param sqlStr 建表语句
      * @return TableInfo
      */
-    public abstract TableInfo getTableInfo(String sqlStr);
+    public abstract TableInfo parseSql(String sqlStr);
 
-    public String toJavaType(String sqlType) {
+    protected final String toJavaType(String sqlType) {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         sqlType = sqlType.toLowerCase();
         if (sqlType.contains("int") || sqlType.contains("integer") || sqlType.contains("smallint") || sqlType.contains("serial") || sqlType.contains("smallserial")) {
