@@ -63,6 +63,7 @@ public class CommonToolsDialog extends BaseDialog {
             }
         }
         buttonList.forEach(button -> button.addActionListener(e -> {
+            //TODO 改变按钮颜色
             currentTool = StringUtil.toLowerCaseFirst(button.getText());
             paneMap.forEach((key, value) -> value.setBackground(key.startsWith(currentTool) ? JBColor.BLUE : value.getParent().getBackground()));
         }));
