@@ -6,11 +6,10 @@
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="193.5662.53"/>
     <description><![CDATA[
-        <p>For learning plug-in development。Exchange ideas 、 Feed back BUG：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
-        <p>Source code and function introduction：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a></p>
+        <p><a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
+        <p>Used for learning plugin development. Welcome to exchange ideas and provide feedback on bugs</p>
         <p>很蛋疼，官方要求必须英文开始</p>
-        <p>用于学习插件开发。交流想法、反馈BUG ：<a href="https://gitee.com/zlfzh/javaCodeHelper/issues" target="_blank">Gitee</a></p>
-        <p>源码、功能介绍：<a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a></p>
+        <p>用于学习插件开发。欢迎交流想法、反馈BUG</p>
     ]]>
     </description>
     <change-notes><![CDATA[
