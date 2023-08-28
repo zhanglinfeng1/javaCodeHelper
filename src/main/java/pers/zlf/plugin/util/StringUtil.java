@@ -178,7 +178,15 @@ public class StringUtil {
      * @return String
      */
     public static String unicodeDecode(String value) {
-        return Arrays.stream(value.split("\\\\u")).filter(StringUtil::isNotEmpty).map(t -> StringUtil.toString((char) Integer.parseInt(t, 16))).collect(Collectors.joining());
+        return Arrays.stream(value.split("\\\\u")).filter(StringUtil::isNotEmpty).filter(t -> t.length() >= 4).map(t -> {
+            String num = t.substring(0, 4);
+            String other = t.substring(4);
+            try {
+                return StringUtil.toString((char) Integer.parseInt(num, 16)) + other;
+            } catch (Exception e) {
+                return num + other;
+            }
+        }).collect(Collectors.joining());
     }
 
 }
