@@ -261,23 +261,6 @@ public class MyPsiUtil {
     }
 
     /**
-     * 获取当前模块路径
-     *
-     * @param virtualFile 模块文件
-     * @param project     项目
-     * @return 模块路径
-     */
-    public static Path getCurrentModulePath(VirtualFile virtualFile, Project project) {
-        String filePathStr = Empty.of(virtualFile).map(VirtualFile::getPath).orElse(Common.BLANK_STRING);
-        Path filePath = Paths.get(filePathStr);
-        if (StringUtil.isEmpty(filePathStr)) {
-            return filePath;
-        }
-        Path projectPath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
-        return getSameDirectoryPath(projectPath, filePath);
-    }
-
-    /**
      * 根据VirtualFile 获取所属模块的名称
      *
      * @param virtualFile virtualFile
@@ -289,20 +272,30 @@ public class MyPsiUtil {
     }
 
     /**
-     * 获取同文件夹下的路径
+     * 获取当前模块路径
      *
-     * @param path1 路径1
-     * @param path2 路径2
-     * @return Path
+     * @param virtualFile 模块文件
+     * @param project     项目
+     * @return 模块路径
      */
-    public static Path getSameDirectoryPath(Path path1, Path path2) {
-        if (path1 == null || path2 == null || path1.getParent() == null || path2.getParent() == null) {
-            return Path.of(Common.BLANK_STRING);
+    public static Path getCurrentModulePath(VirtualFile virtualFile, Project project) {
+        String filePathStr = Empty.of(virtualFile).map(VirtualFile::getPath).orElse(Common.BLANK_STRING);
+        Path filePath = Paths.get(filePathStr);
+        Path modulePath = Paths.get(Optional.ofNullable(project.getBasePath()).orElse(Common.BLANK_STRING));
+        if (StringUtil.isEmpty(filePathStr) || StringUtil.isEmpty(modulePath.toString())) {
+            return filePath;
         }
-        if (path1.getParent().equals(path2.getParent())) {
-            return path2;
+        while (!filePath.startsWith(modulePath)) {
+            modulePath = modulePath.getParent();
         }
-        return getSameDirectoryPath(path1, path2.getParent());
+        for (int i = modulePath.getNameCount(); i < filePath.getNameCount(); i++) {
+            String pathName = filePath.getName(i).toString();
+            if (Common.SRC.equals(filePath.getName(i).toString())) {
+                return modulePath;
+            }
+            modulePath = Paths.get(modulePath.toString(), pathName);
+        }
+        return modulePath;
     }
 
     /**

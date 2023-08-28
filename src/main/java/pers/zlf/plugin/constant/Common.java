@@ -95,6 +95,7 @@ public class Common {
     public static final String RESOURCES = "resources";
     public static final String DOT_GIT = ".git";
     public static final String DOT_IDEA = ".idea";
+    public static final String SRC = "src";
 
     /** git配置参数 */
     public static final String USER = "user";
