@@ -1,6 +1,7 @@
 # 功能简介
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
-最低版本193.5662.53(2019.3.1)
+最低版本193.5662.53(2019.3.1)<br />
+源码 <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a>
 
 ## 代码补全
 构造方法内，补全字段赋值<br />
