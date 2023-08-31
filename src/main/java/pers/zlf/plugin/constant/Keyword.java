@@ -12,6 +12,7 @@ public class Keyword {
     public static final String JAVA_RETURN = "return";
     public static final String JAVA_THIS = "this";
     public static final String JAVA_NEW = "new";
+    public static final String JAVA_THROW = "throw";
     public static final String SQL_TABLE = "table";
     public static final String SQL_COMMENT = "comment";
     public static final String SQL_CONSTRAINT = "constraint";

@@ -4,27 +4,33 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaTokenType;
+import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiCodeBlock;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiReturnStatement;
+import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
-import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
+import pers.zlf.plugin.pojo.psi.PsiDeclarationStatementModel;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -32,84 +38,122 @@ import java.util.function.Predicate;
  * @date create in 2023/8/7 10:18
  */
 public class OptionalInspection extends BaseInspection {
+    /** if代码块的唯一语句 */
+    private PsiStatement statement;
+    /** if判断对象 */
+    private PsiExpression judgmentObject;
+
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
-            public void visitIfStatement(PsiIfStatement statement) {
-                PsiExpression condition = statement.getCondition();
-                //二元表达式，单个if，无else分支
-                boolean simpleIfStatement = condition instanceof PsiBinaryExpression && statement.getParent() instanceof PsiCodeBlock && statement.getElseBranch() == null;
-                if (!simpleIfStatement) {
+            public void visitIfStatement(PsiIfStatement ifStatement) {
+                //校验并解析if语句
+                checkAndAnalysisIfStatement(ifStatement);
+                if (statement == null || judgmentObject == null) {
                     return;
                 }
-                //获取变量名
-                String variableName = getVariableName((PsiBinaryExpression) condition);
-                if (StringUtil.isEmpty(variableName)) {
-                    return;
+                //获取判断对象
+                String variableName = judgmentObject.getText();
+                BiFunction<String, String, String> biFunction = null;
+                BiPredicate<Boolean, String> biPredicate = (t, u) -> false;
+                String prefix = Common.BLANK_STRING;
+                //简化 throw
+                if (statement instanceof PsiThrowStatement) {
+                    biFunction = simplifyThrow((PsiThrowStatement) statement);
+                    biPredicate = (t, u) -> t;
+                } else if (statement instanceof PsiExpressionStatement) {
+                    //简化赋值
+                    biFunction = simplifyExpression((PsiExpressionStatement) statement, variableName);
+                    biPredicate = (t, u) -> t && StringUtil.isEmpty(u);
+                    prefix = variableName + Common.EQ_STR;
                 }
-                //获取抛出的异常
-                String throwText = getExceptionText(statement.getThenBranch());
-                if (StringUtil.isEmpty(throwText)) {
-                    return;
+                if (biFunction != null) {
+                    //快速解决方案
+                    ReplaceQuickFix quickFix = new ReplaceQuickFix(Message.OPTIONAL_FIX_NAME, ifStatement, Common.BLANK_STRING);
+                    PsiFile psiFile = ifStatement.getContainingFile();
+                    quickFix.addFixRunnable(() -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL));
+                    //简化return
+                    simplifyReturn(ifStatement, variableName);
+                    //简化声明
+                    PsiDeclarationStatementModel declarationModel = getDeclarationModel(judgmentObject);
+                    if (declarationModel != null) {
+                        quickFix.addFixRunnable(declaration::delete);
+                        variableName = declarationModel.getRightText();
+                        prefix = declarationModel.getLeftText() + Common.EQ_STR;
+                    }
+                    //简化return
+                    if (biPredicate.test(isSimplify, simplifyText)) {
+                        quickFix.addFixRunnable(returnStatement::delete);
+                        prefix = Keyword.JAVA_RETURN + Common.SPACE;
+                    }
+                    quickFix.setText(prefix + biFunction.apply(variableName, Empty.of(simplifyText).orElse(Common.BLANK_STRING)));
+                    holder.registerProblem(ifStatement, Message.OPTIONAL, ProblemHighlightType.WARNING, quickFix);
                 }
-                //快速解决方案
-                String mapText = Common.BLANK_STRING;
-                ReplaceQuickFix quickFix = getQuickFix(statement);
-                PsiElement nextElement = getNextElement(statement);
-                //简化return
-                if (nextElement instanceof PsiReturnStatement) {
-                    mapText = simplifyReturn((PsiReturnStatement) nextElement, variableName, quickFix);
-                }
-                String replaceText = String.format(Common.OPTIONAL_THROW, variableName, mapText, throwText);
-                quickFix.setText(StringUtil.toString(quickFix.getText()) + replaceText);
-                holder.registerProblem(statement, Message.OPTIONAL_THROW, ProblemHighlightType.WARNING, quickFix);
             }
         };
     }
 
-    private String getVariableName(PsiBinaryExpression binaryExpression) {
-        if (binaryExpression.getOperationTokenType() == JavaTokenType.EQEQ) {
-            PsiExpression leftOperand = binaryExpression.getLOperand();
-            PsiExpression rightOperand = binaryExpression.getROperand();
-            Predicate<PsiExpression> isNull = t -> (t instanceof PsiLiteralExpressionImpl && ((PsiLiteralExpressionImpl) t).getLiteralElementType() == JavaTokenType.NULL_KEYWORD);
-            if (isNull.test(leftOperand) && null != rightOperand) {
-                return rightOperand.getText();
-            } else if (isNull.test(rightOperand)) {
-                return leftOperand.getText();
-            }
+    private void checkAndAnalysisIfStatement(PsiIfStatement ifStatement) {
+        PsiExpression condition = ifStatement.getCondition();
+        //二元表达式，单个if，无else分支
+        boolean simpleIfStatement = condition instanceof PsiBinaryExpression && ifStatement.getParent() instanceof PsiCodeBlock && ifStatement.getElseBranch() == null;
+        if (!simpleIfStatement) {
+            return;
         }
-        return null;
-    }
-
-    private String getExceptionText(PsiStatement thenStatement) {
+        //获取if代码块，且只有一个表达式
+        PsiStatement thenStatement = ifStatement.getThenBranch();
         if (thenStatement instanceof PsiBlockStatement) {
             PsiBlockStatement blockStatement = (PsiBlockStatement) thenStatement;
-            //获取处理代码块，且只有一个表达式
-            PsiStatement[] statements = blockStatement.getCodeBlock().getStatements();
-            if (statements.length != 1 || !(statements[0] instanceof PsiThrowStatement)) {
+            statement = Optional.of(blockStatement.getCodeBlock().getStatements()).filter(t -> t.length == 1).map(t -> t[0]).orElse(null);
+            if (statement == null) {
+                return;
+            }
+            PsiBinaryExpression binaryExpression = (PsiBinaryExpression) condition;
+            if (binaryExpression.getOperationTokenType() == JavaTokenType.EQEQ) {
+                PsiExpression leftOperand = binaryExpression.getLOperand();
+                PsiExpression rightOperand = binaryExpression.getROperand();
+                Predicate<PsiExpression> isNull = t -> (t instanceof PsiLiteralExpressionImpl && ((PsiLiteralExpressionImpl) t).getLiteralElementType() == JavaTokenType.NULL_KEYWORD);
+                if (isNull.test(leftOperand)) {
+                    judgmentObject = rightOperand;
+                } else if (isNull.test(rightOperand)) {
+                    judgmentObject = leftOperand;
+                }
+            }
+        }
+    }
+
+    private BiFunction<String, String, String> simplifyThrow(PsiThrowStatement throwStatement) {
+        String throwText = throwStatement.getText().trim();
+        if (throwText.startsWith(Keyword.JAVA_THROW) && throwText.endsWith(Common.SEMICOLON)) {
+            throwText = throwText.substring(5, throwText.length() - 1).trim();
+            String finalThrowText = throwText;
+            return (t, u) -> String.format(Common.OPTIONAL_THROW, t, u, finalThrowText);
+        }
+        return null;
+    }
+
+    private BiFunction<String, String, String> simplifyExpression(PsiExpressionStatement expressionStatement, String variableName) {
+        PsiExpression expression = expressionStatement.getExpression();
+        if (!(expression instanceof PsiAssignmentExpression)) {
+            return null;
+        }
+        PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) expression;
+        PsiExpression leftExpression = assignmentExpression.getLExpression();
+        //赋值表达式左边为引用
+        if (leftExpression instanceof PsiReferenceExpression) {
+            PsiReferenceExpression referenceExpression = (PsiReferenceExpression) leftExpression;
+            String assignmentVariableName = referenceExpression.getReferenceName();
+            if (!variableName.equals(assignmentVariableName)) {
                 return null;
             }
-            String throwText = statements[0].getText().trim();
-            if (throwText.length() > 6) {
-                return throwText.substring(5, throwText.length() - 1).trim();
+            //赋值表达式左边为引用
+            String rightText = Empty.of(assignmentExpression.getRExpression()).map(PsiExpression::getText).orElse(null);
+            if (StringUtil.isNotEmpty(rightText)) {
+                return (t, u) -> String.format(Common.OPTIONAL_ELSE, t, u, rightText);
             }
         }
         return null;
     }
 
-    private ReplaceQuickFix getQuickFix(PsiIfStatement statement) {
-        PsiFile psiFile = statement.getContainingFile();
-        ReplaceQuickFix quickFix = new ReplaceQuickFix(Message.OPTIONAL_THROW_FIX_NAME, statement, Common.BLANK_STRING);
-        quickFix.addFixRunnable(() -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL));
-        return quickFix;
-    }
-
-    private PsiElement getNextElement(PsiElement element) {
-        PsiElement nextElement = element.getNextSibling();
-        if (nextElement instanceof PsiWhiteSpace) {
-            return getNextElement(nextElement);
-        }
-        return nextElement;
-    }
 }
