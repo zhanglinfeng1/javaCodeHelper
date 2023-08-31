@@ -44,6 +44,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      * @return String
      */
     protected final void simplifyReturn(PsiElement element, String variableName) {
+        returnStatement = null;
         PsiElement nextElement = getNextElement(element);
         //简化return
         if (nextElement instanceof PsiReturnStatement) {
@@ -62,6 +63,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      */
     protected final void simplifyIntoLambda(PsiExpression expression, String variableName) {
         isSimplify = false;
+        simplifyText = null;
         String elementText = Optional.ofNullable(expression).map(PsiElement::getText).orElse(Common.BLANK_STRING);
         if (expression instanceof PsiReferenceExpression) {
             isSimplify = true;
@@ -121,6 +123,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      * @return PsiDeclarationStatementModel
      */
     protected final PsiDeclarationStatementModel getDeclarationModel(PsiExpression variableExpression) {
+        declaration = null;
         if (!(variableExpression instanceof PsiReferenceExpression)) {
             return null;
         }
