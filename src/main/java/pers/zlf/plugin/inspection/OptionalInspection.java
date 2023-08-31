@@ -95,6 +95,8 @@ public class OptionalInspection extends BaseInspection {
     }
 
     private void checkAndAnalysisIfStatement(PsiIfStatement ifStatement) {
+        statement = null;
+        judgmentObject = null;
         PsiExpression condition = ifStatement.getCondition();
         //二元表达式，单个if，无else分支
         boolean simpleIfStatement = condition instanceof PsiBinaryExpression && ifStatement.getParent() instanceof PsiCodeBlock && ifStatement.getElseBranch() == null;
