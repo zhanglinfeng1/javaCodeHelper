@@ -1,18 +1,21 @@
 package pers.zlf.plugin.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiNewExpression;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.search.searches.ReferencesSearch;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
-import pers.zlf.plugin.pojo.SimplifyInfo;
 import pers.zlf.plugin.util.MyExpressionUtil;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -23,7 +26,22 @@ import java.util.Optional;
  * @date create in 2023/8/23 12:00
  */
 public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool {
+    /** 可以简化return */
+    protected boolean canSimplifyReturn;
+    /** return语句 */
+    protected PsiReturnStatement returnStatement;
+    /** 简化return的代码 */
+    protected String simplifyReturnText;
+    /** 调用的方法数量 */
     private int methodCallCount;
+    /** 可以简化声明  */
+    protected boolean canSimplifyDeclaration;
+    /** 声明语句  */
+    protected PsiElement declarationElement;
+    /** 声明语句的左边代码 */
+    protected String declarationLeftText;
+    /** 声明语句的右边代码 */
+    protected String declarationRightText;
 
     /**
      * 简化return
@@ -32,19 +50,15 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      * @param variableName 变量名
      * @return SimplifyInfo
      */
-    protected final SimplifyInfo simplifyReturn(PsiElement element, String variableName) {
+    protected final void simplifyReturn(PsiElement element, String variableName) {
+        canSimplifyReturn = false;
         PsiElement nextElement = getNextElement(element);
         //简化return
         if (nextElement instanceof PsiReturnStatement) {
-            PsiReturnStatement returnStatement = (PsiReturnStatement) nextElement;
+            returnStatement = (PsiReturnStatement) nextElement;
             PsiExpression expression = returnStatement.getReturnValue();
-            SimplifyInfo simplifyInfo = simplifyIntoLambda(expression, variableName);
-            if (simplifyInfo != null) {
-                simplifyInfo.setReturnStatement(returnStatement);
-            }
-            return simplifyInfo;
+            simplifyIntoLambda(expression, variableName);
         }
-        return null;
     }
 
     /**
@@ -54,8 +68,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      * @param variableName 变量名
      * @return SimplifyInfo
      */
-    protected final SimplifyInfo simplifyIntoLambda(PsiExpression expression, String variableName) {
-        SimplifyInfo simplifyInfo = new SimplifyInfo();
+    protected final void simplifyIntoLambda(PsiExpression expression, String variableName) {
         String elementText = Optional.ofNullable(expression).map(PsiElement::getText).orElse(Common.BLANK_STRING);
         String functionVariableName = Common.T;
         int count = 1;
@@ -64,21 +77,17 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
             count++;
         }
         if (expression instanceof PsiReferenceExpression) {
-            simplifyInfo.setSimplify(true);
-            simplifyInfo.setSimplifyText(variableName.equals(elementText) ? Common.BLANK_STRING : String.format(Common.MAP_COMMON_STR, functionVariableName, elementText));
-            return simplifyInfo;
+            simplifyReturnText = variableName.equals(elementText) ? Common.BLANK_STRING : String.format(Common.MAP_COMMON_STR, functionVariableName, elementText);
         } else if (expression instanceof PsiLiteralExpression) {
-            simplifyInfo.setSimplifyText(String.format(Common.MAP_COMMON_STR, functionVariableName, elementText));
+            simplifyReturnText = String.format(Common.MAP_COMMON_STR, functionVariableName, elementText);
         } else if (expression instanceof PsiNewExpression) {
-            simplifyInfo.setSimplifyText(simplifyNew((PsiNewExpression) expression, variableName));
+            simplifyReturnText = simplifyNew((PsiNewExpression) expression, variableName);
         } else if (expression instanceof PsiMethodCallExpression) {
-            simplifyInfo.setSimplifyText(simplifyMethodCall((PsiMethodCallExpression) expression, variableName));
+            simplifyReturnText = simplifyMethodCall((PsiMethodCallExpression) expression, variableName);
         }
-        if (StringUtil.isNotEmpty(simplifyInfo.getSimplifyText())) {
-            simplifyInfo.setSimplify(true);
-            return simplifyInfo;
+        if (simplifyReturnText != null) {
+            canSimplifyReturn = true;
         }
-        return null;
     }
 
     /**
@@ -175,4 +184,51 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         return nextElement;
     }
 
+
+    /**
+     * 获取对象的声明信息
+     *
+     * @param variableExpression 引用表达式
+     * @return PsiDeclarationStatementModel
+     */
+    protected final void simplifyDeclaration(PsiExpression variableExpression) {
+        canSimplifyDeclaration = false;
+        if (!(variableExpression instanceof PsiReferenceExpression)) {
+            return;
+        }
+        //判断对象
+        PsiReferenceExpression variableReference = (PsiReferenceExpression) variableExpression;
+        PsiElement variableElement = variableReference.resolve();
+        if (!(variableElement instanceof PsiLocalVariable)) {
+            return;
+        }
+        int currentOffset = variableReference.getAbsoluteRange().getEndOffset();
+        PsiLocalVariable variable = (PsiLocalVariable) variableElement;
+        //存在其他引用则返回
+        for (PsiReference reference : ReferencesSearch.search(variable).toArray(new PsiReference[0])) {
+            if (reference.getAbsoluteRange().getEndOffset() < currentOffset) {
+                return;
+            }
+        }
+        //获取声明语句
+        PsiElement declaration = variable.getParent();
+        if (declaration instanceof PsiDeclarationStatement) {
+            PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
+            String declarationText = declarationStatement.getText();
+            int index = declarationText.indexOf(Common.EQ_STR.trim());
+            if (index == -1 || index == declarationText.length()) {
+                return;
+            }
+            declarationLeftText = declarationText.substring(0, index);
+            declarationRightText = declarationText.substring(index + 1).trim();
+            if (!declarationRightText.endsWith(Common.SEMICOLON)) {
+                return;
+            }
+            declarationRightText = declarationRightText.substring(0, declarationRightText.length() - 1);
+            if (StringUtil.isNotEmpty(declarationLeftText) && StringUtil.isNotEmpty(declarationRightText)) {
+                canSimplifyDeclaration = true;
+                declarationElement = declaration;
+            }
+        }
+    }
 }
