@@ -1,6 +1,7 @@
 package pers.zlf.plugin.pojo.psi;
 
 import com.intellij.psi.PsiDeclarationStatement;
+import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -9,6 +10,8 @@ import pers.zlf.plugin.util.StringUtil;
  * @date create in 2023/8/30 17:59
  */
 public class PsiDeclarationStatementModel {
+    /** 声明语句  */
+    private PsiElement declaration;
     /** 声明语句的左边代码 */
     private String leftText;
     /** 声明语句的右边代码 */
@@ -26,6 +29,14 @@ public class PsiDeclarationStatementModel {
             return;
         }
         this.rightText = rightText.substring(0, rightText.length() - 1);
+    }
+
+    public PsiElement getDeclaration() {
+        return declaration;
+    }
+
+    public void setDeclaration(PsiElement declaration) {
+        this.declaration = declaration;
     }
 
     public String getLeftText() {
