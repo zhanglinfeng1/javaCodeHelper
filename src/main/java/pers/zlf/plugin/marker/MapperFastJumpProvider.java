@@ -49,6 +49,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         put("update", "update");
         put("edit", "update");
         put("delete", "delete");
+        put("remove", "delete");
     }};
     /** 类全名 */
     private String classFullName;
