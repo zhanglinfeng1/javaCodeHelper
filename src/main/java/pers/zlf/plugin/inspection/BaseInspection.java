@@ -212,6 +212,14 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         }
         //获取声明语句
         PsiElement declaration = variable.getParent();
+        //作用域不同
+        try {
+            if (!declaration.getParent().equals(variableExpression.getParent().getParent().getParent())) {
+                return;
+            }
+        }catch (Exception ignored){
+            return;
+        }
         if (declaration instanceof PsiDeclarationStatement) {
             PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
             String declarationText = declarationStatement.getText();
