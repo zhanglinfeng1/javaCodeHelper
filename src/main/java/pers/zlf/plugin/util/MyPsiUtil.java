@@ -386,8 +386,8 @@ public class MyPsiUtil {
         // 打开文件
         Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
         if (editor != null) {
-            // 移动到元素 TODO 有一点点误差
-            editor.getCaretModel().moveToOffset(psiElement.getTextRangeInParent().getEndOffset() + offset);
+            // 移动到元素
+            editor.getCaretModel().moveToOffset(psiElement.getTextRange().getEndOffset() + offset);
             editor.getScrollingModel().scrollToCaret(ScrollType.CENTER_DOWN);
             editor.getSelectionModel().removeSelection();
         }

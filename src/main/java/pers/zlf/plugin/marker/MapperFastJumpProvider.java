@@ -190,7 +190,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
             T newElement = function.apply(code);
             consumer.accept(newElement);
             CodeStyleManager.getInstance(project).reformat(newElement);
-            MyPsiUtil.moveToPsiElement(targetElement, targetElement instanceof XmlTag ? -code.length() : code.length());
+            MyPsiUtil.moveToPsiElement(targetElement, -newElement.getTextLength());
         });
         addLineMarkerInfo(psiMethod, handler);
     }
