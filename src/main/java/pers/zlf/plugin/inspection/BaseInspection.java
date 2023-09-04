@@ -1,6 +1,7 @@
 package pers.zlf.plugin.inspection;
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
+import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
@@ -14,6 +15,7 @@ import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.search.searches.ReferencesSearch;
+import com.intellij.psi.util.PsiTreeUtil;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.util.MyExpressionUtil;
@@ -202,24 +204,23 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         if (!(variableElement instanceof PsiLocalVariable)) {
             return;
         }
-        int currentOffset = variableReference.getAbsoluteRange().getEndOffset();
+        int currentOffset = variableReference.getTextOffset();
+        PsiCodeBlock psiCodeBlock = PsiTreeUtil.getParentOfType(variableReference, PsiCodeBlock.class);
+        int startOffset = Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextOffset).orElse(0);
+        int endOffset = startOffset + Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextLength).orElse(0);
         PsiLocalVariable variable = (PsiLocalVariable) variableElement;
-        //存在其他引用则返回
+        //存在其他引用、作用域不同 则返回
         for (PsiReference reference : ReferencesSearch.search(variable).toArray(new PsiReference[0])) {
-            if (reference.getAbsoluteRange().getEndOffset() < currentOffset) {
+            int referenceOffset = reference.getAbsoluteRange().getEndOffset();
+            if (referenceOffset < currentOffset) {
+                return;
+            }
+            if (startOffset != 0 && (referenceOffset > endOffset || referenceOffset < startOffset)) {
                 return;
             }
         }
         //获取声明语句
         PsiElement declaration = variable.getParent();
-        //作用域不同
-        try {
-            if (!declaration.getParent().equals(variableExpression.getParent().getParent().getParent())) {
-                return;
-            }
-        }catch (Exception ignored){
-            return;
-        }
         if (declaration instanceof PsiDeclarationStatement) {
             PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
             String declarationText = declarationStatement.getText();
