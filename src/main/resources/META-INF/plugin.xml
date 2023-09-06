@@ -4,7 +4,7 @@
     <name>Java Code Helper</name>
     <version>1.13.0</version>
     <vendor>zhanglinfeng</vendor>
-    <idea-version since-build="193.5662.53"/>
+    <idea-version since-build="201.7223.91"/>
     <description><![CDATA[
         <p><a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
         <p>Used for learning plugin development. Welcome to exchange ideas and provide feedback on bugs</p>
