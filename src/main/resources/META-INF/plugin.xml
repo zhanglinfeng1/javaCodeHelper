@@ -36,7 +36,7 @@
         <applicationService serviceImplementation="pers.zlf.plugin.config.FastJumpConfigComponent"/>
         <applicationService serviceImplementation="pers.zlf.plugin.config.CodeStatisticsConfigComponent"/>
         <!-- 配置面板 -->
-        <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable"/>
+        <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable" displayName="JavaCodeHelp"/>
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable"/>
         <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable"/>
         <!-- 代码补全 -->
