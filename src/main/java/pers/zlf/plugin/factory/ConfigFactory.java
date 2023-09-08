@@ -42,14 +42,6 @@ public class ConfigFactory {
         this.commonConfig = commonConfig;
     }
 
-    public static ConfigFactory getConfigFactory() {
-        return configFactory;
-    }
-
-    public static void setConfigFactory(ConfigFactory configFactory) {
-        ConfigFactory.configFactory = configFactory;
-    }
-
     public FastJumpConfig getFastJumpConfig() {
         return fastJumpConfig;
     }

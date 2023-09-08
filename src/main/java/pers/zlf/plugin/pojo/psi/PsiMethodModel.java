@@ -2,9 +2,7 @@ package pers.zlf.plugin.pojo.psi;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
-import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.util.MyPsiUtil;
-import pers.zlf.plugin.util.StringUtil;
 
 import java.util.List;
 import java.util.Optional;

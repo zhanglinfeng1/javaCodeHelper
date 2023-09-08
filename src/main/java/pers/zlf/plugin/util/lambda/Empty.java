@@ -3,6 +3,7 @@ package pers.zlf.plugin.util.lambda;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -36,22 +37,15 @@ public final class Empty<T> {
     }
 
     public void ifPresent(Consumer<? super T> action) {
-        if (value != null) {
-            action.accept(value);
-        }
+        Optional.ofNullable(value).ifPresent(action);
     }
 
     public void ifPresent(Runnable runnable) {
-        if (value != null) {
-            runnable.run();
-        }
+        Optional.ofNullable(value).ifPresent(y -> runnable.run());
     }
 
     public <X extends Throwable> T ifEmptyThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if (value == null) {
-            throw exceptionSupplier.get();
-        }
-        return value;
+        return Optional.ofNullable(value).orElseThrow(exceptionSupplier);
     }
 
     public T orElse(T other) {

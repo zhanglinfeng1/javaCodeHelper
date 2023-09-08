@@ -50,7 +50,6 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      *
      * @param element      当前元素
      * @param variableName 变量名
-     * @return SimplifyInfo
      */
     protected final void simplifyReturn(PsiElement element, String variableName) {
         canSimplifyReturn = false;
@@ -68,7 +67,6 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      *
      * @param expression   语句
      * @param variableName 变量名
-     * @return SimplifyInfo
      */
     protected final void simplifyIntoLambda(PsiExpression expression, String variableName) {
         String elementText = Optional.ofNullable(expression).map(PsiElement::getText).orElse(Common.BLANK_STRING);
@@ -171,7 +169,6 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         return null;
     }
 
-
     /**
      * 获取下一个元素，除空格
      *
@@ -186,12 +183,10 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
         return nextElement;
     }
 
-
     /**
      * 获取对象的声明信息
      *
      * @param variableExpression 引用表达式
-     * @return PsiDeclarationStatementModel
      */
     protected final void simplifyDeclaration(PsiExpression variableExpression) {
         canSimplifyDeclaration = false;
@@ -225,7 +220,7 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
             PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
             String declarationText = declarationStatement.getText();
             int index = declarationText.indexOf(Common.EQ_STR.trim());
-            if (index == -1 || index == declarationText.length()) {
+            if (index == -1) {
                 return;
             }
             declarationLeftText = declarationText.substring(0, index);

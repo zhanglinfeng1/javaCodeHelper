@@ -12,9 +12,9 @@ public enum IconEnum {
     //编辑按钮图标
     EDIT(Icon.EDIT, Icon.EDIT_DARK);
 
-    private javax.swing.Icon brightIcon;
+    private final javax.swing.Icon brightIcon;
 
-    private javax.swing.Icon darkIcon;
+    private final javax.swing.Icon darkIcon;
 
     IconEnum(javax.swing.Icon brightIcon, javax.swing.Icon darkIcon) {
         this.brightIcon = brightIcon;
@@ -25,15 +25,8 @@ public enum IconEnum {
         return brightIcon;
     }
 
-    public void setBrightIcon(javax.swing.Icon brightIcon) {
-        this.brightIcon = brightIcon;
-    }
-
     public javax.swing.Icon getDarkIcon() {
         return darkIcon;
     }
 
-    public void setDarkIcon(javax.swing.Icon darkIcon) {
-        this.darkIcon = darkIcon;
-    }
 }

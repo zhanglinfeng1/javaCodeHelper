@@ -27,7 +27,7 @@ public class StringUtil {
             return col.isEmpty();
         }
         String str = toString(obj);
-        return str == null || str.trim().length() == 0;
+        return str == null || str.trim().isEmpty();
     }
 
     public static boolean isNotEmpty(Object obj) {
