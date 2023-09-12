@@ -46,13 +46,20 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
     protected String declarationRightText;
 
     /**
+     * 初始化值
+     */
+    protected final void init() {
+        canSimplifyDeclaration = false;
+        canSimplifyReturn = false;
+    }
+
+    /**
      * 简化return
      *
      * @param element      当前元素
      * @param variableName 变量名
      */
     protected final void simplifyReturn(PsiElement element, String variableName) {
-        canSimplifyReturn = false;
         PsiElement nextElement = getNextElement(element);
         //简化return
         if (nextElement instanceof PsiReturnStatement) {
@@ -189,7 +196,6 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
      * @param variableExpression 引用表达式
      */
     protected final void simplifyDeclaration(PsiExpression variableExpression) {
-        canSimplifyDeclaration = false;
         if (!(variableExpression instanceof PsiReferenceExpression)) {
             return;
         }

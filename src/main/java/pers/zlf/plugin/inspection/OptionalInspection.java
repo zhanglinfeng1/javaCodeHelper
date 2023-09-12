@@ -31,7 +31,6 @@ import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -64,27 +63,21 @@ public class OptionalInspection extends BaseInspection {
                 BiFunction<String, String, String> biFunction = null;
                 //替换文本前缀
                 String replacePrefix = Common.BLANK_STRING;
-                BiPredicate<Boolean, Boolean> simplifyCheck = (t, u) -> false;
+                //简化判断对象的声明
+                simplifyDeclaration(judgmentObject);
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
                     biFunction = simplifyThrow((PsiThrowStatement) codeBlock);
-                    simplifyCheck = (t, u) -> true;
-                } else if (operationTokenType == JavaTokenType.EQEQ && codeBlock instanceof PsiExpressionStatement) {
+                    //简化return
+                    simplifyReturn(ifStatement, variableName);
+                } else if (codeBlock instanceof PsiExpressionStatement && canSimplifyDeclaration) {
                     //判断类型为 == 、赋值表达式
                     biFunction = simplifyExpression((PsiExpressionStatement) codeBlock, variableName);
                     replacePrefix = variableName + Common.EQ_STR;
-                    simplifyCheck = (t, u) -> t && u;
                 }
                 if (biFunction != null) {
                     PsiFile psiFile = ifStatement.getContainingFile();
                     quickFix.addFixRunnable(() -> MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL));
-                    //简化判断对象的声明
-                    simplifyDeclaration(judgmentObject);
-                    //简化return
-                    simplifyReturn(ifStatement, variableName);
-                    if (!simplifyCheck.test(canSimplifyDeclaration, canSimplifyReturn)) {
-                        return;
-                    }
                     //简化声明
                     if (canSimplifyDeclaration) {
                         quickFix.addFixRunnable(declarationElement::delete);
@@ -104,6 +97,7 @@ public class OptionalInspection extends BaseInspection {
     }
 
     private PsiExpression checkAndAnalysisIfStatement(PsiIfStatement ifStatement, ReplaceQuickFix quickFix) {
+        init();
         codeBlock = null;
         condition = ifStatement.getCondition();
         //二元表达式，单个if
