@@ -24,6 +24,7 @@ import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
@@ -472,4 +473,17 @@ public class MyPsiUtil {
         }
     }
 
+    /**
+     * 获取下一个非空格元素
+     *
+     * @param element 当前元素
+     * @return PsiElement
+     */
+    public static PsiElement getTheNextNonBlankElement(PsiElement element) {
+        PsiElement nextElement = element.getNextSibling();
+        if (nextElement instanceof PsiWhiteSpace) {
+            return getTheNextNonBlankElement(nextElement);
+        }
+        return nextElement;
+    }
 }
