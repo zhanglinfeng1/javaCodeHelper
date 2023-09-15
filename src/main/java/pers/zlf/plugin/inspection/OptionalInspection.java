@@ -36,6 +36,8 @@ import java.util.function.BiConsumer;
 public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     /** 代码块的唯一语句 */
     private PsiStatement codeBlock;
+    /** 判断类型 */
+    private IElementType operationTokenType;
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -58,7 +60,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
                     biConsumer.accept(simplifyThrow((PsiThrowStatement) codeBlock), ReplaceQuickFix.SIMPLIFY_THROW);
-                } else if (codeBlock instanceof PsiExpressionStatement) {
+                } else if (operationTokenType == JavaTokenType.EQEQ && codeBlock instanceof PsiExpressionStatement) {
                     //简化赋值表达式
                     biConsumer.accept(simplifyExpression((PsiExpressionStatement) codeBlock, variableName), ReplaceQuickFix.SIMPLIFY_EXPRESSION);
                 }
@@ -74,7 +76,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             return null;
         }
         PsiBinaryExpression binaryExpression = (PsiBinaryExpression) condition;
-        IElementType operationTokenType = binaryExpression.getOperationTokenType();
+        operationTokenType = binaryExpression.getOperationTokenType();
         PsiStatement elseStatement = ifStatement.getElseBranch();
         PsiStatement codeStatement;
         // 判断类型为 == 且 无else分支
