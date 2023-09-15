@@ -1,5 +1,7 @@
 package pers.zlf.plugin.pojo;
 
+import com.intellij.psi.PsiElement;
+
 /**
  * @author zhanglinfeng
  * @date create in 2023/9/15 14:51
@@ -11,6 +13,8 @@ public class SimplifyInfo {
     private String declarationLeftText;
     /** 声明右边文本 */
     private String declarationRightText;
+    /** 赋值语句 */
+    private PsiElement assignmentElement;
     /** 可以简化return */
     private boolean simplifyReturn;
     /** return简化文本 */
@@ -54,5 +58,13 @@ public class SimplifyInfo {
 
     public void setSimplifyReturnText(String simplifyReturnText) {
         this.simplifyReturnText = simplifyReturnText;
+    }
+
+    public PsiElement getAssignmentElement() {
+        return assignmentElement;
+    }
+
+    public void setAssignmentElement(PsiElement assignmentElement) {
+        this.assignmentElement = assignmentElement;
     }
 }

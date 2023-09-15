@@ -9,7 +9,6 @@ import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiStatement;
@@ -85,8 +84,7 @@ public class ReplaceQuickFix implements LocalQuickFix {
         if (simplifyInfo.isSimplifyDeclaration()) {
             text = simplifyInfo.getDeclarationLeftText() + Common.EQ_STR;
             variableName = simplifyInfo.getDeclarationRightText();
-            PsiLocalVariable variable = (PsiLocalVariable) variableReference.resolve();
-            runnableList.add(variable.getParent()::delete);
+            runnableList.add(simplifyInfo.getAssignmentElement()::delete);
         }
         //简化return
         SimplifyInfo simplifyReturnInfo = simplifyReturn(operationTokenType, nextElement);

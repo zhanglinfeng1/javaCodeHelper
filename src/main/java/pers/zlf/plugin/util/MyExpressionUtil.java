@@ -1,6 +1,7 @@
 package pers.zlf.plugin.util;
 
 import com.intellij.psi.JavaTokenType;
+import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiDeclarationStatement;
@@ -240,17 +241,39 @@ public class MyExpressionUtil {
         int startOffset = Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextOffset).orElse(0);
         int endOffset = startOffset + Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextLength).orElse(0);
         PsiLocalVariable variable = (PsiLocalVariable) variableElement;
-        //存在其他引用、作用域不同 则返回
+        //获取最近的赋值表达式
+        int nearestReferenceOffset = 0;
+        PsiAssignmentExpression assignmentExpression = null;
+        boolean needReturn = false;
         for (PsiReference reference : ReferencesSearch.search(variable).toArray(new PsiReference[0])) {
             int referenceOffset = reference.getAbsoluteRange().getEndOffset();
             if (referenceOffset < currentOffset) {
-                return simplifyInfo;
-            }
-            if (startOffset != 0 && (referenceOffset > endOffset || referenceOffset < startOffset)) {
-                return simplifyInfo;
+                PsiElement psiElement = reference.getElement().getParent();
+                if (startOffset != 0 && referenceOffset > startOffset && referenceOffset > nearestReferenceOffset && psiElement instanceof PsiAssignmentExpression) {
+                    nearestReferenceOffset = referenceOffset;
+                    assignmentExpression = (PsiAssignmentExpression) psiElement;
+                }
+                needReturn = true;
+            } else if (startOffset != 0 && (referenceOffset > endOffset || referenceOffset < startOffset)) {
+                needReturn = true;
             }
         }
-        //获取声明语句
+        //简化赋值表达式
+        if (assignmentExpression != null) {
+            String variableName = variableExpression.getText();
+            String assignmentVariableName = assignmentExpression.getLExpression().getText();
+            String assignmentRightText = Optional.ofNullable(assignmentExpression.getRExpression()).map(PsiElement::getText).orElse(null);
+            if (variableName != null && variableName.equals(assignmentVariableName) && StringUtil.isNotEmpty(assignmentRightText)) {
+                simplifyInfo.setSimplifyDeclaration(true);
+                simplifyInfo.setDeclarationLeftText(variableName);
+                simplifyInfo.setDeclarationRightText(assignmentRightText);
+                simplifyInfo.setAssignmentElement(assignmentExpression);
+            }
+        }
+        if (needReturn) {
+            return simplifyInfo;
+        }
+        //简化声明语句
         PsiElement declaration = variable.getParent();
         if (declaration instanceof PsiDeclarationStatement) {
             PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
@@ -269,6 +292,7 @@ public class MyExpressionUtil {
                 simplifyInfo.setSimplifyDeclaration(true);
                 simplifyInfo.setDeclarationLeftText(declarationLeftText);
                 simplifyInfo.setDeclarationRightText(declarationRightText);
+                simplifyInfo.setAssignmentElement(declaration);
             }
         }
         return simplifyInfo;
