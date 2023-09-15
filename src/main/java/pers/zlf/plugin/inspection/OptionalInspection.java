@@ -27,6 +27,7 @@ import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 /**
  * @author zhanglinfeng
@@ -49,18 +50,17 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 if (StringUtil.isEmpty(variableName)) {
                     return;
                 }
-                //替换文本后缀
-                String textSuffix = null;
+                BiConsumer<String, Integer> biConsumer = (textSuffix, simplifyType) -> {
+                    if (textSuffix != null) {
+                        holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceQuickFix(variableName, textSuffix, simplifyType));
+                    }
+                };
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
-                    textSuffix = simplifyThrow((PsiThrowStatement) codeBlock);
+                    biConsumer.accept(simplifyThrow((PsiThrowStatement) codeBlock), ReplaceQuickFix.SIMPLIFY_THROW);
                 } else if (codeBlock instanceof PsiExpressionStatement) {
                     //简化赋值表达式
-                    textSuffix = simplifyExpression((PsiExpressionStatement) codeBlock, variableName);
-                }
-                if (textSuffix != null) {
-                    ReplaceQuickFix quickFix = new ReplaceQuickFix(variableName, textSuffix, ReplaceQuickFix.SIMPLIFY_THROW);
-                    holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, quickFix);
+                    biConsumer.accept(simplifyExpression((PsiExpressionStatement) codeBlock, variableName), ReplaceQuickFix.SIMPLIFY_EXPRESSION);
                 }
             }
         };
