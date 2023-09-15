@@ -59,6 +59,8 @@ public class FastJumpConfigDialog extends BaseDialog {
         };
         moduleTable.setModel(defaultTableModel);
         moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //初始化按钮背景色
+        initButtonBackground(addModuleButton, deleteModuleButton);
 
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(Common.SELECT_MODULE)
                 .setMovable(true).setItemChosenCallback(value -> this.addCallback(List.of(value))).createPopup().showUnderneathOf(addModuleButton)));

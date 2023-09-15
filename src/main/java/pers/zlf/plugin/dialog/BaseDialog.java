@@ -87,7 +87,7 @@ public class BaseDialog {
      * @param columnNum         列序号
      * @return List<String>
      */
-    public List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
+    protected List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
         List<String> contentList = new ArrayList<>();
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             Empty.of(tableModel.getValueAt(i, columnNum)).map(StringUtil::toString).ifPresent(contentList::add);
@@ -98,8 +98,18 @@ public class BaseDialog {
     /**
      * 清空表格内容
      */
-    public void clearTableContent() {
+    protected void clearTableContent() {
         defaultTableModel.getDataVector().clear();
+    }
+
+    /**
+     * 初始化按钮背景色
+     *
+     * @param buttons 按钮
+     */
+    protected void initButtonBackground(JButton... buttons) {
+        Color color = buttons[0].getParent().getBackground();
+        Arrays.stream(buttons).forEach(t -> t.setBackground(color));
     }
 
     private void addMouseListener(JButton button) {

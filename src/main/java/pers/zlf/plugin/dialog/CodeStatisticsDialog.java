@@ -43,6 +43,8 @@ public class CodeStatisticsDialog extends BaseDialog {
         //git账号
         gitEmailTableModel = new DefaultTableModel(null, new String[]{Common.GIT_EMAIL_TABLE_HEADER});
         initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
+        //初始化按钮背景色
+        initButtonBackground(addFileTypeButton, deleteFileTypeButton, addGitEmailButton, deleteGitEmailButton);
     }
 
     public void reset() {

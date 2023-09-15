@@ -108,6 +108,8 @@ public class GenerateCodeDialog extends BaseDialog {
     }
 
     private void initSecondPanelButtonListener() {
+        //初始化按钮背景色
+        initButtonBackground(addButton, deleteButton);
         //添加
         addButton.addActionListener(e -> {
             addMouseListener(deleteButton, IconEnum.REMOVE);
