@@ -11,6 +11,7 @@ import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Optional;
@@ -20,22 +21,13 @@ import java.util.Optional;
  * @date create in 2023/8/23 12:00
  */
 public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool {
-    /** 可以简化声明  */
-    protected boolean canSimplifyDeclaration;
-    /** 声明语句  */
-    protected PsiElement declarationElement;
-    /** 声明语句的左边代码 */
-    protected String declarationLeftText;
-    /** 声明语句的右边代码 */
-    protected String declarationRightText;
-
     /**
      * 获取对象的声明信息
      *
      * @param variableExpression 引用表达式
+     * @param quickFix 快速处理
      */
-    protected final void simplifyDeclaration(PsiExpression variableExpression) {
-        canSimplifyDeclaration = false;
+    protected final void simplifyDeclaration(PsiExpression variableExpression, ReplaceQuickFix quickFix) {
         if (!(variableExpression instanceof PsiReferenceExpression)) {
             return;
         }
@@ -69,15 +61,14 @@ public abstract class BaseInspection extends AbstractBaseJavaLocalInspectionTool
             if (index == -1) {
                 return;
             }
-            declarationLeftText = declarationText.substring(0, index);
-            declarationRightText = declarationText.substring(index + 1).trim();
+            String declarationLeftText = declarationText.substring(0, index);
+            String declarationRightText = declarationText.substring(index + 1).trim();
             if (!declarationRightText.endsWith(Common.SEMICOLON)) {
                 return;
             }
             declarationRightText = declarationRightText.substring(0, declarationRightText.length() - 1);
             if (StringUtil.isNotEmpty(declarationLeftText) && StringUtil.isNotEmpty(declarationRightText)) {
-                canSimplifyDeclaration = true;
-                declarationElement = declaration;
+                quickFix.dealDeclarationInfo(declarationLeftText, declarationRightText);
             }
         }
     }

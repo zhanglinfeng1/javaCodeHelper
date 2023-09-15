@@ -32,8 +32,6 @@ import java.util.Optional;
  * @date create in 2023/8/7 10:18
  */
 public class OptionalInspection extends BaseInspection {
-    /** 判断条件 */
-    private PsiExpression condition;
     /** 代码块的唯一语句 */
     private PsiStatement codeBlock;
 
@@ -42,35 +40,30 @@ public class OptionalInspection extends BaseInspection {
         return new JavaElementVisitor() {
             @Override
             public void visitIfStatement(PsiIfStatement ifStatement) {
+                PsiExpression condition = ifStatement.getCondition();
                 //校验并解析if语句
-                PsiExpression judgmentObject = checkAndAnalysisIfStatement(ifStatement);
+                PsiExpression judgmentObject = checkAndAnalysisIfStatement(ifStatement, condition);
                 //判断的对象名
                 String variableName = Optional.ofNullable(judgmentObject).map(PsiExpression::getText).orElse(null);
                 if (StringUtil.isEmpty(variableName)) {
                     return;
                 }
                 //快速解决方案
-                ReplaceQuickFix quickFix = new ReplaceQuickFix(Message.OPTIONAL_FIX_NAME, variableName);
+                ReplaceQuickFix quickFix = new ReplaceQuickFix(variableName);
                 //替换文本后缀
                 String textSuffix = null;
                 //简化判断对象的声明
-                simplifyDeclaration(judgmentObject);
+                simplifyDeclaration(judgmentObject, quickFix);
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
                     textSuffix = simplifyThrow((PsiThrowStatement) codeBlock);
                     quickFix.setNeedSimplifyReturn(true);
-                } else if (codeBlock instanceof PsiExpressionStatement && canSimplifyDeclaration) {
+                } else if (codeBlock instanceof PsiExpressionStatement && quickFix.isDeleteDeclaration()) {
                     //判断类型为 == 、赋值表达式
                     textSuffix = simplifyExpression((PsiExpressionStatement) codeBlock, variableName);
                     quickFix.setTextPrefix(variableName + Common.EQ_STR);
                 }
                 if (textSuffix != null) {
-                    //简化声明
-                    if (canSimplifyDeclaration) {
-                        quickFix.setDeleteDeclaration(true);
-                        quickFix.setTextPrefix(declarationLeftText + Common.EQ_STR);
-                        quickFix.setVariableName(declarationRightText);
-                    }
                     quickFix.setTextSuffix(textSuffix);
                     holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, quickFix);
                 }
@@ -78,9 +71,8 @@ public class OptionalInspection extends BaseInspection {
         };
     }
 
-    private PsiExpression checkAndAnalysisIfStatement(PsiIfStatement ifStatement) {
+    private PsiExpression checkAndAnalysisIfStatement(PsiIfStatement ifStatement, PsiExpression condition) {
         codeBlock = null;
-        condition = ifStatement.getCondition();
         //二元表达式，单个if
         boolean simpleIfStatement = condition instanceof PsiBinaryExpression && ifStatement.getParent() instanceof PsiCodeBlock;
         if (!simpleIfStatement) {
