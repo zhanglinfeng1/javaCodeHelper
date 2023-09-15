@@ -11,6 +11,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.tree.IElementType;
@@ -20,6 +21,7 @@ import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.pojo.SimplifyInfo;
 import pers.zlf.plugin.util.MyExpressionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -33,44 +35,23 @@ import java.util.Optional;
  * @date create in 2023/8/18 17:49
  */
 public class ReplaceQuickFix implements LocalQuickFix {
-    /** 替换代码前缀 */
-    private String textPrefix = Common.BLANK_STRING;
+    /** 1: 简化throw  2:简化表达式 */
+    public static int SIMPLIFY_THROW = 1;
+    public static int SIMPLIFY_EXPRESSION = 2;
     /** 替换代码后缀 */
-    private String textSuffix;
+    private final String textSuffix;
     /** 判断的对象原始名 */
     private final String variableOriginalName;
     /** 判断的对象名 */
     private String variableName;
-    /** 删除声明语句 */
-    private boolean deleteDeclaration;
-    /** 需要简化return语句 */
-    private boolean needSimplifyReturn;
+    /** 简化类型 */
+    private final int simplifyType;
 
-    public ReplaceQuickFix(String variableName) {
+    public ReplaceQuickFix(String variableName, String textSuffix, int simplifyType) {
         this.variableOriginalName = variableName;
         this.variableName = variableName;
-    }
-
-    public void setTextPrefix(String textPrefix) {
-        this.textPrefix = textPrefix;
-    }
-
-    public void setTextSuffix(String textSuffix) {
         this.textSuffix = textSuffix;
-    }
-
-    public void dealDeclarationInfo(String declarationLeftText, String declarationRightText) {
-        this.deleteDeclaration = true;
-        this.textPrefix = declarationLeftText + Common.EQ_STR;
-        this.variableName = declarationRightText;
-    }
-
-    public void setNeedSimplifyReturn(boolean needSimplifyReturn) {
-        this.needSimplifyReturn = needSimplifyReturn;
-    }
-
-    public boolean isDeleteDeclaration() {
-        return deleteDeclaration;
+        this.simplifyType = simplifyType;
     }
 
     @NotNull
@@ -96,25 +77,26 @@ public class ReplaceQuickFix implements LocalQuickFix {
         addPsiElement(operationTokenType, ifStatement, nextElement);
         //执行方法
         List<Runnable> runnableList = new ArrayList<>();
-        //简化return
-        String simplifyReturnText = null;
-        if (needSimplifyReturn && operationTokenType == JavaTokenType.EQEQ) {
-            simplifyReturnText = MyExpressionUtil.simplifyReturn(nextElement, variableOriginalName);
-        }
-        //删除声明语句
-        if (deleteDeclaration) {
-            PsiReferenceExpression variableReference = (PsiReferenceExpression) MyExpressionUtil.getExpressionComparedToNull(binaryExpression);
+        //替换的代码
+        String text = simplifyType == SIMPLIFY_EXPRESSION ? variableOriginalName + Common.EQ_STR : Common.BLANK_STRING;
+        //简化声明
+        PsiReferenceExpression variableReference = (PsiReferenceExpression) MyExpressionUtil.getExpressionComparedToNull(binaryExpression);
+        SimplifyInfo simplifyInfo = MyExpressionUtil.simplifyDeclaration(variableReference);
+        if (simplifyInfo.isSimplifyDeclaration()) {
+            text = simplifyInfo.getDeclarationLeftText() + Common.EQ_STR;
+            variableName = simplifyInfo.getDeclarationRightText();
             PsiLocalVariable variable = (PsiLocalVariable) variableReference.resolve();
             runnableList.add(variable.getParent()::delete);
         }
-        //删除return语句
-        if (simplifyReturnText != null) {
-            textPrefix = Keyword.JAVA_RETURN + Common.SPACE;
+        //简化return
+        SimplifyInfo simplifyReturnInfo = simplifyReturn(operationTokenType, nextElement);
+        if (simplifyReturnInfo.isSimplifyReturn()) {
+            text = Keyword.JAVA_RETURN + Common.SPACE + String.format(Common.OPTIONAL, variableName) + simplifyReturnInfo.getSimplifyReturnText() + textSuffix;
             runnableList.add(nextElement::delete);
+        } else {
+            text = text + String.format(Common.OPTIONAL, variableName) + textSuffix;
         }
         //替换
-        String text = String.format(Common.OPTIONAL, variableName) + Optional.ofNullable(simplifyReturnText).orElse(Common.BLANK_STRING);
-        text = textPrefix + text + textSuffix;
         PsiElement newElement = new CommentTracker().replaceAndRestoreComments(ifStatement, text);
         CodeStyleManager.getInstance(project).reformat(newElement);
         //导入java.util.Optional
@@ -140,4 +122,20 @@ public class ReplaceQuickFix implements LocalQuickFix {
         }
     }
 
+    private SimplifyInfo simplifyReturn(IElementType operationTokenType, PsiElement nextElement) {
+        SimplifyInfo simplifyInfo = new SimplifyInfo();
+        if (operationTokenType == JavaTokenType.EQEQ) {
+            if (simplifyType == SIMPLIFY_THROW) {
+                return MyExpressionUtil.simplifyReturn(nextElement, variableOriginalName);
+            } else if (simplifyType == SIMPLIFY_EXPRESSION && nextElement instanceof PsiReturnStatement) {
+                PsiReturnStatement returnStatement = (PsiReturnStatement) nextElement;
+                String elementText = Optional.ofNullable(returnStatement.getReturnValue()).map(PsiElement::getText).orElse(Common.BLANK_STRING);
+                if (variableName.equals(elementText)) {
+                    simplifyInfo.setSimplifyReturn(true);
+                    simplifyInfo.setSimplifyReturnText(Common.BLANK_STRING);
+                }
+            }
+        }
+        return simplifyInfo;
+    }
 }

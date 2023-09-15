@@ -1,5 +1,6 @@
 package pers.zlf.plugin.inspection;
 
+import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
@@ -31,7 +32,7 @@ import java.util.Optional;
  * @author zhanglinfeng
  * @date create in 2023/8/7 10:18
  */
-public class OptionalInspection extends BaseInspection {
+public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     /** 代码块的唯一语句 */
     private PsiStatement codeBlock;
 
@@ -48,23 +49,17 @@ public class OptionalInspection extends BaseInspection {
                 if (StringUtil.isEmpty(variableName)) {
                     return;
                 }
-                //快速解决方案
-                ReplaceQuickFix quickFix = new ReplaceQuickFix(variableName);
                 //替换文本后缀
                 String textSuffix = null;
-                //简化判断对象的声明
-                simplifyDeclaration(judgmentObject, quickFix);
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
                     textSuffix = simplifyThrow((PsiThrowStatement) codeBlock);
-                    quickFix.setNeedSimplifyReturn(true);
-                } else if (codeBlock instanceof PsiExpressionStatement && quickFix.isDeleteDeclaration()) {
-                    //判断类型为 == 、赋值表达式
+                } else if (codeBlock instanceof PsiExpressionStatement) {
+                    //简化赋值表达式
                     textSuffix = simplifyExpression((PsiExpressionStatement) codeBlock, variableName);
-                    quickFix.setTextPrefix(variableName + Common.EQ_STR);
                 }
                 if (textSuffix != null) {
-                    quickFix.setTextSuffix(textSuffix);
+                    ReplaceQuickFix quickFix = new ReplaceQuickFix(variableName, textSuffix, ReplaceQuickFix.SIMPLIFY_THROW);
                     holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, quickFix);
                 }
             }
