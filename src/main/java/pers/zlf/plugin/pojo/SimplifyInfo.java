@@ -1,6 +1,7 @@
 package pers.zlf.plugin.pojo;
 
 import com.intellij.psi.PsiElement;
+import pers.zlf.plugin.util.StringUtil;
 
 /**
  * @author zhanglinfeng
@@ -66,5 +67,14 @@ public class SimplifyInfo {
 
     public void setAssignmentElement(PsiElement assignmentElement) {
         this.assignmentElement = assignmentElement;
+    }
+
+    public void dealDeclarationInfo(String declarationLeftText, String declarationRightText, PsiElement assignmentElement) {
+        if (StringUtil.isNotEmpty(declarationLeftText) && StringUtil.isNotEmpty(declarationRightText)) {
+            this.simplifyDeclaration = true;
+            this.declarationLeftText = declarationLeftText;
+            this.declarationRightText = declarationRightText;
+            this.assignmentElement = assignmentElement;
+        }
     }
 }

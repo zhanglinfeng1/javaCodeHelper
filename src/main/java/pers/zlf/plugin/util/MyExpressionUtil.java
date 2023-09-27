@@ -263,11 +263,8 @@ public class MyExpressionUtil {
             String variableName = variableExpression.getText();
             String assignmentVariableName = assignmentExpression.getLExpression().getText();
             String assignmentRightText = Optional.ofNullable(assignmentExpression.getRExpression()).map(PsiElement::getText).orElse(null);
-            if (variableName != null && variableName.equals(assignmentVariableName) && StringUtil.isNotEmpty(assignmentRightText)) {
-                simplifyInfo.setSimplifyDeclaration(true);
-                simplifyInfo.setDeclarationLeftText(variableName);
-                simplifyInfo.setDeclarationRightText(assignmentRightText);
-                simplifyInfo.setAssignmentElement(assignmentExpression);
+            if (variableName != null && variableName.equals(assignmentVariableName)) {
+                simplifyInfo.dealDeclarationInfo(variableName, assignmentRightText, assignmentExpression);
             }
         }
         if (needReturn) {
@@ -288,12 +285,7 @@ public class MyExpressionUtil {
                 return simplifyInfo;
             }
             declarationRightText = declarationRightText.substring(0, declarationRightText.length() - 1);
-            if (StringUtil.isNotEmpty(declarationLeftText) && StringUtil.isNotEmpty(declarationRightText)) {
-                simplifyInfo.setSimplifyDeclaration(true);
-                simplifyInfo.setDeclarationLeftText(declarationLeftText);
-                simplifyInfo.setDeclarationRightText(declarationRightText);
-                simplifyInfo.setAssignmentElement(declaration);
-            }
+            simplifyInfo.dealDeclarationInfo(declarationLeftText, declarationRightText, declaration);
         }
         return simplifyInfo;
     }
