@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 /**
  * ${tableComment}
  *
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 public class ${tableName}{
     <#list columnList as fields>

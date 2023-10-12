@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 public interface ${tableName}Mapper {
     class ${tableName}MapperProvider {

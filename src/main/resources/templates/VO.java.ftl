@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 /**
  * ${tableComment}VO
  *
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 public class ${tableName}VO{
     <#list columnList as fields>

@@ -6,8 +6,8 @@ import ${packagePath}.${tableName}VO;
 import java.util.List;
 
 /**
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 public interface ${tableName}Service {
 

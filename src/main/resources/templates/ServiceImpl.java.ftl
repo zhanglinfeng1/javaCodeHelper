@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 @Service
 public class ${tableName}ServiceImpl implements ${tableName}Service {

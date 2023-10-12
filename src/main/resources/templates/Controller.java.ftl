@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @Author: ${author}
- * @Date: ${dateTime}
+ * @author ${author}
+ * @date ${dateTime}
  */
 @RestController
 public class ${tableName}Controller {
