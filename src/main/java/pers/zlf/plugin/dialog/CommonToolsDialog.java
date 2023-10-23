@@ -1,5 +1,6 @@
 package pers.zlf.plugin.dialog;
 
+import pers.zlf.plugin.dialog.tool.AsciiDialog;
 import pers.zlf.plugin.dialog.tool.UnicodeDialog;
 import pers.zlf.plugin.dialog.tool.UrlEncodeDialog;
 
@@ -18,6 +19,7 @@ public class CommonToolsDialog {
         //TODO 更改选中标签的颜色
         tabbedPane.add("Unicode", new UnicodeDialog().getContent());
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
+        tabbedPane.add("Ascii", new AsciiDialog().getContent());
     }
 
     public JPanel getContent() {
