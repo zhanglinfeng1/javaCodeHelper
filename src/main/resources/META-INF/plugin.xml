@@ -14,7 +14,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>优化</li>
+            <li>[BUG]简化判断表达式错误</li>
         </ul>
     ]]>
     </change-notes>
