@@ -16,6 +16,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiEmptyStatement;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
@@ -481,7 +482,7 @@ public class MyPsiUtil {
      */
     public static PsiElement getTheNextNonBlankElement(PsiElement element) {
         PsiElement nextElement = element.getNextSibling();
-        if (nextElement instanceof PsiWhiteSpace) {
+        if (nextElement instanceof PsiWhiteSpace || nextElement instanceof PsiEmptyStatement) {
             return getTheNextNonBlankElement(nextElement);
         }
         return nextElement;

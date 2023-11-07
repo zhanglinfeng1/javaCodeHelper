@@ -260,11 +260,17 @@ public class MyExpressionUtil {
         }
         //简化赋值表达式
         if (assignmentExpression != null) {
-            String variableName = variableExpression.getText();
-            String assignmentVariableName = assignmentExpression.getLExpression().getText();
-            String assignmentRightText = Optional.ofNullable(assignmentExpression.getRExpression()).map(PsiElement::getText).orElse(null);
-            if (variableName != null && variableName.equals(assignmentVariableName)) {
-                simplifyInfo.dealDeclarationInfo(variableName, assignmentRightText, assignmentExpression);
+            //判断作用域
+            PsiCodeBlock assignmentCodeBlock = PsiTreeUtil.getParentOfType(assignmentExpression, PsiCodeBlock.class);
+            int assignmentStartOffset = Optional.ofNullable(assignmentCodeBlock).map(PsiCodeBlock::getTextOffset).orElse(0);
+            int assignmentEndOffset = startOffset + Optional.ofNullable(assignmentCodeBlock).map(PsiCodeBlock::getTextLength).orElse(0);
+            if (assignmentStartOffset <= currentOffset && assignmentEndOffset >= currentOffset) {
+                String variableName = variableExpression.getText();
+                String assignmentVariableName = assignmentExpression.getLExpression().getText();
+                String assignmentRightText = Optional.ofNullable(assignmentExpression.getRExpression()).map(PsiElement::getText).orElse(null);
+                if (variableName != null && variableName.equals(assignmentVariableName)) {
+                    simplifyInfo.dealDeclarationInfo(variableName, assignmentRightText, assignmentExpression);
+                }
             }
         }
         if (needReturn) {
