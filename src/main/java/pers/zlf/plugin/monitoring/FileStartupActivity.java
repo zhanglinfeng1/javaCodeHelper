@@ -74,7 +74,7 @@ public class FileStartupActivity implements StartupActivity {
                             }
                             if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
                                 Integer oldCount = fileLineCountMap.get(vFileEvent.getFile().getPath());
-                                if (null == oldCount) {
+                                if (null == oldCount || oldCount <= 0) {
                                     continue;
                                 }
                                 int changeCount = CodeLineCountAction.getLineCount(vFileEvent.getFile()) - oldCount;
