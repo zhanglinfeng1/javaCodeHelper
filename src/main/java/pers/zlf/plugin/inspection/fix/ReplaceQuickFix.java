@@ -35,8 +35,8 @@ import java.util.Optional;
  */
 public class ReplaceQuickFix implements LocalQuickFix {
     /** 1: 简化throw  2:简化表达式 */
-    public static int SIMPLIFY_THROW = 1;
-    public static int SIMPLIFY_EXPRESSION = 2;
+    public static final int SIMPLIFY_THROW = 1;
+    public static final int SIMPLIFY_EXPRESSION = 2;
     /** 替换代码后缀 */
     private final String textSuffix;
     /** 判断的对象原始名 */

@@ -47,7 +47,7 @@ public class BaiDuTransResult extends ResponseResult {
         return Optional.ofNullable(this.transResult).map(t -> t.stream().map(Detail::getDst).collect(Collectors.joining(Common.SEMICOLON))).orElse(null);
     }
 
-    private static class Detail {
+    public static class Detail {
         private String dst;
 
         public String getDst() {
