@@ -33,7 +33,7 @@ import java.util.Optional;
  * @author zhanglinfeng
  * @date create in 2023/8/18 17:49
  */
-public class ReplaceQuickFix implements LocalQuickFix {
+public class ReplaceIfQuickFix implements LocalQuickFix {
     /** 1: 简化throw  2:简化表达式 */
     public static final int SIMPLIFY_THROW = 1;
     public static final int SIMPLIFY_EXPRESSION = 2;
@@ -46,7 +46,7 @@ public class ReplaceQuickFix implements LocalQuickFix {
     /** 简化类型 */
     private final int simplifyType;
 
-    public ReplaceQuickFix(String variableName, String textSuffix, int simplifyType) {
+    public ReplaceIfQuickFix(String variableName, String textSuffix, int simplifyType) {
         this.variableOriginalName = variableName;
         this.variableName = variableName;
         this.textSuffix = textSuffix;

@@ -9,10 +9,12 @@ import com.intellij.psi.PsiAssignmentExpression;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiConditionalExpression;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionStatement;
 import com.intellij.psi.PsiIfStatement;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
@@ -21,7 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.inspection.fix.ReplaceQuickFix;
+import pers.zlf.plugin.inspection.fix.ReplaceIfQuickFix;
+import pers.zlf.plugin.inspection.fix.ReplaceTernaryExpressionQuickFix;
 import pers.zlf.plugin.util.MyExpressionUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
@@ -54,15 +57,45 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 }
                 BiConsumer<String, Integer> biConsumer = (textSuffix, simplifyType) -> {
                     if (textSuffix != null) {
-                        holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceQuickFix(variableName, textSuffix, simplifyType));
+                        holder.registerProblem(condition, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceIfQuickFix(variableName, textSuffix, simplifyType));
                     }
                 };
                 //简化 throw
                 if (codeBlock instanceof PsiThrowStatement) {
-                    biConsumer.accept(simplifyThrow((PsiThrowStatement) codeBlock), ReplaceQuickFix.SIMPLIFY_THROW);
+                    biConsumer.accept(simplifyThrow((PsiThrowStatement) codeBlock), ReplaceIfQuickFix.SIMPLIFY_THROW);
                 } else if (operationTokenType == JavaTokenType.EQEQ && codeBlock instanceof PsiExpressionStatement) {
                     //简化赋值表达式
-                    biConsumer.accept(simplifyExpression((PsiExpressionStatement) codeBlock, variableName), ReplaceQuickFix.SIMPLIFY_EXPRESSION);
+                    biConsumer.accept(simplifyExpression((PsiExpressionStatement) codeBlock, variableName), ReplaceIfQuickFix.SIMPLIFY_EXPRESSION);
+                }
+            }
+
+            @Override
+            public void visitConditionalExpression(PsiConditionalExpression conditionalExpression) {
+                if (conditionalExpression.getParent() instanceof PsiLocalVariable && conditionalExpression.getCondition() instanceof PsiBinaryExpression) {
+                    PsiBinaryExpression binaryExpression = (PsiBinaryExpression) conditionalExpression.getCondition();
+                    IElementType tokenType = binaryExpression.getOperationTokenType();
+                    String nullText;
+                    String notNullText;
+                    if (tokenType == JavaTokenType.EQEQ) {
+                        notNullText = Optional.ofNullable(conditionalExpression.getThenExpression()).map(PsiExpression::getText).orElse(null);
+                        nullText = Optional.ofNullable(conditionalExpression.getElseExpression()).map(PsiExpression::getText).orElse(null);
+                    } else if (tokenType == JavaTokenType.NE) {
+                        nullText = Optional.ofNullable(conditionalExpression.getThenExpression()).map(PsiExpression::getText).orElse(null);
+                        notNullText = Optional.ofNullable(conditionalExpression.getElseExpression()).map(PsiExpression::getText).orElse(null);
+                    } else {
+                        return;
+                    }
+                    PsiExpression expression = MyExpressionUtil.getExpressionComparedToNull(binaryExpression);
+                    if (expression == null || StringUtil.isEmpty(nullText) || StringUtil.isEmpty(notNullText)) {
+                        return;
+                    }
+                    String variable = expression.getText();
+                    String replaceText = String.format(Common.OPTIONAL, variable);
+                    if (variable.equals(notNullText)) {
+                        replaceText = replaceText + String.format(Common.MAP_STR, notNullText);
+                    }
+                    replaceText = replaceText + String.format(Common.OPTIONAL_ELSE, notNullText);
+                    holder.registerProblem(conditionalExpression, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceTernaryExpressionQuickFix(replaceText));
                 }
             }
         };
@@ -125,7 +158,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 //赋值表达式右边代码
                 String rightText = Empty.of(assignmentExpression.getRExpression()).map(PsiExpression::getText).orElse(null);
                 if (StringUtil.isNotEmpty(rightText)) {
-                    return String.format(Common.OPTIONAL_ELSE, rightText);
+                    return String.format(Common.OPTIONAL_ELSE, rightText) + Common.SEMICOLON;
                 }
             }
         }

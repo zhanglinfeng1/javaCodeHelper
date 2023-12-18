@@ -79,7 +79,8 @@ public class Common {
     public static final String CONSTRUCTOR_FILL_STR2 = "this.%s=%s.get%s();";
     public static final String OPTIONAL = "Optional.ofNullable(%s)";
     public static final String OPTIONAL_THROW = ".orElseThrow(()->%s);";
-    public static final String OPTIONAL_ELSE = ".orElse(%s);";
+    public static final String OPTIONAL_ELSE = ".orElse(%s)";
+    public static final String MAP_STR = ".map(%s)";
     public static final String MAP_COMMON_STR = ".map(%s->%s)";
     public static final String MAP_LAMBDA_STR = ".map(%s::%s)";
 
