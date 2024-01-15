@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.13.5</version>
+    <version>1.13.4</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="201.7223.91"/>
     <description><![CDATA[
