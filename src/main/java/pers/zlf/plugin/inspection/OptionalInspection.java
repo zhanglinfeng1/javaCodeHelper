@@ -77,11 +77,11 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                     String nullText;
                     String notNullText;
                     if (tokenType == JavaTokenType.EQEQ) {
-                        notNullText = Optional.ofNullable(conditionalExpression.getThenExpression()).map(PsiExpression::getText).orElse(null);
-                        nullText = Optional.ofNullable(conditionalExpression.getElseExpression()).map(PsiExpression::getText).orElse(null);
-                    } else if (tokenType == JavaTokenType.NE) {
                         nullText = Optional.ofNullable(conditionalExpression.getThenExpression()).map(PsiExpression::getText).orElse(null);
                         notNullText = Optional.ofNullable(conditionalExpression.getElseExpression()).map(PsiExpression::getText).orElse(null);
+                    } else if (tokenType == JavaTokenType.NE) {
+                        notNullText = Optional.ofNullable(conditionalExpression.getThenExpression()).map(PsiExpression::getText).orElse(null);
+                        nullText = Optional.ofNullable(conditionalExpression.getElseExpression()).map(PsiExpression::getText).orElse(null);
                     } else {
                         return;
                     }
@@ -91,10 +91,10 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                     }
                     String variable = expression.getText();
                     String replaceText = String.format(Common.OPTIONAL, variable);
-                    if (variable.equals(notNullText)) {
+                    if (!variable.equals(notNullText)) {
                         replaceText = replaceText + String.format(Common.MAP_STR, notNullText);
                     }
-                    replaceText = replaceText + String.format(Common.OPTIONAL_ELSE, notNullText);
+                    replaceText = replaceText + String.format(Common.OPTIONAL_ELSE, nullText);
                     holder.registerProblem(conditionalExpression, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceTernaryExpressionQuickFix(replaceText));
                 }
             }
