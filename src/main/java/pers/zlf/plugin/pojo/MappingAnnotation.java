@@ -68,6 +68,6 @@ public class MappingAnnotation {
 
     @Override
     public String toString() {
-        return Arrays.stream(this.url.split(Common.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SLASH)) + Common.UNDERSCORE + this.method;
+        return Arrays.stream(this.url.split(Common.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SLASH)) + Common.UNDERLINE + this.method;
     }
 }

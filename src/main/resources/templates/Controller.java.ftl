@@ -53,7 +53,7 @@ public class ${tableName}Controller {
     }
 
     @GetMapping("/v1/${sqlTableName}/list")
-    public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.sqlColumnName}") String ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
+    public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.underlineUpperColumnName}") String ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageVO<${tableName}VO> pageVO = new PageVO<>();
         pageVO.setDatas(new ArrayList<>());
         int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);

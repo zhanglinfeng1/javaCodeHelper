@@ -49,25 +49,26 @@ sql与java的快捷跳转<br />
 建议使用自定义模板，生成的代码更符合自己的项目。可在配置中下载默认模板，在此基础上修改<br />
 模板变量如下<br />
 
-    ${author}                   创建者
-    ${dateTime}                 创建时间
-    ${packagePath}              包路径
-    ${sqlTableName}             sql表名
-    ${tableName}                java规范表名
-    ${firstLowerTableName}      首字母小写表名
-    ${tableComment}             表备注
+    ${author}                       创建者
+    ${dateTime}                     创建时间
+    ${packagePath}                  包路径
+    ${sqlTableName}                 sql表名
+    ${tableName}                    java规范表名
+    ${firstLowerTableName}          首字母小写表名
+    ${tableComment}                 表备注
 
-    ${columnList}               字段信息List
-        ${sqlColumnName}        sql原始字段名
-        ${columnName}           java规范字段名
-        ${firstUpperColumnName} 首字母大写的字段名
-        ${sqlColumnType}        sql字段类型
-        ${columnType}           java字段类型
-        ${columnComment}        字段备注
+    ${columnList}                   字段信息List
+        ${sqlColumnName}            sql原始字段名
+        ${columnName}               java规范字段名
+        ${firstUpperColumnName}     首字母大写的字段名
+        ${underlineUpperColumnName} 下划线格式、全小写的字段名
+        ${sqlColumnType}            sql字段类型
+        ${columnType}               java字段类型
+        ${columnComment}            字段备注
 
-    ${queryColumnList}          用于查询的字段信息List
-        ${sqlColumnName}        sql原始字段名
-        ${columnName}           别名
-        ${queryType}            查询方式
-        ${sqlColumnType}        sql字段类型
-        ${columnType}           java字段类型
+    ${queryColumnList}              用于查询的字段信息List
+        ${sqlColumnName}            sql原始字段名
+        ${columnName}               别名
+        ${queryType}                查询方式
+        ${sqlColumnType}            sql字段类型
+        ${columnType}               java字段类型

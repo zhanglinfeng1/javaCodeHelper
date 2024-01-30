@@ -22,7 +22,7 @@ public class Common {
     public static final String LEFT_PARENTHESES = "(";
     public static final String RIGHT_PARENTHESES = ")";
     public static final String LESS_THAN_SIGN = "<";
-    public static final String UNDERSCORE = "_";
+    public static final String UNDERLINE = "_";
     public static final String SPACE = " ";
     public static final String DOUBLE_QUOTATION = "\"";
     public static final String PERCENT_SIGN = "%";

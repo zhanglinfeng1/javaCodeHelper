@@ -17,6 +17,8 @@ public class ColumnInfo {
     private String columnName;
     /** 首字母大写的字段名 */
     private String firstUpperColumnName;
+    /** 下划线格式字段名 */
+    private String underlineUpperColumnName;
     /** 原始字段类型 */
     private String sqlColumnType;
     /** java类型 */
@@ -31,13 +33,15 @@ public class ColumnInfo {
 
     public ColumnInfo(String sqlColumnName) {
         this.sqlColumnName = sqlColumnName;
-        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(Common.UNDERSCORE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
-        this.columnName = (StringUtil.toLowerCaseFirst(this.firstUpperColumnName));
+        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
+        this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
+        this.underlineUpperColumnName = StringUtil.toUnderlineStyle(this.columnName);
     }
 
     public ColumnInfo(String sqlColumnName, Object columnName, Object queryType) {
         this.sqlColumnName = sqlColumnName;
         this.columnName = StringUtil.toString(columnName);
+        this.underlineUpperColumnName = StringUtil.toUnderlineStyle(this.columnName);
         this.queryType = StringUtil.toString(queryType);
     }
 
@@ -63,6 +67,14 @@ public class ColumnInfo {
 
     public void setFirstUpperColumnName(String firstUpperColumnName) {
         this.firstUpperColumnName = firstUpperColumnName;
+    }
+
+    public String getUnderlineUpperColumnName() {
+        return underlineUpperColumnName;
+    }
+
+    public void setUnderlineUpperColumnName(String underlineUpperColumnName) {
+        this.underlineUpperColumnName = underlineUpperColumnName;
     }
 
     public String getColumnType() {

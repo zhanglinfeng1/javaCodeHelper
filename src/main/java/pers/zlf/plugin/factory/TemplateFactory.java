@@ -85,6 +85,7 @@ public class TemplateFactory {
         tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         if (useDefaultTemplate) {
+            configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), Common.TEMPLATE_PATH);
             for (String templateName : Common.TEMPLATE_LIST) {
                 create(configuration.getTemplate(templateName), map);
             }
@@ -116,8 +117,8 @@ public class TemplateFactory {
      */
     private void create(Template template, Map<String, Object> map) throws Exception {
         String filePath = fullPath + tableInfo.getTableName() + template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-        try {
-            template.process(map, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath))));
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+            template.process(map, bufferedWriter);
         } catch (Exception e) {
             throw new Exception(filePath + Message.CREATE_FILE_ERROR + e.getMessage());
         }

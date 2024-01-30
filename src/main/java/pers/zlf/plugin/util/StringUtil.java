@@ -98,7 +98,7 @@ public class StringUtil {
             String charStr = String.valueOf(aChar);
             if (isNum(aChar) || isLowercaseLetters(aChar) || isUppercaseLetters(aChar)) {
                 if (upperCase) {
-                    charStr = String.valueOf(aChar).toUpperCase();
+                    charStr = charStr.toUpperCase();
                 }
                 result.append(charStr);
                 upperCase = false;
@@ -107,6 +107,26 @@ public class StringUtil {
             upperCase = true;
         }
         return str.length() == result.length() ? toLowerCaseFirst(str) : result.toString();
+    }
+
+    /**
+     * 转下划线格式
+     *
+     * @param str 待处理字符串
+     * @return String
+     */
+    public static String toUnderlineStyle(String str) {
+        StringBuilder result = new StringBuilder();
+        for (char aChar : str.toCharArray()) {
+            String charStr = String.valueOf(aChar);
+            if (isUppercaseLetters(aChar)){
+                result.append(Common.UNDERLINE).append(charStr.toLowerCase());
+            }
+            if (isNum(aChar) || isLowercaseLetters(aChar)) {
+                result.append(charStr);
+            }
+        }
+        return result.toString();
     }
 
     /**

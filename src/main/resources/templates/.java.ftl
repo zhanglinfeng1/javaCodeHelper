@@ -26,12 +26,12 @@ public class ${tableName}{
     private ${fields.columnType} ${fields.columnName};
     </#list>
 
-    public ${tableName}() {
-    }
-
-    public ${tableName}(${tableName}VO obj) {
+    public void syncField(${tableName}VO obj) {
+<#assign noSyncField = ["id", "createTime"]>
 <#list columnList as fields>
+    <#if !noSyncField?seq_contains(fields.columnName)>
         this.${fields.columnName} = obj.get${fields.firstUpperColumnName}();
+    </#if>
 </#list>
     }
 

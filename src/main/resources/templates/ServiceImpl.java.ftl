@@ -26,7 +26,8 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void insert${tableName}(${tableName}VO obj) {
         //新增${tableComment}
-        ${tableName} ${firstLowerTableName} = new ${tableName}(obj);
+        ${tableName} ${firstLowerTableName} = new ${tableName}();
+        ${firstLowerTableName}.syncField(obj);
         ${firstLowerTableName}Mapper.insert${tableName}(${firstLowerTableName});
     }
 
@@ -35,12 +36,7 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
     public void update${tableName}(${tableName}VO obj) {
         //编辑${tableComment}
         ${tableName} ${firstLowerTableName} = this.get${tableName}(obj.getId());
-<#assign noUpdate = ["id", "createTime"]>
-<#list columnList as fields>
-    <#if !noUpdate?seq_contains(fields.columnName)>
-        ${firstLowerTableName}.set${fields.firstUpperColumnName}(obj.get${fields.firstUpperColumnName}());
-    </#if>
-</#list>
+        ${firstLowerTableName}.syncField(obj);
         ${firstLowerTableName}Mapper.update${tableName}(${firstLowerTableName});
     }
 
