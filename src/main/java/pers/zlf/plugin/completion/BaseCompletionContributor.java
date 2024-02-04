@@ -9,6 +9,7 @@ import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
@@ -66,6 +67,12 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
     protected abstract void completion();
 
     protected void addCompletionResult(String completionText) {
+        if (completionText.endsWith(Common.SEMICOLON)) {
+            PsiElement next = PsiTreeUtil.nextVisibleLeaf(this.currentElement);
+            if (null != next && Common.SEMICOLON.equals(next.getText())) {
+                completionText = completionText.substring(0, completionText.length() - 1);
+            }
+        }
         addCompletionResult(completionText, completionText, null);
     }
 
