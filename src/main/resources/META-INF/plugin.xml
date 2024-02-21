@@ -14,7 +14,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>优化代码生成</li>
+            <li>优化代码生成、优化跳转图标的位置</li>
         </ul>
     ]]>
     </change-notes>

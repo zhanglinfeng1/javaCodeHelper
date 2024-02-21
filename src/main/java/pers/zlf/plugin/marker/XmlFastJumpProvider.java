@@ -42,7 +42,7 @@ public class XmlFastJumpProvider extends BaseLineMarkerProvider<XmlFile> {
             //查询insert、update、delete、select标签
             List<XmlTag> tagList = XmlUtil.findTags(mapperTag, Xml.INSERT, Xml.UPDATE, Xml.DELETE, Xml.SELECT);
             //获取标签的id属性，与方法名匹配
-            tagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(method -> addLineMarker(tag, method)));
+            tagList.forEach(tag -> Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(method -> addLineMarker(tag, method.getNameIdentifier())));
         }
     }
 }

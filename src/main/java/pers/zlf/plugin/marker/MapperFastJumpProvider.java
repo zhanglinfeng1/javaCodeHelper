@@ -101,12 +101,12 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
             Optional<PsiMethod> targetMethod = Arrays.stream(targetClass.getMethods()).filter(method -> methodValue.equals(method.getName())).findAny();
             if (targetMethod.isPresent()) {
                 //添加跳转
-                addLineMarkerBoth(targetMethod.get(), psiMethod);
+                addLineMarkerBoth(targetMethod.get().getNameIdentifier(), annotation);
             } else {
                 //生成代码
                 templateName = Common.JUMP_TO_METHOD_TEMPLATE;
                 Function<String, PsiMethod> function = code -> JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, targetClass);
-                addHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), function, targetClass::add, targetClass);
+                addHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), function, targetClass::add, annotation, targetClass);
             }
         }
     }
@@ -154,14 +154,14 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                 List<XmlTag> tagList = XmlUtil.findTags(mapperTag, Xml.INSERT, Xml.UPDATE, Xml.DELETE, Xml.SELECT);
                 for (XmlTag tag : tagList) {
                     Optional.ofNullable(tag.getAttributeValue(Xml.ID)).map(methodMap::get).ifPresent(method -> {
-                        addLineMarker(method, tag);
+                        addLineMarker(method.getNameIdentifier(), tag);
                         methodMap.remove(method.getName());
                     });
                 }
                 //处理未找到跳转的方法
                 methodMap.values().forEach(method -> {
                     Function<String, XmlTag> function = code -> XmlElementFactory.getInstance(project).createTagFromText(code);
-                    addHandler(method, method.getName(), function, element -> mapperTag.addSubTag(element, false), mapperTag);
+                    addHandler(method, method.getName(), function, element -> mapperTag.addSubTag(element, false), method.getNameIdentifier(), mapperTag);
                 });
                 return;
             }
@@ -175,9 +175,10 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
      * @param methodName    需要补全的方法名
      * @param function      添加元素
      * @param consumer      添加动作
+     * @param sourceElement 图标元素
      * @param targetElement 目标元素
      */
-    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, String methodName, Function<String, T> function, Consumer<T> consumer, PsiElement targetElement) {
+    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, String methodName, Function<String, T> function, Consumer<T> consumer, PsiElement sourceElement, PsiElement targetElement) {
         //模版数据
         PsiMethodModel methodModel = new PsiMethodModel(methodName, psiMethod.getReturnType());
         List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
@@ -192,7 +193,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
             CodeStyleManager.getInstance(project).reformat(newElement);
             MyPsiUtil.moveToPsiElement(targetElement, -newElement.getTextLength());
         });
-        addLineMarkerInfo(psiMethod, handler);
+        addLineMarkerInfo(psiMethod, sourceElement, handler);
     }
 
 }

@@ -86,12 +86,13 @@ public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescri
     /**
      * 处理图标点击事件
      *
-     * @param method  待处理元素
-     * @param handler 具体处理方法
+     * @param method        待处理元素
+     * @param sourceElement 图标元素
+     * @param handler       具体处理方法
      */
-    protected void addLineMarkerInfo(PsiMethod method, GutterIconNavigationHandler<PsiMethod> handler) {
+    protected void addLineMarkerInfo(PsiMethod method, PsiElement sourceElement, GutterIconNavigationHandler<PsiMethod> handler) {
         //TODO 兼容2020.1.4及以下版本，后续使用result.add(new RelatedItemLineMarkerInfo<>(method, method.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
-        result.add(new LineMarkerInfo<>(method, method.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER));
+        result.add(new LineMarkerInfo<>(method, sourceElement.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER));
     }
 
 }
