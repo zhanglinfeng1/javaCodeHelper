@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.13.5</version>
+    <version>1.13.6</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="201.7223.91"/>
     <description><![CDATA[
@@ -14,7 +14,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>优化代码生成、优化跳转图标的位置</li>
+            <li>新增xml中的resultMap、refid标签跳转（ctrl+鼠标左击）</li>
         </ul>
     ]]>
     </change-notes>
@@ -28,6 +28,7 @@
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.FeignFastJumpProvider"/>
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.MapperFastJumpProvider"/>
         <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlFastJumpProvider"/>
+        <psi.referenceContributor language="XML" implementation="pers.zlf.plugin.reference.XmlReferenceContributor"/>
         <!-- 工具窗口 -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.CodeToolWindow"/>
         <!-- 配置持久化 -->

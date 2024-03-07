@@ -21,5 +21,7 @@ public class Xml {
     public static final String PROPERTY = "property";
     public static final String TYPE = "type";
     public static final String ITEM = "item";
-
+    public static final String RESULT_MAP = "resultMap";
+    public static final String REFID = "refid";
+    public static final String SQL = "sql";
 }
