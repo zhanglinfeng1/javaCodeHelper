@@ -16,6 +16,7 @@ feign与controller的快捷跳转<br />
 sql与java的快捷跳转<br />
 点击![image](src/main/resources/icon/logo.svg)即可跳转<br />
 点击![image](src/main/resources/icon/logoGrey.svg)即可生成简易的sql代码<br />
+xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 
 ## 翻译
 目前仅支持中译英，英译中<br />
