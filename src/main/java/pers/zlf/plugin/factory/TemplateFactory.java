@@ -127,9 +127,10 @@ public class TemplateFactory {
     /**
      * 下载默认模版
      *
+     * @return boolean
      * @throws IOException 异常
      */
-    public void download() throws IOException {
+    public boolean download() throws IOException {
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
         if (null != virtualFile) {
             for (String templateName : Common.TEMPLATE_LIST) {
@@ -140,7 +141,9 @@ public class TemplateFactory {
                 file.flush();
                 file.close();
             }
+            return true;
         }
+        return false;
     }
 
     /**
