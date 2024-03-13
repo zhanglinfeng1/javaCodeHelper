@@ -78,7 +78,7 @@ public class GenerateCodeDialog extends BaseDialog {
         fullPathField.setText(Common.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER, true);
         addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         initFirstPanelButtonListener();
 

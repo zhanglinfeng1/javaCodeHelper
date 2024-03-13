@@ -9,6 +9,8 @@ import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
@@ -61,6 +63,17 @@ public class BaseDialog {
      * @param defaultText 默认文本
      */
     protected void addFocusListener(JTextField textField, String defaultText) {
+        addFocusListener(textField, defaultText, false);
+    }
+
+    /**
+     * JTextField 鼠标聚焦失焦监听
+     *
+     * @param textField           JTextField
+     * @param defaultText         默认文本
+     * @param addDocumentListener true:添加文本变化监听 false:不添加
+     */
+    protected void addFocusListener(JTextField textField, String defaultText, boolean addDocumentListener) {
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -78,6 +91,31 @@ public class BaseDialog {
                 }
             }
         });
+        if (addDocumentListener) {
+            Runnable runnable = () -> {
+                if (defaultText.equals(textField.getText())) {
+                    textField.setForeground(JBColor.GRAY);
+                } else {
+                    textField.setForeground(JBColor.BLACK);
+                }
+            };
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    runnable.run();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    runnable.run();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    runnable.run();
+                }
+            });
+        }
     }
 
     /**
