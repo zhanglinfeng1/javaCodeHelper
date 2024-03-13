@@ -1,10 +1,14 @@
 package pers.zlf.plugin.dialog;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.TextBrowseFolderListener;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.database.BaseSqlParse;
 import pers.zlf.plugin.dialog.database.MysqlParse;
 import pers.zlf.plugin.dialog.database.OracleParse;
@@ -45,7 +49,7 @@ public class GenerateCodeDialog extends BaseDialog {
     private JButton nextButton;
     private JTextArea textArea;
     private JTextField authorField;
-    private JTextField fullPathField;
+    private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
     private JComboBox<String> dataBaseType;
     /** 第二面板 */
@@ -68,12 +72,13 @@ public class GenerateCodeDialog extends BaseDialog {
 
     public GenerateCodeDialog() {
         //初始化第一面板
+        fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         secondPanel.setVisible(false);
-        fullPathField.setForeground(JBColor.GRAY);
+        fullPathField.getTextField().setForeground(JBColor.GRAY);
         fullPathField.setText(Common.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        addFocusListener(fullPathField, Common.FULL_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
         addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         initFirstPanelButtonListener();
 
@@ -93,9 +98,8 @@ public class GenerateCodeDialog extends BaseDialog {
         nextButton.addActionListener(e -> {
             try {
                 //解析sql
-                BaseSqlParse baseSqlParse = Optional.ofNullable(dataBaseType.getSelectedItem()).map(StringUtil::toString).map(sqlParseMap::get)
-                        .orElseThrow(() -> new Exception("Database not support"));
-                String sqlStr = Empty.of(textArea.getText()).ifEmptyThrow(() -> new Exception("Sql is not null"));
+                BaseSqlParse baseSqlParse = sqlParseMap.get(dataBaseType.getSelectedItem().toString());
+                String sqlStr = Empty.of(textArea.getText()).ifEmptyThrow(() -> new Exception(Message.SQL_NOT_NULL));
                 TableInfo tableInfo = baseSqlParse.parseSql(sqlStr);
                 tableInfo.setAuthor(authorField.getText());
                 //初始化文件路径
@@ -142,12 +146,12 @@ public class GenerateCodeDialog extends BaseDialog {
 
     private String getFullPath() throws Exception {
         return Equals.of(fullPathField.getText()).and(Common.FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
-                .ifTrueThrow(() -> new Exception("Full path is not null"));
+                .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
     }
 
     private String getPackagePathField() throws Exception {
         return Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
-                .ifTrueThrow(() -> new Exception("Package is not null"));
+                .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
     }
 
     private void showFirstPanel() {

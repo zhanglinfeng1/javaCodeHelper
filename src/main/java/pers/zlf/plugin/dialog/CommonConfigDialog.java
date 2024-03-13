@@ -1,6 +1,9 @@
 package pers.zlf.plugin.dialog;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.TextBrowseFolderListener;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
@@ -23,7 +26,7 @@ public class CommonConfigDialog extends BaseDialog {
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
     private JComboBox<String> translateApiComboBox;
-    private JTextField customTemplatesPathField;
+    private TextFieldWithBrowseButton customTemplatesPathField;
     private JButton downloadButton;
     private JComboBox<String> dateClassComboBox;
     private JComboBox<String> apiToolComboBox;
@@ -32,6 +35,8 @@ public class CommonConfigDialog extends BaseDialog {
     private JTextField maxCodeCompletionLengthTextField;
 
     public CommonConfigDialog() {
+        FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false,true,false,false,false,false);
+        customTemplatesPathField.addBrowseFolderListener(new TextBrowseFolderListener(chooserDescriptor));
         downloadButton.addActionListener(e -> {
             try {
                 boolean success = TemplateFactory.getInstance().download();

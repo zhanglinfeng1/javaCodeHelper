@@ -39,8 +39,8 @@ public class Common {
     public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
 
     /** 占位符 */
-    public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\javaCodeHelperFile";
-    public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "com.zlf.service.impl";
+    public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";
+    public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
 
     /** 配置相关 */
     public static final String JAVA_CODE_HELP = "JavaCodeHelp";

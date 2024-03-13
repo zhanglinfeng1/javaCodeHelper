@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -131,11 +132,11 @@ public class TemplateFactory {
      * @throws IOException 异常
      */
     public boolean download() throws IOException {
-        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
-        if (null != virtualFile) {
+        String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
+        if (StringUtil.isNotEmpty(path)) {
             for (String templateName : Common.TEMPLATE_LIST) {
                 Template template = configuration.getTemplate(templateName);
-                FileWriter file = new FileWriter(virtualFile.getPath() + Common.DOUBLE_BACKSLASH + template.getName(), true);
+                FileWriter file = new FileWriter(path + Common.DOUBLE_BACKSLASH + template.getName(), true);
                 //TODO 寻找替换方法
                 file.append(template.getRootTreeNode().toString());
                 file.flush();
