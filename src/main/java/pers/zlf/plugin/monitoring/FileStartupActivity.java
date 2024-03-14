@@ -32,7 +32,7 @@ public class FileStartupActivity implements StartupActivity {
     public void runActivity(@NotNull Project project) {
         CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
         List<String> fileTypeList = config.getFileTypeList();
-        //监听文件变化
+        //TODO 监听文件变化 有误差
         VirtualFileManager.getInstance().addAsyncFileListener(events -> new AsyncFileListener.ChangeApplier() {
                     private final Map<String, Integer> fileLineCountMap = new HashMap<>(2);
 

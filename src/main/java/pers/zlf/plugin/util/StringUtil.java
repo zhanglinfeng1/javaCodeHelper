@@ -81,7 +81,6 @@ public class StringUtil {
      */
     public static String getFirstMatcher(String str, String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
-        //TODO m.group(0)
         return m.find() ? m.group(1) : Common.BLANK_STRING;
     }
 

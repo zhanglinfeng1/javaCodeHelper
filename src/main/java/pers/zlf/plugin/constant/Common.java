@@ -31,6 +31,8 @@ public class Common {
     public static final String DOLLAR = "$";
     public static final String TOOL = "tool";
     public static final String T = "t";
+    public static final String CHARSET_UTF_8 = "utf-8";
+    public static final String IMAGE_JPG = "JPG";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
