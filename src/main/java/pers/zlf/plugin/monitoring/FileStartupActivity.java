@@ -8,7 +8,6 @@ import com.intellij.openapi.vfs.newvfs.events.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileCopyEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
@@ -50,7 +49,7 @@ public class FileStartupActivity implements StartupActivity {
                             if (PathUtil.contain(vFileEvent.getFile().getPath(), Common.DOT_IDEA)) {
                                 continue;
                             }
-                            if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
+                            if (vFileEvent instanceof VFileContentChangeEvent) {
                                 fileLineCountMap.put(vFileEvent.getFile().getPath(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
                             }
                         }
@@ -71,8 +70,9 @@ public class FileStartupActivity implements StartupActivity {
                             }
                             if (vFileEvent instanceof VFileDeleteEvent) {
                                 CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), -CodeLineCountAction.getLineCount(vFileEvent.getFile()));
-                            }
-                            if (vFileEvent instanceof VFileMoveEvent || vFileEvent instanceof VFileCopyEvent || vFileEvent instanceof VFileContentChangeEvent) {
+                            } else if (vFileEvent instanceof VFileCopyEvent) {
+                                CodeLinesCountDecorator.updateLineCount(project, vFileEvent.getFile(), CodeLineCountAction.getLineCount(vFileEvent.getFile()));
+                            } else if (vFileEvent instanceof VFileContentChangeEvent) {
                                 Integer oldCount = fileLineCountMap.get(vFileEvent.getFile().getPath());
                                 if (null == oldCount || oldCount <= 0) {
                                     continue;
