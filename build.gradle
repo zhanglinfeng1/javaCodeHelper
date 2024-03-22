@@ -18,10 +18,10 @@ repositories {
 
 dependencies {
     implementation 'org.freemarker:freemarker:2.3.23'
-    implementation ('org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r'){
+    implementation ('org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r'){
         exclude group:"org.slf4j"
     }
-    implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.google.zxing:javase:3.3.3'
+    implementation 'com.google.zxing:core:3.5.3'
+    implementation 'com.google.zxing:javase:3.5.3'
 
 }

@@ -19,27 +19,29 @@ import pers.zlf.plugin.util.XmlUtil;
 import java.util.Optional;
 
 /**
- * xml中的标签跳转
+ * xml中的跳转
  *
  * @author zhanglinfeng
  * @date create in 2024/3/6 17:32
  */
 public class XmlReferenceContributor extends PsiReferenceContributor {
+
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar) {
+        //resultMap、refid标签跳转
         psiReferenceRegistrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue(Xml.RESULT_MAP, Xml.REFID), new PsiReferenceProvider() {
             @Override
-            public @NotNull
-            PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+            public @NotNull PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
                 XmlAttributeValue resultMapAttributeValue = (XmlAttributeValue) element;
                 XmlTag mapperTag = XmlUtil.getRootTagByName((XmlFile) resultMapAttributeValue.getContainingFile(), Xml.MAPPER);
                 String resultMapValue = resultMapAttributeValue.getValue();
                 Optional<XmlTag> tagOptional = XmlUtil.findTags(mapperTag, Xml.RESULT_MAP, Xml.SQL).stream().filter(t -> resultMapValue.equals(t.getAttributeValue(Xml.ID))).findAny();
                 if (tagOptional.isPresent()) {
-                    return new PsiReferenceBase[]{new XmlTagPsiReference(resultMapAttributeValue, new TextRange(1, resultMapValue.length() + 1), tagOptional.get())};
+                    return new PsiReferenceBase[]{new XmlReference<>(resultMapAttributeValue, new TextRange(1, resultMapValue.length() + 1), tagOptional.get())};
                 }
                 return PsiReference.EMPTY_ARRAY;
             }
         });
+
     }
 }

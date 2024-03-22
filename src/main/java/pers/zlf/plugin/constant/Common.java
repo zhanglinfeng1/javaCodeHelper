@@ -27,7 +27,7 @@ public class Common {
     public static final String DOUBLE_QUOTATION = "\"";
     public static final String PERCENT_SIGN = "%";
     public static final String WRAP = "\n";
-    public static final String HASH = "#";
+    public static final String HASH_LEFT_BRACE = "#{";
     public static final String DOLLAR = "$";
     public static final String TOOL = "tool";
     public static final String T = "t";
