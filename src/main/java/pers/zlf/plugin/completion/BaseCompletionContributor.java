@@ -67,13 +67,17 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
     protected abstract void completion();
 
     protected void addCompletionResult(String completionText) {
+        addCompletionResult(completionText, completionText);
+    }
+
+    protected void addCompletionResult(String completionText, String presentableText) {
         if (completionText.endsWith(Common.SEMICOLON)) {
             PsiElement next = PsiTreeUtil.nextVisibleLeaf(this.currentElement);
             if (null != next && Common.SEMICOLON.equals(next.getText())) {
                 completionText = completionText.substring(0, completionText.length() - 1);
             }
         }
-        addCompletionResult(completionText, completionText, null);
+        addCompletionResult(completionText, presentableText, null);
     }
 
     protected void addCompletionResult(String completionText, String presentableText, InsertHandler<LookupElement> insertHandler) {

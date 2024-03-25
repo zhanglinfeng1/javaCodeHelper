@@ -65,7 +65,7 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         parameterMap = new HashMap<>();
         IElementType currentElementType = ((XmlToken) currentElement).getTokenType();
         int suffixIndex = currentText.lastIndexOf(Common.RIGHT_BRACE);
-        boolean completionVariable = currentText.lastIndexOf(Common.HASH_LEFT_BRACE) > suffixIndex || currentText.lastIndexOf(Common.DOLLAR + Common.LEFT_BRACE) > suffixIndex;
+        boolean completionVariable = currentText.lastIndexOf(Common.HASH_LEFT_BRACE) > suffixIndex || currentText.lastIndexOf(Common.DOLLAR_LEFT_BRACE) > suffixIndex;
         if (completionVariable && currentElementType == XmlTokenType.XML_DATA_CHARACTERS) {
             //补全变量
             completionVariable();
@@ -75,7 +75,8 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         }
         //处理foreach标签中的item
         dealForeachTag(currentTag);
-        completionTextList.forEach(this::addCompletionResult);
+        String prefixStr = (currentText.startsWith(Common.HASH_LEFT_BRACE) || currentText.startsWith(Common.DOLLAR_LEFT_BRACE)) ? Common.BLANK_STRING : currentText.substring(0, currentText.lastIndexOf(Common.HASH_LEFT_BRACE) + 2);
+        completionTextList.forEach(t -> this.addCompletionResult(prefixStr + t, t));
     }
 
     private void completionVariable() {

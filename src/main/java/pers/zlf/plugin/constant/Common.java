@@ -28,7 +28,7 @@ public class Common {
     public static final String PERCENT_SIGN = "%";
     public static final String WRAP = "\n";
     public static final String HASH_LEFT_BRACE = "#{";
-    public static final String DOLLAR = "$";
+    public static final String DOLLAR_LEFT_BRACE = "${";
     public static final String TOOL = "tool";
     public static final String T = "t";
     public static final String CHARSET_UTF_8 = "utf-8";
