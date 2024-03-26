@@ -459,6 +459,17 @@ public class MyPsiUtil {
     }
 
     /**
+     * 获取类的常规字段
+     *
+     * @param psiClass 类
+     * @return List<PsiField>
+     */
+    public static List<PsiField> getTotalFieldList(PsiClass psiClass) {
+        return Arrays.stream(psiClass.getAllFields()).filter(field -> !field.hasModifierProperty(PsiModifier.STATIC) && !field.hasModifierProperty(PsiModifier.FINAL) && !field.hasModifierProperty(PsiModifier.PUBLIC))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 导入类
      *
      * @param psiFile          所在文件

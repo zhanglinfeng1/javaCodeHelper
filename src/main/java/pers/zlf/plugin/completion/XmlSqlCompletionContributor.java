@@ -64,18 +64,21 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         completionTextList = new ArrayList<>();
         parameterMap = new HashMap<>();
         IElementType currentElementType = ((XmlToken) currentElement).getTokenType();
-        int suffixIndex = currentText.lastIndexOf(Common.RIGHT_BRACE);
-        boolean completionVariable = currentText.lastIndexOf(Common.HASH_LEFT_BRACE) > suffixIndex || currentText.lastIndexOf(Common.DOLLAR_LEFT_BRACE) > suffixIndex;
+        int lastHash = currentText.lastIndexOf(Common.HASH_LEFT_BRACE);
+        int lastDollar = currentText.lastIndexOf(Common.DOLLAR_LEFT_BRACE);
+        boolean completionVariable = lastHash != -1 || lastDollar != -1;
+        boolean needAddPrefixStr = false;
         if (completionVariable && currentElementType == XmlTokenType.XML_DATA_CHARACTERS) {
             //补全变量
             completionVariable();
+            needAddPrefixStr = !(currentText.startsWith(Common.HASH_LEFT_BRACE) && !currentText.startsWith(Common.DOLLAR_LEFT_BRACE));
         } else if (currentElementType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
             //补全标签
             completionAttributeValue();
         }
         //处理foreach标签中的item
         dealForeachTag(currentTag);
-        String prefixStr = (currentText.startsWith(Common.HASH_LEFT_BRACE) || currentText.startsWith(Common.DOLLAR_LEFT_BRACE)) ? Common.BLANK_STRING : currentText.substring(0, currentText.lastIndexOf(Common.HASH_LEFT_BRACE) + 2);
+        String prefixStr = needAddPrefixStr ? currentText.substring(0, Math.max(lastHash, lastDollar) + 2) : Common.BLANK_STRING;
         completionTextList.forEach(t -> this.addCompletionResult(prefixStr + t, t));
     }
 
@@ -89,19 +92,27 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         if (null == currentMethod) {
             return;
         }
+        int parameterNum = currentMethod.getParameterList().getParameters().length;
         for (PsiParameter parameter : currentMethod.getParameterList().getParameters()) {
             PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(parameter.getAnnotations(), List.of(Annotation.IBATIS_PARAM));
-            String parameterName = null == psiAnnotation ? parameter.getName() : MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.VALUE);
-            parameterMap.put(parameterName, parameter);
-            completionTextList.add(parameterName);
-            PsiType psiType = parameter.getType();
-            if (TypeUtil.isSimpleType(psiType.getPresentableText())) {
+            if (null == psiAnnotation && parameterNum !=1){
                 continue;
             }
-            PsiClass parameterClass = PsiUtil.resolveClassInClassTypeOnly(parameter.getType());
-            if (null != parameterClass && parameterClass.getImplementsListTypes().length == 0) {
-                MyPsiUtil.getPsiFieldList(parameterClass).forEach(field -> completionTextList.add(parameterName + Common.DOT + field.getName()));
+            String prefixStr;
+            if (null == psiAnnotation){
+                prefixStr = Common.BLANK_STRING ;
+            }else {
+                String parameterName = MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.VALUE);
+                parameterMap.put(parameterName, parameter);
+                completionTextList.add(parameterName);
+                PsiType psiType = parameter.getType();
+                if (TypeUtil.isSimpleType(psiType.getPresentableText())) {
+                    continue;
+                }
+                prefixStr = parameterName + Common.DOT;
             }
+            Optional.ofNullable(PsiUtil.resolveClassInClassTypeOnly(parameter.getType())).map(MyPsiUtil::getTotalFieldList).ifPresent(fieldList ->
+                    fieldList.forEach(field -> completionTextList.add(prefixStr + field.getName())));
         }
     }
 
@@ -118,7 +129,7 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
                 return;
             }
             MyPsiUtil.findClassByFullName(currentElement.getResolveScope(), resultMapTag.getAttributeValue(Xml.TYPE))
-                    .ifPresent(psiClass -> MyPsiUtil.getPsiFieldList(psiClass).forEach(field -> completionTextList.add(field.getName())));
+                    .ifPresent(psiClass -> MyPsiUtil.getTotalFieldList(psiClass).forEach(field -> completionTextList.add(field.getName())));
         }
     }
 
