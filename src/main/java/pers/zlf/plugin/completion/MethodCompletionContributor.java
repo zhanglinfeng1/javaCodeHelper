@@ -147,7 +147,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
             }
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
             //返回类型不一致、set或get方法、静态方法调用非静态方法
-            boolean fieldStaticMethod = currentMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
+            boolean fieldStaticMethod = fieldMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
             if (setAndGetMethodList.contains(fieldMethod.getName()) || null == fieldMethodReturnType ||
                     !typeName.equals(fieldMethodReturnType.getInternalCanonicalText()) || (currentStaticMethod && !fieldStaticMethod)) {
                 continue;
