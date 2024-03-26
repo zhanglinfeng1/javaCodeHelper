@@ -9,6 +9,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiType;
@@ -139,20 +140,27 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     private void findFromClass(PsiClass psiClass, PsiMethod[] methodArr, String typeName, String code) {
         List<String> setAndGetMethodList = Stream.of(Common.SET, Common.GET).flatMap(o1 ->
                 MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).collect(Collectors.toList());
+        boolean currentStaticMethod = currentMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
         for (PsiMethod fieldMethod : methodArr) {
             if (completionLength == 0) {
                 return;
             }
             PsiType fieldMethodReturnType = fieldMethod.getReturnType();
-            //返回类型不一致、set或get方法
-            if (setAndGetMethodList.contains(fieldMethod.getName()) || null == fieldMethodReturnType || !typeName.equals(fieldMethodReturnType.getInternalCanonicalText())) {
+            //返回类型不一致、set或get方法、静态方法调用非静态方法
+            boolean fieldStaticMethod = currentMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
+            if (setAndGetMethodList.contains(fieldMethod.getName()) || null == fieldMethodReturnType ||
+                    !typeName.equals(fieldMethodReturnType.getInternalCanonicalText()) || (currentStaticMethod && !fieldStaticMethod)) {
                 continue;
             }
+            if (fieldStaticMethod){
+                code = code.replace(Keyword.JAVA_THIS + Common.DOT,Common.BLANK_STRING);
+            }
+            String finalCode = code;
             //变量所在类的方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
             Empty.of(this.getParamNameList(psiParameterArr)).map(list -> String.format(Common.END_STR, String.join(Common.COMMA + Common.SPACE, list)))
                     .ifPresent(t -> {
-                        addCompletionResult(code + fieldMethod.getName() + t);
+                        addCompletionResult(finalCode + fieldMethod.getName() + t);
                         completionLength--;
                     });
         }
