@@ -8,7 +8,8 @@ targetCompatibility = 11
 
 intellij {
     version = '2021.2.3'
-    plugins = ['java']
+    type = 'IU'
+    plugins = ['java','DatabaseTools']
     updateSinceUntilBuild = false
 }
 
