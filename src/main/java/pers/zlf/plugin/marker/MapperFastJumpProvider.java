@@ -106,7 +106,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                 //生成代码
                 templateName = Common.JUMP_TO_METHOD_TEMPLATE;
                 Function<String, PsiMethod> function = code -> JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, targetClass);
-                addHandler(psiMethod, Empty.of(methodValue).orElse(psiMethod.getName()), function, targetClass::add, annotation, targetClass);
+                addHandler(psiMethod, annotation, function, targetClass::add, annotation, targetClass);
             }
         }
     }
@@ -161,7 +161,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
                 //处理未找到跳转的方法
                 methodMap.values().forEach(method -> {
                     Function<String, XmlTag> function = code -> XmlElementFactory.getInstance(project).createTagFromText(code);
-                    addHandler(method, method.getName(), function, element -> mapperTag.addSubTag(element, false), method.getNameIdentifier(), mapperTag);
+                    addHandler(method, null, function, element -> mapperTag.addSubTag(element, false), method.getNameIdentifier(), mapperTag);
                 });
                 return;
             }
@@ -172,20 +172,21 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
      * 创建方法代码
      *
      * @param psiMethod     待补全的方法
-     * @param methodName    需要补全的方法名
+     * @param annotation    注解
      * @param function      添加元素
      * @param consumer      添加动作
      * @param sourceElement 图标元素
      * @param targetElement 目标元素
      */
-    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, String methodName, Function<String, T> function, Consumer<T> consumer, PsiElement sourceElement, PsiElement targetElement) {
-        //模版数据
-        PsiMethodModel methodModel = new PsiMethodModel(methodName, psiMethod.getReturnType());
-        List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
-        methodModel.setParameterModelList(modelList);
-        Optional<String> sqlType = sqlTypeMap.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
-        methodModel.setSqlType(sqlType.orElse(Xml.SELECT));
+    private <T extends PsiElement> void addHandler(PsiMethod psiMethod, PsiAnnotation annotation, Function<String, T> function, Consumer<T> consumer, PsiElement sourceElement, PsiElement targetElement) {
         GutterIconNavigationHandler<PsiMethod> handler = (e, elt) -> ApplicationManager.getApplication().runWriteAction(() -> {
+            //模版数据
+            String methodName = Empty.of(annotation).map(t -> MyPsiUtil.getAnnotationValue(annotation, Annotation.METHOD)).orElse(psiMethod.getName());
+            PsiMethodModel methodModel = new PsiMethodModel(methodName, psiMethod.getReturnType());
+            List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
+            methodModel.setParameterModelList(modelList);
+            Optional<String> sqlType = sqlTypeMap.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
+            methodModel.setSqlType(sqlType.orElse(Xml.SELECT));
             //生成代码
             String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));
             T newElement = function.apply(code);
