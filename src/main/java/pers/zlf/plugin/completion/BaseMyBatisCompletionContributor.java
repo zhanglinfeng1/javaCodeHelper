@@ -3,17 +3,11 @@ package pers.zlf.plugin.completion;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
-import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlToken;
-import com.intellij.psi.xml.XmlTokenType;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Xml;
@@ -21,11 +15,8 @@ import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.TypeUtil;
-import pers.zlf.plugin.util.XmlUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,54 +26,17 @@ import java.util.function.BiPredicate;
  * @author zhanglinfeng
  * @date create in 2023/8/7 15:05
  */
-public class XmlSqlCompletionContributor extends BaseCompletionContributor {
+public abstract class BaseMyBatisCompletionContributor extends BaseCompletionContributor {
     /** mapper 标签 */
-    private XmlTag mapperTag;
+    protected XmlTag mapperTag;
     /** 当前标签 */
-    private XmlTag currentTag;
+    protected XmlTag currentTag;
     /** 补全内容 */
-    private List<String> completionTextList;
+    protected List<String> completionTextList;
     /** 标签对应的方法 */
-    private Map<String, PsiParameter> parameterMap;
+    protected Map<String, PsiParameter> parameterMap;
 
-    @Override
-    protected boolean check() {
-        if (!(currentElement instanceof XmlToken)) {
-            return false;
-        }
-        PsiFile file = parameters.getOriginalFile();
-        if (file instanceof XmlFile) {
-            currentTag = PsiTreeUtil.getParentOfType(currentElement, XmlTag.class);
-            mapperTag = XmlUtil.getRootTagByName((XmlFile) file, Xml.MAPPER);
-            return null != currentTag && null != mapperTag;
-        }
-        return false;
-    }
-
-    @Override
-    protected void completion() {
-        completionTextList = new ArrayList<>();
-        parameterMap = new HashMap<>();
-        IElementType currentElementType = ((XmlToken) currentElement).getTokenType();
-        int lastHash = currentText.lastIndexOf(Common.HASH_LEFT_BRACE);
-        int lastDollar = currentText.lastIndexOf(Common.DOLLAR_LEFT_BRACE);
-        boolean completionVariable = lastHash != -1 || lastDollar != -1;
-        boolean needAddPrefixStr = false;
-        if (completionVariable && currentElementType == XmlTokenType.XML_DATA_CHARACTERS) {
-            //补全变量
-            completionVariable();
-            needAddPrefixStr = !(currentText.startsWith(Common.HASH_LEFT_BRACE) && !currentText.startsWith(Common.DOLLAR_LEFT_BRACE));
-        } else if (currentElementType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
-            //补全标签
-            completionAttributeValue();
-        }
-        //处理foreach标签中的item
-        dealForeachTag(currentTag);
-        String prefixStr = needAddPrefixStr ? currentText.substring(0, Math.max(lastHash, lastDollar) + 2) : Common.BLANK_STRING;
-        completionTextList.forEach(t -> this.addCompletionResult(prefixStr + t, t));
-    }
-
-    private void completionVariable() {
+    protected void completionVariable() {
         PsiClass psiClass = MyPsiUtil.findClassByFullName(currentElement.getResolveScope(), mapperTag.getAttributeValue(Xml.NAMESPACE)).orElse(null);
         if (null == psiClass) {
             return;
@@ -116,7 +70,7 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         }
     }
 
-    private void completionAttributeValue() {
+    protected void completionAttributeValue() {
         PsiElement attribute = currentElement.getParent().getParent();
         String tagName = currentTag.getName();
         String attributeName = attribute.getFirstChild().getText();
@@ -133,7 +87,7 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         }
     }
 
-    private void dealForeachTag(XmlTag tag) {
+    protected void dealForeachTag(XmlTag tag) {
         if (tag == null || CollectionUtil.isEmpty(completionTextList) || parameterMap.isEmpty()) {
             return;
         }
@@ -155,7 +109,7 @@ public class XmlSqlCompletionContributor extends BaseCompletionContributor {
         dealForeachTag(tag.getParentTag());
     }
 
-    private String findMethodName(XmlTag tag) {
+    protected String findMethodName(XmlTag tag) {
         if (null == tag) {
             return Common.BLANK_STRING;
         }

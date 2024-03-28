@@ -23,6 +23,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
@@ -37,14 +38,15 @@
         <applicationService serviceImplementation="pers.zlf.plugin.config.FastJumpConfigComponent"/>
         <applicationService serviceImplementation="pers.zlf.plugin.config.CodeStatisticsConfigComponent"/>
         <!-- 配置面板 -->
-        <applicationConfigurable id="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable" displayName="JavaCodeHelp"/>
-        <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable" displayName="快捷跳转"/>
-        <applicationConfigurable parentId="JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable" displayName="代码统计"/>
+        <applicationConfigurable id="pers.zlf.plugin.JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CommonConfigurable" displayName="JavaCodeHelp"/>
+        <applicationConfigurable parentId="pers.zlf.plugin.JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.FastJumpConfigurable" displayName="快捷跳转"/>
+        <applicationConfigurable parentId="pers.zlf.plugin.JavaCodeHelpConfigurable" instance="pers.zlf.plugin.config.CodeStatisticsConfigurable" displayName="代码统计"/>
         <!-- 代码补全 -->
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.ConstructorCompletionContributor"/>
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.MethodCompletionContributor"/>
         <completion.contributor language="JAVA" implementationClass="pers.zlf.plugin.completion.ParameterCompletionContributor"/>
-        <completion.contributor language="XML" implementationClass="pers.zlf.plugin.completion.XmlSqlCompletionContributor"/>
+        <completion.contributor language="XML" implementationClass="pers.zlf.plugin.completion.XmlCompletionContributorBase"/>
+        <completion.contributor language="SQL" implementationClass="pers.zlf.plugin.completion.SqlCompletionContributorBase"/>
         <!-- 更改文件夹备注 -->
         <projectViewNodeDecorator implementation="pers.zlf.plugin.node.CodeLinesCountDecorator"/>
         <!-- 代码检查 -->
@@ -57,24 +59,24 @@
 
     <actions>
         <!-- 简易工具 -->
-        <action id="JavaCodeHelper.JavaCodeHelper" class="pers.zlf.plugin.action.ToolAction" text="工具" icon="/icon/logo.svg">
+        <action id="pers.zlf.plugin.ToolAction" class="pers.zlf.plugin.action.ToolAction" text="工具" icon="/icon/logo.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
         <!-- 翻译 -->
-        <action id="JavaCodeHelper.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="翻译" icon="/icon/logo.svg">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="JavaCodeHelper.JavaCodeHelper"/>
+        <action id="pers.zlf.plugin.TranslateAction" class="pers.zlf.plugin.action.TranslateAction" text="翻译" icon="/icon/logo.svg">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.ToolAction"/>
         </action>
         <!-- 根据注释添加Swagger注解 -->
-        <action id="JavaCodeHelper.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="添加接口文档注解" icon="/icon/logo.svg">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="JavaCodeHelper.TranslateAction"/>
+        <action id="pers.zlf.plugin.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="添加接口文档注解" icon="/icon/logo.svg">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.TranslateAction"/>
         </action>
         <!-- 统计代码行数 -->
-        <action id="JavaCodeHelper.CodeLineCountAction" class="pers.zlf.plugin.action.CodeLineCountAction" text="统计代码行数" icon="/icon/logo.svg">
+        <action id="pers.zlf.plugin.CodeLineCountAction" class="pers.zlf.plugin.action.CodeLineCountAction" text="统计代码行数" icon="/icon/logo.svg">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
         <!-- 根据git记录，统计代码贡献率 -->
-        <action id="JavaCodeHelper.ContributionRateAction" class="pers.zlf.plugin.action.ContributionRateAction" text="统计贡献率" icon="/icon/logo.svg">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="JavaCodeHelper.CodeLineCountAction"/>
+        <action id="pers.zlf.plugin.ContributionRateAction" class="pers.zlf.plugin.action.ContributionRateAction" text="统计贡献率" icon="/icon/logo.svg">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.CodeLineCountAction"/>
         </action>
     </actions>
 </idea-plugin>
