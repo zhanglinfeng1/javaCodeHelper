@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author zhanglinfeng
  * @date create in 2022/10/4 8:18
  */
-@State(name = Common.JAVA_CODE_HELP, storages = @Storage("javaCodeHelpConfig.xml"))
+@State(name = Common.JAVA_CODE_HELPER, storages = @Storage("javaCodeHelpConfig.xml"))
 public class CommonConfigComponent implements PersistentStateComponent<CommonConfig> {
 
     private final CommonConfig config = new CommonConfig();

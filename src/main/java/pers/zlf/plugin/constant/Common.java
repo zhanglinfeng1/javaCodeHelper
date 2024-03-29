@@ -33,6 +33,8 @@ public class Common {
     public static final String T = "t";
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String IMAGE_JPG = "JPG";
+    public static final String SINGLE_QUOTATION = "'";
+    public static final String SINGLE_QUOTATION2 = "`";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
@@ -45,7 +47,7 @@ public class Common {
     public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
 
     /** 配置相关 */
-    public static final String JAVA_CODE_HELP = "JavaCodeHelp";
+    public static final String JAVA_CODE_HELPER = "JavaCodeHelper";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
     public static final String SELECT_MODULE = "选择模块";

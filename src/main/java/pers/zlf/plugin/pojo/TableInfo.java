@@ -38,6 +38,7 @@ public class TableInfo {
         String tableName = Arrays.stream(sqlTableName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.sqlTableName = sqlTableName;
+        this.tableComment = sqlTableName;
         this.tableName = tableName;
         this.firstLowerTableName = firstLowerTableName;
     }

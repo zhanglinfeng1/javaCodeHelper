@@ -27,12 +27,14 @@ public class MysqlParse extends BaseSqlParse {
         tableInfo.setTableComment(StringUtil.getFirstMatcher(lineList.get(lineList.size() - 1), Regex.APOSTROPHE));
         List<ColumnInfo> columnList = new ArrayList<>();
         for (String line : lineList) {
-            List<String> valueList = Arrays.stream(line.split("\\s+(?=(([^']*'){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING)).collect(Collectors.toList());
-            if (Keyword.SQL_COMMENT.equalsIgnoreCase(valueList.get(valueList.size() - 2)) && !line.toUpperCase().contains("ENGINE=")) {
+            if (line.trim().startsWith(Common.SINGLE_QUOTATION) || line.trim().startsWith(Common.SINGLE_QUOTATION2)) {
+                List<String> valueList = Arrays.stream(line.split("\\s+(?=(([^']*'){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING)).collect(Collectors.toList());
                 ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
                 columnInfo.setSqlColumnType(valueList.get(1));
                 columnInfo.setColumnType(toJavaType(valueList.get(1)));
-                columnInfo.setColumnComment(valueList.get(valueList.size() - 1));
+                if (line.toLowerCase().contains(Keyword.SQL_COMMENT)) {
+                    columnInfo.setColumnComment(valueList.get(valueList.size() - 1));
+                }
                 columnList.add(columnInfo);
             }
         }

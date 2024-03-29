@@ -33,6 +33,7 @@ public class ColumnInfo {
 
     public ColumnInfo(String sqlColumnName) {
         this.sqlColumnName = sqlColumnName;
+        this.columnComment = sqlColumnName;
         this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
         this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
         this.underlineUpperColumnName = StringUtil.toUnderlineStyle(this.columnName);

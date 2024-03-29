@@ -23,7 +23,7 @@ public class CommonConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return Common.JAVA_CODE_HELP;
+        return Common.JAVA_CODE_HELPER;
     }
 
     @Nullable

@@ -78,5 +78,9 @@
         <action id="pers.zlf.plugin.ContributionRateAction" class="pers.zlf.plugin.action.ContributionRateAction" text="统计贡献率" icon="/icon/logo.svg">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.CodeLineCountAction"/>
         </action>
+        <!-- 生成代码-->
+        <action id="pers.zlf.plugin.GenerateCodeAction" class="pers.zlf.plugin.action.GenerateCodeAction" text="生成代码" icon="/icon/logo.svg">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
     </actions>
 </idea-plugin>
