@@ -39,7 +39,7 @@ public class GenerateCodeAction extends BaseAction {
         contentManager.removeContent(contentManager.getContent(1), true);
         GenerateCodeDialog generateCodeDialog = new GenerateCodeDialog();
         generateCodeDialog.initTableInfo(selectDbTable);
-        Content generateCodeContent = contentManager.getFactory().createContent(new GenerateCodeDialog().getContent(), Common.GENERATE_CODE, false);
+        Content generateCodeContent = contentManager.getFactory().createContent(generateCodeDialog.getContent(), Common.GENERATE_CODE, false);
         contentManager.addContent(generateCodeContent);
         toolWindow.getContentManager().setSelectedContent(generateCodeContent);
         toolWindow.show(() -> {
