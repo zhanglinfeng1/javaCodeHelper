@@ -1,5 +1,6 @@
 package pers.zlf.plugin.dialog.database;
 
+import com.intellij.database.psi.DbTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
@@ -28,7 +29,13 @@ public abstract class BaseSqlParse {
      * @param sqlStr 建表语句
      * @return TableInfo
      */
-    public abstract TableInfo parseSql(String sqlStr);
+    public TableInfo parseSql(String sqlStr) {
+        return new TableInfo();
+    }
+
+    public TableInfo parseSql(DbTable dbTable) {
+        return new TableInfo();
+    }
 
     protected final String toJavaType(String sqlType) {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();

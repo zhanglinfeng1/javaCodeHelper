@@ -1,8 +1,5 @@
 package pers.zlf.plugin.dialog;
 
-import com.intellij.database.Dbms;
-import com.intellij.database.dialects.mysql.model.MysqlModel;
-import com.intellij.database.model.basic.BasicModModel;
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.Messages;
@@ -14,6 +11,7 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.database.BaseSqlParse;
+import pers.zlf.plugin.dialog.database.CommonParse;
 import pers.zlf.plugin.dialog.database.MysqlParse;
 import pers.zlf.plugin.dialog.database.OracleParse;
 import pers.zlf.plugin.dialog.database.PostgresqlParse;
@@ -100,26 +98,7 @@ public class GenerateCodeDialog extends BaseDialog {
 
     public void initTableInfo(DbTable dbTable) {
         textArea.setText(dbTable.getText());
-        tableInfo = new TableInfo(dbTable.getName());
-        tableInfo.setTableComment(dbTable.getComment());
-        //TODO
-        Object a = dbTable.getDelegate();
-
-//        List<ColumnInfo> columnList = new ArrayList<>();
-//        for (String line : lineList) {
-//            if (line.trim().startsWith(Common.SINGLE_QUOTATION) || line.trim().startsWith(Common.SINGLE_QUOTATION2)) {
-//                List<String> valueList = Arrays.stream(line.split("\\s+(?=(([^']*'){2})*[^']*$)")).filter(StringUtil::isNotEmpty).map(s -> s.replaceAll(Regex.SQL_REPLACE, Common.BLANK_STRING)).collect(Collectors.toList());
-//                ColumnInfo columnInfo = new ColumnInfo(valueList.get(0));
-//                columnInfo.setSqlColumnType(valueList.get(1));
-//                columnInfo.setColumnType(toJavaType(valueList.get(1)));
-//                if (line.toLowerCase().contains(Keyword.SQL_COMMENT)) {
-//                    columnInfo.setColumnComment(valueList.get(valueList.size() - 1));
-//                }
-//                columnList.add(columnInfo);
-//            }
-//        }
-//
-//        tableInfo.setColumnList();
+        tableInfo = new CommonParse().parseSql(dbTable);
     }
 
     private void initFirstPanelButtonListener() {
@@ -129,9 +108,7 @@ public class GenerateCodeDialog extends BaseDialog {
                 //解析sql
                 BaseSqlParse baseSqlParse = sqlParseMap.get(dataBaseType.getSelectedItem().toString());
                 String sqlStr = Empty.of(textArea.getText()).ifEmptyThrow(() -> new Exception(Message.SQL_NOT_NULL));
-                if (tableInfo == null){
-                    tableInfo = baseSqlParse.parseSql(sqlStr);
-                }
+                tableInfo = Optional.ofNullable(tableInfo).orElse(baseSqlParse.parseSql(sqlStr));
                 tableInfo.setAuthor(authorField.getText());
                 //初始化文件路径
                 TemplateFactory.getInstance().init(getFullPath(), getPackagePathField(), tableInfo);

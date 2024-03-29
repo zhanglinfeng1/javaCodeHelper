@@ -15,6 +15,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>新增二维码生成与解析</li>
+            <li>新增Database右击菜单</li>
             <li>优化实时统计</li>
         </ul>
     ]]>
