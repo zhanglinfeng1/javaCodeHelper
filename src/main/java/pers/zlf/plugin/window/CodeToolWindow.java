@@ -22,7 +22,7 @@ public class CodeToolWindow implements ToolWindowFactory {
         //常用工具窗口
         Content commonToolsContent = contentManager.getFactory().createContent(new CommonToolsDialog().getContent(), Common.COMMON_TOOLS, false);
         //生成代码的窗口
-        Content generateCodeContent = contentManager.getFactory().createContent(new GenerateCodeDialog().getContent(), Common.GENERATE_CODE, false);
+        Content generateCodeContent = contentManager.getFactory().createContent(GenerateCodeDialog.getInstance().getContent(), Common.GENERATE_CODE, false);
         contentManager.addContent(commonToolsContent);
         contentManager.addContent(generateCodeContent);
     }

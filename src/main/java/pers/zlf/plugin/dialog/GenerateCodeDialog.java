@@ -10,16 +10,12 @@ import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.dialog.database.BaseSqlParse;
-import pers.zlf.plugin.dialog.database.CommonParse;
-import pers.zlf.plugin.dialog.database.MysqlParse;
-import pers.zlf.plugin.dialog.database.OracleParse;
-import pers.zlf.plugin.dialog.database.PostgresqlParse;
+import pers.zlf.plugin.dialog.database.DBTableParse;
+import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
-import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.DefaultCellEditor;
@@ -32,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,7 +48,6 @@ public class GenerateCodeDialog extends BaseDialog {
     private JTextField authorField;
     private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
-    private JComboBox<String> dataBaseType;
     /** 第二面板 */
     private JPanel secondPanel;
     private JButton submitButton;
@@ -67,13 +61,9 @@ public class GenerateCodeDialog extends BaseDialog {
     private String[] columnArr;
     private TableInfo tableInfo;
 
-    private final Map<String, BaseSqlParse> sqlParseMap = new HashMap<>() {{
-        put("mysql", new MysqlParse());
-        put("oracle", new OracleParse());
-        put("postgresql", new PostgresqlParse());
-    }};
+    private static volatile GenerateCodeDialog generateCodeDialog;
 
-    public GenerateCodeDialog() {
+    private GenerateCodeDialog() {
         //初始化第一面板
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         secondPanel.setVisible(false);
@@ -92,13 +82,23 @@ public class GenerateCodeDialog extends BaseDialog {
         initSecondPanelButtonListener();
     }
 
+    public static GenerateCodeDialog getInstance() {
+        if (generateCodeDialog == null) {
+            synchronized (ConfigFactory.class) {
+                Equals.of(generateCodeDialog == null).ifTrue(() -> generateCodeDialog = new GenerateCodeDialog());
+            }
+        }
+        return generateCodeDialog;
+    }
+
     public JPanel getContent() {
         return contentPane;
     }
 
     public void initTableInfo(DbTable dbTable) {
         textArea.setText(dbTable.getText());
-        tableInfo = new CommonParse().parseSql(dbTable);
+        tableInfo = new DBTableParse().parseSql(dbTable);
+        showFirstPanel();
     }
 
     private void initFirstPanelButtonListener() {
@@ -106,9 +106,10 @@ public class GenerateCodeDialog extends BaseDialog {
         nextButton.addActionListener(e -> {
             try {
                 //解析sql
-                BaseSqlParse baseSqlParse = sqlParseMap.get(dataBaseType.getSelectedItem().toString());
-                String sqlStr = Empty.of(textArea.getText()).ifEmptyThrow(() -> new Exception(Message.SQL_NOT_NULL));
-                tableInfo = Optional.ofNullable(tableInfo).orElse(baseSqlParse.parseSql(sqlStr));
+                if (tableInfo == null){
+                    Messages.showMessageDialog(Message.DB_TABLE_NOT_NULL, Common.BLANK_STRING, Messages.getInformationIcon());
+                    return;
+                }
                 tableInfo.setAuthor(authorField.getText());
                 //初始化文件路径
                 TemplateFactory.getInstance().init(getFullPath(), getPackagePathField(), tableInfo);

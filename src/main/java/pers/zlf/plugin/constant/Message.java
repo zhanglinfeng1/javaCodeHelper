@@ -25,9 +25,9 @@ public class Message {
     public static final String CUSTOMER_TEMPLATE_PATH_NOT_FOLDER = "自定义模板路径必须是文件夹";
     public static final String CUSTOMER_TEMPLATE_PATH_NO_FILE = "不存在后缀为.ftl的模版文件";
     public static final String CREATE_FILE_ERROR = "文件创建失败";
-    public static final String SQL_NOT_NULL = "Sql不能为空";
     public static final String FULL_PATH_NOT_NULL = "文件全路径不能为空";
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";
+    public static final String DB_TABLE_NOT_NULL = "请先选择表";
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";

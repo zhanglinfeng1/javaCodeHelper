@@ -43,8 +43,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 
 ## 根据建表SQL生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
-方式一：Database中右击选中<br />![image](src/main/resources/example/generateCode.png)<br />
-方式二：手动粘贴完整的建表语句，需要加comment<br />
+Database中右击选中<br />![image](src/main/resources/example/generateCode.png)<br />
 建议使用自定义模板，生成的代码更符合自己的项目。可在配置中下载默认模板，在此基础上修改<br />
 模板变量如下<br />
 

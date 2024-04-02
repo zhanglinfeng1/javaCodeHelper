@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>1.14.0</version>
+    <version>1.14.2</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="201.7223.91"/>
     <description><![CDATA[
@@ -14,9 +14,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>新增二维码生成与解析</li>
-            <li>新增Database右击菜单</li>
-            <li>优化实时统计</li>
+            <li>不再支持手动复制建表sql</li>
         </ul>
     ]]>
     </change-notes>

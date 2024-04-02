@@ -1,43 +1,48 @@
 package pers.zlf.plugin.dialog.database;
 
+import com.intellij.database.model.DasColumn;
 import com.intellij.database.psi.DbTable;
+import com.intellij.database.util.DasUtil;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.pojo.config.CommonConfig;
+import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
+import pers.zlf.plugin.pojo.config.CommonConfig;
+import pers.zlf.plugin.util.lambda.Empty;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author zhanglinfeng
- * @date create in 2022/10/18 9:54
+ * @date create in 2022/10/18 9:56
  */
-public abstract class BaseSqlParse {
+public class DBTableParse {
     /** java时间类型*/
     private final Map<Integer, String> dateTypeMap = new HashMap<>() {{
         put(Common.DATE_CLASS_TYPE, "Date");
         put(1, "Timestamp");
         put(2, "LocalDateTime");
     }};
-    /** sql解析后的对象 */
-    protected TableInfo tableInfo;
-
-    /**
-     * 处理sql语句
-     *
-     * @param sqlStr 建表语句
-     * @return TableInfo
-     */
-    public TableInfo parseSql(String sqlStr) {
-        return new TableInfo();
-    }
 
     public TableInfo parseSql(DbTable dbTable) {
-        return new TableInfo();
+        TableInfo tableInfo = new TableInfo(dbTable.getName());
+        tableInfo.setTableComment(dbTable.getComment());
+        List<ColumnInfo> columnList = new ArrayList<>();
+        for (DasColumn column : DasUtil.getColumns(dbTable)) {
+            ColumnInfo columnInfo = new ColumnInfo(column.getName());
+            columnInfo.setSqlColumnType(column.getDataType().typeName);
+            columnInfo.setColumnType(toJavaType(column.getDataType().typeName));
+            columnInfo.setColumnComment(Empty.of(column.getComment()).orElse(column.getName()));
+            columnList.add(columnInfo);
+        }
+        tableInfo.setColumnList(columnList);
+        return tableInfo;
     }
 
-    protected final String toJavaType(String sqlType) {
+    private String toJavaType(String sqlType) {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         sqlType = sqlType.toLowerCase();
         if (sqlType.contains("int") || sqlType.contains("integer") || sqlType.contains("smallint") || sqlType.contains("serial") || sqlType.contains("smallserial")) {
