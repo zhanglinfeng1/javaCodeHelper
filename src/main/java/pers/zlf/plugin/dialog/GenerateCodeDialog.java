@@ -5,7 +5,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
@@ -55,12 +54,8 @@ public class GenerateCodeDialog extends BaseDialog {
     public GenerateCodeDialog(DbTable dbTable) {
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
-        fullPathField.getTextField().setForeground(JBColor.GRAY);
-        fullPathField.setText(Common.FULL_PATH_INPUT_PLACEHOLDER);
-        packagePathField.setForeground(JBColor.GRAY);
-        packagePathField.setText(Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER, true);
-        addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER, false);
         //解析表结构
         tableInfo = new DBTableParse().parseSql(dbTable);
         //表格初始化
@@ -80,7 +75,7 @@ public class GenerateCodeDialog extends BaseDialog {
         initButtonListener();
 
         this.setContentPane(contentPane);
-        String title = Empty.of(dbTable.getComment()).map(t -> Common.SPACE + t).orElse(Common.BLANK_STRING) + dbTable.getName();
+        String title = Empty.of(dbTable.getComment()).map(t -> t + Common.SPACE).orElse(Common.BLANK_STRING) + dbTable.getName();
         this.setTitle(title);
         this.setModalityType(ModalityType.TOOLKIT_MODAL);
     }

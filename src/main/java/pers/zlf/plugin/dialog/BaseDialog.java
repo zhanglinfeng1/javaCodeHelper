@@ -60,21 +60,13 @@ public class BaseDialog extends JDialog {
     /**
      * JTextField 鼠标聚焦失焦监听
      *
-     * @param textField   JTextField
-     * @param defaultText 默认文本
-     */
-    protected void addFocusListener(JTextField textField, String defaultText) {
-        addFocusListener(textField, defaultText, false);
-    }
-
-    /**
-     * JTextField 鼠标聚焦失焦监听
-     *
      * @param textField           JTextField
      * @param defaultText         默认文本
      * @param addDocumentListener true:添加文本变化监听 false:不添加
      */
     protected void addFocusListener(JTextField textField, String defaultText, boolean addDocumentListener) {
+        textField.setForeground(JBColor.GRAY);
+        textField.setText(defaultText);
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
