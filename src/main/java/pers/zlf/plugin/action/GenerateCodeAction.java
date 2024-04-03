@@ -33,6 +33,7 @@ public class GenerateCodeAction extends BaseAction {
 
     @Override
     public void execute() {
+        //TODO 改窗口
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.JAVA_CODE_HELPER);
         ContentManager contentManager = toolWindow.getContentManager();
         Optional.ofNullable(contentManager.getContent(1)).ifPresent(t -> contentManager.removeContent(t, true));
