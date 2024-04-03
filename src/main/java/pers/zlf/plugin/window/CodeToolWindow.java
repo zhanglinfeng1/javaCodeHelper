@@ -8,7 +8,6 @@ import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CommonToolsDialog;
-import pers.zlf.plugin.dialog.GenerateCodeDialog;
 
 /**
  * @author zhanglinfeng
@@ -21,10 +20,7 @@ public class CodeToolWindow implements ToolWindowFactory {
         ContentManager contentManager = toolWindow.getContentManager();
         //常用工具窗口
         Content commonToolsContent = contentManager.getFactory().createContent(new CommonToolsDialog().getContent(), Common.COMMON_TOOLS, false);
-        //生成代码的窗口
-        Content generateCodeContent = contentManager.getFactory().createContent(GenerateCodeDialog.getInstance().getContent(), Common.GENERATE_CODE, false);
         contentManager.addContent(commonToolsContent);
-        contentManager.addContent(generateCodeContent);
     }
 
 }
