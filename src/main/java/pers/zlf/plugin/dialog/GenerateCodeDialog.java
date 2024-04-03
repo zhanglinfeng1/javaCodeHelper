@@ -11,7 +11,6 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.database.DBTableParse;
-import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
@@ -23,7 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -39,19 +37,11 @@ import java.util.stream.Collectors;
  * @date create in 2022/9/8 10:33
  */
 public class GenerateCodeDialog extends BaseDialog {
-    /** 主面板 */
     private JPanel contentPane;
-    /** 第一面板 */
-    private JPanel firstPanel;
-    private JButton nextButton;
-    private JTextArea textArea;
     private JTextField authorField;
     private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
-    /** 第二面板 */
-    private JPanel secondPanel;
     private JButton submitButton;
-    private JButton backButton;
     private JBTable columnTable;
     private JButton addButton;
     private JButton deleteButton;
@@ -61,66 +51,39 @@ public class GenerateCodeDialog extends BaseDialog {
     private String[] columnArr;
     private TableInfo tableInfo;
 
-    private static volatile GenerateCodeDialog generateCodeDialog;
-
-    private GenerateCodeDialog() {
-        //初始化第一面板
+    public GenerateCodeDialog(DbTable dbTable) {
+        //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
-        secondPanel.setVisible(false);
         fullPathField.getTextField().setForeground(JBColor.GRAY);
         fullPathField.setText(Common.FULL_PATH_INPUT_PLACEHOLDER);
         packagePathField.setForeground(JBColor.GRAY);
         packagePathField.setText(Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER, true);
         addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        initFirstPanelButtonListener();
-
-        //初始化第二面板
+        //解析表结构
+        tableInfo = new DBTableParse().parseSql(dbTable);
+        //表格初始化
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         defaultTableModel = new DefaultTableModel(null, Common.QUERY_COLUMN_TABLE_HEADER);
         columnTable.setModel(defaultTableModel);
-        initSecondPanelButtonListener();
-    }
-
-    public static GenerateCodeDialog getInstance() {
-        if (generateCodeDialog == null) {
-            synchronized (ConfigFactory.class) {
-                Equals.of(generateCodeDialog == null).ifTrue(() -> generateCodeDialog = new GenerateCodeDialog());
-            }
-        }
-        return generateCodeDialog;
-    }
-
-    public JPanel getContent() {
-        return contentPane;
-    }
-
-    public void initTableInfo(DbTable dbTable) {
-        textArea.setText(dbTable.getText());
-        tableInfo = new DBTableParse().parseSql(dbTable);
-        showFirstPanel();
-    }
-
-    private void initFirstPanelButtonListener() {
-        //下一步
-        nextButton.addActionListener(e -> {
-            try {
-                //解析sql
-                if (tableInfo == null){
-                    Messages.showMessageDialog(Message.DB_TABLE_NOT_NULL, Common.BLANK_STRING, Messages.getInformationIcon());
-                    return;
-                }
-                tableInfo.setAuthor(authorField.getText());
-                //初始化文件路径
-                TemplateFactory.getInstance().init(getFullPath(), getPackagePathField(), tableInfo);
-                showSecondPanel(tableInfo);
-            } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
+        columnInfoList = tableInfo.getColumnList();
+        columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
+        defaultTableModel.getDataVector().clear();
+        columnTable.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 0) {
+                String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
+                defaultTableModel.setValueAt(value, e.getFirstRow(), 1);
             }
         });
+        //初始化按钮
+        initButtonListener();
+
+        this.setContentPane(contentPane);
+        this.setModal(true);
+        this.getRootPane().setDefaultButton(submitButton);
     }
 
-    private void initSecondPanelButtonListener() {
+    private void initButtonListener() {
         //初始化按钮背景色
         initButtonBackground(addButton, deleteButton);
         //添加
@@ -138,20 +101,21 @@ public class GenerateCodeDialog extends BaseDialog {
                 removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         }));
-        //上一步
-        backButton.addActionListener(e -> showFirstPanel());
         //生成代码
+        submitButton = new JButton();
         submitButton.addActionListener(e -> {
             try {
+                tableInfo.setAuthor(authorField.getText());
+                //初始化文件路径
+                TemplateFactory.getInstance().init(getFullPath(), getPackagePathField(), tableInfo);
                 TemplateFactory.getInstance().create(getQueryColumnList(), defaultTemplateRadioButton.isSelected());
-                clearTableContent();
-                tableInfo = null;
-                showFirstPanel();
                 Messages.showMessageDialog(Common.SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
             }
         });
+        addMouseListener(addButton, IconEnum.ADD);
+        removeMouseListener(deleteButton, IconEnum.REMOVE);
     }
 
     private String getFullPath() throws Exception {
@@ -162,27 +126,6 @@ public class GenerateCodeDialog extends BaseDialog {
     private String getPackagePathField() throws Exception {
         return Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                 .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-    }
-
-    private void showFirstPanel() {
-        firstPanel.setVisible(true);
-        secondPanel.setVisible(false);
-    }
-
-    private void showSecondPanel(TableInfo tableInfo) {
-        firstPanel.setVisible(false);
-        columnInfoList = tableInfo.getColumnList();
-        columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
-        addMouseListener(addButton, IconEnum.ADD);
-        removeMouseListener(deleteButton, IconEnum.REMOVE);
-        defaultTableModel.getDataVector().clear();
-        columnTable.getModel().addTableModelListener(e -> {
-            if (e.getColumn() == 0) {
-                String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
-                defaultTableModel.setValueAt(value, e.getFirstRow(), 1);
-            }
-        });
-        secondPanel.setVisible(true);
     }
 
     private List<ColumnInfo> getQueryColumnList() {
