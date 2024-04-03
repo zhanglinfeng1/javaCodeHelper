@@ -15,6 +15,7 @@ import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.DefaultCellEditor;
@@ -47,9 +48,9 @@ public class GenerateCodeDialog extends BaseDialog {
     private JButton deleteButton;
     private JRadioButton defaultTemplateRadioButton;
     private JRadioButton customTemplateRadioButton;
-    private List<ColumnInfo> columnInfoList;
-    private String[] columnArr;
-    private TableInfo tableInfo;
+    private final List<ColumnInfo> columnInfoList;
+    private final String[] columnArr;
+    private final TableInfo tableInfo;
 
     public GenerateCodeDialog(DbTable dbTable) {
         //文本框初始化
@@ -79,8 +80,9 @@ public class GenerateCodeDialog extends BaseDialog {
         initButtonListener();
 
         this.setContentPane(contentPane);
-        this.setModal(true);
-        this.getRootPane().setDefaultButton(submitButton);
+        String title = Empty.of(dbTable.getComment()).map(t -> Common.SPACE + t).orElse(Common.BLANK_STRING) + dbTable.getName();
+        this.setTitle(title);
+        this.setModalityType(ModalityType.TOOLKIT_MODAL);
     }
 
     private void initButtonListener() {
@@ -102,13 +104,17 @@ public class GenerateCodeDialog extends BaseDialog {
             }
         }));
         //生成代码
-        submitButton = new JButton();
         submitButton.addActionListener(e -> {
             try {
+                String fullPath = Equals.of(fullPathField.getText()).and(Common.FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                        .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
+                String packagePath = Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                        .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
                 tableInfo.setAuthor(authorField.getText());
-                //初始化文件路径
-                TemplateFactory.getInstance().init(getFullPath(), getPackagePathField(), tableInfo);
-                TemplateFactory.getInstance().create(getQueryColumnList(), defaultTemplateRadioButton.isSelected());
+                tableInfo.setPackagePath(packagePath);
+                tableInfo.setQueryColumnList(getQueryColumnList());
+                //生成文件
+                TemplateFactory.getInstance().create(fullPath, tableInfo, defaultTemplateRadioButton.isSelected());
                 Messages.showMessageDialog(Common.SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
@@ -116,16 +122,6 @@ public class GenerateCodeDialog extends BaseDialog {
         });
         addMouseListener(addButton, IconEnum.ADD);
         removeMouseListener(deleteButton, IconEnum.REMOVE);
-    }
-
-    private String getFullPath() throws Exception {
-        return Equals.of(fullPathField.getText()).and(Common.FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
-                .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
-    }
-
-    private String getPackagePathField() throws Exception {
-        return Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
-                .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
     }
 
     private List<ColumnInfo> getQueryColumnList() {

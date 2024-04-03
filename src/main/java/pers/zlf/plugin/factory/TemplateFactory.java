@@ -9,7 +9,6 @@ import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.Regex;
-import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
@@ -26,7 +25,6 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,10 +38,6 @@ public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
     /** freemarker版本 */
     private final Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
-    /** 解析后的表信息 */
-    private TableInfo tableInfo;
-    /** 全路径 */
-    private String fullPath;
 
     private TemplateFactory() {
         configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
@@ -60,35 +54,23 @@ public class TemplateFactory {
     }
 
     /**
-     * 初始化基本信息
-     *
-     * @param fullPath    全路径
-     * @param packagePath 包路径
-     * @param tableInfo   表信息
-     */
-    public void init(String fullPath, String packagePath, TableInfo tableInfo) {
-        getInstance();
-        this.tableInfo = tableInfo;
-        this.tableInfo.setPackagePath(packagePath);
-        this.fullPath = fullPath + (fullPath.endsWith(Common.DOUBLE_BACKSLASH) ? Common.BLANK_STRING : Common.DOUBLE_BACKSLASH);
-    }
-
-    /**
      * 生成文件
      *
-     * @param queryColumnList    查询字段
+     * @param filePath           文件路径
+     * @param tableInfo          表信息
      * @param useDefaultTemplate true：使用默认模版 false：使用自定义模版
      * @throws Exception 异常
      */
-    public void create(List<ColumnInfo> queryColumnList, boolean useDefaultTemplate) throws Exception {
-        Equals.of(new File(fullPath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception(Message.FULL_PATH_CREATE_ERROR));
+    public void create(String filePath, TableInfo tableInfo, boolean useDefaultTemplate) throws Exception {
+        filePath = filePath + (filePath.endsWith(Common.DOUBLE_BACKSLASH) ? Common.BLANK_STRING : Common.DOUBLE_BACKSLASH);
+        Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception(Message.FULL_PATH_CREATE_ERROR));
+        filePath = filePath + tableInfo.getTableName();
         tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
-        tableInfo.setQueryColumnList(queryColumnList);
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         if (useDefaultTemplate) {
             configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), Common.TEMPLATE_PATH);
             for (String templateName : Common.TEMPLATE_LIST) {
-                create(configuration.getTemplate(templateName), map);
+                create(filePath, configuration.getTemplate(templateName), map);
             }
         } else {
             //添加自定义模板
@@ -101,7 +83,7 @@ public class TemplateFactory {
             for (File subFile : Objects.requireNonNull(file.listFiles(), Message.CUSTOMER_TEMPLATE_PATH_NO_FILE)) {
                 String name = subFile.getName();
                 if (name.endsWith(ClassType.FREEMARKER_FILE)) {
-                    create(configuration.getTemplate(name), map);
+                    create(filePath, configuration.getTemplate(name), map);
                     empty = false;
                 }
             }
@@ -112,12 +94,13 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
+     * @param filePath 文件路径
      * @param template 模版
      * @param map      模版数据
      * @throws Exception 异常
      */
-    private void create(Template template, Map<String, Object> map) throws Exception {
-        String filePath = fullPath + tableInfo.getTableName() + template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+    private void create(String filePath, Template template, Map<String, Object> map) throws Exception {
+        filePath = filePath + template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
             template.process(map, bufferedWriter);
         } catch (Exception e) {
