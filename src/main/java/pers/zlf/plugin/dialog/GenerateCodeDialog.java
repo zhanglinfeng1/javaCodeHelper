@@ -5,6 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
@@ -24,7 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +57,8 @@ public class GenerateCodeDialog extends BaseDialog {
     public GenerateCodeDialog(DbTable dbTable) {
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
-        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER, true);
-        addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER, false);
+        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
+        addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         //解析表结构
         tableInfo = new DBTableParse().parseSql(dbTable);
         //表格初始化
@@ -115,6 +119,37 @@ public class GenerateCodeDialog extends BaseDialog {
         });
         addMouseListener(addButton, IconEnum.ADD);
         removeMouseListener(deleteButton, IconEnum.REMOVE);
+
+        Runnable runnable = () -> {
+            String text = fullPathField.getText();
+            if (Common.FULL_PATH_INPUT_PLACEHOLDER.equals(text)) {
+                fullPathField.getTextField().setForeground(JBColor.GRAY);
+            } else {
+                fullPathField.getTextField().setForeground(JBColor.BLACK);
+            }
+            String packagePath = String.format(Common.SRC_MAIN_JAVA, File.separator, File.separator) + File.separator;
+            int index = text.indexOf(packagePath);
+            if (index != -1) {
+                packagePathField.setText(text.substring(index + packagePath.length()).replace(File.separator, Common.DOT));
+                packagePathField.setForeground(JBColor.BLACK);
+            }
+        };
+        fullPathField.getTextField().getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                runnable.run();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                runnable.run();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                runnable.run();
+            }
+        });
     }
 
     private List<ColumnInfo> getQueryColumnList() {

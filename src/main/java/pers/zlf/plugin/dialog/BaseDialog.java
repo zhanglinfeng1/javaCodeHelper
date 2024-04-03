@@ -9,8 +9,6 @@ import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
@@ -59,11 +57,10 @@ public class BaseDialog {
     /**
      * JTextField 鼠标聚焦失焦监听
      *
-     * @param textField           JTextField
-     * @param defaultText         默认文本
-     * @param addDocumentListener true:添加文本变化监听 false:不添加
+     * @param textField   JTextField
+     * @param defaultText 默认文本
      */
-    protected void addFocusListener(JTextField textField, String defaultText, boolean addDocumentListener) {
+    protected void addFocusListener(JTextField textField, String defaultText) {
         textField.setForeground(JBColor.GRAY);
         textField.setText(defaultText);
         textField.addFocusListener(new FocusAdapter() {
@@ -83,38 +80,13 @@ public class BaseDialog {
                 }
             }
         });
-        if (addDocumentListener) {
-            Runnable runnable = () -> {
-                if (defaultText.equals(textField.getText())) {
-                    textField.setForeground(JBColor.GRAY);
-                } else {
-                    textField.setForeground(JBColor.BLACK);
-                }
-            };
-            textField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    runnable.run();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    runnable.run();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    runnable.run();
-                }
-            });
-        }
     }
 
     /**
      * 获取表格内容
      *
      * @param tableModel DefaultTableModel
-     * @param columnNum         列序号
+     * @param columnNum  列序号
      * @return List<String>
      */
     protected List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
@@ -135,6 +107,11 @@ public class BaseDialog {
         Arrays.stream(buttons).forEach(t -> t.setBackground(color));
     }
 
+    /**
+     * 添加按钮监听，聚焦、失焦时变色
+     *
+     * @param button 按钮
+     */
     private void addMouseListener(JButton button) {
         Container container = button.getParent();
         button.addMouseListener(new MouseListener() {
