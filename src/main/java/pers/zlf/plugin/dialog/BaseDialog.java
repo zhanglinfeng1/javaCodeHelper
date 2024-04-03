@@ -8,7 +8,6 @@ import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -28,7 +27,7 @@ import java.util.List;
  * @author zhanglinfeng
  * @date create in 2023/2/15 15:24
  */
-public class BaseDialog extends JDialog {
+public class BaseDialog {
     protected DefaultTableModel defaultTableModel;
 
     /**
@@ -167,12 +166,4 @@ public class BaseDialog extends JDialog {
         });
     }
 
-    /**
-     * 展示
-     */
-    public void open(){
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-    }
 }

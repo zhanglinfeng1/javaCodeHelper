@@ -15,6 +15,8 @@ public class CommonConfig {
     private String secretKey;
     /** 自定义模板文件夹 */
     private String customTemplatesPath;
+    /** 文件创建人 */
+    private String author;
     /** Java日期类 */
     private Integer dateClassType = Common.DATE_CLASS_TYPE;
     /** api工具 */
@@ -54,6 +56,14 @@ public class CommonConfig {
 
     public void setCustomTemplatesPath(String customTemplatesPath) {
         this.customTemplatesPath = customTemplatesPath;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Integer getDateClassType() {

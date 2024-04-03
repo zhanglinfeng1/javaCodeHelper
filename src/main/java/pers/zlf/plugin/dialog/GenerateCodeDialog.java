@@ -10,11 +10,11 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.database.DBTableParse;
+import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
-import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import javax.swing.DefaultCellEditor;
@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
  */
 public class GenerateCodeDialog extends BaseDialog {
     private JPanel contentPane;
-    private JTextField authorField;
     private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
     private JButton submitButton;
@@ -73,11 +72,10 @@ public class GenerateCodeDialog extends BaseDialog {
         });
         //初始化按钮
         initButtonListener();
+    }
 
-        this.setContentPane(contentPane);
-        String title = Empty.of(dbTable.getComment()).map(t -> t + Common.SPACE).orElse(Common.BLANK_STRING) + dbTable.getName();
-        this.setTitle(title);
-        this.setModalityType(ModalityType.TOOLKIT_MODAL);
+    public JPanel getContent() {
+        return contentPane;
     }
 
     private void initButtonListener() {
@@ -105,7 +103,7 @@ public class GenerateCodeDialog extends BaseDialog {
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
                 String packagePath = Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-                tableInfo.setAuthor(authorField.getText());
+                tableInfo.setAuthor(ConfigFactory.getInstance().getCommonConfig().getAuthor());
                 tableInfo.setPackagePath(packagePath);
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件

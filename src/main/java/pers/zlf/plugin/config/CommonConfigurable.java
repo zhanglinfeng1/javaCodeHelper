@@ -56,6 +56,9 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength())) {
             return true;
         }
+        if (!dialog.getAuthor().equals(config.getAuthor())) {
+            return true;
+        }
         return !dialog.getCustomTemplatesPath().equals(config.getCustomTemplatesPath());
     }
 
@@ -68,6 +71,7 @@ public class CommonConfigurable implements Configurable {
         config.setDateClassType(dialog.getDateClassType());
         config.setApiTool(dialog.getApiTool());
         config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
+        config.setAuthor(dialog.getAuthor());
         ConfigFactory.getInstance().setCommonConfig(config);
     }
 

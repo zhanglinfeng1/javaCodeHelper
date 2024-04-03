@@ -33,9 +33,10 @@ public class CommonConfigDialog extends BaseDialog {
     private JRadioButton codeCompletionEnableButton;
     private JRadioButton codeCompletionDisabledButton;
     private JTextField maxCodeCompletionLengthTextField;
+    private JTextField authorField;
 
     public CommonConfigDialog() {
-        FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false,true,false,false,false,false);
+        FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false);
         customTemplatesPathField.addBrowseFolderListener(new TextBrowseFolderListener(chooserDescriptor));
         downloadButton.addActionListener(e -> {
             try {
@@ -55,6 +56,7 @@ public class CommonConfigDialog extends BaseDialog {
         securityKeyTextField.setText(commonConfig.getSecretKey());
         maxCodeCompletionLengthTextField.setText(String.valueOf(commonConfig.getMaxCodeCompletionLength()));
         customTemplatesPathField.setText(commonConfig.getCustomTemplatesPath());
+        authorField.setText(commonConfig.getAuthor());
 
         Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
         Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(dateClassComboBox::setSelectedIndex);
@@ -95,5 +97,9 @@ public class CommonConfigDialog extends BaseDialog {
 
     public Integer getMaxCodeCompletionLength() {
         return Integer.parseInt(maxCodeCompletionLengthTextField.getText());
+    }
+
+    public String getAuthor() {
+        return authorField.getText();
     }
 }
