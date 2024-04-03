@@ -2,11 +2,15 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
@@ -16,11 +20,14 @@ import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
+import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -40,7 +47,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2022/9/8 10:33
  */
-public class GenerateCodeDialog extends BaseDialog {
+public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private JPanel contentPane;
     private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
@@ -53,8 +60,11 @@ public class GenerateCodeDialog extends BaseDialog {
     private final List<ColumnInfo> columnInfoList;
     private final String[] columnArr;
     private final TableInfo tableInfo;
+    private DefaultTableModel defaultTableModel;
 
-    public GenerateCodeDialog(DbTable dbTable) {
+    public GenerateCodeDialog(Project project,DbTable dbTable) {
+        super(project);
+        this.setOKActionEnabled(false);
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
@@ -76,9 +86,18 @@ public class GenerateCodeDialog extends BaseDialog {
         });
         //初始化按钮
         initButtonListener();
+        String title = Empty.of(dbTable.getComment()).map(t -> t + Common.SPACE).orElse(Common.BLANK_STRING) + dbTable.getName();
+        this.setTitle(title);
+        super.init();
     }
 
-    public JPanel getContent() {
+    @Override
+    protected Action @NotNull [] createActions() {
+        return new Action[0];
+    }
+
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
         return contentPane;
     }
 
@@ -169,5 +188,6 @@ public class GenerateCodeDialog extends BaseDialog {
         }
         return queryColumnList;
     }
+
 
 }

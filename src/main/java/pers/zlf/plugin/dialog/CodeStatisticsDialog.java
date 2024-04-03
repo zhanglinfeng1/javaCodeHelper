@@ -22,7 +22,7 @@ import java.util.List;
  * @author zhanglinfeng
  * @date create in 2023/6/15 15:16
  */
-public class CodeStatisticsDialog extends BaseDialog {
+public class CodeStatisticsDialog implements BaseDialog {
     private JPanel panel;
     private JBTable fileTypeTable;
     private JButton deleteFileTypeButton;
@@ -35,6 +35,7 @@ public class CodeStatisticsDialog extends BaseDialog {
     private JCheckBox countCommentCheckBox;
     private JCheckBox countKeywordCheckBox;
     private final DefaultTableModel gitEmailTableModel;
+    private DefaultTableModel defaultTableModel;
 
     public CodeStatisticsDialog() {
         //文件类型

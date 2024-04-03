@@ -15,13 +15,14 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import java.util.Optional;
 
 /**
  * @author zhanglinfeng
  * @date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog extends BaseDialog {
+public class CommonConfigDialog implements BaseDialog {
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
@@ -34,6 +35,7 @@ public class CommonConfigDialog extends BaseDialog {
     private JRadioButton codeCompletionDisabledButton;
     private JTextField maxCodeCompletionLengthTextField;
     private JTextField authorField;
+    private DefaultTableModel defaultTableModel;
 
     public CommonConfigDialog() {
         FileChooserDescriptor chooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false);

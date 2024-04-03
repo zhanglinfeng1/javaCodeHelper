@@ -25,8 +25,7 @@ import java.util.List;
  * @author zhanglinfeng
  * @date create in 2023/2/15 15:24
  */
-public class BaseDialog {
-    protected DefaultTableModel defaultTableModel;
+public interface BaseDialog {
 
     /**
      * 添加按钮的鼠标监听
@@ -34,7 +33,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    protected void addMouseListener(JButton button, IconEnum iconEnum) {
+    default void addMouseListener(JButton button, IconEnum iconEnum) {
         button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
@@ -47,7 +46,7 @@ public class BaseDialog {
      * @param button   JButton
      * @param iconEnum ICON_ENUM
      */
-    protected void removeMouseListener(JButton button, IconEnum iconEnum) {
+    default void removeMouseListener(JButton button, IconEnum iconEnum) {
         Container container = button.getParent();
         button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
         button.setBackground(container.getBackground());
@@ -60,7 +59,7 @@ public class BaseDialog {
      * @param textField   JTextField
      * @param defaultText 默认文本
      */
-    protected void addFocusListener(JTextField textField, String defaultText) {
+    default void addFocusListener(JTextField textField, String defaultText) {
         textField.setForeground(JBColor.GRAY);
         textField.setText(defaultText);
         textField.addFocusListener(new FocusAdapter() {
@@ -89,7 +88,7 @@ public class BaseDialog {
      * @param columnNum  列序号
      * @return List<String>
      */
-    protected List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
+    default List<String> getTableContentList(DefaultTableModel tableModel, int columnNum) {
         List<String> contentList = new ArrayList<>();
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             Empty.of(tableModel.getValueAt(i, columnNum)).map(StringUtil::toString).ifPresent(contentList::add);
@@ -102,7 +101,7 @@ public class BaseDialog {
      *
      * @param buttons 按钮
      */
-    protected void initButtonBackground(JButton... buttons) {
+    default void initButtonBackground(JButton... buttons) {
         Color color = buttons[0].getParent().getBackground();
         Arrays.stream(buttons).forEach(t -> t.setBackground(color));
     }

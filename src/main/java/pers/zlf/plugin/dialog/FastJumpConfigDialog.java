@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2023/2/13 10:36
  */
-public class FastJumpConfigDialog extends BaseDialog {
+public class FastJumpConfigDialog implements BaseDialog {
     private JPanel panel;
     private JTextField controllerTextField;
     private JTextField feignTextField;
@@ -39,6 +39,7 @@ public class FastJumpConfigDialog extends BaseDialog {
     private JButton addModuleButton;
     private JButton deleteModuleButton;
     private final Set<String> totalSelectList;
+    private DefaultTableModel defaultTableModel;
 
     public FastJumpConfigDialog() {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());
