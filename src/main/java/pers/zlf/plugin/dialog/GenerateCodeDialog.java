@@ -60,11 +60,10 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private final List<ColumnInfo> columnInfoList;
     private final String[] columnArr;
     private final TableInfo tableInfo;
-    private DefaultTableModel defaultTableModel;
+    private final DefaultTableModel defaultTableModel;
 
     public GenerateCodeDialog(Project project,DbTable dbTable) {
         super(project);
-        this.setOKActionEnabled(false);
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
@@ -77,7 +76,6 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         columnTable.setModel(defaultTableModel);
         columnInfoList = tableInfo.getColumnList();
         columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
-        defaultTableModel.getDataVector().clear();
         columnTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {
                 String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
@@ -126,7 +124,8 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
                 String packagePath = Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-                tableInfo.setAuthor(ConfigFactory.getInstance().getCommonConfig().getAuthor());
+                String author = Optional.ofNullable(ConfigFactory.getInstance().getCommonConfig().getAuthor()).orElse(Common.BLANK_STRING);
+                tableInfo.setAuthor(author);
                 tableInfo.setPackagePath(packagePath);
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
@@ -148,6 +147,13 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
             }
             String packagePath = String.format(Common.SRC_MAIN_JAVA, File.separator, File.separator) + File.separator;
             int index = text.indexOf(packagePath);
+            if (index != -1) {
+                packagePathField.setText(text.substring(index + packagePath.length()).replace(File.separator, Common.DOT));
+                packagePathField.setForeground(JBColor.BLACK);
+                return;
+            }
+            packagePath = File.separator + Common.SRC + File.separator;
+            index = text.indexOf(packagePath);
             if (index != -1) {
                 packagePathField.setText(text.substring(index + packagePath.length()).replace(File.separator, Common.DOT));
                 packagePathField.setForeground(JBColor.BLACK);
