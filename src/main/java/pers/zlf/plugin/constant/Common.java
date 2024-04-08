@@ -58,8 +58,10 @@ public class Common {
     public static final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
     public static final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
     public static final String[] QUERY_COLUMN_TABLE_HEADER = {"字段名", "别名", "查询方式"};
+    public static final String[] DB_TABLE_HEADER = {"字段名", "别名", "类型", "java数据类型", "备注"};
     /** 查询方式下拉选项 */
     public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
+    public static final String[] DATA_TYPE_OPTIONS = {"String", "int", "Integer", "double", "Double", "Date", "Timestamp", "LocalDateTime"};
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;
     public static final String BAIDU_TRANSLATE_CHINESE = "百度翻译";

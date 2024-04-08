@@ -31,11 +31,13 @@ public class ColumnInfo {
     public ColumnInfo() {
     }
 
-    public ColumnInfo(String sqlColumnName) {
+    public ColumnInfo(String sqlColumnName, String columnName, String sqlColumnType, String columnType, String columnComment) {
         this.sqlColumnName = sqlColumnName;
-        this.columnComment = sqlColumnName;
-        this.firstUpperColumnName = (Arrays.stream(this.sqlColumnName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining()));
-        this.columnName = StringUtil.toLowerCaseFirst(this.firstUpperColumnName);
+        this.columnName = columnName;
+        this.sqlColumnType = sqlColumnType;
+        this.columnType = columnType;
+        this.columnComment = columnComment;
+        this.firstUpperColumnName = StringUtil.toUpperCaseFirst(this.columnName);
         this.underlineUpperColumnName = StringUtil.toUnderlineStyle(this.columnName);
     }
 

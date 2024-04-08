@@ -2,6 +2,7 @@ package pers.zlf.plugin.pojo;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +35,11 @@ public class TableInfo {
     public TableInfo() {
     }
 
-    public TableInfo(String sqlTableName) {
+    public TableInfo(String sqlTableName, String tableComment) {
         String tableName = Arrays.stream(sqlTableName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
         String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.sqlTableName = sqlTableName;
-        this.tableComment = sqlTableName;
+        this.tableComment = Empty.of(tableComment).orElse(sqlTableName);
         this.tableName = tableName;
         this.firstLowerTableName = firstLowerTableName;
     }

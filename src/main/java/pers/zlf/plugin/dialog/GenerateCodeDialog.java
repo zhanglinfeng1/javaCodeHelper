@@ -1,6 +1,8 @@
 package pers.zlf.plugin.dialog;
 
+import com.intellij.database.model.DasColumn;
 import com.intellij.database.psi.DbTable;
+import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -14,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.dialog.database.DBTableParse;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
@@ -49,43 +50,62 @@ import java.util.stream.Collectors;
  */
 public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private JPanel contentPane;
+    private JPanel firstPanel;
+    private JPanel secondPanel;
     private TextFieldWithBrowseButton fullPathField;
     private JTextField packagePathField;
+    private JButton nextButton;
+    private JButton backButton;
     private JButton submitButton;
-    private JBTable columnTable;
     private JButton addButton;
     private JButton deleteButton;
+    private JBTable columnTable;
+    private JBTable queryTable;
     private JRadioButton defaultTemplateRadioButton;
     private JRadioButton customTemplateRadioButton;
-    private final List<ColumnInfo> columnInfoList;
-    private final String[] columnArr;
+    private String[] columnArr;
     private final TableInfo tableInfo;
-    private final DefaultTableModel defaultTableModel;
+    private final DefaultTableModel firstTableModel = new DefaultTableModel(null, Common.DB_TABLE_HEADER);
+    private final DefaultTableModel secondTableModel = new DefaultTableModel(null, Common.QUERY_COLUMN_TABLE_HEADER);
 
-    public GenerateCodeDialog(Project project,DbTable dbTable) {
+    public GenerateCodeDialog(Project project, DbTable dbTable) {
         super(project);
+        //解析表结构
+        tableInfo = new TableInfo(dbTable.getName(), dbTable.getComment());
+        columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        columnTable.setModel(firstTableModel);
+        for (DasColumn column : DasUtil.getColumns(dbTable)) {
+            String sqlColumn = column.getName();
+            String dataType = column.getDataType().typeName;
+            firstTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(sqlColumn)});
+            JTextField textField = new JTextField();
+            textField.setEnabled(false);
+            JTextField textField2 = new JTextField();
+            textField2.setEnabled(false);
+            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
+            columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
+            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
+            columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.DATA_TYPE_OPTIONS)));
+            columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
+        }
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
         addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
-        //解析表结构
-        tableInfo = new DBTableParse().parseSql(dbTable);
         //表格初始化
-        columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        defaultTableModel = new DefaultTableModel(null, Common.QUERY_COLUMN_TABLE_HEADER);
-        columnTable.setModel(defaultTableModel);
-        columnInfoList = tableInfo.getColumnList();
-        columnArr = columnInfoList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
-        columnTable.getModel().addTableModelListener(e -> {
+        queryTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        queryTable.setModel(secondTableModel);
+        queryTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {
-                String value = StringUtil.toHumpStyle(defaultTableModel.getValueAt(e.getFirstRow(), 0).toString());
-                defaultTableModel.setValueAt(value, e.getFirstRow(), 1);
+                String value = StringUtil.toHumpStyle(secondTableModel.getValueAt(e.getFirstRow(), 0).toString());
+                secondTableModel.setValueAt(value, e.getFirstRow(), 1);
             }
         });
         //初始化按钮
         initButtonListener();
         String title = Empty.of(dbTable.getComment()).map(t -> t + Common.SPACE).orElse(Common.BLANK_STRING) + dbTable.getName();
         this.setTitle(title);
+        showFirstPanel();
         super.init();
     }
 
@@ -99,21 +119,47 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         return contentPane;
     }
 
+    private void showFirstPanel() {
+        firstPanel.setVisible(true);
+        secondPanel.setVisible(false);
+    }
+
+    private void showSecondPanel() {
+        firstPanel.setVisible(false);
+        secondPanel.setVisible(true);
+        int rowCount = firstTableModel.getRowCount();
+        if (rowCount > 0) {
+            List<ColumnInfo> columnList = new ArrayList<>();
+            for (int i = 0; i < rowCount; i++) {
+                int row = i;
+                Function<Integer, String> function = column -> StringUtil.toString(firstTableModel.getValueAt(row, column));
+                ColumnInfo columnInfo = new ColumnInfo(function.apply(0), function.apply(1), function.apply(2), function.apply(3), function.apply(4));
+                columnList.add(columnInfo);
+            }
+            tableInfo.setColumnList(columnList);
+            columnArr = columnList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
+        }
+    }
+
     private void initButtonListener() {
+        //下一步
+        nextButton.addActionListener(e -> showSecondPanel());
+        //上一步
+        backButton.addActionListener(e -> showFirstPanel());
         //初始化按钮背景色
         initButtonBackground(addButton, deleteButton);
         //添加
         addButton.addActionListener(e -> {
             addMouseListener(deleteButton, IconEnum.REMOVE);
-            defaultTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
-            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
-            columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.SELECT_OPTIONS)));
+            secondTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
+            queryTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
+            queryTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
+            queryTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.SELECT_OPTIONS)));
         });
         //删除
-        deleteButton.addActionListener(e -> Equals.of(columnTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
-            defaultTableModel.removeRow(rowNum);
-            if (columnTable.getRowCount() == 0) {
+        deleteButton.addActionListener(e -> Equals.of(queryTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
+            secondTableModel.removeRow(rowNum);
+            if (queryTable.getRowCount() == 0) {
                 removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         }));
@@ -179,12 +225,12 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
 
     private List<ColumnInfo> getQueryColumnList() {
         List<ColumnInfo> queryColumnList = new ArrayList<>();
-        int rowCount = defaultTableModel.getRowCount();
+        int rowCount = secondTableModel.getRowCount();
         if (rowCount > 0) {
-            Map<String, ColumnInfo> columnInfoMap = columnInfoList.stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
+            Map<String, ColumnInfo> columnInfoMap = tableInfo.getColumnList().stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
             for (int i = 0; i < rowCount; i++) {
-                String columnName = StringUtil.toString(defaultTableModel.getValueAt(i, 0));
-                ColumnInfo queryColumnInfo = new ColumnInfo(columnName, defaultTableModel.getValueAt(i, 1), defaultTableModel.getValueAt(i, 2));
+                String columnName = StringUtil.toString(secondTableModel.getValueAt(i, 0));
+                ColumnInfo queryColumnInfo = new ColumnInfo(columnName, secondTableModel.getValueAt(i, 1), secondTableModel.getValueAt(i, 2));
                 Optional.ofNullable(columnInfoMap.get(columnName)).ifPresent(t -> {
                     queryColumnInfo.setSqlColumnType(t.getSqlColumnType());
                     queryColumnInfo.setColumnType(t.getColumnType());
@@ -194,6 +240,5 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         }
         return queryColumnList;
     }
-
 
 }
