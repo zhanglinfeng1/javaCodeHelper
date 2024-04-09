@@ -27,11 +27,9 @@ public class Message {
     public static final String CREATE_FILE_ERROR = "文件创建失败";
     public static final String FULL_PATH_NOT_NULL = "文件全路径不能为空";
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";
-    public static final String DB_TABLE_NOT_NULL = "请先选择表";
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
     public static final String UPLOAD_QR_CODE_FIRST = "请先上传二维码";
-
 
 }

@@ -29,7 +29,7 @@ public class XmlReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar) {
         //resultMap、refid标签跳转
-        psiReferenceRegistrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue(Xml.RESULT_MAP, Xml.REFID), new PsiReferenceProvider() {
+        psiReferenceRegistrar.registerReferenceProvider(XmlPatterns.xmlAttributeValue(Xml.RESULT_MAP, Xml.REF_ID), new PsiReferenceProvider() {
             @Override
             public @NotNull PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
                 XmlAttributeValue resultMapAttributeValue = (XmlAttributeValue) element;
