@@ -1,18 +1,9 @@
 package ${packagePath};
 
-<#list columnList as fields>
-    <#if fields.columnType == 'Timestamp'>
+import ${packagePath}.${tableName}VO;
 import java.sql.Timestamp;
-        <#break>
-    <#elseif fields.columnType == 'Date'>
 import java.util.Date;
-        <#break>
-    <#elseif fields.columnType == 'LocalDateTime'>
 import java.time.LocalDateTime;
-        <#break>
-    <#else>
-    </#if>
-</#list>
 
 /**
  * ${tableComment}
