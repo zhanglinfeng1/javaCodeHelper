@@ -39,7 +39,7 @@
               <component id="a593b" class="com.intellij.ui.table.JBTable" binding="columnTable">
                 <constraints/>
                 <properties>
-                  <preferredScrollableViewportSize width="400" height="300"/>
+                  <preferredScrollableViewportSize width="800" height="400"/>
                 </properties>
               </component>
             </children>
@@ -189,7 +189,7 @@
               <component id="4d4cb" class="com.intellij.ui.table.JBTable" binding="queryTable">
                 <constraints/>
                 <properties>
-                  <preferredScrollableViewportSize width="400" height="300"/>
+                  <preferredScrollableViewportSize width="800" height="400"/>
                 </properties>
               </component>
             </children>
