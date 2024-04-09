@@ -29,7 +29,6 @@ public class CommonConfigDialog implements BaseDialog {
     private JComboBox<String> translateApiComboBox;
     private TextFieldWithBrowseButton customTemplatesPathField;
     private JButton downloadButton;
-    private JComboBox<String> dateClassComboBox;
     private JComboBox<String> apiToolComboBox;
     private JRadioButton codeCompletionEnableButton;
     private JRadioButton codeCompletionDisabledButton;
@@ -61,7 +60,6 @@ public class CommonConfigDialog implements BaseDialog {
         authorField.setText(commonConfig.getAuthor());
 
         Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
-        Optional.ofNullable(commonConfig.getDateClassType()).ifPresent(dateClassComboBox::setSelectedIndex);
         Optional.ofNullable(commonConfig.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
     }
 
@@ -83,10 +81,6 @@ public class CommonConfigDialog implements BaseDialog {
 
     public String getCustomTemplatesPath() {
         return customTemplatesPathField.getText();
-    }
-
-    public Integer getDateClassType() {
-        return dateClassComboBox.getSelectedIndex();
     }
 
     public Integer getApiTool() {

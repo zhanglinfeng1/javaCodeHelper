@@ -17,8 +17,6 @@ public class CommonConfig {
     private String customTemplatesPath;
     /** 文件创建人 */
     private String author;
-    /** Java日期类 */
-    private Integer dateClassType = Common.DATE_CLASS_TYPE;
     /** api工具 */
     private Integer apiTool = Common.SWAGGER_API;
     /** 开启代码补全 */
@@ -64,14 +62,6 @@ public class CommonConfig {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public Integer getDateClassType() {
-        return dateClassType;
-    }
-
-    public void setDateClassType(Integer dateClassType) {
-        this.dateClassType = dateClassType;
     }
 
     public Integer getApiTool() {

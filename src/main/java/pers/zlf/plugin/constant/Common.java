@@ -52,8 +52,6 @@ public class Common {
     public static final String TEMPLATE_CONFIG = "模版配置";
     public static final String COMMON_TOOLS = "常用工具";
 
-    /** java时间类型 */
-    public static final Integer DATE_CLASS_TYPE = 0;
     /** 表头 */
     public static final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
     public static final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";

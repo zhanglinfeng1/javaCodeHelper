@@ -44,9 +44,6 @@ public class CommonConfigurable implements Configurable {
         if (!dialog.getSecurityKey().equals(config.getSecretKey())) {
             return true;
         }
-        if (!dialog.getDateClassType().equals(config.getDateClassType())) {
-            return true;
-        }
         if (!dialog.getApiTool().equals(config.getApiTool())) {
             return true;
         }
@@ -68,7 +65,6 @@ public class CommonConfigurable implements Configurable {
         config.setAppId(dialog.getAppId());
         config.setSecretKey(dialog.getSecurityKey());
         config.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
-        config.setDateClassType(dialog.getDateClassType());
         config.setApiTool(dialog.getApiTool());
         config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
         config.setAuthor(dialog.getAuthor());
