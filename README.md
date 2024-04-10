@@ -41,7 +41,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 1.选择文本后，右击选择“工具”![image](src/main/resources/example/rightClickTool.png)<br />
 2.打开 View > Tool Windows > JavaCodeHelp ![image](src/main/resources/example/toolWindow.png)<br />
 
-## 根据建表SQL生成代码
+## 自定义模版生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
 Database中右击选中<br />![image](src/main/resources/example/generateCode.png)<br />
 建议使用自定义模板，生成的代码更符合自己的项目。可在配置中下载默认模板，在此基础上修改<br />
