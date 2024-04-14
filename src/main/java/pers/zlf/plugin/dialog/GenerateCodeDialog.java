@@ -30,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
@@ -61,8 +60,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private JButton deleteButton;
     private JBTable columnTable;
     private JBTable queryTable;
-    private JRadioButton defaultTemplateRadioButton;
-    private JRadioButton customTemplateRadioButton;
+    private JTextField tableNamePrefixField;
     private String[] columnArr;
     private final TableInfo tableInfo;
     private final DefaultTableModel firstTableModel = new DefaultTableModel(null, Common.DB_TABLE_HEADER);
@@ -170,12 +168,17 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
                 String packagePath = Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-                String author = Optional.ofNullable(ConfigFactory.getInstance().getCommonConfig().getAuthor()).orElse(Common.BLANK_STRING);
+                String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
+                String tableNamePrefix = tableNamePrefixField.getText();
+                if (StringUtil.isEmpty(author)) {
+                    throw new Exception(Message.TEMPLATE_AUTHOR_CONFIGURATION);
+                }
+                tableInfo.dealTableName(tableNamePrefix);
                 tableInfo.setAuthor(author);
                 tableInfo.setPackagePath(packagePath);
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
-                TemplateFactory.getInstance().create(fullPath, tableInfo, defaultTemplateRadioButton.isSelected());
+                TemplateFactory.getInstance().create(fullPath, tableInfo);
                 Messages.showMessageDialog(Common.SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());

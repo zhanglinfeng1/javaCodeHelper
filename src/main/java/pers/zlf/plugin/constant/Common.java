@@ -11,7 +11,6 @@ public class Common {
     public static final String SUCCESS = "success";
     public static final String TRUE = "true";
     public static final String BLANK_STRING = "";
-    public static final String DOUBLE_BACKSLASH = "\\";
     public static final String SLASH = "/";
     public static final String DOT = ".";
     public static final String COMMA = ",";
@@ -33,12 +32,14 @@ public class Common {
     public static final String T = "t";
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String IMAGE_JPG = "JPG";
+    public static final String MODEL = "Model";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
     public static final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
     public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
-    public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "Controller.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "VO.java.ftl");
+    public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
+    public static final String TEMPLATE_NAME = "模版名称";
 
     /** 占位符 */
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";

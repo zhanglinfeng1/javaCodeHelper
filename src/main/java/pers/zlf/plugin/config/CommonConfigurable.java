@@ -50,13 +50,7 @@ public class CommonConfigurable implements Configurable {
         if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
             return true;
         }
-        if (!dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength())) {
-            return true;
-        }
-        if (!dialog.getAuthor().equals(config.getAuthor())) {
-            return true;
-        }
-        return !dialog.getCustomTemplatesPath().equals(config.getCustomTemplatesPath());
+        return !dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength());
     }
 
     @Override
@@ -64,10 +58,8 @@ public class CommonConfigurable implements Configurable {
         config.setTranslateApi(dialog.getTranslateApi());
         config.setAppId(dialog.getAppId());
         config.setSecretKey(dialog.getSecurityKey());
-        config.setCustomTemplatesPath(dialog.getCustomTemplatesPath());
         config.setApiTool(dialog.getApiTool());
         config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
-        config.setAuthor(dialog.getAuthor());
         ConfigFactory.getInstance().setCommonConfig(config);
     }
 

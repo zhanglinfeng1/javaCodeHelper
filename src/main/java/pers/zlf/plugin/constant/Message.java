@@ -16,14 +16,13 @@ public class Message {
     /** 配置 */
     public static final String TRANSLATION_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 翻译配置";
     public static final String CODE_STATISTICAL_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 代码统计 > 参与统计的文件类型";
-    public static final String CUSTOMER_TEMPLATE_PATH_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 自定义模板路径";
+    public static final String TEMPLATE_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 自定义模版配置";
+    public static final String TEMPLATE_AUTHOR_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 作者";
+
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";
 
     /** 模版生成代码 */
     public static final String FULL_PATH_CREATE_ERROR = "文件全路径创建失败";
-    public static final String CUSTOMER_TEMPLATE_PATH_NOT_EXISTS = "自定义模板路径不存在";
-    public static final String CUSTOMER_TEMPLATE_PATH_NOT_FOLDER = "自定义模板路径必须是文件夹";
-    public static final String CUSTOMER_TEMPLATE_PATH_NO_FILE = "不存在后缀为.ftl的模版文件";
     public static final String CREATE_FILE_ERROR = "文件创建失败";
     public static final String FULL_PATH_NOT_NULL = "文件全路径不能为空";
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";

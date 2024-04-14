@@ -1,8 +1,5 @@
 package pers.zlf.plugin.factory;
 
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import pers.zlf.plugin.constant.ClassType;
@@ -13,7 +10,6 @@ import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
 import pers.zlf.plugin.util.StringUtil;
-import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import java.io.BufferedWriter;
@@ -24,10 +20,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -56,38 +53,50 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
-     * @param filePath           文件路径
-     * @param tableInfo          表信息
-     * @param useDefaultTemplate true：使用默认模版 false：使用自定义模版
+     * @param filePath  文件路径
+     * @param tableInfo 表信息
      * @throws Exception 异常
      */
-    public void create(String filePath, TableInfo tableInfo, boolean useDefaultTemplate) throws Exception {
-        filePath = filePath + (filePath.endsWith(Common.DOUBLE_BACKSLASH) ? Common.BLANK_STRING : Common.DOUBLE_BACKSLASH);
+    public void create(String filePath, TableInfo tableInfo) throws Exception {
         Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception(Message.FULL_PATH_CREATE_ERROR));
-        filePath = filePath + tableInfo.getTableName();
         tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
-        if (useDefaultTemplate) {
-            configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), Common.TEMPLATE_PATH);
-            for (String templateName : Common.TEMPLATE_LIST) {
-                create(filePath, configuration.getTemplate(templateName), map);
+        //创建临时模版文件
+        String temporaryFilePath = Path.of(filePath, Common.JAVA_CODE_HELPER).toString();
+        createTemporaryFile(temporaryFilePath);
+        //添加自定义模板
+        File file = new File(temporaryFilePath);
+        configuration.setDirectoryForTemplateLoading(file);
+        for (File subFile : Objects.requireNonNull(file.listFiles())) {
+            String name = subFile.getName();
+            if (name.endsWith(ClassType.FREEMARKER_FILE)) {
+                create(filePath, tableInfo.getTableName(), configuration.getTemplate(name), map);
             }
-        } else {
-            //添加自定义模板
-            String customTemplatesPath = Empty.of(ConfigFactory.getInstance().getCommonConfig().getCustomTemplatesPath()).ifEmptyThrow(() -> new Exception(Message.CUSTOMER_TEMPLATE_PATH_CONFIGURATION));
-            File file = new File(customTemplatesPath);
-            Equals.of(file.exists()).ifFalseThrow(() -> new Exception(Message.CUSTOMER_TEMPLATE_PATH_NOT_EXISTS));
-            Equals.of(file.isDirectory()).ifFalseThrow(() -> new Exception(Message.CUSTOMER_TEMPLATE_PATH_NOT_FOLDER));
-            configuration.setDirectoryForTemplateLoading(file);
-            boolean empty = true;
-            for (File subFile : Objects.requireNonNull(file.listFiles(), Message.CUSTOMER_TEMPLATE_PATH_NO_FILE)) {
-                String name = subFile.getName();
-                if (name.endsWith(ClassType.FREEMARKER_FILE)) {
-                    create(filePath, configuration.getTemplate(name), map);
-                    empty = false;
-                }
-            }
-            Equals.of(empty).ifTrueThrow(() -> new Exception(Message.CUSTOMER_TEMPLATE_PATH_NO_FILE));
+        }
+        //删除临时模版文件
+        for (File templateFile : file.listFiles()) {
+            templateFile.delete();
+        }
+        file.delete();
+        System.out.println(1);
+    }
+
+    /**
+     * 生成临时模版文件
+     *
+     * @throws IOException 异常
+     */
+    private void createTemporaryFile(String filePath) throws Exception {
+        Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs);
+        Map<String, String> templateMap = ConfigFactory.getInstance().getTemplateConfig().getTemplateMap();
+        if (templateMap == null || templateMap.isEmpty()) {
+            throw new Exception(Message.TEMPLATE_CONFIGURATION);
+        }
+        for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
+            FileWriter file = new FileWriter(Path.of(filePath, templateEntry.getKey() + ClassType.FREEMARKER_FILE).toString(), true);
+            file.append(templateEntry.getValue());
+            file.flush();
+            file.close();
         }
     }
 
@@ -95,39 +104,24 @@ public class TemplateFactory {
      * 生成文件
      *
      * @param filePath 文件路径
+     * @param tableName 表名
      * @param template 模版
      * @param map      模版数据
      * @throws Exception 异常
      */
-    private void create(String filePath, Template template, Map<String, Object> map) throws Exception {
-        filePath = filePath + template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+    private void create(String filePath, String tableName, Template template, Map<String, Object> map) throws Exception {
+        String fileName = template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+        if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName)) {
+            fileName = tableName + ClassType.JAVA_FILE;
+        } else {
+            fileName = tableName + fileName;
+        }
+        filePath = Path.of(filePath, fileName).toString();
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
             template.process(map, bufferedWriter);
         } catch (Exception e) {
             throw new Exception(filePath + Message.CREATE_FILE_ERROR + e.getMessage());
         }
-    }
-
-    /**
-     * 下载默认模版
-     *
-     * @return boolean
-     * @throws IOException 异常
-     */
-    public boolean download() throws IOException {
-        String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
-        if (StringUtil.isNotEmpty(path)) {
-            for (String templateName : Common.TEMPLATE_LIST) {
-                Template template = configuration.getTemplate(templateName);
-                FileWriter file = new FileWriter(path + Common.DOUBLE_BACKSLASH + template.getName(), true);
-                //TODO 寻找替换方法
-                file.append(template.getRootTreeNode().toString());
-                file.flush();
-                file.close();
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -146,5 +140,23 @@ public class TemplateFactory {
         } catch (Exception ignored) {
         }
         return Arrays.stream(stringWriter.toString().split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.WRAP));
+    }
+
+    /**
+     * 获取全部默认模版
+     *
+     * @return Map<String, String>
+     */
+    public Map<String, String> getAllDefaultTemplate() {
+        Map<String, String> map = new HashMap<>();
+        for (String templateName : Common.TEMPLATE_LIST) {
+            Template template = null;
+            try {
+                template = configuration.getTemplate(templateName);
+            } catch (IOException ignored) {
+            }
+            map.put(templateName, template.getRootTreeNode().toString());
+        }
+        return map;
     }
 }

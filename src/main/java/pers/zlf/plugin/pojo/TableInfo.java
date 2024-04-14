@@ -36,10 +36,16 @@ public class TableInfo {
     }
 
     public TableInfo(String sqlTableName, String tableComment) {
-        String tableName = Arrays.stream(sqlTableName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
-        String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.sqlTableName = sqlTableName;
         this.tableComment = Empty.of(tableComment).orElse(sqlTableName);
+    }
+
+    public void dealTableName(String tableNamePrefix){
+        if (StringUtil.isNotEmpty(tableNamePrefix)){
+            this.sqlTableName = this.sqlTableName.substring(tableNamePrefix.length());
+        }
+        String tableName = Arrays.stream(this.sqlTableName.split(Common.UNDERLINE)).map(StringUtil::toUpperCaseFirst).collect(Collectors.joining());
+        String firstLowerTableName = StringUtil.toLowerCaseFirst(tableName);
         this.tableName = tableName;
         this.firstLowerTableName = firstLowerTableName;
     }

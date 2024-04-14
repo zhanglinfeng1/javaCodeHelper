@@ -34,7 +34,9 @@ public interface BaseDialog {
      * @param iconEnum ICON_ENUM
      */
     default void addMouseListener(JButton button, IconEnum iconEnum) {
-        button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
+        if (iconEnum != null) {
+            button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
+        }
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
         }
@@ -48,7 +50,9 @@ public interface BaseDialog {
      */
     default void removeMouseListener(JButton button, IconEnum iconEnum) {
         Container container = button.getParent();
-        button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
+        if (iconEnum != null) {
+            button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
+        }
         button.setBackground(container.getBackground());
         Arrays.stream(button.getMouseListeners()).filter(m -> !(m instanceof BasicButtonListener)).findAny().ifPresent(button::removeMouseListener);
     }

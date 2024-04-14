@@ -13,10 +13,6 @@ public class CommonConfig {
     private String appId;
     /** 翻译api secretKey */
     private String secretKey;
-    /** 自定义模板文件夹 */
-    private String customTemplatesPath;
-    /** 文件创建人 */
-    private String author;
     /** api工具 */
     private Integer apiTool = Common.SWAGGER_API;
     /** 开启代码补全 */
@@ -46,22 +42,6 @@ public class CommonConfig {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
-    }
-
-    public String getCustomTemplatesPath() {
-        return customTemplatesPath;
-    }
-
-    public void setCustomTemplatesPath(String customTemplatesPath) {
-        this.customTemplatesPath = customTemplatesPath;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public Integer getApiTool() {
