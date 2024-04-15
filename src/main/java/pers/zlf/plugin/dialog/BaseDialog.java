@@ -115,7 +115,7 @@ public interface BaseDialog {
      *
      * @param button 按钮
      */
-    private void addMouseListener(JButton button) {
+    default void addMouseListener(JButton button) {
         Container container = button.getParent();
         button.addMouseListener(new MouseListener() {
             @Override
