@@ -102,15 +102,15 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
-     * @param filePath 文件路径
+     * @param filePath  文件路径
      * @param tableName 表名
-     * @param template 模版
-     * @param map      模版数据
+     * @param template  模版
+     * @param map       模版数据
      * @throws Exception 异常
      */
     private void create(String filePath, String tableName, Template template, Map<String, Object> map) throws Exception {
         String fileName = template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-        if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName)) {
+        if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
             fileName = tableName;
         } else {
             fileName = tableName + fileName;

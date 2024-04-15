@@ -40,16 +40,11 @@ public class TemplateConfigDialog implements BaseDialog {
     private JButton resetButton;
 
     public TemplateConfigDialog() {
-        //初始化按钮背景色
-        initButtonBackground(addButton, deleteButton);
-        addMouseListener(addButton, null);
-        addMouseListener(deleteButton, null);
         //添加
         addButton.addActionListener(e -> {
             String title = Messages.showInputDialog((Project) null, null, Common.TEMPLATE_NAME, Messages.getInformationIcon());
             if (StringUtil.isNotEmpty(title)) {
-                templatePane.addTab(title, getTemplateJPanel(Common.BLANK_STRING));
-                addMouseListener(deleteButton, null);
+                templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
             }
         });
         //删除
@@ -57,10 +52,6 @@ public class TemplateConfigDialog implements BaseDialog {
             int index = templatePane.getSelectedIndex();
             if (index != -1) {
                 templatePane.remove(index);
-            }
-            int total = templatePane.getTabCount();
-            if (total == 0) {
-                removeMouseListener(deleteButton, null);
             }
         });
         //重置
@@ -71,9 +62,8 @@ public class TemplateConfigDialog implements BaseDialog {
                 String key = templateEntry.getKey();
                 String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
                 title = ClassType.JAVA_FILE.equals(title) ? Common.MODEL + ClassType.JAVA_FILE : title;
-                templatePane.addTab(title, getTemplateJPanel(templateMap.get(key)));
+                templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
             }
-            addMouseListener(deleteButton, null);
         });
     }
 
@@ -83,10 +73,7 @@ public class TemplateConfigDialog implements BaseDialog {
         Map<String, String> templateMap = templateConfig.getTemplateMap();
         templatePane.removeAll();
         for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
-            templatePane.addTab(templateEntry.getKey(), getTemplateJPanel(templateEntry.getValue()));
-        }
-        if (templateMap.isEmpty()) {
-            removeMouseListener(deleteButton, null);
+            templatePane.addTab(templateEntry.getKey(), createTemplateJPanel(templateEntry.getValue()));
         }
     }
 
@@ -110,7 +97,7 @@ public class TemplateConfigDialog implements BaseDialog {
         return map;
     }
 
-    private JPanel getTemplateJPanel(String text) {
+    private JPanel createTemplateJPanel(String text) {
         JPanel jPanel = new JPanel(new GridLayout());
         JScrollPane pane = new JBScrollPane();
         LanguageTextField languageTextField = new LanguageTextField(JavaLanguage.INSTANCE, null, text, false);
