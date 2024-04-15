@@ -78,7 +78,6 @@ public class TemplateFactory {
             templateFile.delete();
         }
         file.delete();
-        System.out.println(1);
     }
 
     /**
@@ -112,9 +111,12 @@ public class TemplateFactory {
     private void create(String filePath, String tableName, Template template, Map<String, Object> map) throws Exception {
         String fileName = template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
         if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName)) {
-            fileName = tableName + ClassType.JAVA_FILE;
+            fileName = tableName;
         } else {
             fileName = tableName + fileName;
+        }
+        if (!fileName.contains(Common.DOT)) {
+            fileName = fileName + ClassType.JAVA_FILE;
         }
         filePath = Path.of(filePath, fileName).toString();
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
