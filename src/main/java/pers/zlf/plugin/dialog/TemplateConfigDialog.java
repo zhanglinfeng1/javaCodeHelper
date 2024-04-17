@@ -63,7 +63,6 @@ public class TemplateConfigDialog implements BaseDialog {
             for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
                 String key = templateEntry.getKey();
                 String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-                title = ClassType.JAVA_FILE.equals(title) ? Common.MODEL + ClassType.JAVA_FILE : title;
                 templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
             }
         });

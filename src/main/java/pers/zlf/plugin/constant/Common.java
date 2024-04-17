@@ -38,7 +38,7 @@ public class Common {
     public static final String TEMPLATE_PATH = "templates";
     public static final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
     public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
-    public static final List<String> TEMPLATE_LIST = List.of(".java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
+    public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String TEMPLATE_NAME = "模版名称";
 
     /** 占位符 */
