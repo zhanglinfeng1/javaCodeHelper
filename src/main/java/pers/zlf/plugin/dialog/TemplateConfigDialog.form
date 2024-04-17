@@ -89,33 +89,54 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="d0245" class="javax.swing.JButton" binding="resetButton">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="重置成默认模版"/>
-            </properties>
-          </component>
           <hspacer id="e56bf">
             <constraints>
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
-          <component id="3d5e2" class="javax.swing.JButton" binding="addButton">
+          <component id="2e24" class="javax.swing.JButton" binding="addButton">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="20" height="20"/>
+                <preferred-size width="20" height="20"/>
+                <maximum-size width="20" height="20"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="新增模版"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <opaque value="true"/>
+              <text value=""/>
             </properties>
           </component>
-          <component id="428c5" class="javax.swing.JButton" binding="deleteButton">
+          <component id="c7116" class="javax.swing.JButton" binding="deleteButton">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="20" height="20"/>
+                <preferred-size width="20" height="20"/>
+                <maximum-size width="20" height="20"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="删除模版"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <opaque value="true"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="9b606" class="javax.swing.JButton" binding="resetButton">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="20" height="20"/>
+                <preferred-size width="20" height="20"/>
+                <maximum-size width="20" height="20"/>
+              </grid>
+            </constraints>
+            <properties>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <opaque value="true"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

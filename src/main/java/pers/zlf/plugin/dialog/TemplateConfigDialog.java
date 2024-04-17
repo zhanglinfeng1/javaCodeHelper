@@ -11,6 +11,7 @@ import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.config.TemplateConfig;
@@ -42,11 +43,17 @@ public class TemplateConfigDialog implements BaseDialog {
     private JButton resetButton;
 
     public TemplateConfigDialog() {
+        //初始化按钮背景色
+        initButtonBackground(addButton, deleteButton, resetButton);
+        addMouseListener(addButton, IconEnum.ADD);
+        addMouseListener(deleteButton, IconEnum.REMOVE);
+        addMouseListener(resetButton, IconEnum.RESET);
         //添加
         addButton.addActionListener(e -> {
             String title = Messages.showInputDialog((Project) null, null, Common.TEMPLATE_NAME, Messages.getInformationIcon());
             if (StringUtil.isNotEmpty(title)) {
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
+                addMouseListener(deleteButton, IconEnum.REMOVE);
             }
         });
         //删除
@@ -54,6 +61,10 @@ public class TemplateConfigDialog implements BaseDialog {
             int index = templatePane.getSelectedIndex();
             if (index != -1) {
                 templatePane.remove(index);
+            }
+            int total = templatePane.getTabCount();
+            if (total == 0) {
+                removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         });
         //重置
@@ -65,6 +76,7 @@ public class TemplateConfigDialog implements BaseDialog {
                 String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
                 templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
             }
+            addMouseListener(deleteButton, IconEnum.REMOVE);
         });
     }
 
@@ -75,6 +87,9 @@ public class TemplateConfigDialog implements BaseDialog {
         templatePane.removeAll();
         for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
             templatePane.addTab(templateEntry.getKey(), createTemplateJPanel(templateEntry.getValue()));
+        }
+        if (templateMap.isEmpty()) {
+            removeMouseListener(deleteButton, IconEnum.REMOVE);
         }
     }
 

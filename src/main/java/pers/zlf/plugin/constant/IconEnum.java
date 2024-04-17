@@ -10,7 +10,9 @@ public enum IconEnum {
     //删除按钮图标
     REMOVE(Icon.REMOVE, Icon.REMOVE_DARK),
     //编辑按钮图标
-    EDIT(Icon.EDIT, Icon.EDIT_DARK);
+    EDIT(Icon.EDIT, Icon.EDIT_DARK),
+    //重置按钮图标
+    RESET(Icon.RESET, Icon.RESET_DARK);
 
     private final javax.swing.Icon brightIcon;
 
