@@ -104,7 +104,7 @@ public class TemplateConfigDialog implements BaseDialog {
         JScrollPane pane = new JBScrollPane();
         LanguageTextField languageTextField = new LanguageTextField(JavaLanguage.INSTANCE, null, text, false);
         Color themeColor = panel.getBackground();
-        languageTextField.setBackground(ColorUtil.isDark(themeColor) ? themeColor.brighter() : themeColor.darker());
+        languageTextField.setBackground(ColorUtil.isDark(themeColor) ? themeColor.darker() : themeColor.brighter());
         pane.setViewportView(languageTextField);
         jPanel.add(pane);
         languageTextField.addDocumentListener(new DocumentListener() {
