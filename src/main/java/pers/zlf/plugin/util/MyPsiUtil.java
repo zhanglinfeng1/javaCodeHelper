@@ -122,7 +122,6 @@ public class MyPsiUtil {
      * @return 属性值
      */
     public static String getAnnotationValue(PsiAnnotation annotation, String attributeName) {
-        //TODO 获取实际值
         String attributeValue = Optional.ofNullable(annotation)
                 .map(t -> t.findAttributeValue(attributeName))
                 .map(PsiAnnotationMemberValue::getText)

@@ -17,7 +17,6 @@ public class CommonToolsDialog {
     private JTabbedPane tabbedPane;
 
     public CommonToolsDialog() {
-        //TODO 更改选中标签的颜色
         tabbedPane.add("Unicode", new UnicodeDialog().getContent());
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
         tabbedPane.add("Ascii", new AsciiDialog().getContent());

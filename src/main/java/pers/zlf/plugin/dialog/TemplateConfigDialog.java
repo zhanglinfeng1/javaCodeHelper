@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.ColorUtil;
 import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.HashMap;
@@ -101,6 +103,8 @@ public class TemplateConfigDialog implements BaseDialog {
         JPanel jPanel = new JPanel(new GridLayout());
         JScrollPane pane = new JBScrollPane();
         LanguageTextField languageTextField = new LanguageTextField(JavaLanguage.INSTANCE, null, text, false);
+        Color themeColor = panel.getBackground();
+        languageTextField.setBackground(ColorUtil.isDark(themeColor) ? themeColor.brighter() : themeColor.darker());
         pane.setViewportView(languageTextField);
         jPanel.add(pane);
         languageTextField.addDocumentListener(new DocumentListener() {
