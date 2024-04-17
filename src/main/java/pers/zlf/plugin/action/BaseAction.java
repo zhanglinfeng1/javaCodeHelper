@@ -1,5 +1,6 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -30,6 +31,11 @@ public abstract class BaseAction extends AnAction {
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
         event.getPresentation().setVisible(isVisible());
+    }
+
+    @NotNull
+    public ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     /**

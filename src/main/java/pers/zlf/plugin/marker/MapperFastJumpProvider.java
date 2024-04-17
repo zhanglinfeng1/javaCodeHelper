@@ -64,8 +64,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public boolean checkPsiElement(PsiElement element) {
-        if (element instanceof PsiClass) {
-            PsiClass psiClass = (PsiClass) element;
+        if (element instanceof PsiClass psiClass) {
             return !psiClass.isAnnotationType() && psiClass.isInterface() && psiClass.getMethods().length != 0;
         }
         return false;
@@ -143,8 +142,7 @@ public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
         //文件
         for (PsiFile psiFile : psiDirectory.getFiles()) {
             //处理xml文件
-            if (psiFile instanceof XmlFile) {
-                XmlFile xmlFile = (XmlFile) psiFile;
+            if (psiFile instanceof XmlFile xmlFile) {
                 XmlTag mapperTag = XmlUtil.getRootTagByName(xmlFile, Xml.MAPPER);
                 if (null == mapperTag || !classFullName.equals(mapperTag.getAttributeValue(Xml.NAMESPACE))) {
                     continue;

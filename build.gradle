@@ -1,13 +1,13 @@
 plugins {
-    id 'org.jetbrains.intellij' version '1.16.1'
+    id 'org.jetbrains.intellij' version '1.17.3'
 }
 
 group 'pers.zlf'
 
-targetCompatibility = 11
+targetCompatibility = 17
 
 intellij {
-    version = '2021.2.3'
+    version = '2024.1'
     type = 'IU'
     plugins = ['java','DatabaseTools']
     updateSinceUntilBuild = false

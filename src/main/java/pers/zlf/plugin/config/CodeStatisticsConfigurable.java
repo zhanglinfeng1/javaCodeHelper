@@ -45,9 +45,6 @@ public class CodeStatisticsConfigurable implements Configurable {
         if (!CollectionUtil.equals(dialog.getGitEmailList(), config.getGitEmailList())) {
             return true;
         }
-        if (dialog.isRealTimeStatistics() != config.isRealTimeStatistics()) {
-            return true;
-        }
         if (dialog.isCountEmptyLine() != config.isCountEmptyLine()) {
             return true;
         }
@@ -64,13 +61,10 @@ public class CodeStatisticsConfigurable implements Configurable {
         config.setCountComment(dialog.isCountComment());
         config.setCountEmptyLine(dialog.isCountEmptyLine());
         config.setCountKeyword(dialog.isCountKeyword());
-        config.setRealTimeStatistics(dialog.isRealTimeStatistics());
         ConfigFactory.getInstance().setCodeStatisticsConfig(config);
         // 重新统计
-        if (config.isRealTimeStatistics()){
-            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-                CodeLineCountAction.countCodeLines(project);
-            }
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            CodeLineCountAction.countCodeLines(project);
         }
     }
 

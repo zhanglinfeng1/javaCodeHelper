@@ -98,8 +98,7 @@ public class MyExpressionUtil {
      */
     public static SimplifyInfo simplifyReturn(PsiElement element, String variableName) {
         //简化return
-        if (element instanceof PsiReturnStatement) {
-            PsiReturnStatement returnStatement = (PsiReturnStatement) element;
+        if (element instanceof PsiReturnStatement returnStatement) {
             PsiExpression expression = returnStatement.getReturnValue();
             return simplifyIntoLambda(expression, variableName);
         }
@@ -227,20 +226,18 @@ public class MyExpressionUtil {
      */
     public static SimplifyInfo simplifyDeclaration(PsiExpression variableExpression) {
         SimplifyInfo simplifyInfo = new SimplifyInfo();
-        if (!(variableExpression instanceof PsiReferenceExpression)) {
+        if (!(variableExpression instanceof PsiReferenceExpression variableReference)) {
             return simplifyInfo;
         }
         //判断对象
-        PsiReferenceExpression variableReference = (PsiReferenceExpression) variableExpression;
         PsiElement variableElement = variableReference.resolve();
-        if (!(variableElement instanceof PsiLocalVariable)) {
+        if (!(variableElement instanceof PsiLocalVariable variable)) {
             return simplifyInfo;
         }
         int currentOffset = variableReference.getTextOffset();
         PsiCodeBlock psiCodeBlock = PsiTreeUtil.getParentOfType(variableReference, PsiCodeBlock.class);
         int startOffset = Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextOffset).orElse(0);
         int endOffset = startOffset + Optional.ofNullable(psiCodeBlock).map(PsiCodeBlock::getTextLength).orElse(0);
-        PsiLocalVariable variable = (PsiLocalVariable) variableElement;
         //获取最近的赋值表达式
         int nearestReferenceOffset = 0;
         PsiAssignmentExpression assignmentExpression = null;
@@ -278,8 +275,7 @@ public class MyExpressionUtil {
         }
         //简化声明语句
         PsiElement declaration = variable.getParent();
-        if (declaration instanceof PsiDeclarationStatement) {
-            PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) declaration;
+        if (declaration instanceof PsiDeclarationStatement declarationStatement) {
             String declarationText = declarationStatement.getText();
             int index = declarationText.indexOf(Common.EQ_STR.trim());
             if (index == -1) {

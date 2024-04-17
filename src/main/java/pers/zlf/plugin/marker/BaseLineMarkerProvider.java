@@ -3,6 +3,7 @@ package pers.zlf.plugin.marker;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
+import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiElement;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -91,8 +93,7 @@ public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescri
      * @param handler       具体处理方法
      */
     protected void addLineMarkerInfo(PsiMethod method, PsiElement sourceElement, GutterIconNavigationHandler<PsiMethod> handler) {
-        //TODO 兼容2020.1.4及以下版本，后续使用result.add(new RelatedItemLineMarkerInfo<>(method, method.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
-        result.add(new LineMarkerInfo<>(method, sourceElement.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER));
+        result.add(new RelatedItemLineMarkerInfo<>(method, sourceElement.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
     }
 
 }

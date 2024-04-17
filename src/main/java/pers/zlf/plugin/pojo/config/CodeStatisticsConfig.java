@@ -14,8 +14,6 @@ public class CodeStatisticsConfig {
     private boolean countComment = true;
     /** 统计关键字 */
     private boolean countKeyword = true;
-    /** 实时统计 */
-    private boolean realTimeStatistics = false;
     /** 参与代码行数统计的文件类型 */
     private List<String> fileTypeList = new ArrayList<>();
     /** 参与统计的git邮箱 */
@@ -43,14 +41,6 @@ public class CodeStatisticsConfig {
 
     public void setCountKeyword(boolean countKeyword) {
         this.countKeyword = countKeyword;
-    }
-
-    public boolean isRealTimeStatistics() {
-        return realTimeStatistics;
-    }
-
-    public void setRealTimeStatistics(boolean realTimeStatistics) {
-        this.realTimeStatistics = realTimeStatistics;
     }
 
     public List<String> getFileTypeList() {

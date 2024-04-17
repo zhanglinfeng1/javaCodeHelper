@@ -178,8 +178,7 @@ public class MyPsiUtil {
      * @return List<User> return User
      */
     public static PsiClass getReferenceTypeClass(PsiType psiType) {
-        if (psiType instanceof PsiClassReferenceType) {
-            PsiClassReferenceType referenceType = (PsiClassReferenceType) psiType;
+        if (psiType instanceof PsiClassReferenceType referenceType) {
             PsiType[] psiTypeArr = referenceType.getParameters();
             if (psiTypeArr.length == 1) {
                 return PsiUtil.resolveClassInClassTypeOnly(psiTypeArr[0]);
@@ -323,8 +322,7 @@ public class MyPsiUtil {
     public static String getComment(PsiElement element) {
         StringBuilder comment = new StringBuilder(Common.BLANK_STRING);
         for (PsiElement childrenElement : element.getChildren()) {
-            if (childrenElement instanceof PsiDocComment) {
-                PsiDocComment docComment = (PsiDocComment) childrenElement;
+            if (childrenElement instanceof PsiDocComment docComment) {
                 String value = Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining());
                 value = Arrays.stream(value.split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SPACE));
                 comment.append(value);
@@ -344,8 +342,7 @@ public class MyPsiUtil {
     public static Map<String, String> getParamComment(PsiElement element) {
         Map<String, String> commentMap = new HashMap<>(2);
         for (PsiElement childrenElement : element.getChildren()) {
-            if (childrenElement instanceof PsiDocComment) {
-                PsiDocComment docComment = (PsiDocComment) childrenElement;
+            if (childrenElement instanceof PsiDocComment docComment) {
                 for (PsiDocTag tag : docComment.getTags()) {
                     Optional.ofNullable(tag.getValueElement()).map(PsiDocTagValue::getText).ifPresent(paramName -> {
                         PsiElement[] dataElementArr = tag.getDataElements();
@@ -425,8 +422,7 @@ public class MyPsiUtil {
         for (PsiElement element : codeBlock.getChildren()) {
             //获取元素
             Optional.ofNullable(function.apply(element)).ifPresent(elementList::addAll);
-            if (element instanceof PsiStatement) {
-                PsiStatement statement = (PsiStatement) element;
+            if (element instanceof PsiStatement statement) {
                 //递归代码块
                 Arrays.stream(statement.getChildren()).filter(t -> t instanceof PsiBlockStatement)
                         .map(t -> (PsiBlockStatement) t).forEach(blockStatement -> elementList.addAll(getElementFromPsiCodeBlock(blockStatement.getCodeBlock(), function)));
@@ -476,8 +472,7 @@ public class MyPsiUtil {
      * @param classFullNameArr 待导入类
      */
     public static void importClass(PsiFile psiFile, String... classFullNameArr) {
-        if (psiFile instanceof PsiJavaFile) {
-            PsiJavaFile javaFile = (PsiJavaFile) psiFile;
+        if (psiFile instanceof PsiJavaFile javaFile) {
             GlobalSearchScope globalSearchScope = javaFile.getResolveScope();
             for (String classFullName : classFullNameArr) {
                 MyPsiUtil.findClassByFullName(globalSearchScope, classFullName).ifPresent(javaFile::importClass);

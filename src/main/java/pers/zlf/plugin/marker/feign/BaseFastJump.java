@@ -125,7 +125,7 @@ public abstract class BaseFastJump {
                 .map(f -> ((PsiJavaFile) f).getClasses())
                 .filter(classes -> classes.length == 1)
                 .map(classes -> classes[0])
-                .filter(this::checkTargetClass).collect(Collectors.toList());
+                .filter(this::checkTargetClass).toList();
         //处理类中的方法
         for (PsiClass psiClass : psiClassList) {
             String classUrl = this.getClassUrl(psiClass);

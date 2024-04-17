@@ -22,8 +22,7 @@ public class StringUtil {
     }
 
     public static boolean isEmpty(Object obj) {
-        if (obj instanceof Collection<?>){
-            Collection<?> col = (Collection<?>) obj;
+        if (obj instanceof Collection<?> col){
             return col.isEmpty();
         }
         String str = toString(obj);

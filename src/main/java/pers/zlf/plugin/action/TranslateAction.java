@@ -49,8 +49,7 @@ public class TranslateAction extends BaseAction {
                 if (StringUtil.isNotEmpty(translateResult)) {
                     //复制菜单
                     ActionListener actionListener = e -> {
-                        if (e.getSource() instanceof MouseEvent) {
-                            MouseEvent mouseEvent = (MouseEvent) e.getSource();
+                        if (e.getSource() instanceof MouseEvent mouseEvent) {
                             SwingUtil.createJBPopupMenu(mouseEvent, SwingUtil.MENU_ITEM_COPY);
                         }
                     };

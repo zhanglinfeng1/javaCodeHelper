@@ -32,19 +32,19 @@ public class RecommendationClassInspection extends AbstractBaseJavaLocalInspecti
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
-            public void visitField(PsiField field) {
+            public void visitField(@NotNull PsiField field) {
                 super.visitField(field);
                 checkType(holder, field.getTypeElement(), field.getType());
             }
 
             @Override
-            public void visitLocalVariable(PsiLocalVariable variable) {
+            public void visitLocalVariable(@NotNull PsiLocalVariable variable) {
                 super.visitLocalVariable(variable);
                 checkType(holder, variable.getTypeElement(), variable.getType());
             }
 
             @Override
-            public void visitParameter(PsiParameter parameter) {
+            public void visitParameter(@NotNull PsiParameter parameter) {
                 super.visitParameter(parameter);
                 checkType(holder, parameter.getTypeElement(), parameter.getType());
             }

@@ -1,10 +1,6 @@
 package pers.zlf.plugin.pojo;
 
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng

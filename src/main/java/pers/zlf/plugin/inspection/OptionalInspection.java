@@ -46,7 +46,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
-            public void visitIfStatement(PsiIfStatement ifStatement) {
+            public void visitIfStatement(@NotNull PsiIfStatement ifStatement) {
                 PsiExpression condition = ifStatement.getCondition();
                 //校验并解析if语句
                 PsiExpression judgmentObject = checkAndAnalysisIfStatement(ifStatement, condition);
@@ -70,9 +70,8 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             }
 
             @Override
-            public void visitConditionalExpression(PsiConditionalExpression conditionalExpression) {
-                if (conditionalExpression.getParent() instanceof PsiLocalVariable && conditionalExpression.getCondition() instanceof PsiBinaryExpression) {
-                    PsiBinaryExpression binaryExpression = (PsiBinaryExpression) conditionalExpression.getCondition();
+            public void visitConditionalExpression(@NotNull PsiConditionalExpression conditionalExpression) {
+                if (conditionalExpression.getParent() instanceof PsiLocalVariable && conditionalExpression.getCondition() instanceof PsiBinaryExpression binaryExpression) {
                     IElementType tokenType = binaryExpression.getOperationTokenType();
                     String nullText;
                     String notNullText;
@@ -122,8 +121,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
             return null;
         }
         //代码块有且只有一个表达式
-        if (codeStatement instanceof PsiBlockStatement) {
-            PsiBlockStatement blockStatement = (PsiBlockStatement) codeStatement;
+        if (codeStatement instanceof PsiBlockStatement blockStatement) {
             codeBlock = Optional.of(blockStatement.getCodeBlock().getStatements()).filter(t -> t.length == 1).map(t -> t[0]).orElse(null);
             if (codeBlock == null) {
                 return null;
@@ -145,12 +143,10 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private String simplifyExpression(PsiExpressionStatement expressionStatement, String variableName) {
         PsiExpression expression = expressionStatement.getExpression();
-        if (expression instanceof PsiAssignmentExpression) {
-            PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) expression;
+        if (expression instanceof PsiAssignmentExpression assignmentExpression) {
             PsiExpression leftExpression = assignmentExpression.getLExpression();
             //赋值表达式左边为引用
-            if (leftExpression instanceof PsiReferenceExpression) {
-                PsiReferenceExpression referenceExpression = (PsiReferenceExpression) leftExpression;
+            if (leftExpression instanceof PsiReferenceExpression referenceExpression) {
                 String assignmentVariableName = referenceExpression.getReferenceName();
                 if (!variableName.equals(assignmentVariableName)) {
                     return null;

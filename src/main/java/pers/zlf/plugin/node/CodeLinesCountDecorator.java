@@ -7,8 +7,6 @@ import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ui.PackageDependenciesNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -57,27 +55,20 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             CodeStatisticsInfo codeStatisticsInfo = STATISTICS_MAP.get(directoryModuleName);
             if (null == codeStatisticsInfo) {
                 codeStatisticsInfo = new CodeStatisticsInfo();
-                if (config.isRealTimeStatistics()) {
-                    int count = 0;
-                    for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                        String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-                        if (moduleName.startsWith(directoryModuleName)) {
-                            count = count + CodeLineCountAction.getLineCount(virtualFile);
-                        }
+                int count = 0;
+                for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+                    String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
+                    if (moduleName.startsWith(directoryModuleName)) {
+                        count = count + CodeLineCountAction.getLineCount(virtualFile);
                     }
-                    codeStatisticsInfo.setLineCount(count);
                 }
+                codeStatisticsInfo.setLineCount(count);
                 codeStatisticsInfo.setProjectName(project.getName());
                 STATISTICS_MAP.put(directoryModuleName, codeStatisticsInfo);
             }
             codeStatisticsInfo.dealPresentationData(data);
             updateNode(codeStatisticsInfo);
         }
-    }
-
-    @Override
-    public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
-
     }
 
     /**

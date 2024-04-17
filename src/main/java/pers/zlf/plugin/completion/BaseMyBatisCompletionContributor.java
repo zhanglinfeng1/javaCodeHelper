@@ -114,16 +114,10 @@ public abstract class BaseMyBatisCompletionContributor extends BaseCompletionCon
             return Common.BLANK_STRING;
         }
         String tagName = tag.getName();
-        switch (tagName) {
-            case Xml.SELECT:
-            case Xml.INSERT:
-            case Xml.UPDATE:
-            case Xml.DELETE:
-                return tag.getAttributeValue(Xml.ID);
-            default:
-                break;
-        }
-        return findMethodName(tag.getParentTag());
+        return switch (tagName) {
+            case Xml.SELECT, Xml.INSERT, Xml.UPDATE, Xml.DELETE -> tag.getAttributeValue(Xml.ID);
+            default -> findMethodName(tag.getParentTag());
+        };
     }
 
 }

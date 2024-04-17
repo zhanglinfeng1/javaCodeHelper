@@ -30,12 +30,11 @@ public class CodeStatisticsDialog implements BaseDialog {
     private JBTable gitEmailTable;
     private JButton addGitEmailButton;
     private JButton deleteGitEmailButton;
-    private JCheckBox realTimeStatisticsCheckBox;
     private JCheckBox countEmptyLineCheckBox;
     private JCheckBox countCommentCheckBox;
     private JCheckBox countKeywordCheckBox;
     private final DefaultTableModel gitEmailTableModel;
-    private DefaultTableModel defaultTableModel;
+    private final DefaultTableModel defaultTableModel;
 
     public CodeStatisticsDialog() {
         //文件类型
@@ -52,7 +51,6 @@ public class CodeStatisticsDialog implements BaseDialog {
         CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
         List<String> fileTypeList = config.getFileTypeList();
         List<String> gitEmailList = config.getGitEmailList();
-        realTimeStatisticsCheckBox.setSelected(config.isRealTimeStatistics());
         countEmptyLineCheckBox.setSelected(config.isCountEmptyLine());
         countCommentCheckBox.setSelected(config.isCountComment());
         countKeywordCheckBox.setSelected(config.isCountKeyword());
@@ -81,10 +79,6 @@ public class CodeStatisticsDialog implements BaseDialog {
 
     public boolean isCountComment() {
         return countCommentCheckBox.isSelected();
-    }
-
-    public boolean isRealTimeStatistics() {
-        return realTimeStatisticsCheckBox.isSelected();
     }
 
     public boolean isCountEmptyLine() {

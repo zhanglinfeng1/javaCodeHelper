@@ -95,14 +95,11 @@ public class CodeLineCountAction extends BaseAction {
      */
     public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
         String fileType = MyPsiUtil.getFileType(virtualFile);
-        switch (fileType) {
-            case ClassType.JAVA_FILE:
-                return new CommentFormat(ClassType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
-            case ClassType.XML_FILE:
-                return new CommentFormat(ClassType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
-            default:
-                return new CommentFormat();
-        }
+        return switch (fileType) {
+            case ClassType.JAVA_FILE -> new CommentFormat(ClassType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
+            case ClassType.XML_FILE -> new CommentFormat(ClassType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
+            default -> new CommentFormat();
+        };
     }
 
     /**

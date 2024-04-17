@@ -39,7 +39,7 @@ public class FastJumpConfigDialog implements BaseDialog {
     private JButton addModuleButton;
     private JButton deleteModuleButton;
     private final Set<String> totalSelectList;
-    private DefaultTableModel defaultTableModel;
+    private final DefaultTableModel defaultTableModel;
 
     public FastJumpConfigDialog() {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());

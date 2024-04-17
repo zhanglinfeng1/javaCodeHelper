@@ -74,7 +74,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         columnTable.setModel(firstTableModel);
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             String sqlColumn = column.getName();
-            String dataType = column.getDataType().typeName;
+            String dataType = column.getDasType().toDataType().typeName;
             firstTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(sqlColumn)});
             JTextField textField = new JTextField();
             textField.setEnabled(false);

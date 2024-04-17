@@ -108,8 +108,7 @@ public class ReplaceIfQuickFix implements LocalQuickFix {
             return;
         }
         PsiStatement thenStatement = ifStatement.getThenBranch();
-        if (thenStatement instanceof PsiBlockStatement) {
-            PsiBlockStatement thenCodeBlock = (PsiBlockStatement) thenStatement;
+        if (thenStatement instanceof PsiBlockStatement thenCodeBlock) {
             for (PsiElement element : thenCodeBlock.getCodeBlock().getChildren()) {
                 String text = element.getText();
                 if (StringUtil.isEmpty(text) || Common.LEFT_BRACE.equals(text) || Common.RIGHT_BRACE.equals(text)) {
@@ -125,8 +124,7 @@ public class ReplaceIfQuickFix implements LocalQuickFix {
         if (operationTokenType == JavaTokenType.EQEQ) {
             if (simplifyType == SIMPLIFY_THROW) {
                 return MyExpressionUtil.simplifyReturn(nextElement, variableOriginalName);
-            } else if (simplifyType == SIMPLIFY_EXPRESSION && nextElement instanceof PsiReturnStatement) {
-                PsiReturnStatement returnStatement = (PsiReturnStatement) nextElement;
+            } else if (simplifyType == SIMPLIFY_EXPRESSION && nextElement instanceof PsiReturnStatement returnStatement) {
                 String elementText = Optional.ofNullable(returnStatement.getReturnValue()).map(PsiElement::getText).orElse(Common.BLANK_STRING);
                 if (variableName.equals(elementText)) {
                     simplifyInfo.setSimplifyReturn(true);

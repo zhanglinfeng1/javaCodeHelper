@@ -82,9 +82,8 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
                     .forEach(t -> addTransformation(t.getKey(), t.getValue(), t.getKey() + Common.EQ_STR));
             //寻找void类型方法
             addSameType(currentText, ClassType.VOID, Common.BLANK_STRING);
-        } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable) {
+        } else if (currentElement instanceof PsiIdentifier && currentElement.getParent() instanceof PsiLocalVariable variable) {
             //当前元素是变量
-            PsiLocalVariable variable = (PsiLocalVariable) currentElement.getParent();
             String variableName = MyPsiUtil.dealVariableName(currentText, variable.getType(), new ArrayList<>(currentMethodVariableMap.keySet()));
             //新建变量转化
             addTransformation(variableName, variable.getType(), variableName + Common.EQ_STR);
@@ -113,8 +112,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         //获取代码块中的变量
         Function<PsiElement, List<PsiLocalVariable>> function = element -> {
             List<PsiLocalVariable> localVariableList = new ArrayList<>();
-            if (element.getTextOffset() <= endOffset && element instanceof PsiDeclarationStatement) {
-                PsiDeclarationStatement declarationStatement = (PsiDeclarationStatement) element;
+            if (element.getTextOffset() <= endOffset && element instanceof PsiDeclarationStatement declarationStatement) {
                 Arrays.stream(declarationStatement.getDeclaredElements()).filter(t -> t instanceof PsiLocalVariable).map(t -> (PsiLocalVariable) t).forEach(localVariableList::add);
             }
             return localVariableList;
@@ -139,7 +137,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
 
     private void findFromClass(PsiClass psiClass, PsiMethod[] methodArr, String typeName, String code) {
         List<String> setAndGetMethodList = Stream.of(Common.SET, Common.GET).flatMap(o1 ->
-                MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).collect(Collectors.toList());
+                MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).toList();
         boolean currentStaticMethod = currentMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
         for (PsiMethod fieldMethod : methodArr) {
             if (completionLength == 0) {
@@ -205,7 +203,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         //过滤只有一个参数的构造方法
         List<String> typeList = Arrays.stream(psiClass.getConstructors()).map(m -> m.getParameterList().getParameters())
                 .filter(parameterArr -> 1 == parameterArr.length)
-                .map(parameterArr -> parameterArr[0].getType().getInternalCanonicalText()).collect(Collectors.toList());
+                .map(parameterArr -> parameterArr[0].getType().getInternalCanonicalText()).toList();
         if (typeList.isEmpty()) {
             return;
         }

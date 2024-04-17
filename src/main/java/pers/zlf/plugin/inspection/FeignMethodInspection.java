@@ -25,7 +25,7 @@ public class FeignMethodInspection extends AbstractBaseJavaLocalInspectionTool {
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
-            public void visitClass(PsiClass psiClass) {
+            public void visitClass(@NotNull PsiClass psiClass) {
                 if (!MyPsiUtil.isFeign(psiClass)) {
                     return;
                 }

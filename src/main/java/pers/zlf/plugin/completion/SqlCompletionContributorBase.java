@@ -33,8 +33,7 @@ public class SqlCompletionContributorBase extends BaseMyBatisCompletionContribut
             InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(currentElement.getProject());
             PsiElement position = parameters.getOriginalPosition();
             PsiFile file = Optional.ofNullable(position).map(injectedLanguageManager::getTopLevelFile).orElse(null);
-            if (file instanceof XmlFile) {
-                XmlFile xmlFile = (XmlFile) file;
+            if (file instanceof XmlFile xmlFile) {
                 int offset = injectedLanguageManager.injectedToHost(position, position.getTextOffset());
                 currentElement = xmlFile.findElementAt(offset);
                 currentTag = PsiTreeUtil.getParentOfType(currentElement, XmlTag.class);
