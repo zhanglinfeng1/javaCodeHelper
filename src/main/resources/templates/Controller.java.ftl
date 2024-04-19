@@ -29,7 +29,7 @@ public class ${tableName}Controller {
     private ${tableName}Service ${firstLowerTableName}Service;
 
     @GetMapping("/v1/${sqlTableName}")
-    public ${tableName}VO get${tableName}(@RequestParam("id") Integer id) {
+    public ${tableName}VO get${tableName}(@RequestParam("id") ${idColumnType} id) {
         ${tableName} ${firstLowerTableName} = ${firstLowerTableName}Service.get${tableName}(id);
         return new ${tableName}VO(${firstLowerTableName});
     }
@@ -47,13 +47,14 @@ public class ${tableName}Controller {
     }
 
     @DeleteMapping("/v1/${sqlTableName}")
-    public Map<String, String> delete${tableName}(@RequestParam Integer id) {
+    public Map<String, String> delete${tableName}(@RequestParam ${idColumnType} id) {
         ${firstLowerTableName}Service.delete${tableName}(id);
         return new HashMap<>(2);
     }
 
+<#assign inList = ["in","not in"]>
     @GetMapping("/v1/${sqlTableName}/list")
-    public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.underlineUpperColumnName}") String ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
+    public PageVO<${tableName}VO> get${tableName}List(<#list queryColumnList as fields>@RequestParam("${fields.underlineUpperColumnName}") <#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}, </#list>@RequestParam("page") int page, @RequestParam("limit") int limit) {
         PageVO<${tableName}VO> pageVO = new PageVO<>();
         pageVO.setDatas(new ArrayList<>());
         int totalCount = ${firstLowerTableName}Service.get${tableName}ListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);
@@ -68,7 +69,7 @@ public class ${tableName}Controller {
             return pageVO;
         }
         int offset = PageUtil.getOffset(limit, page);
-        List<${tableName}> dataList = ${firstLowerTableName}Service.get${tableName}List(<#list queryColumnList as fields>, ${fields.columnName}, </#list>offset, limit);
+        List<${tableName}> dataList = ${firstLowerTableName}Service.get${tableName}List(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit);
         pageVO.setDatas(dataList.stream().map(${tableName}VO::new).collect(Collectors.toList()));
         return pageVO;
     }

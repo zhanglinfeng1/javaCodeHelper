@@ -28,7 +28,7 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
         //新增${tableComment}
         ${tableName} ${firstLowerTableName} = new ${tableName}();
         ${firstLowerTableName}.syncField(obj);
-        ${firstLowerTableName}Mapper.insert${tableName}(${firstLowerTableName});
+        ${firstLowerTableName}Mapper.insert(${firstLowerTableName});
     }
 
     @Override
@@ -37,27 +37,28 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
         //编辑${tableComment}
         ${tableName} ${firstLowerTableName} = this.get${tableName}(obj.getId());
         ${firstLowerTableName}.syncField(obj);
-        ${firstLowerTableName}Mapper.update${tableName}(${firstLowerTableName});
+        ${firstLowerTableName}Mapper.update(${firstLowerTableName});
     }
 
     @Override
-    public void delete${tableName}(Integer id) {
-        ${firstLowerTableName}Mapper.delete${tableName}(id);
+    public void delete${tableName}(${idColumnType} id) {
+        ${firstLowerTableName}Mapper.delete(id);
     }
 
     @Override
-    public ${tableName} get${tableName}(Integer id) {
-        //return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get${tableName}(id)).orElseThrow(() -> new Exception("", ""));
-        return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get${tableName}(id)).orElse(new ${tableName}());
+    public ${tableName} get${tableName}(${idColumnType} id) {
+        //return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get(id)).orElseThrow(() -> new Exception("", ""));
+        return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get(id)).orElse(new ${tableName}());
+    }
+
+<#assign inList = ["in","not in"]>
+    @Override
+    public int get${tableName}ListCount(<#list queryColumnList as fields><#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}<#if fields_has_next>, </#if></#list>) {
+        return ${firstLowerTableName}Mapper.getListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);
     }
 
     @Override
-    public int get${tableName}ListCount(<#list queryColumnList as fields>String ${fields.columnName}<#if fields_has_next>, </#if></#list>) {
-        return ${firstLowerTableName}Mapper.get${tableName}ListCount(<#list queryColumnList as fields>${fields.columnName}<#if fields_has_next>, </#if></#list>);
-    }
-
-    @Override
-    public List<${tableName}> get${tableName}List(<#list queryColumnList as fields>String ${fields.columnName}, </#list>int offset, int limit) {
-        return Optional.ofNullable(${firstLowerTableName}Mapper.get${tableName}List(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit)).orElse(new ArrayList<>());
+    public List<${tableName}> get${tableName}List(<#list queryColumnList as fields><#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}, </#list>int offset, int limit) {
+        return Optional.ofNullable(${firstLowerTableName}Mapper.getList(<#list queryColumnList as fields>${fields.columnName}, </#list>offset, limit)).orElse(new ArrayList<>());
     }
 }

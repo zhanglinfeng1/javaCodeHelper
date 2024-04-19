@@ -26,6 +26,7 @@ public class Message {
     public static final String CREATE_FILE_ERROR = "文件创建失败";
     public static final String FULL_PATH_NOT_NULL = "文件全路径不能为空";
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";
+    public static final String GENERATE_CODE_SUCCESS = "代码生成成功，请手动移动文件至合理目录";
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";

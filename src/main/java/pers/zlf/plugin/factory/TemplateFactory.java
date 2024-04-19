@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -63,21 +64,22 @@ public class TemplateFactory {
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
         //创建临时模版文件
         String temporaryFilePath = Path.of(filePath, Common.JAVA_CODE_HELPER).toString();
-        createTemporaryFile(temporaryFilePath);
-        //添加自定义模板
         File file = new File(temporaryFilePath);
-        configuration.setDirectoryForTemplateLoading(file);
-        for (File subFile : Objects.requireNonNull(file.listFiles())) {
-            String name = subFile.getName();
-            if (name.endsWith(ClassType.FREEMARKER_FILE)) {
-                create(filePath, tableInfo.getTableName(), configuration.getTemplate(name), map);
+        try {
+            createTemporaryFile(temporaryFilePath);
+            //添加自定义模板
+            configuration.setDirectoryForTemplateLoading(file);
+            for (File subFile : Objects.requireNonNull(file.listFiles())) {
+                String name = subFile.getName();
+                if (name.endsWith(ClassType.FREEMARKER_FILE)) {
+                    create(filePath, tableInfo.getTableName(), configuration.getTemplate(name), map);
+                }
             }
+        } finally {
+            //删除临时模版文件
+            Optional.ofNullable(file.listFiles()).ifPresent(t -> Arrays.stream(t).forEach(File::delete));
+            file.delete();
         }
-        //删除临时模版文件
-        for (File templateFile : file.listFiles()) {
-            templateFile.delete();
-        }
-        file.delete();
     }
 
     /**

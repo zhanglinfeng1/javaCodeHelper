@@ -9,6 +9,7 @@ import java.util.List;
 public class ClassType {
     public static final String LIST = "List";
     public static final String SET = "Set";
+    public static final String STRING = "String";
     public static final String ARRAYS_PATH = "java.util.Arrays";
     public static final String OPTIONAL = "java.util.Optional";
     public static final String COLLECTORS = "java.util.stream.Collectors";

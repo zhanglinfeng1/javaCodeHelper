@@ -133,6 +133,9 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                 Function<Integer, String> function = column -> StringUtil.toString(firstTableModel.getValueAt(row, column));
                 ColumnInfo columnInfo = new ColumnInfo(function.apply(0), function.apply(1), function.apply(2), function.apply(3), function.apply(4));
                 columnList.add(columnInfo);
+                if (Common.ID.equals(columnInfo.getColumnName())) {
+                    tableInfo.setIdColumnType(columnInfo.getColumnType());
+                }
             }
             tableInfo.setColumnList(columnList);
             columnArr = columnList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
@@ -179,7 +182,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
                 TemplateFactory.getInstance().create(fullPath, tableInfo);
-                Messages.showMessageDialog(Common.SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
             }

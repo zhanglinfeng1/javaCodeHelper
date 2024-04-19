@@ -15,11 +15,12 @@ public interface ${tableName}Service {
 
     void update${tableName}(${tableName}VO obj);
 
-    void delete${tableName}(Integer id);
+    void delete${tableName}(${idColumnType} id);
 
-    ${tableName} get${tableName}(Integer id);
+    ${tableName} get${tableName}(${idColumnType} id);
 
-    int get${tableName}ListCount(<#list queryColumnList as fields>String ${fields.columnName}<#if fields_has_next>, </#if></#list>);
+<#assign inList = ["in","not in"]>
+    int get${tableName}ListCount(<#list queryColumnList as fields><#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}<#if fields_has_next>, </#if></#list>);
 
-    List<${tableName}> get${tableName}List(<#list queryColumnList as fields>String ${fields.columnName}, </#list>int offset, int limit);
+    List<${tableName}> get${tableName}List(<#list queryColumnList as fields><#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}, </#list>int offset, int limit);
 }

@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class Common {
     /** 通用常量 */
-    public static final String SUCCESS = "success";
     public static final String TRUE = "true";
     public static final String BLANK_STRING = "";
     public static final String SLASH = "/";
@@ -33,12 +32,13 @@ public class Common {
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String IMAGE_JPG = "JPG";
     public static final String MODEL = "Model";
+    public static final String ID = "id";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
     public static final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
     public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
-    public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
+    public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String TEMPLATE_NAME = "模版名称";
 
     /** 占位符 */
@@ -100,7 +100,6 @@ public class Common {
     public static final String JAVA = "java";
     public static final String RESOURCES = "resources";
     public static final String DOT_GIT = ".git";
-    public static final String DOT_IDEA = ".idea";
     public static final String SRC = "src";
     public static final String SRC_MAIN_JAVA = "src%smain%sjava";
 

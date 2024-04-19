@@ -1,5 +1,6 @@
 package pers.zlf.plugin.pojo;
 
+import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
@@ -31,6 +32,8 @@ public class TableInfo {
     private List<ColumnInfo> columnList;
     /** 用于查询的字段信息 */
     private List<ColumnInfo> queryColumnList;
+    /** id字段类型 */
+    private String idColumnType = ClassType.STRING;
 
     public TableInfo() {
     }
@@ -120,5 +123,13 @@ public class TableInfo {
 
     public void setQueryColumnList(List<ColumnInfo> queryColumnList) {
         this.queryColumnList = queryColumnList;
+    }
+
+    public String getIdColumnType() {
+        return idColumnType;
+    }
+
+    public void setIdColumnType(String idColumnType) {
+        this.idColumnType = idColumnType;
     }
 }
