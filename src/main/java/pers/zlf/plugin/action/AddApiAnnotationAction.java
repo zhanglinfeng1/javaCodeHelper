@@ -72,6 +72,9 @@ public class AddApiAnnotationAction extends BaseAction {
         annotationMap = new HashMap<>(2);
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             Equals.of(psiClass).and(MyPsiUtil::isController).then(this::addSwaggerForController, this::addSwaggerForModel);
+            for (PsiClass innerClasses : psiClass.getAllInnerClasses()) {
+                Equals.of(innerClasses).and(MyPsiUtil::isController).ifFalse(this::addSwaggerForModel);
+            }
         }
         WriteCommandAction.runWriteCommandAction(project, () -> {
             MyPsiUtil.importClass(psiJavaFile, importClassSet.toArray(new String[0]));
