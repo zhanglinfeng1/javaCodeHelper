@@ -27,6 +27,10 @@ public class Message {
     public static final String FULL_PATH_NOT_NULL = "文件全路径不能为空";
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";
     public static final String GENERATE_CODE_SUCCESS = "代码生成成功，请手动移动文件至合理目录";
+    public static final String DELETE_TEMPLATE = "确认删除模版 '%s' 吗？";
+    public static final String NO_DELETE_TEMPLATE = "无法删除默认模版";
+    public static final String UPDATE_TEMPLATE = "模版 '%s' 有改动，是否保存？";
+
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";

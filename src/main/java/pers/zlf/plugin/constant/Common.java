@@ -40,6 +40,9 @@ public class Common {
     public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
     public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String TEMPLATE_NAME = "模版名称";
+    public static final String UPDATE_TEMPLATE_NAME = "修改模版名称";
+    public static final String DEFAULT_TEMPLATE = "默认模版";
+    public static final String CUSTOM_TEMPLATE = "自定义模版";
 
     /** 占位符 */
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";

@@ -54,11 +54,12 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
-     * @param filePath  文件路径
-     * @param tableInfo 表信息
+     * @param selectedTemplate 选择的模版
+     * @param filePath         文件路径
+     * @param tableInfo        表信息
      * @throws Exception 异常
      */
-    public void create(String filePath, TableInfo tableInfo) throws Exception {
+    public void create(String selectedTemplate, String filePath, TableInfo tableInfo) throws Exception {
         Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception(Message.FULL_PATH_CREATE_ERROR));
         tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
@@ -66,7 +67,7 @@ public class TemplateFactory {
         String temporaryFilePath = Path.of(filePath, Common.JAVA_CODE_HELPER).toString();
         File file = new File(temporaryFilePath);
         try {
-            createTemporaryFile(temporaryFilePath);
+            createTemporaryFile(selectedTemplate, temporaryFilePath);
             //添加自定义模板
             configuration.setDirectoryForTemplateLoading(file);
             for (File subFile : Objects.requireNonNull(file.listFiles())) {
@@ -85,11 +86,12 @@ public class TemplateFactory {
     /**
      * 生成临时模版文件
      *
+     * @param selectedTemplate 选择的模版
      * @throws IOException 异常
      */
-    private void createTemporaryFile(String filePath) throws Exception {
+    private void createTemporaryFile(String selectedTemplate, String filePath) throws Exception {
         Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs);
-        Map<String, String> templateMap = ConfigFactory.getInstance().getTemplateConfig().getTemplateMap();
+        Map<String, String> templateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().get(selectedTemplate);
         if (templateMap == null || templateMap.isEmpty()) {
             throw new Exception(Message.TEMPLATE_CONFIGURATION);
         }

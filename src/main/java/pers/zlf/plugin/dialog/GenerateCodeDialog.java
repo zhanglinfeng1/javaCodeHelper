@@ -61,6 +61,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private JBTable columnTable;
     private JBTable queryTable;
     private JTextField tableNamePrefixField;
+    private JComboBox templateComboBox;
     private String[] columnArr;
     private final TableInfo tableInfo;
     private final DefaultTableModel firstTableModel = new DefaultTableModel(null, Common.DB_TABLE_HEADER);
@@ -125,6 +126,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private void showSecondPanel() {
         firstPanel.setVisible(false);
         secondPanel.setVisible(true);
+        ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().keySet().forEach(templateComboBox::addItem);
         int rowCount = firstTableModel.getRowCount();
         if (rowCount > 0) {
             List<ColumnInfo> columnList = new ArrayList<>();
@@ -176,12 +178,13 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                 if (StringUtil.isEmpty(author)) {
                     throw new Exception(Message.TEMPLATE_AUTHOR_CONFIGURATION);
                 }
+                String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 tableInfo.dealTableName(tableNamePrefix);
                 tableInfo.setAuthor(author);
                 tableInfo.setPackagePath(packagePath);
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
-                TemplateFactory.getInstance().create(fullPath, tableInfo);
+                TemplateFactory.getInstance().create(selectedTemplate,fullPath, tableInfo);
                 Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
             } catch (Exception ex) {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());

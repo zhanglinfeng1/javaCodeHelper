@@ -40,6 +40,7 @@ public interface BaseDialog {
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
         }
+        button.setEnabled(true);
     }
 
     /**
@@ -55,6 +56,7 @@ public interface BaseDialog {
         }
         button.setBackground(container.getBackground());
         Arrays.stream(button.getMouseListeners()).filter(m -> !(m instanceof BasicButtonListener)).findAny().ifPresent(button::removeMouseListener);
+        button.setEnabled(false);
     }
 
     /**
