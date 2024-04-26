@@ -28,9 +28,13 @@ public class Message {
     public static final String PACKAGE_PATH_NOT_NULL = "包路径不能为空";
     public static final String GENERATE_CODE_SUCCESS = "代码生成成功，请手动移动文件至合理目录";
     public static final String DELETE_TEMPLATE = "确认删除模版 '%s' 吗？";
+    public static final String DELETE_TEMPLATE_FILE = "确认删除模版文件 '%s' 吗？";
     public static final String NO_DELETE_TEMPLATE = "无法删除默认模版";
     public static final String UPDATE_TEMPLATE = "模版 '%s' 有改动，是否保存？";
-
+    public static final String TEMPLATE_NAME = "模版名称";
+    public static final String TEMPLATE_FILE_NAME = "模版文件名称";
+    public static final String UPDATE_TEMPLATE_NAME = "修改模版名称";
+    public static final String RESET_TEMPLATE = "将当前模版的所有文件重置为默认的模版文件";
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";

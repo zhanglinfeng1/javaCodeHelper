@@ -66,7 +66,7 @@ public class TemplateConfigDialog implements BaseDialog {
         addMouseListener(resetButton, IconEnum.RESET);
         //添加
         addTemplateButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Common.TEMPLATE_NAME, Messages.getInformationIcon());
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, Messages.getInformationIcon());
             if (StringUtil.isNotEmpty(title)) {
                 templateComboBox.addItem(title);
                 totalTemplateMap.put(title, new HashMap<>());
@@ -92,7 +92,7 @@ public class TemplateConfigDialog implements BaseDialog {
         //修改
         editTemplateButton.addActionListener(e -> {
             String oldName = templateComboBox.getSelectedItem().toString();
-            String newName = Messages.showInputDialog((Project) null, null, Common.UPDATE_TEMPLATE_NAME, Messages.getInformationIcon());
+            String newName = Messages.showInputDialog((Project) null, null, Message.UPDATE_TEMPLATE_NAME, Messages.getInformationIcon());
             if (StringUtil.isNotEmpty(newName)) {
                 templateComboBox.removeItem(oldName);
                 templateComboBox.addItem(newName);
@@ -102,7 +102,7 @@ public class TemplateConfigDialog implements BaseDialog {
         });
         //添加
         addButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Common.TEMPLATE_NAME, Messages.getInformationIcon());
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, Messages.getInformationIcon());
             if (StringUtil.isNotEmpty(title)) {
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
                 addMouseListener(deleteButton, IconEnum.REMOVE);
@@ -111,24 +111,31 @@ public class TemplateConfigDialog implements BaseDialog {
         //删除
         deleteButton.addActionListener(e -> {
             int index = templatePane.getSelectedIndex();
-            if (index != -1) {
-                templatePane.remove(index);
-            }
-            int total = templatePane.getTabCount();
-            if (total == 0) {
-                removeMouseListener(deleteButton, IconEnum.REMOVE);
+            String title = templatePane.getTitleAt(index);
+            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE_FILE, title), Common.TEMPLATE_CONFIG, null);
+            if (Messages.YES == result) {
+                if (index != -1) {
+                    templatePane.remove(index);
+                }
+                int total = templatePane.getTabCount();
+                if (total == 0) {
+                    removeMouseListener(deleteButton, IconEnum.REMOVE);
+                }
             }
         });
         //重置
         resetButton.addActionListener(e -> {
-            templatePane.removeAll();
-            Map<String, String> templateMap = TemplateFactory.getInstance().getAllDefaultTemplate();
-            for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
-                String key = templateEntry.getKey();
-                String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-                templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
+            int result = Messages.showYesNoDialog(Message.RESET_TEMPLATE, Common.TEMPLATE_CONFIG, null);
+            if (Messages.YES == result) {
+                templatePane.removeAll();
+                Map<String, String> templateMap = TemplateFactory.getInstance().getAllDefaultTemplate();
+                for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
+                    String key = templateEntry.getKey();
+                    String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+                    templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
+                }
+                addMouseListener(deleteButton, IconEnum.REMOVE);
             }
-            addMouseListener(deleteButton, IconEnum.REMOVE);
         });
     }
 
