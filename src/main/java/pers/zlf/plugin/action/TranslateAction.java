@@ -56,7 +56,7 @@ public class TranslateAction extends BaseAction {
                     };
                     //弹窗展示
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
-                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, Icon.LOGO, MessageType.INFO.getPopupBackground(), null)
+                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
                             .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
