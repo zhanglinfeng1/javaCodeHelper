@@ -9,6 +9,7 @@ import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -50,12 +51,12 @@ public class ContributionRateAction extends BaseAction {
     @Override
     public boolean isExecute() {
         if (CodeLinesCountDecorator.contributionRateExecute){
-            Messages.showMessageDialog(Message.STATISTICS_IN_PROGRESS, Common.BLANK_STRING, Messages.getInformationIcon());
+            Messages.showMessageDialog(Message.STATISTICS_IN_PROGRESS, Common.BLANK_STRING, Icon.LOGO);
             return false;
         }
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Messages.getInformationIcon());
+            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Icon.LOGO);
             return false;
         }
         return true;

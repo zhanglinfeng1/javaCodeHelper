@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import pers.zlf.plugin.api.BaiDuApi;
 import pers.zlf.plugin.api.BaseApi;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.util.StringUtil;
@@ -55,11 +56,11 @@ public class TranslateAction extends BaseAction {
                     };
                     //弹窗展示
                     JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
-                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, null, MessageType.INFO.getPopupBackground(), null)
+                    ApplicationManager.getApplication().invokeLater(() -> jbPopupFactory.createHtmlTextBalloonBuilder(translateResult, Icon.LOGO, MessageType.INFO.getPopupBackground(), null)
                             .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
-                ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon()));
+                ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO));
             }
         });
     }

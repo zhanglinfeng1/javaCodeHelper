@@ -14,6 +14,7 @@ import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -185,9 +186,9 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
                 TemplateFactory.getInstance().create(selectedTemplate,fullPath, tableInfo);
-                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, Icon.LOGO);
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Icon.LOGO);
             }
         });
         addMouseListener(addButton, IconEnum.ADD);

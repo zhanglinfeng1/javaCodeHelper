@@ -17,7 +17,12 @@ public class MapUtil {
      * @return boolean
      */
     public static <T, R> boolean equals(Map<T, R> map1, Map<T, R> map2) {
-        if (null == map1 || null == map2) {
+        boolean map1Empty = map1 == null || map1.isEmpty();
+        boolean map2Empty = map2 == null || map2.isEmpty();
+        if (map1Empty && map2Empty) {
+            return true;
+        }
+        if (map1Empty || map2Empty) {
             return false;
         }
         Set<T> set1 = map1.keySet();

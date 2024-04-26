@@ -9,12 +9,11 @@ import com.intellij.ui.ColorUtil;
 import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.config.TemplateConfig;
 import pers.zlf.plugin.util.MapUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -34,6 +33,7 @@ import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhanglinfeng
@@ -63,21 +63,27 @@ public class TemplateConfigDialog implements BaseDialog {
         addMouseListener(resetButton, IconEnum.RESET);
         //添加
         addTemplateButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, Messages.getInformationIcon());
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, Icon.LOGO);
+            Set<String> templateNameList = totalTemplateMap.keySet();
+            if (templateNameList.contains(title)) {
+                Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                return;
+            }
             if (StringUtil.isNotEmpty(title)) {
                 templateComboBox.addItem(title);
                 totalTemplateMap.put(title, new HashMap<>());
                 addMouseListener(deleteTemplateButton, IconEnum.REMOVE);
+                updateTemplateJPanel(new HashMap<>());
             }
         });
         //删除
         deleteTemplateButton.addActionListener(e -> {
             String selectedItem = templateComboBox.getSelectedItem().toString();
             if (Common.DEFAULT_TEMPLATE.equals(selectedItem)) {
-                Messages.showMessageDialog(Message.NO_DELETE_TEMPLATE, Common.BLANK_STRING, Messages.getInformationIcon());
+                Messages.showMessageDialog(Message.NO_DELETE_TEMPLATE, Common.BLANK_STRING, Icon.LOGO);
                 return;
             }
-            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, null);
+            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, Icon.LOGO);
             if (Messages.YES == result) {
                 templateComboBox.removeItem(selectedItem);
                 totalTemplateMap.remove(selectedItem);
@@ -89,7 +95,17 @@ public class TemplateConfigDialog implements BaseDialog {
         //修改
         editTemplateButton.addActionListener(e -> {
             String oldName = templateComboBox.getSelectedItem().toString();
-            String newName = Messages.showInputDialog((Project) null, null, Message.UPDATE_TEMPLATE_NAME, Messages.getInformationIcon());
+            if (Common.DEFAULT_TEMPLATE.equals(oldName)) {
+                Messages.showMessageDialog(Message.NO_UPDATE_TEMPLATE, Common.BLANK_STRING, Icon.LOGO);
+                return;
+            }
+            String newName = Messages.showInputDialog((Project) null, null, Message.UPDATE_TEMPLATE_NAME, Icon.LOGO);
+            Set<String> templateNameList = totalTemplateMap.keySet();
+            templateNameList.remove(oldName);
+            if (templateNameList.contains(newName)) {
+                Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                return;
+            }
             if (StringUtil.isNotEmpty(newName)) {
                 templateComboBox.removeItem(oldName);
                 templateComboBox.addItem(newName);
@@ -99,7 +115,16 @@ public class TemplateConfigDialog implements BaseDialog {
         });
         //添加
         addButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, Messages.getInformationIcon());
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, Icon.LOGO);
+            int index = templatePane.getSelectedIndex();
+            if (index != -1) {
+                String selectedTitle = templatePane.getTitleAt(index);
+                Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
+                if (templateFileNameList.contains(title)) {
+                    Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                    return;
+                }
+            }
             if (StringUtil.isNotEmpty(title)) {
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
                 addMouseListener(deleteButton, IconEnum.REMOVE);
@@ -109,7 +134,7 @@ public class TemplateConfigDialog implements BaseDialog {
         deleteButton.addActionListener(e -> {
             int index = templatePane.getSelectedIndex();
             String title = templatePane.getTitleAt(index);
-            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE_FILE, title), Common.TEMPLATE_CONFIG, null);
+            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE_FILE, title), Common.TEMPLATE_CONFIG, Icon.LOGO);
             if (Messages.YES == result) {
                 if (index != -1) {
                     templatePane.remove(index);
@@ -122,16 +147,9 @@ public class TemplateConfigDialog implements BaseDialog {
         });
         //重置
         resetButton.addActionListener(e -> {
-            int result = Messages.showYesNoDialog(Message.RESET_TEMPLATE, Common.TEMPLATE_CONFIG, null);
+            int result = Messages.showYesNoDialog(Message.RESET_TEMPLATE, Common.TEMPLATE_CONFIG, Icon.LOGO);
             if (Messages.YES == result) {
-                templatePane.removeAll();
-                Map<String, String> templateMap = TemplateFactory.getInstance().getAllDefaultTemplate();
-                for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
-                    String key = templateEntry.getKey();
-                    String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-                    templatePane.addTab(title, createTemplateJPanel(templateMap.get(key)));
-                }
-                addMouseListener(deleteButton, IconEnum.REMOVE);
+                updateTemplateJPanel(totalTemplateMap.get(Common.DEFAULT_TEMPLATE));
             }
         });
     }
@@ -183,11 +201,11 @@ public class TemplateConfigDialog implements BaseDialog {
         updateTemplateJPanel(totalTemplateMap.get(defaultItem));
         templateComboBox.addItemListener(e -> {
             String selectedItem = e.getItem().toString();
-            if (e.getStateChange() == ItemEvent.DESELECTED) {
+            if (e.getStateChange() == ItemEvent.DESELECTED && !Common.DEFAULT_TEMPLATE.equals(selectedItem)) {
                 Map<String, String> oldTemplateMap = totalTemplateMap.get(selectedItem);
                 Map<String, String> newTemplateMap = getCurrentTemplateMap();
                 if (!MapUtil.equals(oldTemplateMap, newTemplateMap)) {
-                    int result = Messages.showYesNoCancelDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, null);
+                    int result = Messages.showYesNoDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, Icon.LOGO);
                     if (Messages.YES == result) {
                         totalTemplateMap.put(selectedItem, newTemplateMap);
                     }
@@ -195,6 +213,15 @@ public class TemplateConfigDialog implements BaseDialog {
             }
 
             if (e.getStateChange() == ItemEvent.SELECTED) {
+                if (Common.DEFAULT_TEMPLATE.equals(selectedItem)) {
+                    addButton.setVisible(false);
+                    deleteButton.setVisible(false);
+                    resetButton.setVisible(false);
+                } else {
+                    addButton.setVisible(true);
+                    deleteButton.setVisible(true);
+                    resetButton.setVisible(true);
+                }
                 updateTemplateJPanel(totalTemplateMap.get(selectedItem));
             }
         });
@@ -202,10 +229,11 @@ public class TemplateConfigDialog implements BaseDialog {
 
     private void updateTemplateJPanel(Map<String, String> templatePaneMap) {
         templatePane.removeAll();
-        for (Map.Entry<String, String> templateEntry : templatePaneMap.entrySet()) {
-            templatePane.addTab(templateEntry.getKey(), createTemplateJPanel(templateEntry.getValue()));
-        }
-        if (totalTemplateMap.isEmpty()) {
+        if (templatePaneMap != null && !totalTemplateMap.isEmpty()) {
+            for (Map.Entry<String, String> templateEntry : templatePaneMap.entrySet()) {
+                templatePane.addTab(templateEntry.getKey(), createTemplateJPanel(templateEntry.getValue()));
+            }
+        } else {
             removeMouseListener(deleteButton, IconEnum.REMOVE);
         }
     }
