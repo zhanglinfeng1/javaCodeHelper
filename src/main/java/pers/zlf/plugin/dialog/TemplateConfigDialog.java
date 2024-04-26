@@ -51,9 +51,6 @@ public class TemplateConfigDialog implements BaseDialog {
     private JButton editTemplateButton;
     private JButton deleteTemplateButton;
     private Map<String, Map<String, String>> totalTemplateMap;
-    private String oldItem;
-    private int itemChange;
-    private boolean noItemListener = false;
 
     public TemplateConfigDialog() {
         //初始化按钮背景色
@@ -187,34 +184,18 @@ public class TemplateConfigDialog implements BaseDialog {
         templateComboBox.addItemListener(e -> {
             String selectedItem = e.getItem().toString();
             if (e.getStateChange() == ItemEvent.DESELECTED) {
-                if (noItemListener) {
-                    return;
-                }
                 Map<String, String> oldTemplateMap = totalTemplateMap.get(selectedItem);
                 Map<String, String> newTemplateMap = getCurrentTemplateMap();
                 if (!MapUtil.equals(oldTemplateMap, newTemplateMap)) {
-                    itemChange = Messages.showYesNoCancelDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, null);
-                    if (Messages.YES == itemChange) {
+                    int result = Messages.showYesNoCancelDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, null);
+                    if (Messages.YES == result) {
                         totalTemplateMap.put(selectedItem, newTemplateMap);
-                    } else if (Messages.CANCEL == itemChange) {
-                        oldItem = selectedItem;
                     }
                 }
             }
 
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                if (noItemListener) {
-                    noItemListener = false;
-                    return;
-                }
-                if (Messages.YES == itemChange) {
-                    updateTemplateJPanel(totalTemplateMap.get(selectedItem));
-                } else if (Messages.NO == itemChange) {
-                    updateTemplateJPanel(totalTemplateMap.get(selectedItem));
-                } else if (Messages.CANCEL == itemChange) {
-                    noItemListener = true;
-                    templateComboBox.setSelectedItem(oldItem);
-                }
+                updateTemplateJPanel(totalTemplateMap.get(selectedItem));
             }
         });
     }
