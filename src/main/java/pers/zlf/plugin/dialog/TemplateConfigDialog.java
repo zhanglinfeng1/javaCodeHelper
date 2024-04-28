@@ -63,7 +63,7 @@ public class TemplateConfigDialog implements BaseDialog {
         addMouseListener(resetButton, IconEnum.RESET);
         //添加
         addTemplateButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, Icon.LOGO);
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, null);
             if (StringUtil.isNotEmpty(title)) {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 if (templateNameList.contains(title)) {
@@ -91,7 +91,7 @@ public class TemplateConfigDialog implements BaseDialog {
         //修改
         editTemplateButton.addActionListener(e -> {
             String oldName = templateComboBox.getSelectedItem().toString();
-            String newName = Messages.showInputDialog((Project) null, null, Message.UPDATE_TEMPLATE_NAME, Icon.LOGO);
+            String newName = Messages.showInputDialog((Project) null, null, Message.UPDATE_TEMPLATE_NAME, null);
             if (StringUtil.isNotEmpty(newName)) {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 templateNameList.remove(oldName);
@@ -107,7 +107,7 @@ public class TemplateConfigDialog implements BaseDialog {
         });
         //添加
         addButton.addActionListener(e -> {
-            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, Icon.LOGO);
+            String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, null);
             if (StringUtil.isNotEmpty(title)) {
                 int index = templatePane.getSelectedIndex();
                 if (index != -1) {
