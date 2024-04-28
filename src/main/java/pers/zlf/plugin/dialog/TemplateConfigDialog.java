@@ -182,7 +182,6 @@ public class TemplateConfigDialog implements BaseDialog {
 
     private void initTemplateComboBox() {
         TemplateConfig templateConfig = ConfigFactory.getInstance().getTemplateConfig();
-        templateConfig.initMap();
         totalTemplateMap = templateConfig.getTotalTemplateMap();
         //初始化下拉
         templateComboBox.removeAllItems();

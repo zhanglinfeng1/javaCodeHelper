@@ -67,7 +67,6 @@ public class TemplateConfigurable implements Configurable {
         config.setAuthor(dialog.getAuthor());
         config.setTotalTemplateMap(dialog.getTotalTemplateMap());
         config.setSelectedTemplate(dialog.getSelectedTemplate());
-        config.setSyncFlag(true);
         ConfigFactory.getInstance().setTemplateConfig(config);
     }
 
