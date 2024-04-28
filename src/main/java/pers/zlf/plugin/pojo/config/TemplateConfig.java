@@ -74,7 +74,9 @@ public class TemplateConfig {
                 templateValueMap.put(title, defaultMap.get(key));
             }
             totalTemplateMap.put(Common.DEFAULT_TEMPLATE, templateValueMap);
-            totalTemplateMap.put(Common.CUSTOM_TEMPLATE, templateMap);
+            if (templateMap != null && !templateMap.isEmpty()){
+                totalTemplateMap.put(Common.CUSTOM_TEMPLATE, templateMap);
+            }
         }
     }
 }
