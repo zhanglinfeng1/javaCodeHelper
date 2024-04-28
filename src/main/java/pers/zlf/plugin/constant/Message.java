@@ -29,8 +29,6 @@ public class Message {
     public static final String GENERATE_CODE_SUCCESS = "代码生成成功，请手动移动文件至合理目录";
     public static final String DELETE_TEMPLATE = "确认删除模版 '%s' 吗？";
     public static final String DELETE_TEMPLATE_FILE = "确认删除模版文件 '%s' 吗？";
-    public static final String NO_DELETE_TEMPLATE = "无法删除默认模版";
-    public static final String NO_UPDATE_TEMPLATE = "无法编辑默认模版";
     public static final String TEMPLATE_EXISTING = "已存在同名模版";
     public static final String TEMPLATE_FILE_EXISTING = "已存在同名模版文件";
     public static final String UPDATE_TEMPLATE = "模版 '%s' 有改动，是否保存？";

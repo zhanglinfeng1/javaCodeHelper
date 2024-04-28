@@ -31,8 +31,6 @@ public class Common {
     public static final String T = "t";
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String IMAGE_JPG = "JPG";
-    public static final String MODEL = "Model";
-    public static final String ID = "id";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
@@ -41,6 +39,8 @@ public class Common {
     public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String DEFAULT_TEMPLATE = "默认模版";
     public static final String CUSTOM_TEMPLATE = "自定义模版";
+    public static final String MODEL = "Model";
+    public static final String ID = "id";
 
     /** 占位符 */
     public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";

@@ -62,7 +62,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private JBTable columnTable;
     private JBTable queryTable;
     private JTextField tableNamePrefixField;
-    private JComboBox templateComboBox;
+    private JComboBox<String> templateComboBox;
     private String[] columnArr;
     private final TableInfo tableInfo;
     private final DefaultTableModel firstTableModel = new DefaultTableModel(null, Common.DB_TABLE_HEADER);
@@ -70,8 +70,14 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
 
     public GenerateCodeDialog(Project project, DbTable dbTable) {
         super(project);
-        //解析表结构
         tableInfo = new TableInfo(dbTable.getName(), dbTable.getComment());
+        Map<String, Map<String, String>> totalTemplateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap();
+        if (totalTemplateMap == null || totalTemplateMap.isEmpty()){
+            Messages.showMessageDialog(Message.TEMPLATE_CONFIGURATION, Common.BLANK_STRING, Icon.LOGO);
+            return;
+        }
+        totalTemplateMap.keySet().forEach(templateComboBox::addItem);
+        //解析表结构
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         columnTable.setModel(firstTableModel);
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
@@ -127,7 +133,6 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private void showSecondPanel() {
         firstPanel.setVisible(false);
         secondPanel.setVisible(true);
-        ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().keySet().forEach(templateComboBox::addItem);
         int rowCount = firstTableModel.getRowCount();
         if (rowCount > 0) {
             List<ColumnInfo> columnList = new ArrayList<>();
