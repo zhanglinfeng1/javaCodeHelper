@@ -7,9 +7,9 @@ import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiReturnStatement;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
@@ -79,7 +79,7 @@ public class ReplaceIfQuickFix implements LocalQuickFix {
         //替换的代码
         String text = simplifyType == SIMPLIFY_EXPRESSION ? variableOriginalName + Common.EQ_STR : Common.BLANK_STRING;
         //简化声明
-        PsiReferenceExpression variableReference = (PsiReferenceExpression) MyExpressionUtil.getExpressionComparedToNull(binaryExpression);
+        PsiExpression variableReference = MyExpressionUtil.getExpressionComparedToNull(binaryExpression);
         SimplifyInfo simplifyInfo = MyExpressionUtil.simplifyDeclaration(variableReference);
         if (simplifyInfo.isSimplifyDeclaration()) {
             text = simplifyInfo.getDeclarationLeftText() + Common.EQ_STR;
