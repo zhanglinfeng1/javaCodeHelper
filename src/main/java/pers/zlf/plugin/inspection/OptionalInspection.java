@@ -132,7 +132,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     }
 
     private String simplifyThrow(PsiThrowStatement throwStatement) {
-        String throwText = throwStatement.getText().trim();
+        String throwText = Optional.ofNullable(throwStatement).map(PsiThrowStatement::getText).map(String::trim).orElse(Common.BLANK_STRING);
         if (throwText.startsWith(Keyword.JAVA_THROW) && throwText.endsWith(Common.SEMICOLON)) {
             throwText = throwText.substring(5, throwText.length() - 1).trim();
             String finalThrowText = throwText;
