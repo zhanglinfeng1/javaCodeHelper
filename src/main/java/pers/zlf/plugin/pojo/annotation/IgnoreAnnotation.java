@@ -9,12 +9,22 @@ import pers.zlf.plugin.constant.Annotation;
 public class IgnoreAnnotation extends BaseAnnotation {
 
     @Override
-    public String getSwaggerApi() {
+    protected String getSwagger2Api() {
         return Annotation.SPRINGFOX_API_IGNORE;
     }
 
     @Override
-    public String toString() {
+    protected String getSwagger3Api() {
+        return Annotation.SWAGGER3_HIDDEN;
+    }
+
+    @Override
+    protected String getSwagger2Text() {
+        return name;
+    }
+
+    @Override
+    protected String getSwagger3Text() {
         return name;
     }
 }

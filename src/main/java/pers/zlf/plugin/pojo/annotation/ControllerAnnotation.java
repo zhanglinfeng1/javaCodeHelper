@@ -9,13 +9,18 @@ import pers.zlf.plugin.constant.Annotation;
 public class ControllerAnnotation extends BaseAnnotation {
 
     @Override
-    public String getSwaggerApi() {
-        return Annotation.SWAGGER_API;
+    protected String getSwagger2Api() {
+        return Annotation.SWAGGER2_API;
     }
 
     @Override
-    public String toString() {
-        return super.toString().replaceFirst(Annotation.VALUE, Annotation.TAGS);
+    protected String getSwagger3Api() {
+        return Annotation.SWAGGER3_TAG;
+    }
+
+    @Override
+    protected String getSwagger2Text() {
+        return super.getSwagger2Text().replaceFirst(Annotation.VALUE, Annotation.TAGS);
     }
 
 }

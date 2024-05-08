@@ -9,7 +9,17 @@ import pers.zlf.plugin.constant.Annotation;
 public class MethodAnnotation extends BaseAnnotation {
 
     @Override
-    public String getSwaggerApi() {
-        return Annotation.SWAGGER_API_OPERATION;
+    protected String getSwagger2Api() {
+        return Annotation.SWAGGER2_API_OPERATION;
+    }
+
+    @Override
+    protected String getSwagger3Api() {
+        return Annotation.SWAGGER3_OPERATION;
+    }
+
+    @Override
+    protected String getSwagger3Text() {
+        return super.getSwagger3Text().replaceFirst(Annotation.NAME, Annotation.SUMMARY);
     }
 }

@@ -182,7 +182,8 @@
             </constraints>
             <properties>
               <model>
-                <item value="Swagger"/>
+                <item value="Swagger2"/>
+                <item value="Swagger3"/>
               </model>
             </properties>
           </component>

@@ -8,7 +8,12 @@ import pers.zlf.plugin.constant.Annotation;
  */
 public class FieldAnnotation extends BaseAnnotation {
     @Override
-    public String getSwaggerApi() {
-        return Annotation.SWAGGER_API_MODEL_PROPERTY;
+    protected String getSwagger2Api() {
+        return Annotation.SWAGGER2_API_MODEL_PROPERTY;
+    }
+
+    @Override
+    protected String getSwagger3Api() {
+        return Annotation.SWAGGER3_SCHEMA;
     }
 }

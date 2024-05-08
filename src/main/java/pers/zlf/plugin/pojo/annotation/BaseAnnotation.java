@@ -10,25 +10,39 @@ import pers.zlf.plugin.factory.ConfigFactory;
  * @date create in 2023/4/24 16:22
  */
 public abstract class BaseAnnotation {
+    /** 注解名称 */
     protected final String name;
+    /** 注解路径 */
     private String qualifiedName;
+    /** 注释 */
     private String value;
+    /** 是否必须 */
     private boolean required;
 
     public BaseAnnotation() {
-        if (Common.SWAGGER_API.equals(ConfigFactory.getInstance().getCommonConfig().getApiTool())) {
-            qualifiedName = getSwaggerApi();
+        Integer apiTool = ConfigFactory.getInstance().getCommonConfig().getApiTool();
+        if (Common.SWAGGER2_API.equals(apiTool)) {
+            qualifiedName = getSwagger2Api();
+        }else if (Common.SWAGGER3_API.equals(apiTool)){
+            qualifiedName = getSwagger3Api();
         }
         String[] annotationPathArr = this.qualifiedName.split(Regex.DOT);
         this.name = annotationPathArr[annotationPathArr.length - 1];
     }
 
     /**
-     * 获取注解路径
+     * 获取Swagger2注解路径
      *
      * @return String
      */
-    public abstract String getSwaggerApi();
+    protected abstract String getSwagger2Api();
+
+    /**
+     * 获取Swagger3注解路径
+     *
+     * @return String
+     */
+    protected abstract String getSwagger3Api();
 
     public void setValue(String value) {
         this.value = value;
@@ -41,14 +55,35 @@ public abstract class BaseAnnotation {
     public String getQualifiedName() {
         return qualifiedName;
     }
-    
-    @Override
-    public String toString() {
-        String result = this.name + Common.LEFT_PARENTHESES + Annotation.VALUE + Common.EQ_STR + Common.DOUBLE_QUOTATION + value + Common.DOUBLE_QUOTATION;
-        if (required) {
-            result = result + Common.COMMA + Annotation.REQUIRED + Common.EQ_STR + true;
+
+    /**
+     * 获取注解文本
+     *
+     * @return String
+     */
+    public String getText() {
+        Integer apiTool = ConfigFactory.getInstance().getCommonConfig().getApiTool();
+        if (Common.SWAGGER2_API.equals(apiTool)) {
+            return getSwagger2Text();
+        } else if (Common.SWAGGER3_API.equals(apiTool)) {
+            return getSwagger3Text();
         }
-        return result + Common.RIGHT_PARENTHESES;
+        return Common.BLANK_STRING;
     }
 
+    protected String getSwagger2Text() {
+        return getSwaggerText(Annotation.VALUE);
+    }
+
+    protected String getSwagger3Text() {
+        return getSwaggerText(Annotation.NAME);
+    }
+
+    private String getSwaggerText(String attributeName) {
+        if (required) {
+            return this.name + String.format(Common.FILLING_STR2, attributeName, value, Annotation.REQUIRED, true);
+        } else {
+            return this.name + String.format(Common.FILLING_STR, attributeName, value);
+        }
+    }
 }

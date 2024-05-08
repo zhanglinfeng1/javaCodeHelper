@@ -22,7 +22,6 @@ public class Common {
     public static final String LESS_THAN_SIGN = "<";
     public static final String UNDERLINE = "_";
     public static final String SPACE = " ";
-    public static final String DOUBLE_QUOTATION = "\"";
     public static final String PERCENT_SIGN = "%";
     public static final String WRAP = "\n";
     public static final String HASH_LEFT_BRACE = "#{";
@@ -38,7 +37,6 @@ public class Common {
     public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
     public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String DEFAULT_TEMPLATE = "默认模版";
-    public static final String CUSTOM_TEMPLATE = "自定义模版";
     public static final String MODEL = "Model";
     public static final String ID = "id";
 
@@ -67,13 +65,16 @@ public class Common {
     public static final String BAIDU_TRANSLATE_CHINESE = "百度翻译";
     public static final String BAIDU_TRANSLATE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
     /** 接口文档Api */
-    public static final Integer SWAGGER_API = 0;
+    public static final Integer SWAGGER2_API = 0;
+    public static final Integer SWAGGER3_API = 1;
 
     /** 用于拼接的字符串 */
     public static final String GET = "get";
     public static final String SET = "set";
     public static final String EQ_STR = " = ";
     public static final String END_STR = "(%s);";
+    public static final String FILLING_STR = "(%s = \"%s\")";
+    public static final String FILLING_STR2 = "(%s = \"%s\", %s = %s)";
     public static final String ARRAYS_STREAM_STR = "Arrays.stream(%s).map(";
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";

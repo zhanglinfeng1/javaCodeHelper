@@ -14,7 +14,7 @@ public class CommonConfig {
     /** 翻译api secretKey */
     private String secretKey;
     /** api工具 */
-    private Integer apiTool = Common.SWAGGER_API;
+    private Integer apiTool = Common.SWAGGER2_API;
     /** 开启代码补全 */
     private boolean enableCodeCompletion = true;
     /** 最大代码补全展示数量 */

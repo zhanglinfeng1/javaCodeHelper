@@ -9,7 +9,13 @@ import pers.zlf.plugin.constant.Annotation;
 public class ParameterAnnotation extends BaseAnnotation {
 
     @Override
-    public String getSwaggerApi() {
-        return Annotation.SWAGGER_API_PARAM;
+    protected String getSwagger2Api() {
+        return Annotation.SWAGGER2_API_PARAM;
     }
+
+    @Override
+    protected String getSwagger3Api() {
+        return Annotation.SWAGGER3_PARAMETER;
+    }
+
 }

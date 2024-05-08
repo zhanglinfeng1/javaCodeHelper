@@ -137,7 +137,7 @@ public class AddApiAnnotationAction extends BaseAction {
     /**
      * 添加注解
      *
-     * @param baseAnnotation        注解
+     * @param baseAnnotation 注解
      * @param psiElement     元素
      * @param modifierList   PsiModifierList
      * @param psiElementName 元素名
@@ -146,7 +146,7 @@ public class AddApiAnnotationAction extends BaseAction {
         if (needAdd(psiElement) && null != modifierList && !modifierList.hasAnnotation(baseAnnotation.getQualifiedName())) {
             baseAnnotation.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
             importClassSet.add(baseAnnotation.getQualifiedName());
-            annotationMap.put(modifierList, baseAnnotation.toString());
+            annotationMap.put(modifierList, baseAnnotation.getText());
         }
     }
 
