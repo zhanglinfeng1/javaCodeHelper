@@ -85,39 +85,68 @@ public class AddApiAnnotationAction extends BaseAction {
     /**
      * Controller类添加注解
      *
-     * @param psiClass PsiClass
+     * @param psiClass Controller类
      */
     private void addSwaggerForController(PsiClass psiClass) {
         addApiAnnotation(new ControllerAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
-        for (PsiMethod method : psiClass.getMethods()) {
-            Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
+        addSwaggerForMethod(psiClass.getMethods());
+    }
+
+    /**
+     * 方法添加注解
+     *
+     * @param methods 方法数组
+     */
+    private void addSwaggerForMethod(PsiMethod[] methods) {
+        for (PsiMethod method : methods) {
             addApiAnnotation(new MethodAnnotation(), method, method.getModifierList(), method.getName());
-            for (PsiParameter parameter : method.getParameterList().getParameters()) {
-                if (!needAdd(parameter)) {
-                    continue;
-                }
-                Map<String, PsiAnnotation> parameterAnnotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
-                String parameterComment = Empty.of(parameterCommentMap.get(parameter.getName())).orElse(parameter.getName());
-                for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {
-                    PsiAnnotation annotation = entry.getValue();
-                    switch (entry.getKey()) {
-                        case Annotation.REQUEST_ATTRIBUTE:
-                        case Annotation.REQUEST_HEADER:
-                            addApiAnnotation(new IgnoreAnnotation(), parameter, parameter.getModifierList(), parameterComment);
-                            break;
-                        case Annotation.REQUEST_PARAM:
-                        case Annotation.REQUEST_PART:
-                        case Annotation.PATH_VARIABLE:
-                        case Annotation.REQUEST_BODY:
-                            ParameterAnnotation parameterAnnotation = new ParameterAnnotation();
-                            String required = MyPsiUtil.getAnnotationValue(annotation, Annotation.REQUIRED);
-                            parameterAnnotation.setRequired(required.equals(Common.TRUE));
-                            addApiAnnotation(parameterAnnotation, parameter, parameter.getModifierList(), parameterComment);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            addSwaggerForParameter(method, method.getParameterList().getParameters());
+        }
+    }
+
+    /**
+     * 参数添加注解
+     *
+     * @param method     方法
+     * @param parameters 参数数组
+     */
+    private void addSwaggerForParameter(PsiMethod method, PsiParameter[] parameters) {
+        Map<String, String> parameterCommentMap = MyPsiUtil.getParamComment(method);
+        for (PsiParameter parameter : parameters) {
+            if (!needAdd(parameter)) {
+                continue;
+            }
+            addSwaggerForParameter(parameterCommentMap, parameter);
+        }
+    }
+
+    /**
+     * 参数添加注解
+     *
+     * @param parameterCommentMap 参数注释
+     * @param parameter           参数
+     */
+    private void addSwaggerForParameter(Map<String, String> parameterCommentMap, PsiParameter parameter) {
+        Map<String, PsiAnnotation> parameterAnnotationMap = Arrays.stream(parameter.getAnnotations()).collect(Collectors.toMap(PsiAnnotation::getQualifiedName, Function.identity()));
+        String parameterComment = Empty.of(parameterCommentMap.get(parameter.getName())).orElse(parameter.getName());
+        for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {
+            PsiAnnotation annotation = entry.getValue();
+            switch (entry.getKey()) {
+                case Annotation.REQUEST_ATTRIBUTE:
+                case Annotation.REQUEST_HEADER:
+                    addApiAnnotation(new IgnoreAnnotation(), parameter, parameter.getModifierList(), parameterComment);
+                    break;
+                case Annotation.REQUEST_PARAM:
+                case Annotation.REQUEST_PART:
+                case Annotation.PATH_VARIABLE:
+                case Annotation.REQUEST_BODY:
+                    ParameterAnnotation parameterAnnotation = new ParameterAnnotation();
+                    String required = MyPsiUtil.getAnnotationValue(annotation, Annotation.REQUIRED);
+                    parameterAnnotation.setRequired(required.equals(Common.TRUE));
+                    addApiAnnotation(parameterAnnotation, parameter, parameter.getModifierList(), parameterComment);
+                    break;
+                default:
+                    break;
             }
         }
     }
