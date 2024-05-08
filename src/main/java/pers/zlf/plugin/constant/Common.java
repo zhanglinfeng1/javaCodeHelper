@@ -75,6 +75,7 @@ public class Common {
     public static final String END_STR = "(%s);";
     public static final String FILLING_STR = "(%s = \"%s\")";
     public static final String FILLING_STR2 = "(%s = \"%s\", %s = %s)";
+    public static final String FILLING_STR3 = "(%s = %s)";
     public static final String ARRAYS_STREAM_STR = "Arrays.stream(%s).map(";
     public static final String STREAM_MAP_STR = ".stream().map(";
     public static final String COLLECT_LIST_STR = "::new).collect(Collectors.toList());";

@@ -41,6 +41,7 @@ public class Annotation {
     public static final String REQUIRED = "required";
     public static final String NAME = "name";
     public static final String SUMMARY = "summary";
+    public static final String HIDDEN = "hidden";
 
     /** api注解 */
     public static final String SPRINGFOX_API_IGNORE = "springfox.documentation.annotations.ApiIgnore";
@@ -52,7 +53,6 @@ public class Annotation {
     public static final String SWAGGER3_TAG = "io.swagger.v3.oas.annotations.tags.Tag";
     public static final String SWAGGER3_OPERATION = "io.swagger.v3.oas.annotations.Operation";
     public static final String SWAGGER3_SCHEMA = "io.swagger.v3.oas.annotations.media.Schema";
-    public static final String SWAGGER3_HIDDEN = "io.swagger.v3.oas.annotations.Hidden";
     public static final String SWAGGER3_PARAMETER = "io.swagger.v3.oas.annotations.Parameter";
 
     /** 参数注解 */
