@@ -6,6 +6,7 @@ import pers.zlf.plugin.factory.TemplateFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -28,6 +29,17 @@ public class TemplateConfig {
     }
 
     public Map<String, Map<String, String>> getTotalTemplateMap() {
+        totalTemplateMap = Optional.ofNullable(totalTemplateMap).orElse(new HashMap<>());
+        if (!totalTemplateMap.containsKey(Common.DEFAULT_TEMPLATE)) {
+            Map<String, String> templateValueMap = new HashMap<>();
+            Map<String, String> defaultMap = TemplateFactory.getInstance().getAllDefaultTemplate();
+            for (Map.Entry<String, String> templateEntry : defaultMap.entrySet()) {
+                String key = templateEntry.getKey();
+                String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+                templateValueMap.put(title, defaultMap.get(key));
+            }
+            totalTemplateMap.put(Common.DEFAULT_TEMPLATE, templateValueMap);
+        }
         return totalTemplateMap;
     }
 
