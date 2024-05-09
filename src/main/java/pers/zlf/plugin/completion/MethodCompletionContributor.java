@@ -151,10 +151,10 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
                 continue;
             }
             if (fieldStaticMethod){
-                code = code.replace(Keyword.JAVA_THIS + Common.DOT,Common.BLANK_STRING);
+                code = code.replace(Keyword.JAVA_THIS + Common.DOT, Common.BLANK_STRING);
             }
             String finalCode = code;
-            //变量所在类的方法包含的参数
+            //方法包含的参数
             PsiParameter[] psiParameterArr = fieldMethod.getParameterList().getParameters();
             Empty.of(this.getParamNameList(psiParameterArr)).map(list -> String.format(Common.END_STR, String.join(Common.COMMA + Common.SPACE, list)))
                     .ifPresent(t -> {
@@ -167,6 +167,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
     private List<String> getParamNameList(PsiParameter[] psiParameterArr) {
         List<String> paramNameList = new ArrayList<>();
         for (PsiParameter parameter : psiParameterArr) {
+            //类型与名一致
             PsiType variableType = totalVariableMap.get(parameter.getName());
             String parameterTypeStr = parameter.getType().getPresentableText();
             if (null != variableType && parameterTypeStr.equals(variableType.getPresentableText())) {
@@ -176,7 +177,13 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
             if (TypeUtil.isSimpleType(parameterTypeStr)) {
                 return null;
             }
-            totalVariableMap.entrySet().stream().filter(m -> parameterTypeStr.equals(m.getValue().getPresentableText())).map(Map.Entry::getKey).findAny().ifPresent(paramNameList::add);
+            //非简单类型，类型一致
+            Optional<String> variable = totalVariableMap.entrySet().stream().filter(m -> parameterTypeStr.equals(m.getValue().getPresentableText())).map(Map.Entry::getKey).findAny();
+            if (variable.isPresent()) {
+                paramNameList.add(variable.get());
+            } else {
+                return null;
+            }
         }
         return paramNameList;
     }
