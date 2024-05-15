@@ -127,6 +127,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
     private void showSecondPanel() {
         firstPanel.setVisible(false);
         secondPanel.setVisible(true);
+        templateComboBox.removeAllItems();
         ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().keySet().forEach(templateComboBox::addItem);
         int rowCount = firstTableModel.getRowCount();
         if (rowCount > 0) {
