@@ -9,23 +9,6 @@ import java.nio.file.Path;
 public class PathUtil {
 
     /**
-     * 判断路径中是否包含了文件夹
-     *
-     * @param pathStr       路径
-     * @param directoryName 文件夹名
-     * @return boolean
-     */
-    public static boolean contain(String pathStr, String directoryName) {
-        Path path = Path.of(pathStr);
-        for (Path subPath : path) {
-            if (subPath.endsWith(directoryName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 统一路径格式
      *
      * @param path 路径
