@@ -109,14 +109,11 @@ public class TemplateConfigDialog implements BaseDialog {
         addButton.addActionListener(e -> {
             String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_FILE_NAME, null);
             if (StringUtil.isNotEmpty(title)) {
-                int index = templatePane.getSelectedIndex();
-                if (index != -1) {
-                    String selectedTitle = templatePane.getTitleAt(index);
-                    Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
-                    if (templateFileNameList.contains(title)) {
-                        Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
-                        return;
-                    }
+                String selectedTitle = templateComboBox.getSelectedItem().toString();
+                Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
+                if (templateFileNameList.contains(title)) {
+                    Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                    return;
                 }
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
                 addMouseListener(deleteButton, IconEnum.REMOVE);
