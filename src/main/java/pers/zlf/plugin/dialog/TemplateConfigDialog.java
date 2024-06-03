@@ -162,6 +162,10 @@ public class TemplateConfigDialog implements BaseDialog {
     }
 
     public Map<String, Map<String, String>> getTotalTemplateMap() {
+        String selectedItem = templateComboBox.getSelectedItem().toString();
+        if (!Common.DEFAULT_TEMPLATE.equals(selectedItem)) {
+            totalTemplateMap.put(templateComboBox.getSelectedItem().toString(), getCurrentTemplateMap());
+        }
         return totalTemplateMap;
     }
 

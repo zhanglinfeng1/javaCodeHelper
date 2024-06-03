@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,12 +53,13 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
-     * @param selectedTemplate 选择的模版
-     * @param filePath         文件路径
-     * @param tableInfo        表信息
+     * @param selectedTemplate    选择的模版
+     * @param selectedTemplateMap key:文件名 value:模版名
+     * @param filePath            文件路径
+     * @param tableInfo           表信息
      * @throws Exception 异常
      */
-    public void create(String selectedTemplate, String filePath, TableInfo tableInfo) throws Exception {
+    public void create(String selectedTemplate, Map<String, String> selectedTemplateMap, String filePath, TableInfo tableInfo) throws Exception {
         Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs).ifFalseThrow(() -> new Exception(Message.FULL_PATH_CREATE_ERROR));
         tableInfo.setDateTime(DateUtil.nowStr(DateUtil.YYYY_MM_DDHHMMSS));
         Map<String, Object> map = JsonUtil.toMap(tableInfo);
@@ -70,11 +70,10 @@ public class TemplateFactory {
             createTemporaryFile(selectedTemplate, temporaryFilePath);
             //添加自定义模板
             configuration.setDirectoryForTemplateLoading(file);
-            for (File subFile : Objects.requireNonNull(file.listFiles())) {
-                String name = subFile.getName();
-                if (name.endsWith(ClassType.FREEMARKER_FILE)) {
-                    create(filePath, tableInfo.getTableName(), configuration.getTemplate(name), map);
-                }
+            for (Map.Entry<String, String> entry : selectedTemplateMap.entrySet()) {
+                String fileName = entry.getKey();
+                String templateFileName = entry.getValue() + ClassType.FREEMARKER_FILE;
+                create(filePath, fileName, configuration.getTemplate(templateFileName), map);
             }
         } finally {
             //删除临时模版文件
@@ -106,22 +105,13 @@ public class TemplateFactory {
     /**
      * 生成文件
      *
-     * @param filePath  文件路径
-     * @param tableName 表名
-     * @param template  模版
-     * @param map       模版数据
+     * @param filePath 文件路径
+     * @param fileName 文件名
+     * @param template 模版
+     * @param map      模版数据
      * @throws Exception 异常
      */
-    private void create(String filePath, String tableName, Template template, Map<String, Object> map) throws Exception {
-        String fileName = template.getName().replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-        if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
-            fileName = tableName;
-        } else {
-            fileName = tableName + fileName;
-        }
-        if (!fileName.contains(Common.DOT)) {
-            fileName = fileName + ClassType.JAVA_FILE;
-        }
+    private void create(String filePath, String fileName, Template template, Map<String, Object> map) throws Exception {
         filePath = Path.of(filePath, fileName).toString();
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath); OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
             template.process(map, bufferedWriter);
