@@ -78,16 +78,16 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
             String sqlColumn = column.getName();
             String dataType = column.getDasType().toDataType().typeName;
             firstTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(sqlColumn)});
-            JTextField textField = new JTextField();
-            textField.setEnabled(false);
-            JTextField textField2 = new JTextField();
-            textField2.setEnabled(false);
-            columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
-            columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
-            columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.DATA_TYPE_OPTIONS)));
-            columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
         }
+        JTextField textField = new JTextField();
+        textField.setEnabled(false);
+        JTextField textField2 = new JTextField();
+        textField2.setEnabled(false);
+        columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
+        columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
+        columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
+        columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.DATA_TYPE_OPTIONS)));
+        columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
