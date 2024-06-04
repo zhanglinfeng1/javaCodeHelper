@@ -42,9 +42,6 @@ public class TemplateConfigurable implements Configurable {
         if (!dialog.getAuthor().equals(config.getAuthor())) {
             return true;
         }
-        if (!dialog.getSelectedTemplate().equals(config.getSelectedTemplate())) {
-            return true;
-        }
         Map<String, Map<String, String>> dialogTemplateMap = dialog.getTotalTemplateMap();
         Map<String, Map<String, String>> configTemplateMap = config.getTotalTemplateMap();
         Set<String> dialogKeySet = dialogTemplateMap.keySet();
