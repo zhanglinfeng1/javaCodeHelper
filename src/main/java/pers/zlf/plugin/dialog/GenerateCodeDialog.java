@@ -180,6 +180,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         });
         //删除
         deleteButton.addActionListener(e -> Equals.of(queryTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
+            //TODO 点击下拉后未选择，再点删除，有BUG
             queryTableModel.removeRow(rowNum);
             if (queryTable.getRowCount() == 0) {
                 removeMouseListener(deleteButton, IconEnum.REMOVE);
