@@ -20,15 +20,16 @@ public class CronUtil {
     /**
      * 判断是否是cron表达式
      *
-     * @param cronStr cron表达式
+     * @param cronStr  cron表达式
+     * @param cronType cron类型
      * @return true 是
      */
-    public static boolean isCron(String cronStr) {
+    public static boolean isCron(String cronStr, CronType cronType) {
         if (StringUtil.isEmpty(cronStr)) {
             return false;
         }
         try {
-            CronParser cronParser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.SPRING));
+            CronParser cronParser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(cronType));
             cronParser.parse(cronStr);
             return true;
         } catch (Exception e) {
@@ -39,12 +40,13 @@ public class CronUtil {
     /**
      * 返回最近的执行时间
      *
-     * @param cronStr cron表达式
-     * @param count   次数
+     * @param cronStr  cron表达式
+     * @param cronType cron类型
+     * @param count    次数
      * @return List
      */
-    public static List<String> getExecutionTimeList(String cronStr, int count) {
-        CronParser cronParser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.SPRING));
+    public static List<String> getExecutionTimeList(String cronStr, CronType cronType, int count) {
+        CronParser cronParser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(cronType));
         Cron cron = cronParser.parse(cronStr);
         ExecutionTime executionTime = ExecutionTime.forCron(cron);
         ZonedDateTime now = ZonedDateTime.now();
