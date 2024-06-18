@@ -14,6 +14,7 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
+import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2023/2/13 10:36
  */
-public class FastJumpConfigDialog implements BaseDialog {
+public class FastJumpConfigDialog {
     private JPanel panel;
     private JTextField controllerTextField;
     private JTextField feignTextField;
@@ -61,7 +62,7 @@ public class FastJumpConfigDialog implements BaseDialog {
         moduleTable.setModel(defaultTableModel);
         moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //初始化按钮背景色
-        initButtonBackground(addModuleButton, deleteModuleButton);
+        SwingUtil.initButtonBackground(addModuleButton, deleteModuleButton);
 
         addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(Common.SELECT_MODULE)
                 .setMovable(true).setItemChosenCallback(value -> this.addCallback(List.of(value))).createPopup().showUnderneathOf(addModuleButton)));
@@ -70,9 +71,9 @@ public class FastJumpConfigDialog implements BaseDialog {
             int rowNum = moduleTable.getSelectedRow();
             if (rowNum >= 0) {
                 defaultTableModel.removeRow(rowNum);
-                addMouseListener(addModuleButton, IconEnum.ADD);
+                SwingUtil.addMouseListener(addModuleButton, IconEnum.ADD);
                 if (moduleTable.getRowCount() == 0) {
-                    removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
+                    SwingUtil.removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
                 }
             }
         });
@@ -84,9 +85,9 @@ public class FastJumpConfigDialog implements BaseDialog {
         feignTextField.setText(config.getFeignFolderName());
         defaultTableModel.getDataVector().clear();
         List<String> selectModuleList = config.getModuleNameList().stream().sorted().collect(Collectors.toList());
-        addMouseListener(addModuleButton, IconEnum.ADD);
+        SwingUtil.addMouseListener(addModuleButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
-            removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
+            SwingUtil.removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
         } else {
             this.addCallback(selectModuleList);
         }
@@ -105,7 +106,7 @@ public class FastJumpConfigDialog implements BaseDialog {
     }
 
     public List<String> getModuleNameList(){
-        return getTableContentList(defaultTableModel, 0);
+        return SwingUtil.getTableContentList(defaultTableModel, 0);
     }
 
     private List<String> getOptionalList() {
@@ -116,9 +117,9 @@ public class FastJumpConfigDialog implements BaseDialog {
 
     private void addCallback(List<String> valueList) {
         valueList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
-        addMouseListener(deleteModuleButton, IconEnum.REMOVE);
+        SwingUtil.addMouseListener(deleteModuleButton, IconEnum.REMOVE);
         if (CollectionUtil.isEmpty(getOptionalList())) {
-            removeMouseListener(addModuleButton, IconEnum.ADD);
+            SwingUtil.removeMouseListener(addModuleButton, IconEnum.ADD);
         }
     }
 }

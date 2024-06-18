@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author zhanglinfeng
  * @date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog implements BaseDialog {
+public class CommonConfigDialog {
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;

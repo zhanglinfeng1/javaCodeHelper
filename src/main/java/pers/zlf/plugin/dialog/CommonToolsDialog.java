@@ -20,7 +20,7 @@ public class CommonToolsDialog {
     public CommonToolsDialog() {
         tabbedPane.add("Unicode", new UnicodeDialog().getContent());
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
-        tabbedPane.add("Ascii", new AsciiDialog().getContent());
+        tabbedPane.add("Ascii码", new AsciiDialog().getContent());
         tabbedPane.add("二维码", new QrCodeDialog().getContent());
         tabbedPane.add("Cron表达式", new CronDialog().getContent());
     }

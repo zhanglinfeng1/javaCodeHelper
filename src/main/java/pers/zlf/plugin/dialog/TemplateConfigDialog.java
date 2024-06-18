@@ -17,6 +17,7 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.TemplateConfig;
 import pers.zlf.plugin.util.MapUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ import java.util.Set;
  * @author zhanglinfeng
  * @date create in 2024/4/8 15:02
  */
-public class TemplateConfigDialog implements BaseDialog {
+public class TemplateConfigDialog {
     private JPanel panel;
     private JTextField authorField;
     private JTabbedPane templatePane;
@@ -54,13 +55,13 @@ public class TemplateConfigDialog implements BaseDialog {
 
     public TemplateConfigDialog() {
         //初始化按钮背景色
-        initButtonBackground(addButton, deleteButton, resetButton, addTemplateButton, editTemplateButton, deleteTemplateButton);
-        addMouseListener(addTemplateButton, IconEnum.ADD);
-        addMouseListener(editTemplateButton, IconEnum.EDIT);
-        addMouseListener(deleteTemplateButton, IconEnum.REMOVE);
-        addMouseListener(addButton, IconEnum.ADD);
-        addMouseListener(deleteButton, IconEnum.REMOVE);
-        addMouseListener(resetButton, IconEnum.RESET);
+        SwingUtil.initButtonBackground(addButton, deleteButton, resetButton, addTemplateButton, editTemplateButton, deleteTemplateButton);
+        SwingUtil.addMouseListener(addTemplateButton, IconEnum.ADD);
+        SwingUtil.addMouseListener(editTemplateButton, IconEnum.EDIT);
+        SwingUtil.addMouseListener(deleteTemplateButton, IconEnum.REMOVE);
+        SwingUtil.addMouseListener(addButton, IconEnum.ADD);
+        SwingUtil.addMouseListener(deleteButton, IconEnum.REMOVE);
+        SwingUtil.addMouseListener(resetButton, IconEnum.RESET);
         //添加
         addTemplateButton.addActionListener(e -> {
             String title = Messages.showInputDialog((Project) null, null, Message.TEMPLATE_NAME, null);
@@ -72,7 +73,7 @@ public class TemplateConfigDialog implements BaseDialog {
                 }
                 templateComboBox.addItem(title);
                 totalTemplateMap.put(title, new HashMap<>());
-                addMouseListener(deleteTemplateButton, IconEnum.REMOVE);
+                SwingUtil.addMouseListener(deleteTemplateButton, IconEnum.REMOVE);
                 updateTemplateJPanel(new HashMap<>());
             }
         });
@@ -84,7 +85,7 @@ public class TemplateConfigDialog implements BaseDialog {
                 templateComboBox.removeItem(selectedItem);
                 totalTemplateMap.remove(selectedItem);
                 if (templateComboBox.getItemCount() == 1) {
-                    removeMouseListener(deleteTemplateButton, IconEnum.REMOVE);
+                    SwingUtil.removeMouseListener(deleteTemplateButton, IconEnum.REMOVE);
                 }
             }
         });
@@ -116,7 +117,7 @@ public class TemplateConfigDialog implements BaseDialog {
                     return;
                 }
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
-                addMouseListener(deleteButton, IconEnum.REMOVE);
+                SwingUtil.addMouseListener(deleteButton, IconEnum.REMOVE);
             }
         });
         //删除
@@ -130,7 +131,7 @@ public class TemplateConfigDialog implements BaseDialog {
                 }
                 int total = templatePane.getTabCount();
                 if (total == 0) {
-                    removeMouseListener(deleteButton, IconEnum.REMOVE);
+                    SwingUtil.removeMouseListener(deleteButton, IconEnum.REMOVE);
                 }
             }
         });
@@ -230,7 +231,7 @@ public class TemplateConfigDialog implements BaseDialog {
                 templatePane.addTab(templateEntry.getKey(), createTemplateJPanel(templateEntry.getValue()));
             }
         } else {
-            removeMouseListener(deleteButton, IconEnum.REMOVE);
+            SwingUtil.removeMouseListener(deleteButton, IconEnum.REMOVE);
         }
     }
 

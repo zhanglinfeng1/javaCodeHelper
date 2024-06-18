@@ -23,6 +23,7 @@ import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -54,7 +55,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2022/9/8 10:33
  */
-public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
+public class GenerateCodeDialog extends DialogWrapper {
     private JPanel contentPane;
     /** 第一面板 */
     private JPanel firstPanel;
@@ -101,8 +102,8 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
-        addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
-        addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
+        SwingUtil.addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
+        SwingUtil.addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
         //表格初始化
         queryTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         queryTable.setModel(queryTableModel);
@@ -169,10 +170,10 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
         //上一步
         backButton.addActionListener(e -> showFirstPanel());
         //初始化按钮背景色
-        initButtonBackground(addButton, deleteButton);
+        SwingUtil.initButtonBackground(addButton, deleteButton);
         //添加
         addButton.addActionListener(e -> {
-            addMouseListener(deleteButton, IconEnum.REMOVE);
+            SwingUtil.addMouseListener(deleteButton, IconEnum.REMOVE);
             queryTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
             queryTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             queryTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
@@ -183,7 +184,7 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
             //TODO 点击下拉后未选择，再点删除，有BUG
             queryTableModel.removeRow(rowNum);
             if (queryTable.getRowCount() == 0) {
-                removeMouseListener(deleteButton, IconEnum.REMOVE);
+                SwingUtil.removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
         }));
         //生成代码
@@ -208,8 +209,8 @@ public class GenerateCodeDialog extends DialogWrapper implements BaseDialog {
                 Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Icon.LOGO);
             }
         });
-        addMouseListener(addButton, IconEnum.ADD);
-        removeMouseListener(deleteButton, IconEnum.REMOVE);
+        SwingUtil.addMouseListener(addButton, IconEnum.ADD);
+        SwingUtil.removeMouseListener(deleteButton, IconEnum.REMOVE);
 
         Runnable runnable = () -> {
             String text = fullPathField.getText();
