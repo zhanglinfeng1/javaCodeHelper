@@ -1,6 +1,7 @@
 package pers.zlf.plugin.dialog;
 
 import pers.zlf.plugin.dialog.tool.AsciiDialog;
+import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.QrCodeDialog;
 import pers.zlf.plugin.dialog.tool.UnicodeDialog;
 import pers.zlf.plugin.dialog.tool.UrlEncodeDialog;
@@ -21,6 +22,7 @@ public class CommonToolsDialog {
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
         tabbedPane.add("Ascii", new AsciiDialog().getContent());
         tabbedPane.add("二维码", new QrCodeDialog().getContent());
+        tabbedPane.add("Cron表达式", new CronDialog().getContent());
     }
 
     public JPanel getContent() {

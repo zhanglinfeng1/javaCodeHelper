@@ -40,5 +40,6 @@ public class Message {
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
     public static final String UPLOAD_QR_CODE_FIRST = "请先上传二维码";
+    public static final String NOT_CRON_EXPRESSIONS = "非cron表达式";
 
 }

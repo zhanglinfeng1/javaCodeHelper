@@ -18,6 +18,7 @@
           <component id="d664a" class="javax.swing.JTextArea" binding="upTextArea">
             <constraints/>
             <properties>
+              <font name="JetBrains Mono SemiBold" size="14" style="0"/>
               <lineWrap value="true"/>
               <wrapStyleWord value="true"/>
             </properties>
