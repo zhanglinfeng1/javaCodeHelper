@@ -20,7 +20,7 @@ public class UrlEncodeDialog {
 
     public UrlEncodeDialog() {
         downButton.addActionListener(e -> downTextArea.setText(URLEncoder.encode(upTextArea.getText(), StandardCharsets.UTF_8)));
-        upButton.addActionListener(e -> upTextArea.setText(URLDecoder.decode(upTextArea.getText(), StandardCharsets.UTF_8)));
+        upButton.addActionListener(e -> upTextArea.setText(URLDecoder.decode(downTextArea.getText(), StandardCharsets.UTF_8)));
     }
 
     public JPanel getContent() {
