@@ -3,6 +3,7 @@ package pers.zlf.plugin.dialog;
 import pers.zlf.plugin.dialog.tool.AsciiDialog;
 import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.QrCodeDialog;
+import pers.zlf.plugin.dialog.tool.TimeStampDialog;
 import pers.zlf.plugin.dialog.tool.UnicodeDialog;
 import pers.zlf.plugin.dialog.tool.UrlEncodeDialog;
 
@@ -23,6 +24,7 @@ public class CommonToolsDialog {
         tabbedPane.add("Ascii码", new AsciiDialog().getContent());
         tabbedPane.add("二维码", new QrCodeDialog().getContent());
         tabbedPane.add("Cron表达式", new CronDialog().getContent());
+        tabbedPane.add("时间戳转换", new TimeStampDialog().getContent());
     }
 
     public JPanel getContent() {
