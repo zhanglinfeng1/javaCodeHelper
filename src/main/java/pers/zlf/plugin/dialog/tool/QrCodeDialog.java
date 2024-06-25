@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +39,6 @@ public class QrCodeDialog {
     private JPanel contentPanel;
     private TextFieldWithBrowseButton logoTextField;
     private JLabel qrCodeLabel;
-    private JButton uploadButton;
     private static BufferedImage qrCodeImage;
     private static String uploadFilePath;
 
@@ -78,14 +79,17 @@ public class QrCodeDialog {
         });
 
         //上传
-        uploadButton.addActionListener(e -> {
-            uploadFilePath = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
-            if (StringUtil.isNotEmpty(uploadFilePath)) {
-                try {
-                    qrCodeLabel.setIcon(new ImageIcon(QRCodeUtil.compress(uploadFilePath)));
-                    qrCodeImage = null;
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
+        qrCodeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                uploadFilePath = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
+                if (StringUtil.isNotEmpty(uploadFilePath)) {
+                    try {
+                        qrCodeLabel.setIcon(new ImageIcon(QRCodeUtil.compress(uploadFilePath)));
+                        qrCodeImage = null;
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
