@@ -2,7 +2,7 @@
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
 [![](https://img.shields.io/badge/Github-blue?logo=github)](https://github.com/zhanglinfeng1/javaCodeHelper)
 [![](https://img.shields.io/badge/Gitee-blue?logo=gitee)](https://gitee.com/zlfzh/javaCodeHelper)
-[![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
+[![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
 
 ## 代码补全
 构造方法内，补全字段赋值<br />
