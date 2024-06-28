@@ -1,6 +1,8 @@
 # 功能简介
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
-源码 <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a>
+[![](https://img.shields.io/badge/Github-blue?logo=github)](https://github.com/zhanglinfeng1/javaCodeHelper)
+[![](https://img.shields.io/badge/Gitee-blue?logo=gitee)](https://gitee.com/zlfzh/javaCodeHelper)
+[![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
 
 ## 代码补全
 构造方法内，补全字段赋值<br />
@@ -37,8 +39,8 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 ![image](src/main/resources/example/codeStatistics.png)<br />
 
 ## 常用工具
-1.选择文本后，右击选择“工具”![image](src/main/resources/example/rightClickTool.png)<br />
-2.打开 View > Tool Windows > JavaCodeHelp ![image](src/main/resources/example/toolWindow.png)<br />
+1.选中文本后，右击选择 " 工具 " <br />
+2.打开 View > Tool Windows > JavaCodeHelp 
 
 ## 自定义模版生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
