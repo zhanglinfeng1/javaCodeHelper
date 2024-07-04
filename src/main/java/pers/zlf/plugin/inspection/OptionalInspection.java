@@ -18,6 +18,8 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.PsiThrowStatement;
+import com.intellij.psi.impl.source.tree.java.PsiExpressionStatementImpl;
+import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
@@ -66,11 +68,15 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                 } else if (operationTokenType == JavaTokenType.EQEQ && codeBlock instanceof PsiExpressionStatement) {
                     //简化赋值表达式
                     biConsumer.accept(simplifyExpression((PsiExpressionStatement) codeBlock, variableName), ReplaceIfQuickFix.SIMPLIFY_EXPRESSION);
+                } else if (operationTokenType == JavaTokenType.NE) {
+                    //简化方法调用
+                    biConsumer.accept(simplifyMethodCall(judgmentObject), ReplaceIfQuickFix.SIMPLIFY_IF_PRESENT);
                 }
             }
 
             @Override
             public void visitConditionalExpression(@NotNull PsiConditionalExpression conditionalExpression) {
+                //三元表达式
                 if (conditionalExpression.getParent() instanceof PsiLocalVariable && conditionalExpression.getCondition() instanceof PsiBinaryExpression binaryExpression) {
                     IElementType tokenType = binaryExpression.getOperationTokenType();
                     String nullText;
@@ -91,7 +97,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                     String variable = expression.getText();
                     String replaceText = String.format(Common.OPTIONAL, variable);
                     if (!variable.equals(notNullText)) {
-                        replaceText = replaceText + String.format(Common.MAP_COMMON_STR, Common.T, notNullText);
+                        replaceText = replaceText + Common.MAP_STR + String.format(Common.LAMBDA_STR, Common.T, notNullText);
                     }
                     replaceText = replaceText + String.format(Common.OPTIONAL_ELSE, nullText);
                     holder.registerProblem(conditionalExpression, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceTernaryExpressionQuickFix(replaceText));
@@ -117,6 +123,9 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         } else if (operationTokenType == JavaTokenType.NE && elseStatement != null) {
             // 判断类型为 != 且 存在else分支
             codeStatement = elseStatement;
+        } else if (operationTokenType == JavaTokenType.NE ) {
+            // 判断类型为 != 且 无else分支
+            codeStatement = ifStatement.getThenBranch();
         } else {
             return null;
         }
@@ -161,4 +170,18 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         return null;
     }
 
+    private String simplifyMethodCall(PsiExpression judgmentObject) {
+        if (codeBlock instanceof PsiExpressionStatementImpl expressionStatement && expressionStatement.getExpression() instanceof PsiMethodCallExpressionImpl methodCallExpression) {
+            String variableName = judgmentObject.getText();
+            if (StringUtil.isEmpty(variableName)) {
+                return null;
+            }
+            String simplifyText = MyExpressionUtil.simplifyMethodCall(methodCallExpression, variableName);
+            if (StringUtil.isNotEmpty(simplifyText)) {
+                simplifyText = Common.IF_PRESENT_STR + simplifyText + Common.SEMICOLON;
+            }
+            return simplifyText;
+        }
+        return null;
+    }
 }

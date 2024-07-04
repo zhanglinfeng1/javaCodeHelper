@@ -86,9 +86,10 @@ public class Common {
     public static final String OPTIONAL = "Optional.ofNullable(%s)";
     public static final String OPTIONAL_THROW = ".orElseThrow(()->%s);";
     public static final String OPTIONAL_ELSE = ".orElse(%s)";
-    public static final String MAP_COMMON_STR = ".map(%s->%s)";
-    public static final String MAP_LAMBDA_STR = ".map(%s::%s)";
-
+    public static final String LAMBDA_STR = "(%s -> %s)";
+    public static final String LAMBDA_SIMPLIFY_STR = "(%s::%s)";
+    public static final String MAP_STR = ".map";
+    public static final String IF_PRESENT_STR = ".ifPresent";
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "补全构造方法";
 

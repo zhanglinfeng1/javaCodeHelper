@@ -123,9 +123,9 @@ public class MyExpressionUtil {
         }
         String simplifyReturnText = null;
         if (expression instanceof PsiReferenceExpression) {
-            simplifyReturnText = variableName.equals(elementText) ? Common.BLANK_STRING : String.format(Common.MAP_COMMON_STR, functionVariableName, elementText);
+            simplifyReturnText = variableName.equals(elementText) ? Common.BLANK_STRING : String.format(Common.LAMBDA_STR, functionVariableName, elementText);
         } else if (expression instanceof PsiLiteralExpression) {
-            simplifyReturnText = String.format(Common.MAP_COMMON_STR, functionVariableName, elementText);
+            simplifyReturnText = String.format(Common.LAMBDA_STR, functionVariableName, elementText);
         } else if (expression instanceof PsiNewExpression) {
             simplifyReturnText = simplifyNew((PsiNewExpression) expression, variableName);
         } else if (expression instanceof PsiMethodCallExpression) {
@@ -133,7 +133,7 @@ public class MyExpressionUtil {
         }
         if (simplifyReturnText != null) {
             simplifyInfo.setSimplifyReturn(true);
-            simplifyInfo.setSimplifyReturnText(simplifyReturnText);
+            simplifyInfo.setSimplifyReturnText(Common.MAP_STR + simplifyReturnText);
         }
         return simplifyInfo;
     }
@@ -152,10 +152,10 @@ public class MyExpressionUtil {
         }
         String parameterText = MyExpressionUtil.getOnlyOneParameterName(newExpression.getArgumentList());
         if (variableName.equals(parameterText)) {
-            return String.format(Common.MAP_LAMBDA_STR, referenceElement.getReferenceName(), Keyword.JAVA_NEW);
+            return String.format(Common.LAMBDA_SIMPLIFY_STR, referenceElement.getReferenceName(), Keyword.JAVA_NEW);
         } else if (Common.BLANK_STRING.equals(parameterText)) {
             String text = newExpression.getText();
-            return String.format(Common.MAP_COMMON_STR, Common.T, text);
+            return String.format(Common.LAMBDA_STR, Common.T, text);
         }
         return null;
     }
@@ -188,21 +188,21 @@ public class MyExpressionUtil {
         String methodText = methodCallExpression.getText();
         methodText = methodText.replace(referenceName + Common.DOT, Common.BLANK_STRING);
         if (methodText.contains(Common.LEFT_PARENTHESES)) {
-            methodText = methodText.substring(0, methodText.indexOf(Common.LEFT_PARENTHESES) + 1);
+            methodText = methodText.substring(0, methodText.indexOf(Common.LEFT_PARENTHESES));
         }
         if (count.getNum() == 1) {
             if (parameterText.equals(Common.T)) {
-                return String.format(Common.MAP_LAMBDA_STR, referenceName, methodText);
+                return String.format(Common.LAMBDA_SIMPLIFY_STR, referenceName, methodText);
             }
             String variableTypeName = MyExpressionUtil.getTypeName(referenceExpression);
             if (referenceName.equals(variableName) && StringUtil.isNotEmpty(variableTypeName)) {
-                return String.format(Common.MAP_LAMBDA_STR, variableTypeName, methodText);
+                return String.format(Common.LAMBDA_SIMPLIFY_STR, variableTypeName, methodText);
             }
         }
-        return String.format(Common.MAP_COMMON_STR, Common.T, methodText + parameterText + Common.RIGHT_PARENTHESES);
+        return String.format(Common.LAMBDA_STR, Common.T, methodText + parameterText + Common.RIGHT_PARENTHESES);
     }
 
-    private static PsiReferenceExpression getReferenceElement(PsiMethodCallExpression methodCallExpression, Count count) {
+    public static PsiReferenceExpression getReferenceElement(PsiMethodCallExpression methodCallExpression, Count count) {
         PsiReferenceExpression referenceExpression = methodCallExpression.getMethodExpression();
         for (PsiElement element : referenceExpression.getChildren()) {
             if (element instanceof PsiMethodCallExpression) {
