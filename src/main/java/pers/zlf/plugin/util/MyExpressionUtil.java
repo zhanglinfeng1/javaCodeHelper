@@ -131,9 +131,12 @@ public class MyExpressionUtil {
         } else if (expression instanceof PsiMethodCallExpression) {
             simplifyReturnText = simplifyMethodCall((PsiMethodCallExpression) expression, variableName);
         }
+        if (StringUtil.isNotEmpty(simplifyReturnText)) {
+            simplifyReturnText = Common.MAP_STR + simplifyReturnText;
+        }
         if (simplifyReturnText != null) {
             simplifyInfo.setSimplifyReturn(true);
-            simplifyInfo.setSimplifyReturnText(Common.MAP_STR + simplifyReturnText);
+            simplifyInfo.setSimplifyReturnText(simplifyReturnText);
         }
         return simplifyInfo;
     }
