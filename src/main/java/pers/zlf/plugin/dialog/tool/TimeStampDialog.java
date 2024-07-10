@@ -1,5 +1,6 @@
 package pers.zlf.plugin.dialog.tool;
 
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -16,6 +17,7 @@ public class TimeStampDialog {
     private JButton downButton;
     private JTextArea downTextArea;
     private JPanel contentPanel;
+    private JButton upButton;
 
     public TimeStampDialog() {
         downButton.addActionListener(e -> {
@@ -33,10 +35,25 @@ public class TimeStampDialog {
             } catch (Exception ignored) {
             }
         });
+
+        upButton.addActionListener(e -> {
+            String text = downTextArea.getText();
+            if (StringUtil.isEmpty(text)) {
+                return;
+            }
+            try {
+                upTextArea.setText(DateUtil.stringToMilliseconds(text));
+            } catch (Exception ignored) {
+            }
+        });
     }
 
     public JPanel getContent() {
         return this.contentPanel;
     }
 
+    public void refresh() {
+        upTextArea.setText(String.valueOf(System.currentTimeMillis()));
+        downTextArea.setText(Common.BLANK_STRING);
+    }
 }

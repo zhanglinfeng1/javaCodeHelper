@@ -123,7 +123,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         } else if (operationTokenType == JavaTokenType.NE && elseStatement != null) {
             // 判断类型为 != 且 存在else分支
             codeStatement = elseStatement;
-        } else if (operationTokenType == JavaTokenType.NE ) {
+        } else if (operationTokenType == JavaTokenType.NE) {
             // 判断类型为 != 且 无else分支
             codeStatement = ifStatement.getThenBranch();
         } else {

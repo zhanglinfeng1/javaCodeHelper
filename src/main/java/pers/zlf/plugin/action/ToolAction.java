@@ -43,7 +43,7 @@ public class ToolAction extends BaseAction {
 
     @Override
     public void execute() {
-        JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(UPPER_CASE, LOWER_CASE, HUMP, LOWERCASE_UNDERLINE)).setTitle(Common.TOOL).setMovable(true)
+        JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(UPPER_CASE, LOWER_CASE, HUMP, LOWERCASE_UNDERLINE)).setMovable(true)
                 .setItemChosenCallback(value -> {
                     String result = functionMap.get(value).apply(selectionText);
                     WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), result));
