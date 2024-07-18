@@ -1,6 +1,5 @@
 package pers.zlf.plugin.dialog.tool;
 
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -53,7 +52,8 @@ public class TimeStampDialog {
     }
 
     public void refresh() {
-        upTextArea.setText(String.valueOf(System.currentTimeMillis()));
-        downTextArea.setText(Common.BLANK_STRING);
+        String milliseconds = String.valueOf(System.currentTimeMillis());
+        upTextArea.setText(milliseconds);
+        downTextArea.setText(DateUtil.stringToMilliseconds(milliseconds));
     }
 }
