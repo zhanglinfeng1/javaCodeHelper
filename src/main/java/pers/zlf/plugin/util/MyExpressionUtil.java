@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiLambdaExpression;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMethodCallExpression;
@@ -185,24 +186,25 @@ public class MyExpressionUtil {
         PsiReferenceExpression referenceExpression = getReferenceElement(methodCallExpression, count);
         //父类名
         String referenceName = Optional.ofNullable(referenceExpression).map(PsiElement::getText).orElse(Keyword.JAVA_THIS);
-        if (referenceName.equals(variableName)) {
-            referenceName = variableName;
-        }
         String methodText = methodCallExpression.getText();
         methodText = methodText.replace(referenceName + Common.DOT, Common.BLANK_STRING);
         if (methodText.contains(Common.LEFT_PARENTHESES)) {
             methodText = methodText.substring(0, methodText.indexOf(Common.LEFT_PARENTHESES));
         }
         if (count.getNum() == 1) {
+            //作为参数
             if (parameterText.equals(Common.T)) {
                 return String.format(Common.LAMBDA_SIMPLIFY_STR, referenceName, methodText);
             }
             String variableTypeName = MyExpressionUtil.getTypeName(referenceExpression);
-            if (referenceName.equals(variableName) && StringUtil.isNotEmpty(variableTypeName)) {
+            if (!referenceName.equals(variableName) && StringUtil.isNotEmpty(variableTypeName)) {
                 return String.format(Common.LAMBDA_SIMPLIFY_STR, variableTypeName, methodText);
             }
         }
-        return String.format(Common.LAMBDA_STR, Common.T, methodText + parameterText + Common.RIGHT_PARENTHESES);
+        if (referenceName.equals(variableName)) {
+            methodText = Common.T + Common.DOT + methodText;
+        }
+        return String.format(Common.LAMBDA_STR, Common.T, methodText + Common.LEFT_PARENTHESES + parameterText + Common.RIGHT_PARENTHESES);
     }
 
     public static PsiReferenceExpression getReferenceElement(PsiMethodCallExpression methodCallExpression, Count count) {
@@ -235,6 +237,9 @@ public class MyExpressionUtil {
         //判断对象
         PsiElement variableElement = variableReference.resolve();
         if (!(variableElement instanceof PsiLocalVariable variable)) {
+            return simplifyInfo;
+        }
+        if (variable.getInitializer() instanceof PsiLambdaExpression){
             return simplifyInfo;
         }
         int currentOffset = variableReference.getTextOffset();
