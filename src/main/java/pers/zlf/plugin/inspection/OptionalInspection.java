@@ -51,6 +51,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         return new JavaElementVisitor() {
             @Override
             public void visitIfStatement(@NotNull PsiIfStatement ifStatement) {
+                simplifyThrow = true;
                 PsiExpression condition = ifStatement.getCondition();
                 //校验并解析if语句
                 PsiExpression judgmentObject = checkAndAnalysisIfStatement(ifStatement, condition);
