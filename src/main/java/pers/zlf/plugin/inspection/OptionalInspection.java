@@ -43,6 +43,8 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     private PsiStatement codeBlock;
     /** 判断类型 */
     private IElementType operationTokenType;
+    /** 可以简化throw */
+    private boolean simplifyThrow = true;
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -63,7 +65,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                     }
                 };
                 //简化 throw
-                if (codeBlock instanceof PsiThrowStatement) {
+                if (codeBlock instanceof PsiThrowStatement && simplifyThrow) {
                     biConsumer.accept(simplifyThrow((PsiThrowStatement) codeBlock), ReplaceIfQuickFix.SIMPLIFY_THROW);
                 } else if (operationTokenType == JavaTokenType.EQEQ && codeBlock instanceof PsiExpressionStatement) {
                     //简化赋值表达式
@@ -126,6 +128,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
         } else if (operationTokenType == JavaTokenType.NE) {
             // 判断类型为 != 且 无else分支
             codeStatement = ifStatement.getThenBranch();
+            simplifyThrow = false;
         } else {
             return null;
         }
