@@ -44,14 +44,13 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
     /** 判断类型 */
     private IElementType operationTokenType;
     /** 可以简化throw */
-    private boolean simplifyThrow = true;
+    private boolean simplifyThrow;
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
             @Override
             public void visitIfStatement(@NotNull PsiIfStatement ifStatement) {
-                simplifyThrow = true;
                 PsiExpression condition = ifStatement.getCondition();
                 //校验并解析if语句
                 PsiExpression judgmentObject = checkAndAnalysisIfStatement(ifStatement, condition);
@@ -111,6 +110,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private PsiExpression checkAndAnalysisIfStatement(PsiIfStatement ifStatement, PsiExpression condition) {
         codeBlock = null;
+        simplifyThrow = true;
         //二元表达式，单个if
         boolean simpleIfStatement = condition instanceof PsiBinaryExpression && ifStatement.getParent() instanceof PsiCodeBlock;
         if (!simpleIfStatement) {
