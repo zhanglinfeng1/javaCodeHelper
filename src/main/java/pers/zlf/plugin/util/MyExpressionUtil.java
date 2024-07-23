@@ -177,11 +177,9 @@ public class MyExpressionUtil {
         if (parameterText == null) {
             return null;
         }
+        String originalMethodText = StringUtil.codeReplace(methodCallExpression.getText(), variableName, Common.T);
         if (methodCallExpression.getFirstChild().getFirstChild() instanceof PsiMethodCallExpression) {
-            return String.format(Common.LAMBDA_STR, Common.T, methodCallExpression.getText());
-        }
-        if (parameterText.equals(variableName)) {
-            parameterText = Common.T;
+            return String.format(Common.LAMBDA_STR, Common.T, originalMethodText);
         }
         Count count = new Count();
         count.add();
@@ -196,11 +194,11 @@ public class MyExpressionUtil {
         }
         if (count.getNum() == 1) {
             //作为参数、无参数
-            if (Common.T.equals(parameterText) || Common.BLANK_STRING.equals(parameterText)) {
+            if (parameterText.equals(variableName) || Common.BLANK_STRING.equals(parameterText)) {
                 return String.format(Common.LAMBDA_SIMPLIFY_STR, referenceName, methodText);
             }
         }
-        return String.format(Common.LAMBDA_STR, Common.T, methodCallExpression.getText());
+        return String.format(Common.LAMBDA_STR, Common.T, originalMethodText);
     }
 
     public static PsiReferenceExpression getReferenceElement(PsiMethodCallExpression methodCallExpression, Count count) {

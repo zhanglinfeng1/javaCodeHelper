@@ -1,11 +1,14 @@
 package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.CommentFormat;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -207,4 +210,30 @@ public class StringUtil {
         }).collect(Collectors.joining());
     }
 
+    /**
+     * 替换
+     *
+     * @param code         代码
+     * @param replacedText 被替换代码
+     * @param replaceText  替换代码
+     * @return String
+     */
+    public static String codeReplace(String code, String replacedText, String replaceText) {
+        StringBuilder result = new StringBuilder(code);
+        int index = 0;
+        Predicate<Character> isCode = t -> isNum(t) || isLowercaseLetters(t) || isUppercaseLetters(t) || t == 95;
+        while (true) {
+            index = result.indexOf(replacedText, index);
+            if (index == -1) {
+                break;
+            }
+            boolean frontCharIsCode = index == 0 || isCode.test(code.charAt(index - 1));
+            boolean afterCharIsCode = isCode.test(code.charAt(index + replacedText.length()));
+            if (!frontCharIsCode && !afterCharIsCode) {
+                result.replace(index, index + replacedText.length(), replaceText);
+            }
+            index++;
+        }
+        return result.toString();
+    }
 }
