@@ -106,7 +106,7 @@ public class StringUtil {
             }
             upperCase = true;
         }
-        return str.length() == result.length() ? toLowerCaseFirst(str) : result.toString();
+        return result.toString();
     }
 
     /**
