@@ -109,4 +109,10 @@ public class Common {
     public static final String USER = "user";
     public static final String EMAIL = "email";
 
+    /** 常用加解密方式 */
+    public static final String BASE64 = "BASE64";
+    public static final String MD5 = "MD5";
+    public static final String SHA1 = "SHA1";
+    public static final String SHA256 = "SHA256";
+    public static final String SHA512 = "SHA512";
 }

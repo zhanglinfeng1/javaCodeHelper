@@ -23,9 +23,21 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 配置路径：File > Setting > Other Settings > JavaCodeHelp
 
 ## 一键添加api注解
-可根据注释一键添加Api注解。目前仅支持swagger<br />
+可根据注释一键添加Api注解。目前仅支持swagger2、swagger3<br />
 选中需要添加注解的代码块，右击选择“添加接口文档注解”<br />
 如果不选中代码块，会给整个类添加注解，代码过长时会有卡顿(っ °Д °;)っ
+
+## 常用工具
+1.选中文本后，右击选择 "工具" ，包含大写、小写、转驼峰、转小写下划线<br />
+2.打开 View > Tool Windows > JavaCodeHelp，包含以下功能 <br />
+
+    unicode：unicode与字符串的互相转换
+    urlEncode：url的encode和decode
+    ascii码：ascii码与字符串的互相转换
+    二维码：二维码的生成与解析
+    cron表达式：解析cron表达式，展示最近的5次执行时间
+    时间戳转换：时间戳与字符串的互相转换
+    加解密：一些常用的加解密方式
 
 ## 代码检查
 具体见 File > Setting > Editor > Inspections > JavaCodeHelp<br />
@@ -37,10 +49,6 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 右击项目视图任意区域，选择'统计贡献率'，会统计每个模块的代码贡献率（未提交的代码不算做自己的），时间较长，耐心等待 (っ °Д °;)っ<br />
 目前注释判断仅支持.java、.xml文件<br />
 ![image](src/main/resources/example/codeStatistics.png)<br />
-
-## 常用工具
-1.选中文本后，右击选择 " 工具 " <br />
-2.打开 View > Tool Windows > JavaCodeHelp 
 
 ## 自定义模版生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
