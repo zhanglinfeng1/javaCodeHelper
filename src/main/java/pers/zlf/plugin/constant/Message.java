@@ -41,5 +41,7 @@ public class Message {
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
     public static final String UPLOAD_QR_CODE_FIRST = "请先上传二维码";
     public static final String NOT_CRON_EXPRESSIONS = "非cron表达式";
+    public static final String AES_SECRET_KEY_LENGTH_ERROR = "秘钥长度必须为16位";
+    public static final String AES_IV_LENGTH_ERROR = "偏移量长度必须为16位";
 
 }

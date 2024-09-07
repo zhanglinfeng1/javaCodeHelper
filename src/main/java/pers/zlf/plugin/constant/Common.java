@@ -115,4 +115,8 @@ public class Common {
     public static final String SHA1 = "SHA1";
     public static final String SHA256 = "SHA256";
     public static final String SHA512 = "SHA512";
+    public static final String AES = "AES";
+    public static final String AES_ECB = "AES_ECB";
+    public static final String AES_CBC = "AES_CBC";
+
 }

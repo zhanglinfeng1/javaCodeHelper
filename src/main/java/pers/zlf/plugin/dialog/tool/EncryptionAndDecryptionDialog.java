@@ -1,6 +1,9 @@
 package pers.zlf.plugin.dialog.tool;
 
+import com.intellij.openapi.ui.Messages;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.util.AESUtil;
 import pers.zlf.plugin.util.MessageDigestUtil;
 
 import javax.swing.JButton;
@@ -26,6 +29,8 @@ public class EncryptionAndDecryptionDialog {
     private JPanel contentPanel;
     private JTextField secretKeyTextField;
     private JLabel secretKeyLabel;
+    private JTextField ivTextField;
+    private JLabel ivLabel;
 
     public EncryptionAndDecryptionDialog() {
         downButton.addActionListener(e -> downTextArea.setText(encryption(upTextArea.getText())));
@@ -33,22 +38,32 @@ public class EncryptionAndDecryptionDialog {
         typeComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 String selectedItem = e.getItem().toString();
-                initButton();
                 switch (selectedItem) {
                     case Common.BASE64:
-                        upButton.setVisible(true);
+                        initButton(true, false, false, false, false);
+                        break;
+                    case Common.MD5, Common.SHA1, Common.SHA256, Common.SHA512:
+                        initButton(false, false, false, false, false);
+                        break;
+                    case Common.AES_ECB:
+                        initButton(true, true, true, false, false);
+                        break;
+                    case Common.AES_CBC:
+                        initButton(true, true, true, true, true);
+                        break;
                 }
             }
         });
-        secretKeyLabel.setVisible(false);
-        secretKeyTextField.setVisible(false);
+        initButton(true, false, false, false, false);
     }
 
-    private void initButton() {
+    private void initButton(boolean upButtonVisible, boolean secretKeyLabelVisible, boolean secretKeyTextFieldVisible, boolean ivLabelVisible, boolean ivTextFieldVisible) {
         downTextArea.setText(Common.BLANK_STRING);
-        upButton.setVisible(false);
-        secretKeyLabel.setVisible(false);
-        secretKeyTextField.setVisible(false);
+        upButton.setVisible(upButtonVisible);
+        secretKeyLabel.setVisible(secretKeyLabelVisible);
+        secretKeyTextField.setVisible(secretKeyTextFieldVisible);
+        ivLabel.setVisible(ivLabelVisible);
+        ivTextField.setVisible(ivTextFieldVisible);
     }
 
     public JPanel getContent() {
@@ -57,19 +72,52 @@ public class EncryptionAndDecryptionDialog {
 
     private String encryption(String str) {
         String type = typeComboBox.getSelectedItem().toString();
-        return switch (type) {
-            case Common.BASE64 -> Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
-            case Common.MD5, Common.SHA1, Common.SHA256, Common.SHA512 -> MessageDigestUtil.encode(type, str);
-            default -> Common.BLANK_STRING;
-        };
+
+        switch (type) {
+            case Common.BASE64:
+                return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+            case Common.MD5, Common.SHA1, Common.SHA256, Common.SHA512:
+                return MessageDigestUtil.encode(type, str);
+            case Common.AES_ECB:
+                try {
+                    return AESUtil.encrypt(str, secretKeyTextField.getText());
+                } catch (Exception e) {
+                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+                    return Common.BLANK_STRING;
+                }
+            case Common.AES_CBC:
+                try {
+                    return AESUtil.encrypt(str, secretKeyTextField.getText(), ivTextField.getText());
+                } catch (Exception e) {
+                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+                    return Common.BLANK_STRING;
+                }
+            default:
+                return Common.BLANK_STRING;
+        }
     }
 
     private String decryption(String str) {
-        String type = typeComboBox.getSelectedItem().toString();
-        return switch (type) {
-            case Common.BASE64 ->  new String(Base64.getDecoder().decode(str.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-            default -> Common.BLANK_STRING;
-        };
+        switch (typeComboBox.getSelectedItem().toString()) {
+            case Common.BASE64:
+                return new String(Base64.getDecoder().decode(str.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+            case Common.AES_ECB:
+                try {
+                    return AESUtil.decrypt(str, secretKeyTextField.getText());
+                } catch (Exception e) {
+                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+                    return Common.BLANK_STRING;
+                }
+            case Common.AES_CBC:
+                try {
+                    return AESUtil.decrypt(str, secretKeyTextField.getText(), ivTextField.getText());
+                } catch (Exception e) {
+                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+                    return Common.BLANK_STRING;
+                }
+            default:
+                return Common.BLANK_STRING;
+        }
     }
 
 }
