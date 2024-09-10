@@ -1,10 +1,10 @@
 package pers.zlf.plugin.dialog.tool;
 
 import com.intellij.openapi.ui.Messages;
+import org.apache.commons.codec.digest.DigestUtils;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.util.AESUtil;
-import pers.zlf.plugin.util.MessageDigestUtil;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -76,8 +76,14 @@ public class EncryptionAndDecryptionDialog {
         switch (type) {
             case Common.BASE64:
                 return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
-            case Common.MD5, Common.SHA1, Common.SHA256, Common.SHA512:
-                return MessageDigestUtil.encode(type, str);
+            case Common.MD5:
+                return DigestUtils.md5Hex(str);
+            case Common.SHA1:
+                return DigestUtils.sha1Hex(str);
+            case Common.SHA256:
+                return DigestUtils.sha256Hex(str);
+            case  Common.SHA512:
+                return DigestUtils.sha512Hex(str);
             case Common.AES_ECB:
                 try {
                     return AESUtil.encrypt(str, secretKeyTextField.getText());
