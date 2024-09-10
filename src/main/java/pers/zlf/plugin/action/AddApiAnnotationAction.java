@@ -10,6 +10,7 @@ import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import pers.zlf.plugin.constant.Annotation;
@@ -28,6 +29,7 @@ import pers.zlf.plugin.util.lambda.Equals;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -98,7 +100,13 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param methods 方法数组
      */
     private void addSwaggerForMethod(PsiMethod[] methods) {
+        List<String> mappingList = List.of(Annotation.REQUEST_MAPPING, Annotation.POST_MAPPING, Annotation.GET_MAPPING, Annotation.PUT_MAPPING, Annotation.DELETE_MAPPING, Annotation.PATCH_MAPPING);
         for (PsiMethod method : methods) {
+            //获取注解
+            PsiAnnotation psiAnnotation = MyPsiUtil.findAnnotation(method.getAnnotations(), mappingList);
+            if (null == psiAnnotation) {
+                continue;
+            }
             addApiAnnotation(new MethodAnnotation(), method, method.getModifierList(), method.getName());
             addSwaggerForParameter(method, method.getParameterList().getParameters());
         }
