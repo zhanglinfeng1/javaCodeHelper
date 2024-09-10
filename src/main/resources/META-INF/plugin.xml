@@ -2,13 +2,23 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>2.3.1</version>
+    <version>2.3.2</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="223.7571.182"/>
     <description><![CDATA[
-        <p><a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
-        <p>Used for learning plugin development. Welcome to exchange ideas and provide feedback on bugs</p>
-        <p>用于学习插件开发。欢迎交流想法、反馈BUG</p>
+        <p>Used for learning plugin development. Welcome to exchange ideas and provide feedback on bugs
+        <p>用于学习插件开发，欢迎交流想法、反馈BUG。</p>
+        <p>目前有以下功能，详情见 <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
+        <ul>
+            <li>代码补全</li>
+            <li>快捷跳转</li>
+            <li>翻译</li>
+            <li>一键添加api注解</li>
+            <li>常用工具</li>
+            <li>代码检查</li>
+            <li>代码统计</li>
+            <li>生成代码</li>
+        </ul>
     ]]>
     </description>
     <change-notes><![CDATA[

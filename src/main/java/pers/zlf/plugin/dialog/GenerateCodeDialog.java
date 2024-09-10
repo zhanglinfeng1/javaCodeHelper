@@ -89,7 +89,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             String sqlColumn = column.getName();
             String dataType = column.getDasType().toDataType().typeName;
-            columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(sqlColumn)});
+            columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
         }
         JTextField textField = new JTextField();
         textField.setEnabled(false);
@@ -298,7 +298,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         if (!fileName.contains(Common.DOT)) {
             fileName = fileName + ClassType.JAVA_FILE;
         }
-        return fileName;
+        return StringUtil.toUpperCaseFirst(fileName);
     }
 
     private Map<String, String> getSelectedTemplateFile() {
