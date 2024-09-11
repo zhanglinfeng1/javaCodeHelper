@@ -19,6 +19,7 @@ public class Message {
     public static final String TEMPLATE_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 自定义模版配置";
     public static final String TEMPLATE_AUTHOR_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 作者";
 
+    /** 代码统计 */
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";
 
     /** 模版生成代码 */
@@ -43,5 +44,9 @@ public class Message {
     public static final String NOT_CRON_EXPRESSIONS = "非cron表达式";
     public static final String AES_SECRET_KEY_LENGTH_ERROR = "秘钥长度必须为16位";
     public static final String AES_IV_LENGTH_ERROR = "偏移量长度必须为16位";
+
+    /** 导出 */
+    public static final String TABLE_EXPORT_PATH_NOT_NULL = "文件导出路径不能为空";
+    public static final String EXPORT_SUCCESS = "导出成功";
 
 }

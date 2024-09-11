@@ -39,6 +39,13 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     时间戳转换：时间戳与字符串的互相转换
     加解密：一些常用的加解密方式
 
+## 数据库表结构导出成文档
+Database中右击选中 <br />
+选中的是单张表，则导出单张表的结构 <br />
+选中的是单个库，则导出库中所有表的结构 <br />
+![image](src/main/resources/example/exportTableInfo.png)<br />
+
+
 ## 代码检查
 具体见 File > Setting > Editor > Inspections > JavaCodeHelp<br />
 ![image](src/main/resources/example/codeCheck.png)<br />

@@ -27,4 +27,6 @@ dependencies {
     implementation("com.cronutils:cron-utils:9.2.1") {
         exclude group: "org.slf4j"
     }
+    implementation 'org.apache.poi:poi:5.2.2'
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
 }

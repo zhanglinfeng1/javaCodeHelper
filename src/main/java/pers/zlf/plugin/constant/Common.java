@@ -28,6 +28,8 @@ public class Common {
     public static final String T = "t";
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String IMAGE_JPG = "JPG";
+    public static final String HOOK_UP = "√";
+    public static final String FONT_WRYH = "微软雅黑";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";

@@ -13,8 +13,8 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
@@ -289,14 +289,14 @@ public class GenerateCodeDialog extends DialogWrapper {
     }
 
     private String getFileName(String templateName) {
-        String fileName = templateName.replaceAll(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
-        if ((Common.MODEL + ClassType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
+        String fileName = templateName.replaceAll(FileType.FREEMARKER_FILE, Common.BLANK_STRING);
+        if ((Common.MODEL + FileType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
             fileName = StringUtil.toHumpStyle(tableInfo.getTableName());
         } else {
             fileName = StringUtil.toHumpStyle(tableInfo.getTableName()) + fileName;
         }
         if (!fileName.contains(Common.DOT)) {
-            fileName = fileName + ClassType.JAVA_FILE;
+            fileName = fileName + FileType.JAVA_FILE;
         }
         return StringUtil.toUpperCaseFirst(fileName);
     }

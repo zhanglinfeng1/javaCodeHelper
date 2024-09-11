@@ -14,9 +14,6 @@ public class ClassType {
     public static final String OPTIONAL = "java.util.Optional";
     public static final String COLLECTORS = "java.util.stream.Collectors";
     public static final String VOID = "void";
-    public static final String JAVA_FILE = ".java";
-    public static final String XML_FILE = ".xml";
-    public static final String FREEMARKER_FILE = ".ftl";
     public static final List<String> BASIC_TYPE_LIST = List.of("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float",
             "Double", "Boolean", "Character", "String", "Date", "Timestamp");
 

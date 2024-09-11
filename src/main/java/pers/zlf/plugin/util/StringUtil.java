@@ -2,6 +2,7 @@ package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.pojo.CommentFormat;
+import pers.zlf.plugin.util.lambda.Empty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,8 +120,9 @@ public class StringUtil {
         StringBuilder result = new StringBuilder();
         for (char aChar : str.toCharArray()) {
             String charStr = String.valueOf(aChar);
-            if (isUppercaseLetters(aChar)){
-                result.append(Common.UNDERLINE).append(charStr.toLowerCase());
+            if (isUppercaseLetters(aChar)) {
+                Empty.of(result).ifPresent(t -> t.append(Common.UNDERLINE));
+                result.append(charStr.toLowerCase());
             }
             if (isNum(aChar) || isLowercaseLetters(aChar)) {
                 result.append(charStr);

@@ -1,7 +1,7 @@
 package pers.zlf.plugin.pojo.config;
 
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.factory.TemplateFactory;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class TemplateConfig {
             Map<String, String> defaultMap = TemplateFactory.getInstance().getAllDefaultTemplate();
             for (Map.Entry<String, String> templateEntry : defaultMap.entrySet()) {
                 String key = templateEntry.getKey();
-                String title = key.replace(ClassType.FREEMARKER_FILE, Common.BLANK_STRING);
+                String title = key.replace(FileType.FREEMARKER_FILE, Common.BLANK_STRING);
                 templateValueMap.put(title, defaultMap.get(key));
             }
             totalTemplateMap.put(Common.DEFAULT_TEMPLATE, templateValueMap);

@@ -1,0 +1,103 @@
+package pers.zlf.plugin.action.export;
+
+import com.intellij.database.model.DasColumn;
+import com.intellij.database.model.DasObject;
+import com.intellij.database.util.DasUtil;
+import com.intellij.openapi.ui.Messages;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
+import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.util.ExcelStyleUtil;
+import pers.zlf.plugin.util.lambda.Empty;
+
+import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+/**
+ * @author zhanglinfeng
+ * @date create in 2024/9/10 18:17
+ */
+public abstract class BaseExport {
+    private final List<String> headerList = List.of("序号", "主键", "字段", "注释", "类型", "默认值", "不可为null");
+
+    /**
+     * 导出文件
+     *
+     * @param path 文件路径
+     */
+    public void exportXlsx(String path) {
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            String fileName = dealWorkbook(workbook);
+            try (FileOutputStream outputStream = new FileOutputStream(Path.of(path, fileName + FileType.XLSX_FILE).toString())) {
+                workbook.write(outputStream);
+            }
+            Messages.showMessageDialog(Message.EXPORT_SUCCESS, Common.BLANK_STRING, Icon.LOGO);
+        } catch (Exception e) {
+            Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+        }
+    }
+
+
+    /**
+     * 处理workbook
+     *
+     * @param workbook excel
+     * @return 文件名
+     */
+    protected abstract String dealWorkbook(XSSFWorkbook workbook);
+
+    /**
+     * 创建Sheet
+     *
+     * @param workbook excel
+     * @param dbTable  待处理的表
+     */
+    protected void createSheet(XSSFWorkbook workbook, DasObject dbTable) {
+        String title = dbTable.getName() + Empty.of(dbTable.getComment()).map(t -> Common.LEFT_PARENTHESES + t + Common.RIGHT_PARENTHESES).orElse(Common.BLANK_STRING);
+        Sheet sheet = workbook.createSheet(dbTable.getName());
+        int rowNum = 0;
+        //插入标题数据
+        Row titleRow = sheet.createRow(rowNum++);
+        ExcelStyleUtil.createCell(titleRow, 0, title, ExcelStyleUtil.titleCellStyle(workbook));
+        ExcelStyleUtil.addMergedRegion(sheet, 0, 0, 0, headerList.size() - 1);
+        //插入表头数据
+        Row headerRow = sheet.createRow(rowNum++);
+        CellStyle headerCellStyle = ExcelStyleUtil.headerCellStyle(workbook);
+        IntStream.range(0, headerList.size()).forEach(i -> ExcelStyleUtil.createCell(headerRow, i, headerList.get(i), headerCellStyle));
+        //插入主体数据
+        CellStyle commonStyle = ExcelStyleUtil.contentCellStyle(workbook);
+        int serialNumber = 0;
+        for (DasColumn column : DasUtil.getColumns(dbTable)) {
+            Row row = sheet.createRow(rowNum++);
+            ExcelStyleUtil.createCell(row, 0, String.valueOf(serialNumber++), commonStyle);
+            ExcelStyleUtil.createCell(row, 1, DasUtil.isPrimary(column) ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
+            ExcelStyleUtil.createCell(row, 2, column.getName(), commonStyle);
+            ExcelStyleUtil.createCell(row, 3, Optional.ofNullable(column.getComment()).orElse(Common.BLANK_STRING), commonStyle);
+            String type = column.getDasType().toDataType().typeName;
+            if (column.getDasType().toDataType().getPrecision() > 0) {
+                type = type + Common.LEFT_PARENTHESES + column.getDasType().toDataType().getPrecision();
+                if (column.getDasType().toDataType().getScale() > 0) {
+                    type = type + Common.COMMA + column.getDasType().toDataType().getScale();
+                }
+                type = type + Common.RIGHT_PARENTHESES;
+            }
+            ExcelStyleUtil.createCell(row, 4, type, commonStyle);
+            ExcelStyleUtil.createCell(row, 5, Optional.ofNullable(column.getDefault()).orElse(Common.BLANK_STRING), commonStyle);
+            ExcelStyleUtil.createCell(row, 6, column.isNotNull() ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
+            //自适应高度
+            row.setHeight((short) -1);
+        }
+        //自适应宽度
+        for (int i = 0; i < headerList.size(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
+}

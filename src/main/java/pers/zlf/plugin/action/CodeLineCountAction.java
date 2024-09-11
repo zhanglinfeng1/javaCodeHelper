@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
@@ -97,8 +97,8 @@ public class CodeLineCountAction extends BaseAction {
     public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
         String fileType = MyPsiUtil.getFileType(virtualFile);
         return switch (fileType) {
-            case ClassType.JAVA_FILE -> new CommentFormat(ClassType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
-            case ClassType.XML_FILE -> new CommentFormat(ClassType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
+            case FileType.JAVA_FILE -> new CommentFormat(FileType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
+            case FileType.XML_FILE -> new CommentFormat(FileType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
             default -> new CommentFormat();
         };
     }
@@ -117,7 +117,7 @@ public class CodeLineCountAction extends BaseAction {
         }
         //关键字统计
         //java中的package、import
-        if (ClassType.JAVA_FILE.equals(commentFormat.getFileType())) {
+        if (FileType.JAVA_FILE.equals(commentFormat.getFileType())) {
             if (lineValue.startsWith(Keyword.JAVA_PACKAGE + Common.SPACE) || lineValue.startsWith(Keyword.JAVA_IMPORT + Common.SPACE)) {
                 return ConfigFactory.getInstance().getCodeStatisticsConfig().isCountKeyword();
             }

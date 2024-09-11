@@ -2,8 +2,8 @@ package pers.zlf.plugin.factory;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.TableInfo;
@@ -72,7 +72,7 @@ public class TemplateFactory {
             configuration.setDirectoryForTemplateLoading(file);
             for (Map.Entry<String, String> entry : selectedTemplateMap.entrySet()) {
                 String fileName = entry.getKey();
-                String templateFileName = entry.getValue() + ClassType.FREEMARKER_FILE;
+                String templateFileName = entry.getValue() + FileType.FREEMARKER_FILE;
                 create(filePath, fileName, configuration.getTemplate(templateFileName), map);
             }
         } finally {
@@ -95,7 +95,7 @@ public class TemplateFactory {
             throw new Exception(Message.TEMPLATE_CONFIGURATION);
         }
         for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
-            FileWriter file = new FileWriter(Path.of(filePath, templateEntry.getKey() + ClassType.FREEMARKER_FILE).toString(), true);
+            FileWriter file = new FileWriter(Path.of(filePath, templateEntry.getKey() + FileType.FREEMARKER_FILE).toString(), true);
             file.append(templateEntry.getValue());
             file.flush();
             file.close();
