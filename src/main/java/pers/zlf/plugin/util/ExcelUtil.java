@@ -18,7 +18,7 @@ import pers.zlf.plugin.constant.Common;
  * @author zhanglinfeng
  * @date create in 2023/6/5 10:20
  */
-public class ExcelStyleUtil {
+public class ExcelUtil {
 
     public static CellStyle titleCellStyle(Workbook wb) {
         return defaultCellStyle(wb, (short) 14);

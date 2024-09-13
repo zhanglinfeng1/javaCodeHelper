@@ -140,14 +140,11 @@ public class AddApiAnnotationAction extends BaseAction {
         for (Map.Entry<String, PsiAnnotation> entry : parameterAnnotationMap.entrySet()) {
             PsiAnnotation annotation = entry.getValue();
             switch (entry.getKey()) {
-                case Annotation.REQUEST_ATTRIBUTE:
-                case Annotation.REQUEST_HEADER:
+                case Annotation.REQUEST_ATTRIBUTE, Annotation.REQUEST_HEADER:
                     addApiAnnotation(new IgnoreAnnotation(), parameter, parameter.getModifierList(), parameterComment);
                     break;
-                case Annotation.REQUEST_PARAM:
-                case Annotation.REQUEST_PART:
-                case Annotation.PATH_VARIABLE:
-                case Annotation.REQUEST_BODY:
+                case Annotation.REQUEST_PARAM, Annotation.REQUEST_PART, Annotation.PATH_VARIABLE,
+                     Annotation.REQUEST_BODY:
                     ParameterAnnotation parameterAnnotation = new ParameterAnnotation();
                     String required = MyPsiUtil.getAnnotationValue(annotation, Annotation.REQUIRED);
                     parameterAnnotation.setRequired(required.equals(Common.TRUE));

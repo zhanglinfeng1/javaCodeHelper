@@ -7,7 +7,7 @@ group 'pers.zlf'
 targetCompatibility = 17
 
 intellij {
-    version = '2024.1'
+    version = '2022.1'
     type = 'IU'
     plugins = ['java','DatabaseTools']
     updateSinceUntilBuild = false

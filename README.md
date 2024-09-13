@@ -1,5 +1,6 @@
 # 功能简介
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
+版本要求：2021.1 ~ 最新<br />
 [![](https://img.shields.io/badge/Github-blue?logo=github)](https://github.com/zhanglinfeng1/javaCodeHelper)
 [![](https://img.shields.io/badge/Gitee-blue?logo=gitee)](https://gitee.com/zlfzh/javaCodeHelper)
 [![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)

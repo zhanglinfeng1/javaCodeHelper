@@ -137,7 +137,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
 
     private void findFromClass(PsiClass psiClass, PsiMethod[] methodArr, String typeName, String code) {
         List<String> setAndGetMethodList = Stream.of(Common.SET, Common.GET).flatMap(o1 ->
-                MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).toList();
+                MyPsiUtil.getPsiFieldList(psiClass).stream().map(f -> StringUtil.toUpperCaseFirst(f.getName()))).collect(Collectors.toList());
         boolean currentStaticMethod = currentMethod.getModifierList().hasModifierProperty(PsiModifier.STATIC);
         for (PsiMethod fieldMethod : methodArr) {
             if (completionLength == 0) {
@@ -210,7 +210,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
         //过滤只有一个参数的构造方法
         List<String> typeList = Arrays.stream(psiClass.getConstructors()).map(m -> m.getParameterList().getParameters())
                 .filter(parameterArr -> 1 == parameterArr.length)
-                .map(parameterArr -> parameterArr[0].getType().getInternalCanonicalText()).toList();
+                .map(parameterArr -> parameterArr[0].getType().getInternalCanonicalText()).collect(Collectors.toList());
         if (typeList.isEmpty()) {
             return;
         }

@@ -2,6 +2,7 @@ package pers.zlf.plugin.action.export;
 
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasObject;
+import com.intellij.database.model.DataType;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.ui.Messages;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -12,7 +13,8 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Icon;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.util.ExcelStyleUtil;
+import pers.zlf.plugin.util.ExcelUtil;
+import pers.zlf.plugin.util.TypeUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.io.FileOutputStream;
@@ -66,32 +68,33 @@ public abstract class BaseExport {
         int rowNum = 0;
         //插入标题数据
         Row titleRow = sheet.createRow(rowNum++);
-        ExcelStyleUtil.createCell(titleRow, 0, title, ExcelStyleUtil.titleCellStyle(workbook));
-        ExcelStyleUtil.addMergedRegion(sheet, 0, 0, 0, headerList.size() - 1);
+        ExcelUtil.createCell(titleRow, 0, title, ExcelUtil.titleCellStyle(workbook));
+        ExcelUtil.addMergedRegion(sheet, 0, 0, 0, headerList.size() - 1);
         //插入表头数据
         Row headerRow = sheet.createRow(rowNum++);
-        CellStyle headerCellStyle = ExcelStyleUtil.headerCellStyle(workbook);
-        IntStream.range(0, headerList.size()).forEach(i -> ExcelStyleUtil.createCell(headerRow, i, headerList.get(i), headerCellStyle));
+        CellStyle headerCellStyle = ExcelUtil.headerCellStyle(workbook);
+        IntStream.range(0, headerList.size()).forEach(i -> ExcelUtil.createCell(headerRow, i, headerList.get(i), headerCellStyle));
         //插入主体数据
-        CellStyle commonStyle = ExcelStyleUtil.contentCellStyle(workbook);
+        CellStyle commonStyle = ExcelUtil.contentCellStyle(workbook);
         int serialNumber = 0;
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             Row row = sheet.createRow(rowNum++);
-            ExcelStyleUtil.createCell(row, 0, String.valueOf(serialNumber++), commonStyle);
-            ExcelStyleUtil.createCell(row, 1, DasUtil.isPrimary(column) ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
-            ExcelStyleUtil.createCell(row, 2, column.getName(), commonStyle);
-            ExcelStyleUtil.createCell(row, 3, Optional.ofNullable(column.getComment()).orElse(Common.BLANK_STRING), commonStyle);
-            String type = column.getDasType().toDataType().typeName;
-            if (column.getDasType().toDataType().getPrecision() > 0) {
-                type = type + Common.LEFT_PARENTHESES + column.getDasType().toDataType().getPrecision();
-                if (column.getDasType().toDataType().getScale() > 0) {
-                    type = type + Common.COMMA + column.getDasType().toDataType().getScale();
+            ExcelUtil.createCell(row, 0, String.valueOf(serialNumber++), commonStyle);
+            ExcelUtil.createCell(row, 1, DasUtil.isPrimary(column) ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
+            ExcelUtil.createCell(row, 2, column.getName(), commonStyle);
+            ExcelUtil.createCell(row, 3, Optional.ofNullable(column.getComment()).orElse(Common.BLANK_STRING), commonStyle);
+            DataType dataType = TypeUtil.getDataType(column);
+            String type = dataType.typeName;
+            if (dataType.getPrecision() > 0) {
+                type = type + Common.LEFT_PARENTHESES + dataType.getPrecision();
+                if (dataType.getScale() > 0) {
+                    type = type + Common.COMMA + dataType.getScale();
                 }
                 type = type + Common.RIGHT_PARENTHESES;
             }
-            ExcelStyleUtil.createCell(row, 4, type, commonStyle);
-            ExcelStyleUtil.createCell(row, 5, Optional.ofNullable(column.getDefault()).orElse(Common.BLANK_STRING), commonStyle);
-            ExcelStyleUtil.createCell(row, 6, column.isNotNull() ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
+            ExcelUtil.createCell(row, 4, type, commonStyle);
+            ExcelUtil.createCell(row, 5, Optional.ofNullable(column.getDefault()).orElse(Common.BLANK_STRING), commonStyle);
+            ExcelUtil.createCell(row, 6, column.isNotNull() ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
             //自适应高度
             row.setHeight((short) -1);
         }

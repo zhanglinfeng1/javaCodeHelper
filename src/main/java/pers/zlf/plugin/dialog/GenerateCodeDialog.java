@@ -24,6 +24,7 @@ import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.SwingUtil;
+import pers.zlf.plugin.util.TypeUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -88,7 +89,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         columnTable.setModel(columnTableModel);
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             String sqlColumn = column.getName();
-            String dataType = column.getDasType().toDataType().typeName;
+            String dataType = TypeUtil.getDataType(column).typeName;
             columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
         }
         JTextField textField = new JTextField();
@@ -274,7 +275,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         tableInfo.dealTableName(tableNamePrefix);
         String templateName = templateComboBox.getSelectedItem().toString();
         Map<String, String> templateFileMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().get(templateName);
-        List<String> templateFileNameList = templateFileMap.keySet().stream().toList();
+        List<String> templateFileNameList = templateFileMap.keySet().stream().collect(Collectors.toList());
         int length = templateFileNameList.size();
         int rowCount = length / 3;
         templateFilePanel.removeAll();
