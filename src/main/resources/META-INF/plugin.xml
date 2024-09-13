@@ -4,7 +4,7 @@
     <name>Java Code Helper</name>
     <version>2.4.1</version>
     <vendor>zhanglinfeng</vendor>
-    <idea-version since-build="221.*.*"/>
+    <idea-version since-build="221.5080.210"/>
     <description><![CDATA[
         <p>Used for learning plugin development. Welcome to exchange ideas and provide feedback on bugs
         <p>用于学习插件开发，欢迎交流想法、反馈BUG。</p>
