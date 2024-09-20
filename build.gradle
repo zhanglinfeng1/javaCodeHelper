@@ -4,10 +4,13 @@ plugins {
 
 group 'pers.zlf'
 
-targetCompatibility = 17
+java {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+}
 
 intellij {
-    version = '2022.1'
+    version = '2022.3'
     type = 'IU'
     plugins = ['java','DatabaseTools']
     updateSinceUntilBuild = false

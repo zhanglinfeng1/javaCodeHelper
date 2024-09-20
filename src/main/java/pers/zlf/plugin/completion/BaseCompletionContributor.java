@@ -12,7 +12,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -81,7 +81,7 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
     }
 
     protected void addCompletionResult(String completionText, String presentableText, InsertHandler<LookupElement> insertHandler) {
-        LookupElementBuilder builder = LookupElementBuilder.create(completionText).withPresentableText(presentableText).withIcon(Icon.LOGO).withCaseSensitivity(true);
+        LookupElementBuilder builder = LookupElementBuilder.create(completionText).withPresentableText(presentableText).withIcon(MyIcon.LOGO).withCaseSensitivity(true);
         result.addElement(Optional.ofNullable(insertHandler).map(builder::withInsertHandler).orElse(builder));
     }
 }

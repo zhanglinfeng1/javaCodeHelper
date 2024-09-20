@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.GenerateCodeDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -36,7 +36,7 @@ public class GenerateCodeAction extends BaseAction {
         //生成代码的窗口
         Map<String, Map<String, String>> totalTemplateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap();
         if (totalTemplateMap == null || totalTemplateMap.isEmpty()){
-            Messages.showMessageDialog(Message.TEMPLATE_CONFIGURATION, Common.BLANK_STRING, Icon.LOGO);
+            Messages.showMessageDialog(Message.TEMPLATE_CONFIGURATION, Common.BLANK_STRING, MyIcon.LOGO);
             return;
         }
         new GenerateCodeDialog(project, selectDbTable).show();

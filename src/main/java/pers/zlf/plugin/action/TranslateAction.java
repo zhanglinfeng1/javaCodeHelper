@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import pers.zlf.plugin.api.BaiDuApi;
 import pers.zlf.plugin.api.BaseApi;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.util.StringUtil;
@@ -60,7 +60,7 @@ public class TranslateAction extends BaseAction {
                             .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
-                ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO));
+                ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO));
             }
         });
     }

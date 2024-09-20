@@ -6,13 +6,13 @@ package pers.zlf.plugin.constant;
  */
 public enum IconEnum {
     //新增按钮图标
-    ADD(Icon.ADD, Icon.ADD_DARK),
+    ADD(MyIcon.ADD, MyIcon.ADD_DARK),
     //删除按钮图标
-    REMOVE(Icon.REMOVE, Icon.REMOVE_DARK),
+    REMOVE(MyIcon.REMOVE, MyIcon.REMOVE_DARK),
     //编辑按钮图标
-    EDIT(Icon.EDIT, Icon.EDIT_DARK),
+    EDIT(MyIcon.EDIT, MyIcon.EDIT_DARK),
     //重置按钮图标
-    RESET(Icon.RESET, Icon.RESET_DARK);
+    RESET(MyIcon.RESET, MyIcon.RESET_DARK);
 
     private final javax.swing.Icon brightIcon;
 

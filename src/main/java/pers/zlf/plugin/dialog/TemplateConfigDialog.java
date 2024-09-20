@@ -10,7 +10,7 @@ import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -68,7 +68,7 @@ public class TemplateConfigDialog {
             if (StringUtil.isNotEmpty(title)) {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 if (templateNameList.contains(title)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
                     return;
                 }
                 templateComboBox.addItem(title);
@@ -80,7 +80,7 @@ public class TemplateConfigDialog {
         //删除
         deleteTemplateButton.addActionListener(e -> {
             String selectedItem = templateComboBox.getSelectedItem().toString();
-            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, Icon.LOGO);
+            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, MyIcon.LOGO);
             if (Messages.YES == result) {
                 templateComboBox.removeItem(selectedItem);
                 totalTemplateMap.remove(selectedItem);
@@ -97,7 +97,7 @@ public class TemplateConfigDialog {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 templateNameList.remove(oldName);
                 if (templateNameList.contains(newName)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
                     return;
                 }
                 templateComboBox.removeItem(oldName);
@@ -113,7 +113,7 @@ public class TemplateConfigDialog {
                 String selectedTitle = templateComboBox.getSelectedItem().toString();
                 Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
                 if (templateFileNameList.contains(title)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, Icon.LOGO);
+                    Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
                     return;
                 }
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));
@@ -124,7 +124,7 @@ public class TemplateConfigDialog {
         deleteButton.addActionListener(e -> {
             int index = templatePane.getSelectedIndex();
             String title = templatePane.getTitleAt(index);
-            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE_FILE, title), Common.TEMPLATE_CONFIG, Icon.LOGO);
+            int result = Messages.showYesNoDialog(String.format(Message.DELETE_TEMPLATE_FILE, title), Common.TEMPLATE_CONFIG, MyIcon.LOGO);
             if (Messages.YES == result) {
                 if (index != -1) {
                     templatePane.remove(index);
@@ -137,7 +137,7 @@ public class TemplateConfigDialog {
         });
         //重置
         resetButton.addActionListener(e -> {
-            int result = Messages.showYesNoDialog(Message.RESET_TEMPLATE, Common.TEMPLATE_CONFIG, Icon.LOGO);
+            int result = Messages.showYesNoDialog(Message.RESET_TEMPLATE, Common.TEMPLATE_CONFIG, MyIcon.LOGO);
             if (Messages.YES == result) {
                 updateTemplateJPanel(totalTemplateMap.get(Common.DEFAULT_TEMPLATE));
             }
@@ -198,7 +198,7 @@ public class TemplateConfigDialog {
                 Map<String, String> oldTemplateMap = totalTemplateMap.get(selectedItem);
                 Map<String, String> newTemplateMap = getCurrentTemplateMap();
                 if (!MapUtil.equals(oldTemplateMap, newTemplateMap)) {
-                    int result = Messages.showYesNoDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, Icon.LOGO);
+                    int result = Messages.showYesNoDialog(String.format(Message.UPDATE_TEMPLATE, selectedItem), Common.TEMPLATE_CONFIG, MyIcon.LOGO);
                     if (Messages.YES == result) {
                         totalTemplateMap.put(selectedItem, newTemplateMap);
                     }

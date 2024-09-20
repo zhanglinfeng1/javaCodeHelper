@@ -7,8 +7,6 @@ import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ui.PackageDependenciesNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
 import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -71,11 +69,6 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
             codeStatisticsInfo.dealPresentationData(data);
             updateNode(codeStatisticsInfo);
         }
-    }
-
-    @Override
-    public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
-
     }
 
     /**

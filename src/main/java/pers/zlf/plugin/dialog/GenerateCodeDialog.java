@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -24,7 +24,6 @@ import pers.zlf.plugin.pojo.ColumnInfo;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.SwingUtil;
-import pers.zlf.plugin.util.TypeUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -89,7 +88,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         columnTable.setModel(columnTableModel);
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             String sqlColumn = column.getName();
-            String dataType = TypeUtil.getDataType(column).typeName;
+            String dataType = column.getDasType().toDataType().typeName;
             columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
         }
         JTextField textField = new JTextField();
@@ -205,9 +204,9 @@ public class GenerateCodeDialog extends DialogWrapper {
                 //生成文件
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
-                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, Icon.LOGO);
+                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, MyIcon.LOGO);
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
             }
         });
         SwingUtil.addMouseListener(addButton, IconEnum.ADD);
@@ -275,7 +274,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         tableInfo.dealTableName(tableNamePrefix);
         String templateName = templateComboBox.getSelectedItem().toString();
         Map<String, String> templateFileMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().get(templateName);
-        List<String> templateFileNameList = templateFileMap.keySet().stream().collect(Collectors.toList());
+        List<String> templateFileNameList = templateFileMap.keySet().stream().toList();
         int length = templateFileNameList.size();
         int rowCount = length / 3;
         templateFilePanel.removeAll();

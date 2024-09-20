@@ -6,7 +6,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -37,7 +37,7 @@ public class CodeLineCountAction extends BaseAction {
     public boolean isExecute() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, Icon.LOGO);
+            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, MyIcon.LOGO);
             return false;
         }
         return true;

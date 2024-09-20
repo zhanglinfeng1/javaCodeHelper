@@ -1,14 +1,10 @@
 package pers.zlf.plugin.util;
 
-import com.intellij.database.model.DasColumn;
-import com.intellij.database.model.DataType;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
 import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
@@ -16,10 +12,6 @@ import java.util.Arrays;
  * @date create in 2022/9/8 17:37
  */
 public class TypeUtil {
-    private static final String GET_DAS_TYPE = "getDasType";
-    private static final String TO_DATA_TYPE = "toDataType";
-    private static final String GET_DATA_TYPE = "getDataType";
-
 
     /**
      * 判断对象是否是List
@@ -78,29 +70,5 @@ public class TypeUtil {
      */
     public static boolean isSimpleType(String typeStr) {
         return ClassType.BASIC_TYPE_LIST.contains(typeStr);
-    }
-
-    /**
-     * 获取表字段类型
-     *
-     * @param dasColumn 字段
-     * @return DataType
-     */
-    public static DataType getDataType(DasColumn dasColumn) {
-        try {
-            // 兼容2022.3.3及以上版本
-            Method getDasTypeMethod = dasColumn.getClass().getMethod(GET_DAS_TYPE);
-            Object dasType = getDasTypeMethod.invoke(dasColumn);
-            Method toDataTypeMethod = dasType.getClass().getMethod(TO_DATA_TYPE);
-            return (DataType) toDataTypeMethod.invoke(dasType);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            // 兼容2022.3.3以下版本
-            try {
-                Method getDataTypeMethod = dasColumn.getClass().getMethod(GET_DATA_TYPE);
-                return (DataType) getDataTypeMethod.invoke(dasColumn);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
     }
 }

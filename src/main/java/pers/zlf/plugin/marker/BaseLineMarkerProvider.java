@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,11 +67,11 @@ public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescri
      * @param targets 跳转目标
      */
     protected void addLineMarker(PsiElement element, PsiElement targets) {
-        result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
+        result.add(NavigationGutterIconBuilder.create(MyIcon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
     protected void addLineMarker(PsiElement element, List<? extends PsiElement> targets) {
-        result.add(NavigationGutterIconBuilder.create(Icon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
+        result.add(NavigationGutterIconBuilder.create(MyIcon.LOGO).setTargets(targets).setTooltipText(Common.BLANK_STRING).createLineMarkerInfo(element));
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class BaseLineMarkerProvider<T> extends LineMarkerProviderDescri
      * @param handler       具体处理方法
      */
     protected void addLineMarkerInfo(PsiMethod method, PsiElement sourceElement, GutterIconNavigationHandler<PsiMethod> handler) {
-        result.add(new RelatedItemLineMarkerInfo<>(method, sourceElement.getTextRange(), Icon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
+        result.add(new RelatedItemLineMarkerInfo<>(method, sourceElement.getTextRange(), MyIcon.LOGO_GREY, null, handler, GutterIconRenderer.Alignment.CENTER, ArrayList::new));
     }
 
 }

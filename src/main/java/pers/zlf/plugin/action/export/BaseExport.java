@@ -11,10 +11,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
-import pers.zlf.plugin.constant.Icon;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.ExcelUtil;
-import pers.zlf.plugin.util.TypeUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.io.FileOutputStream;
@@ -41,9 +40,9 @@ public abstract class BaseExport {
             try (FileOutputStream outputStream = new FileOutputStream(Path.of(path, fileName + FileType.XLSX_FILE).toString())) {
                 workbook.write(outputStream);
             }
-            Messages.showMessageDialog(Message.EXPORT_SUCCESS, Common.BLANK_STRING, Icon.LOGO);
+            Messages.showMessageDialog(Message.EXPORT_SUCCESS, Common.BLANK_STRING, MyIcon.LOGO);
         } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, Icon.LOGO);
+            Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
         }
     }
 
@@ -83,7 +82,7 @@ public abstract class BaseExport {
             ExcelUtil.createCell(row, 1, DasUtil.isPrimary(column) ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);
             ExcelUtil.createCell(row, 2, column.getName(), commonStyle);
             ExcelUtil.createCell(row, 3, Optional.ofNullable(column.getComment()).orElse(Common.BLANK_STRING), commonStyle);
-            DataType dataType = TypeUtil.getDataType(column);
+            DataType dataType = column.getDasType().toDataType();
             String type = dataType.typeName;
             if (dataType.getPrecision() > 0) {
                 type = type + Common.LEFT_PARENTHESES + dataType.getPrecision();
