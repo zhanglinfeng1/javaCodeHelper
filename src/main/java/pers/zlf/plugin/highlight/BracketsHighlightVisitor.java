@@ -73,30 +73,34 @@ public class BracketsHighlightVisitor extends JavaElementVisitor implements High
         CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
         BiFunction<Stack<TextAttributesKey>, String, TextAttributesKey> function = (colorStack, key) -> {
             int length = colorStack.size();
-            if (length > 7) {
+            if (length >= 7) {
                 length = length % 7;
             }
             TextAttributesKey colorKey = TextAttributesKey.createTextAttributesKey(key + length);
             colorStack.push(colorKey);
             return colorKey;
         };
-        if (elementType == JavaTokenType.LBRACKET && config.isOpenBracket()) {
-            color = function.apply(bracketColorStack, Common.BRACKET_COLOR);
-        } else if (elementType == JavaTokenType.LPARENTH && config.isOpenParenth()) {
-            color = function.apply(parenthColorStack, Common.PARENTH_COLOR);
-        } else if (elementType == JavaTokenType.LBRACE && config.isOpenBrace()) {
-            color = function.apply(braceColorStack, Common.BRACE_COLOR);
-        } else if (elementType == JavaTokenType.LT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
-            color = function.apply(angleBracketColorStack, Common.ANGLE_BRACKET_COLOR);
-        } else if (elementType == JavaTokenType.GT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
-            color = angleBracketColorStack.pop();
-        } else if (elementType == JavaTokenType.RBRACKET && config.isOpenBracket()) {
-            color = bracketColorStack.pop();
-        } else if (elementType == JavaTokenType.RPARENTH && config.isOpenParenth()) {
-            color = parenthColorStack.pop();
-        } else if (elementType == JavaTokenType.RBRACE && config.isOpenBrace()) {
-            color = braceColorStack.pop();
-        } else {
+        try {
+            if (elementType == JavaTokenType.LBRACKET && config.isOpenBracket()) {
+                color = function.apply(bracketColorStack, Common.BRACKET_COLOR);
+            } else if (elementType == JavaTokenType.LPARENTH && config.isOpenParenth()) {
+                color = function.apply(parenthColorStack, Common.PARENTH_COLOR);
+            } else if (elementType == JavaTokenType.LBRACE && config.isOpenBrace()) {
+                color = function.apply(braceColorStack, Common.BRACE_COLOR);
+            } else if (elementType == JavaTokenType.LT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
+                color = function.apply(angleBracketColorStack, Common.ANGLE_BRACKET_COLOR);
+            } else if (elementType == JavaTokenType.GT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
+                color = angleBracketColorStack.pop();
+            } else if (elementType == JavaTokenType.RBRACKET && config.isOpenBracket()) {
+                color = bracketColorStack.pop();
+            } else if (elementType == JavaTokenType.RPARENTH && config.isOpenParenth()) {
+                color = parenthColorStack.pop();
+            } else if (elementType == JavaTokenType.RBRACE && config.isOpenBrace()) {
+                color = braceColorStack.pop();
+            } else {
+                return;
+            }
+        }catch (Exception e){
             return;
         }
         HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(JavaHighlightInfoTypes.JAVA_KEYWORD).range(token.getTextRange());
