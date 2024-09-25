@@ -3,6 +3,7 @@ package pers.zlf.plugin.dialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -23,18 +24,27 @@ public class CommonConfigDialog {
     private JRadioButton codeCompletionEnableButton;
     private JRadioButton codeCompletionDisabledButton;
     private JTextField maxCodeCompletionLengthTextField;
+    private JCheckBox braceCheckBox;
+    private JCheckBox parenthCheckBox;
+    private JCheckBox bracketCheckBox;
+    private JCheckBox angleBracketCheckBox;
 
     public CommonConfigDialog() {
     }
 
     public void reset() {
-        CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
-        appIdTextField.setText(commonConfig.getAppId());
-        securityKeyTextField.setText(commonConfig.getSecretKey());
-        maxCodeCompletionLengthTextField.setText(String.valueOf(commonConfig.getMaxCodeCompletionLength()));
+        CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
+        appIdTextField.setText(config.getAppId());
+        securityKeyTextField.setText(config.getSecretKey());
+        maxCodeCompletionLengthTextField.setText(String.valueOf(config.getMaxCodeCompletionLength()));
 
-        Optional.ofNullable(commonConfig.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
-        Optional.ofNullable(commonConfig.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
+        Optional.ofNullable(config.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
+        Optional.ofNullable(config.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
+
+        braceCheckBox.setSelected(config.isOpenBrace());
+        parenthCheckBox.setSelected(config.isOpenParenth());
+        bracketCheckBox.setSelected(config.isOpenBracket());
+        angleBracketCheckBox.setSelected(config.isOpenAngleBracket());
     }
 
     public JComponent getComponent() {
@@ -65,4 +75,20 @@ public class CommonConfigDialog {
         return Integer.parseInt(maxCodeCompletionLengthTextField.getText());
     }
 
+
+    public boolean isOpenAngleBracket() {
+        return angleBracketCheckBox.isSelected();
+    }
+
+    public boolean isOpenParenth() {
+        return parenthCheckBox.isSelected();
+    }
+
+    public boolean isOpenBracket() {
+        return bracketCheckBox.isSelected();
+    }
+
+    public boolean isOpenBrace() {
+        return braceCheckBox.isSelected();
+    }
 }

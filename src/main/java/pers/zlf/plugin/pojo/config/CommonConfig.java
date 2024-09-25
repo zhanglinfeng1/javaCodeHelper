@@ -19,6 +19,14 @@ public class CommonConfig {
     private boolean enableCodeCompletion = true;
     /** 最大代码补全展示数量 */
     private int maxCodeCompletionLength = 10;
+    /** <> */
+    private boolean openAngleBracket = true;
+    /** () */
+    private boolean openParenth = true;
+    /** [] */
+    private boolean openBracket = true;
+    /** {} */
+    private boolean openBrace = true;
 
     public Integer getTranslateApi() {
         return translateApi;
@@ -66,5 +74,37 @@ public class CommonConfig {
 
     public void setMaxCodeCompletionLength(int maxCodeCompletionLength) {
         this.maxCodeCompletionLength = maxCodeCompletionLength;
+    }
+
+    public boolean isOpenAngleBracket() {
+        return openAngleBracket;
+    }
+
+    public void setOpenAngleBracket(boolean openAngleBracket) {
+        this.openAngleBracket = openAngleBracket;
+    }
+
+    public boolean isOpenParenth() {
+        return openParenth;
+    }
+
+    public void setOpenParenth(boolean openParenth) {
+        this.openParenth = openParenth;
+    }
+
+    public boolean isOpenBracket() {
+        return openBracket;
+    }
+
+    public void setOpenBracket(boolean openBracket) {
+        this.openBracket = openBracket;
+    }
+
+    public boolean isOpenBrace() {
+        return openBrace;
+    }
+
+    public void setOpenBrace(boolean openBrace) {
+        this.openBrace = openBrace;
     }
 }

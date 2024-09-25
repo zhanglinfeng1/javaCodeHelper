@@ -30,6 +30,10 @@ public class Common {
     public static final String IMAGE_JPG = "JPG";
     public static final String HOOK_UP = "√";
     public static final String FONT_WRYH = "微软雅黑";
+    public static final String ANGLE_BRACKET_COLOR = "JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR";
+    public static final String PARENTH_COLOR = "JAVA_CODE_HELPER_PARENTH_COLOR";
+    public static final String BRACKET_COLOR = "JAVA_CODE_HELPER_BRACKET_COLOR";
+    public static final String BRACE_COLOR = "JAVA_CODE_HELPER_BRACE_COLOR";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";

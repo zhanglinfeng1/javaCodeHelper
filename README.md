@@ -5,6 +5,9 @@ intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
 [![](https://img.shields.io/badge/Gitee-blue?logo=gitee)](https://gitee.com/zlfzh/javaCodeHelper)
 [![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
 
+## 彩虹括号
+<>、()、[]、{} 同对颜色一致
+
 ## 代码补全
 构造方法内，补全字段赋值<br />
 非构造方法内，根据输入的字符，补全代码<br />

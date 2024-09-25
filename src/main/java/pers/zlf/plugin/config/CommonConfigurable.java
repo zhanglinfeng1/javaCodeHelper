@@ -50,6 +50,18 @@ public class CommonConfigurable implements Configurable {
         if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
             return true;
         }
+        if (dialog.isOpenAngleBracket() != config.isOpenAngleBracket()) {
+            return true;
+        }
+        if (dialog.isOpenBrace() != config.isOpenBrace()) {
+            return true;
+        }
+        if (dialog.isOpenBracket() != config.isOpenBracket()) {
+            return true;
+        }
+        if (dialog.isOpenParenth() != config.isOpenParenth()) {
+            return true;
+        }
         return !dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength());
     }
 
@@ -60,6 +72,10 @@ public class CommonConfigurable implements Configurable {
         config.setSecretKey(dialog.getSecurityKey());
         config.setApiTool(dialog.getApiTool());
         config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
+        config.setOpenAngleBracket(dialog.isOpenAngleBracket());
+        config.setOpenBrace(dialog.isOpenBrace());
+        config.setOpenBracket(dialog.isOpenBracket());
+        config.setOpenBracket(dialog.isOpenParenth());
         ConfigFactory.getInstance().setCommonConfig(config);
     }
 

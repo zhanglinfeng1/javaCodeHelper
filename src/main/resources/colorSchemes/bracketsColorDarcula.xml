@@ -1,0 +1,147 @@
+<?xml version='1.0'?>
+<list>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR0">
+        <value>
+            <option name="FOREGROUND" value="E8BA36"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR1">
+        <value>
+            <option name="FOREGROUND" value="54A857"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR2">
+        <value>
+            <option name="FOREGROUND" value="359FF4"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR3">
+        <value>
+            <option name="FOREGROUND" value="5060BB"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR4">
+        <value>
+            <option name="FOREGROUND" value="179387"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR5">
+        <value>
+            <option name="FOREGROUND" value="A5BE00"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR6">
+        <value>
+            <option name="FOREGROUND" value="005FA3"/>
+        </value>
+    </option>
+
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR0">
+        <value>
+            <option name="FOREGROUND" value="E8BA36"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR1">
+        <value>
+            <option name="FOREGROUND" value="54A857"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR2">
+        <value>
+            <option name="FOREGROUND" value="359FF4"/>
+        </value>
+    </option>
+        <option name="JAVA_CODE_HELPER_PARENTH_COLOR3">
+        <value>
+            <option name="FOREGROUND" value="5060BB"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR4">
+        <value>
+            <option name="FOREGROUND" value="179387"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR5">
+        <value>
+            <option name="FOREGROUND" value="A5BE00"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_PARENTH_COLOR6">
+        <value>
+            <option name="FOREGROUND" value="005FA3"/>
+        </value>
+    </option>
+
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR0">
+        <value>
+            <option name="FOREGROUND" value="E8BA36"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR1">
+        <value>
+            <option name="FOREGROUND" value="54A857"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR2">
+        <value>
+            <option name="FOREGROUND" value="359FF4"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR3">
+        <value>
+            <option name="FOREGROUND" value="5060BB"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR4">
+        <value>
+            <option name="FOREGROUND" value="179387"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR5">
+        <value>
+            <option name="FOREGROUND" value="A5BE00"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACKET_COLOR6">
+        <value>
+            <option name="FOREGROUND" value="005FA3"/>
+        </value>
+    </option>
+
+
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR0">
+        <value>
+            <option name="FOREGROUND" value="E8BA36"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR1">
+        <value>
+            <option name="FOREGROUND" value="54A857"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR2">
+        <value>
+            <option name="FOREGROUND" value="359FF4"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR3">
+        <value>
+            <option name="FOREGROUND" value="5060BB"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR4">
+        <value>
+            <option name="FOREGROUND" value="179387"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR5">
+        <value>
+            <option name="FOREGROUND" value="A5BE00"/>
+        </value>
+    </option>
+    <option name="JAVA_CODE_HELPER_BRACE_COLOR6">
+        <value>
+            <option name="FOREGROUND" value="005FA3"/>
+        </value>
+    </option>
+</list>
