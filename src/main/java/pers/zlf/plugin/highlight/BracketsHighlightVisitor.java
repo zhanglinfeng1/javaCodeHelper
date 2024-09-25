@@ -86,9 +86,9 @@ public class BracketsHighlightVisitor extends JavaElementVisitor implements High
             color = function.apply(parenthColorStack, Common.PARENTH_COLOR);
         } else if (elementType == JavaTokenType.LBRACE && config.isOpenBrace()) {
             color = function.apply(braceColorStack, Common.BRACE_COLOR);
-        } else if (elementType == JavaTokenType.GT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
-            color = function.apply(angleBracketColorStack, Common.ANGLE_BRACKET_COLOR);
         } else if (elementType == JavaTokenType.LT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
+            color = function.apply(angleBracketColorStack, Common.ANGLE_BRACKET_COLOR);
+        } else if (elementType == JavaTokenType.GT && token.getParent() instanceof PsiReferenceParameterList && config.isOpenAngleBracket()) {
             color = angleBracketColorStack.pop();
         } else if (elementType == JavaTokenType.RBRACKET && config.isOpenBracket()) {
             color = bracketColorStack.pop();
