@@ -17,9 +17,11 @@ public class Common {
     public static final String LEFT_BRACE = "{";
     public static final String RIGHT_BRACE = "}";
     public static final String LEFT_BRACKETS = "[";
+    public static final String RIGHT_BRACKETS = "]";
     public static final String LEFT_PARENTHESES = "(";
     public static final String RIGHT_PARENTHESES = ")";
-    public static final String LESS_THAN_SIGN = "<";
+    public static final String LEFT_ANGLE_BRACKET = "<";
+    public static final String RIGHT_ANGLE_BRACKET = ">";
     public static final String UNDERLINE = "_";
     public static final String SPACE = " ";
     public static final String PERCENT_SIGN = "%";
@@ -30,10 +32,7 @@ public class Common {
     public static final String IMAGE_JPG = "JPG";
     public static final String HOOK_UP = "√";
     public static final String FONT_WRYH = "微软雅黑";
-    public static final String ANGLE_BRACKET_COLOR = "JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR";
-    public static final String PARENTH_COLOR = "JAVA_CODE_HELPER_PARENTH_COLOR";
-    public static final String BRACKET_COLOR = "JAVA_CODE_HELPER_BRACKET_COLOR";
-    public static final String BRACE_COLOR = "JAVA_CODE_HELPER_BRACE_COLOR";
+    public static final String LINE_BREAK = "\n";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
@@ -55,7 +54,19 @@ public class Common {
     public static final String SELECT_MODULE = "选择模块";
     public static final String TEMPLATE_CONFIG = "模版配置";
     public static final String COMMON_TOOLS = "常用工具";
-
+    public static final String RAINBOW_BRACKET = "彩虹括号";
+    public static final String ANGLE_BRACKET_COLOR_KEY = "JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR";
+    public static final String PARENTH_COLOR_KEY = "JAVA_CODE_HELPER_PARENTH_COLOR";
+    public static final String BRACKET_COLOR_KEY = "JAVA_CODE_HELPER_BRACKET_COLOR";
+    public static final String BRACE_COLOR_KEY = "JAVA_CODE_HELPER_BRACE_COLOR";
+    public static final String ANGLE_BRACKET_COLOR_DISPLAY_NAME = "尖括号//颜色";
+    public static final String PARENTH_COLOR_DISPLAY_NAME = "小括号//颜色";
+    public static final String BRACKET_COLOR_DISPLAY_NAME = "中括号//颜色";
+    public static final String BRACE_COLOR_DISPLAY_NAME = "大括号//颜色";
+    public static final String ANGLE_BRACKET_COLOR_TAG_NAME = "JKH";
+    public static final String PARENTH_COLOR_TAG_NAME = "XKH";
+    public static final String BRACKET_COLOR_TAG_NAME = "ZKH";
+    public static final String BRACE_COLOR_TAG_NAME = "DKH";
     /** 表头 */
     public static final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
     public static final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
@@ -94,6 +105,7 @@ public class Common {
     public static final String LAMBDA_SIMPLIFY_STR = "(%s::%s)";
     public static final String MAP_STR = ".map";
     public static final String IF_PRESENT_STR = ".ifPresent";
+    public static final String COLOR_TAG_STR = "<%s>%s </%s>";
     /** 构造方法补全提示 */
     public static final String FILL_CONSTRUCTOR = "补全构造方法";
 

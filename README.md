@@ -6,7 +6,8 @@ intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
 [![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
 
 ## 彩虹括号
-<>、()、[]、{} 同对颜色一致
+<>、()、[]、{} 同对颜色一致<br />
+可以自定义颜色，配置路径：File > Setting > Editor > Color Scheme > 彩虹括号
 
 ## 代码补全
 构造方法内，补全字段赋值<br />

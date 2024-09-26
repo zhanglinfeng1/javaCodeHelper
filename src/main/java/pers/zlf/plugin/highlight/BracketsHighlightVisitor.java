@@ -47,10 +47,7 @@ public class BracketsHighlightVisitor extends BaseVisitor {
         CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
 
         TriConsumer<IElementType, Stack<TextAttributesKey>, String> triConsumer = (otherTokenType, colorStack, key) -> {
-            int length = colorStack.size();
-            if (length >= 7) {
-                length = length % 7;
-            }
+            int length = colorStack.size() % 7 + 1;
             TextAttributesKey colorKey = TextAttributesKey.createTextAttributesKey(key + length);
             colorStack.add(colorKey);
             addHighlightInfo(colorKey, token);
@@ -60,19 +57,19 @@ public class BracketsHighlightVisitor extends BaseVisitor {
         };
 
         if (tokenType == JavaTokenType.LBRACKET && config.isOpenBracket()) {
-            triConsumer.accept(JavaTokenType.RBRACKET, bracketColorStack, Common.BRACKET_COLOR);
+            triConsumer.accept(JavaTokenType.RBRACKET, bracketColorStack, Common.BRACKET_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RBRACKET && config.isOpenBracket()) {
             addHighlightInfo(bracketColorStack, token);
         } else if (tokenType == JavaTokenType.LPARENTH && config.isOpenParenth()) {
-            triConsumer.accept(JavaTokenType.RPARENTH, parenthColorStack, Common.PARENTH_COLOR);
+            triConsumer.accept(JavaTokenType.RPARENTH, parenthColorStack, Common.PARENTH_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RPARENTH && config.isOpenParenth()) {
             addHighlightInfo(parenthColorStack, token);
         } else if (tokenType == JavaTokenType.LBRACE && config.isOpenBrace()) {
-            triConsumer.accept(JavaTokenType.RBRACE, braceColorStack, Common.BRACE_COLOR);
+            triConsumer.accept(JavaTokenType.RBRACE, braceColorStack, Common.BRACE_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RBRACE && config.isOpenBrace()) {
             addHighlightInfo(braceColorStack, token);
         } else if (tokenType == JavaTokenType.LT && config.isOpenAngleBracket()) {
-            triConsumer.accept(JavaTokenType.GT, angleBracketColorStack, Common.ANGLE_BRACKET_COLOR);
+            triConsumer.accept(JavaTokenType.GT, angleBracketColorStack, Common.ANGLE_BRACKET_COLOR_KEY);
         } else if (tokenType == JavaTokenType.GT && config.isOpenAngleBracket()) {
             addHighlightInfo(angleBracketColorStack, token);
         }

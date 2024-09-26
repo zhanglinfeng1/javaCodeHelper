@@ -143,10 +143,10 @@ public class MyPsiUtil {
     public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = Common.BLANK_STRING;
-        if (basicTypeName.contains(Common.LESS_THAN_SIGN)) {
+        if (basicTypeName.contains(Common.LEFT_ANGLE_BRACKET)) {
             String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, Regex.ANGLE_BRACKETS).split(Common.COMMA);
             suggestedVariableName = suggestedVariableNames[suggestedVariableNames.length - 1].trim();
-            basicTypeName = basicTypeName.split(Common.LESS_THAN_SIGN)[0];
+            basicTypeName = basicTypeName.split(Common.LEFT_ANGLE_BRACKET)[0];
         } else if (basicTypeName.contains(Common.LEFT_BRACKETS)) {
             suggestedVariableName = basicTypeName.split(Regex.LEFT_BRACKETS)[0];
             basicTypeName = Common.S_STR;

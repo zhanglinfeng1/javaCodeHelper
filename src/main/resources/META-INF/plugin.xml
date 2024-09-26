@@ -69,6 +69,7 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/bracketsColorDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/bracketsColorDarcula.xml"/>
         <highlightVisitor implementation="pers.zlf.plugin.highlight.BracketsHighlightVisitor"/>
+        <colorSettingsPage implementation="pers.zlf.plugin.highlight.BracketsColorSettingsPage"/>
     </extensions>
 
     <actions>
