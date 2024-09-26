@@ -38,6 +38,10 @@ public class BracketsHighlightVisitor extends BaseVisitor {
 
     @Override
     public boolean suitableForFile(@NotNull PsiFile file) {
+        parenthColorStack.clear();
+        bracketColorStack.clear();
+        braceColorStack.clear();
+        angleBracketColorStack.clear();
         return file instanceof PsiImportHolder && !InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file);
     }
 
