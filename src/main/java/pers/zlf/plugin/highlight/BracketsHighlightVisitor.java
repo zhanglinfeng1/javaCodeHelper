@@ -6,7 +6,6 @@ import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiImportHolder;
 import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.PsiReferenceParameterList;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
@@ -33,15 +32,15 @@ public class BracketsHighlightVisitor extends BaseVisitor {
     @NotNull
     @Override
     public BracketsHighlightVisitor clone() {
+        parenthColorStack.clear();
+        bracketColorStack.clear();
+        braceColorStack.clear();
+        angleBracketColorStack.clear();
         return new BracketsHighlightVisitor();
     }
 
     @Override
     public boolean suitableForFile(@NotNull PsiFile file) {
-        parenthColorStack.clear();
-        bracketColorStack.clear();
-        braceColorStack.clear();
-        angleBracketColorStack.clear();
         return file instanceof PsiImportHolder && !InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file);
     }
 

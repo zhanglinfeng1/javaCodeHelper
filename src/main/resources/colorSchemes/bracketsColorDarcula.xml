@@ -2,7 +2,7 @@
 <list>
     <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR1">
         <value>
-            <option name="FOREGROUND" value="E8BA36"/>
+            <option name="FOREGROUND" value="FF8181"/>
         </value>
     </option>
     <option name="JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR2">
@@ -38,7 +38,7 @@
 
     <option name="JAVA_CODE_HELPER_PARENTH_COLOR1">
         <value>
-            <option name="FOREGROUND" value="E8BA36"/>
+            <option name="FOREGROUND" value="FF8181"/>
         </value>
     </option>
     <option name="JAVA_CODE_HELPER_PARENTH_COLOR2">
@@ -74,7 +74,7 @@
 
     <option name="JAVA_CODE_HELPER_BRACKET_COLOR1">
         <value>
-            <option name="FOREGROUND" value="E8BA36"/>
+            <option name="FOREGROUND" value="FF8181"/>
         </value>
     </option>
     <option name="JAVA_CODE_HELPER_BRACKET_COLOR2">
@@ -110,7 +110,7 @@
 
     <option name="JAVA_CODE_HELPER_BRACE_COLOR1">
         <value>
-            <option name="FOREGROUND" value="E8BA36"/>
+            <option name="FOREGROUND" value="FF8181"/>
         </value>
     </option>
     <option name="JAVA_CODE_HELPER_BRACE_COLOR2">
