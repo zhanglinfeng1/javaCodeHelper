@@ -32,16 +32,19 @@ public class BracketsHighlightVisitor extends BaseVisitor {
     @NotNull
     @Override
     public BracketsHighlightVisitor clone() {
-        parenthColorStack.clear();
-        bracketColorStack.clear();
-        braceColorStack.clear();
-        angleBracketColorStack.clear();
         return new BracketsHighlightVisitor();
     }
 
     @Override
     public boolean suitableForFile(@NotNull PsiFile file) {
-        return file instanceof PsiImportHolder && !InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file);
+        boolean suitable = file instanceof PsiImportHolder && !InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file);
+        if (suitable) {
+            parenthColorStack.clear();
+            bracketColorStack.clear();
+            braceColorStack.clear();
+            angleBracketColorStack.clear();
+        }
+        return suitable;
     }
 
     @Override
