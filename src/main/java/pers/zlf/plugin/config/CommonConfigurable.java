@@ -75,7 +75,7 @@ public class CommonConfigurable implements Configurable {
         config.setOpenAngleBracket(dialog.isOpenAngleBracket());
         config.setOpenBrace(dialog.isOpenBrace());
         config.setOpenBracket(dialog.isOpenBracket());
-        config.setOpenBracket(dialog.isOpenParenth());
+        config.setOpenParenth(dialog.isOpenParenth());
         ConfigFactory.getInstance().setCommonConfig(config);
     }
 
