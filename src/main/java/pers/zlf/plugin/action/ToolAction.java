@@ -5,7 +5,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.PsiFile;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.HashMap;

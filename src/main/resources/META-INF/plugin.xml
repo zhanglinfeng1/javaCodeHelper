@@ -37,9 +37,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- 快捷跳转 -->
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.FeignFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.MapperFastJumpProvider"/>
-        <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlFastJumpProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.FeignLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA" implementationClass="pers.zlf.plugin.marker.MapperLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlLineMarkerProvider"/>
         <psi.referenceContributor language="XML" implementation="pers.zlf.plugin.reference.XmlReferenceContributor"/>
         <!-- 工具窗口 -->
         <toolWindow id="JavaCodeHelper" secondary="false" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.CodeToolWindow"/>

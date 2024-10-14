@@ -15,7 +15,7 @@ import java.util.Map;
  * @author zhanglinfeng
  * @date create in 2022/9/26 18:08
  */
-public class FeignFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
+public class FeignLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
     public boolean checkPsiElement(PsiElement element) {

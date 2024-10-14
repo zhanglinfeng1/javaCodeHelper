@@ -23,7 +23,7 @@ public class CronDialog {
     private JButton downButton;
     private JTextArea downTextArea;
     private JComboBox<String> cronTypeComboBox;
-    Map<String, CronType> cronTypeMap = new HashMap<>() {{
+    private final Map<String, CronType> cronTypeMap = new HashMap<>() {{
         put("CRON4J", CronType.CRON4J);
         put("QUARTZ", CronType.QUARTZ);
         put("UNIX", CronType.UNIX);

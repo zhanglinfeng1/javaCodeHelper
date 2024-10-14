@@ -37,7 +37,7 @@ public class SqlCompletionContributorBase extends BaseMyBatisCompletionContribut
                 int offset = injectedLanguageManager.injectedToHost(position, position.getTextOffset());
                 currentElement = xmlFile.findElementAt(offset);
                 currentTag = PsiTreeUtil.getParentOfType(currentElement, XmlTag.class);
-                mapperTag = XmlUtil.getRootTagByName((XmlFile) file, Xml.MAPPER);
+                mapperTag = XmlUtil.getRootTagByName(xmlFile, Xml.MAPPER);
                 return null != currentTag && null != mapperTag;
             }
         }

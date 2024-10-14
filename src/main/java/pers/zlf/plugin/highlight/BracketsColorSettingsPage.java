@@ -35,7 +35,6 @@ public class BracketsColorSettingsPage implements ColorSettingsPage {
     private static final StringBuilder demoText = new StringBuilder();
 
     public BracketsColorSettingsPage() {
-
         BiConsumer<BaseBrackets, Integer> consumer = (brackets, length) -> {
             StringBuilder frontText = new StringBuilder();
             StringBuilder afterText = new StringBuilder();

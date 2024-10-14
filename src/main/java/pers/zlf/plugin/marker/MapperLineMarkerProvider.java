@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -42,7 +41,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2023/1/6 14:25
  */
-public class MapperFastJumpProvider extends BaseLineMarkerProvider<PsiClass> {
+public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
     /** sql语句类型 */
     private final Map<String, String> sqlTypeMap = new HashMap<>() {{
         put("add", "insert");

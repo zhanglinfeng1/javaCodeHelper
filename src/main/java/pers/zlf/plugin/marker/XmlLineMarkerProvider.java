@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2023/1/6 16:35
  */
-public class XmlFastJumpProvider extends BaseLineMarkerProvider<XmlFile> {
+public class XmlLineMarkerProvider extends BaseLineMarkerProvider<XmlFile> {
 
     @Override
     public boolean checkPsiElement(PsiElement element) {

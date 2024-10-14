@@ -1,5 +1,7 @@
 package pers.zlf.plugin.constant;
 
+import javax.swing.Icon;
+
 /**
  * @author zhanglinfeng
  * @date create in 2023/1/28 9:54
@@ -14,20 +16,20 @@ public enum IconEnum {
     //重置按钮图标
     RESET(MyIcon.RESET, MyIcon.RESET_DARK);
 
-    private final javax.swing.Icon brightIcon;
+    private final Icon brightIcon;
 
-    private final javax.swing.Icon darkIcon;
+    private final Icon darkIcon;
 
-    IconEnum(javax.swing.Icon brightIcon, javax.swing.Icon darkIcon) {
+    IconEnum(Icon brightIcon, Icon darkIcon) {
         this.brightIcon = brightIcon;
         this.darkIcon = darkIcon;
     }
 
-    public javax.swing.Icon getBrightIcon() {
+    public Icon getBrightIcon() {
         return brightIcon;
     }
 
-    public javax.swing.Icon getDarkIcon() {
+    public Icon getDarkIcon() {
         return darkIcon;
     }
 
