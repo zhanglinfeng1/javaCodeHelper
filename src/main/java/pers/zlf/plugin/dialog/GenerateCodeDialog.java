@@ -291,9 +291,9 @@ public class GenerateCodeDialog extends DialogWrapper {
     private String getFileName(String templateName) {
         String fileName = templateName.replaceAll(FileType.FREEMARKER_FILE, Common.BLANK_STRING);
         if ((Common.MODEL + FileType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
-            fileName = StringUtil.toHumpStyle(tableInfo.getTableName());
+            fileName = tableInfo.getTableName();
         } else {
-            fileName = StringUtil.toHumpStyle(tableInfo.getTableName()) + fileName;
+            fileName = tableInfo.getTableName() + fileName;
         }
         if (!fileName.contains(Common.DOT)) {
             fileName = fileName + FileType.JAVA_FILE;
