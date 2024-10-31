@@ -24,31 +24,18 @@ public class BinaryConversionDialog {
 
     public BinaryConversionDialog() {
         downButton.addActionListener(e -> {
-            int num = Integer.parseInt(upTextArea.getText());
-            int selectedIndex = typeComboBox.getSelectedIndex();
-            int radix = switch (selectedIndex) {
-                case 0 -> 2;
-                case 1 -> 8;
-                case 2 -> 16;
-                default -> 10;
-            };
+            int num;
             try {
-                downTextArea.setText(Integer.toString(num, radix));
+                num = Integer.parseInt(upTextArea.getText());
             } catch (Exception ex) {
                 Messages.showMessageDialog(Message.FORMAT_ERROR, Common.BLANK_STRING, MyIcon.LOGO);
+                return;
             }
+            downTextArea.setText(Integer.toString(num, getRadix()));
         });
         upButton.addActionListener(e -> {
-            String value = downTextArea.getText();
-            int selectedIndex = typeComboBox.getSelectedIndex();
-            int radix = switch (selectedIndex) {
-                case 0 -> 2;
-                case 1 -> 8;
-                case 2 -> 16;
-                default -> 10;
-            };
             try {
-                upTextArea.setText(String.valueOf(Integer.parseInt(value, radix)));
+                upTextArea.setText(String.valueOf(Integer.parseInt(downTextArea.getText(), getRadix())));
             } catch (Exception ex) {
                 Messages.showMessageDialog(Message.FORMAT_ERROR, Common.BLANK_STRING, MyIcon.LOGO);
             }
@@ -59,4 +46,13 @@ public class BinaryConversionDialog {
         return this.contentPanel;
     }
 
+    private int getRadix() {
+        int selectedIndex = typeComboBox.getSelectedIndex();
+        return switch (selectedIndex) {
+            case 0 -> 2;
+            case 1 -> 8;
+            case 2 -> 16;
+            default -> 10;
+        };
+    }
 }
