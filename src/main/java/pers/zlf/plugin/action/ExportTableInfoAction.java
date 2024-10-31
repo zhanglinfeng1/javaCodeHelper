@@ -5,14 +5,11 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.action.export.BaseExport;
 import pers.zlf.plugin.action.export.DatabaseExport;
 import pers.zlf.plugin.action.export.TableExport;
-import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -46,7 +43,7 @@ public class ExportTableInfoAction extends BaseAction {
     public void execute() {
         String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
         if (StringUtil.isEmpty(path)) {
-            Messages.showMessageDialog(Message.TABLE_EXPORT_PATH_NOT_NULL, Common.BLANK_STRING, MyIcon.LOGO);
+            Message.showMessage(Message.TABLE_EXPORT_PATH_NOT_NULL);
             return;
         }
         export.exportXlsx(path);

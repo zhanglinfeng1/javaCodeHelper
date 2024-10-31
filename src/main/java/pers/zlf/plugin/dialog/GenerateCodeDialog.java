@@ -6,7 +6,6 @@ import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.JBColor;
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
-import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -204,9 +202,9 @@ public class GenerateCodeDialog extends DialogWrapper {
                 //生成文件
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
-                Messages.showMessageDialog(Message.GENERATE_CODE_SUCCESS, Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(Message.GENERATE_CODE_SUCCESS);
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(ex.getMessage());
             }
         });
         SwingUtil.addMouseListener(addButton, IconEnum.ADD);

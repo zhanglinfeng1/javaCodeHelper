@@ -1,5 +1,7 @@
 package pers.zlf.plugin.constant;
 
+import com.intellij.openapi.ui.Messages;
+
 /**
  * 弹窗提示文本
  *
@@ -50,4 +52,12 @@ public class Message {
     public static final String TABLE_EXPORT_PATH_NOT_NULL = "文件导出路径不能为空";
     public static final String EXPORT_SUCCESS = "导出成功";
 
+    /**
+     * 弹窗展示
+     *
+     * @param message 展示信息
+     */
+    public static void showMessage(String message) {
+        Messages.showMessageDialog(message, Common.BLANK_STRING, MyIcon.LOGO);
+    }
 }

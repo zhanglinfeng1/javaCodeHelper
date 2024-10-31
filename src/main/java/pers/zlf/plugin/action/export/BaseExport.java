@@ -4,14 +4,12 @@ import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasObject;
 import com.intellij.database.model.DataType;
 import com.intellij.database.util.DasUtil;
-import com.intellij.openapi.ui.Messages;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
-import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.ExcelUtil;
 import pers.zlf.plugin.util.lambda.Empty;
@@ -40,9 +38,9 @@ public abstract class BaseExport {
             try (FileOutputStream outputStream = new FileOutputStream(Path.of(path, fileName + FileType.XLSX_FILE).toString())) {
                 workbook.write(outputStream);
             }
-            Messages.showMessageDialog(Message.EXPORT_SUCCESS, Common.BLANK_STRING, MyIcon.LOGO);
+            Message.showMessage(Message.EXPORT_SUCCESS);
         } catch (Exception e) {
-            Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+            Message.showMessage(e.getMessage());
         }
     }
 

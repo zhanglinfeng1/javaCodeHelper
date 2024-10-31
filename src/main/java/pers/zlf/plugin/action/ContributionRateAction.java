@@ -1,7 +1,6 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
@@ -9,7 +8,6 @@ import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -51,12 +49,12 @@ public class ContributionRateAction extends BaseAction {
     @Override
     public boolean isExecute() {
         if (CodeLinesCountDecorator.contributionRateExecute){
-            Messages.showMessageDialog(Message.STATISTICS_IN_PROGRESS, Common.BLANK_STRING, MyIcon.LOGO);
+            Message.showMessage(Message.STATISTICS_IN_PROGRESS);
             return false;
         }
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Messages.showMessageDialog(Message.CODE_STATISTICAL_CONFIGURATION, Common.BLANK_STRING, MyIcon.LOGO);
+            Message.showMessage(Message.CODE_STATISTICAL_CONFIGURATION);
             return false;
         }
         return true;

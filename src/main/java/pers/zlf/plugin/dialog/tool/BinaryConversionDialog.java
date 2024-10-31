@@ -1,9 +1,6 @@
 package pers.zlf.plugin.dialog.tool;
 
-import com.intellij.openapi.ui.Messages;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.constant.MyIcon;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -28,7 +25,7 @@ public class BinaryConversionDialog {
             try {
                 num = Integer.parseInt(upTextArea.getText());
             } catch (Exception ex) {
-                Messages.showMessageDialog(Message.FORMAT_ERROR, Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(Message.FORMAT_ERROR);
                 return;
             }
             downTextArea.setText(Integer.toString(num, getRadix()));
@@ -37,7 +34,7 @@ public class BinaryConversionDialog {
             try {
                 upTextArea.setText(String.valueOf(Integer.parseInt(downTextArea.getText(), getRadix())));
             } catch (Exception ex) {
-                Messages.showMessageDialog(Message.FORMAT_ERROR, Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(Message.FORMAT_ERROR);
             }
         });
     }

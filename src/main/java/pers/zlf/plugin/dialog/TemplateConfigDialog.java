@@ -68,7 +68,7 @@ public class TemplateConfigDialog {
             if (StringUtil.isNotEmpty(title)) {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 if (templateNameList.contains(title)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(Message.TEMPLATE_EXISTING);
                     return;
                 }
                 templateComboBox.addItem(title);
@@ -97,7 +97,7 @@ public class TemplateConfigDialog {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 templateNameList.remove(oldName);
                 if (templateNameList.contains(newName)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(Message.TEMPLATE_EXISTING);
                     return;
                 }
                 templateComboBox.removeItem(oldName);
@@ -113,7 +113,7 @@ public class TemplateConfigDialog {
                 String selectedTitle = templateComboBox.getSelectedItem().toString();
                 Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
                 if (templateFileNameList.contains(title)) {
-                    Messages.showMessageDialog(Message.TEMPLATE_FILE_EXISTING, Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(Message.TEMPLATE_FILE_EXISTING);
                     return;
                 }
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));

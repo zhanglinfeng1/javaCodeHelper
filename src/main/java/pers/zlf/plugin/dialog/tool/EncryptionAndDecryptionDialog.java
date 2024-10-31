@@ -1,9 +1,8 @@
 package pers.zlf.plugin.dialog.tool;
 
-import com.intellij.openapi.ui.Messages;
 import org.apache.commons.codec.digest.DigestUtils;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.MyIcon;
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.AESUtil;
 
 import javax.swing.JButton;
@@ -88,14 +87,14 @@ public class EncryptionAndDecryptionDialog {
                 try {
                     return AESUtil.encrypt(str, secretKeyTextField.getText());
                 } catch (Exception e) {
-                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(e.getMessage());
                     return Common.BLANK_STRING;
                 }
             case Common.AES_CBC:
                 try {
                     return AESUtil.encrypt(str, secretKeyTextField.getText(), ivTextField.getText());
                 } catch (Exception e) {
-                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(e.getMessage());
                     return Common.BLANK_STRING;
                 }
             default:
@@ -111,14 +110,14 @@ public class EncryptionAndDecryptionDialog {
                 try {
                     return AESUtil.decrypt(str, secretKeyTextField.getText());
                 } catch (Exception e) {
-                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(e.getMessage());
                     return Common.BLANK_STRING;
                 }
             case Common.AES_CBC:
                 try {
                     return AESUtil.decrypt(str, secretKeyTextField.getText(), ivTextField.getText());
                 } catch (Exception e) {
-                    Messages.showMessageDialog(e.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                    Message.showMessage(e.getMessage());
                     return Common.BLANK_STRING;
                 }
             default:

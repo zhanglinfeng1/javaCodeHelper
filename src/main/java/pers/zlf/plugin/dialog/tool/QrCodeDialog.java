@@ -3,12 +3,10 @@ package pers.zlf.plugin.dialog.tool;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.QRCodeUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -55,14 +53,14 @@ public class QrCodeDialog {
                 qrCodeImage = QRCodeUtil.generateQRCode(content, logoTextField.getText());
                 qrCodeLabel.setIcon(new ImageIcon(qrCodeImage));
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(ex.getMessage());
             }
         });
 
         //下载
         downloadButton.addActionListener(e -> {
             if (qrCodeImage == null) {
-                Messages.showMessageDialog(Message.GENERATE_QR_CODE_FIRST, Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(Message.GENERATE_QR_CODE_FIRST);
                 return;
             }
             String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
@@ -74,7 +72,7 @@ public class QrCodeDialog {
                 ImageIO.write(qrCodeImage, Common.IMAGE_JPG, new File(fileName));
                 uploadFilePath = null;
             } catch (IOException ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(ex.getMessage());
             }
         });
 
@@ -97,13 +95,13 @@ public class QrCodeDialog {
         //解析
         upButton.addActionListener(e -> {
             if (StringUtil.isEmpty(uploadFilePath)) {
-                Messages.showMessageDialog(Message.UPLOAD_QR_CODE_FIRST, Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(Message.UPLOAD_QR_CODE_FIRST);
                 return;
             }
             try {
                 upTextArea.setText(QRCodeUtil.analysisQRCode(uploadFilePath));
             } catch (Exception ex) {
-                Messages.showMessageDialog(ex.getMessage(), Common.BLANK_STRING, MyIcon.LOGO);
+                Message.showMessage(ex.getMessage());
             }
         });
     }
