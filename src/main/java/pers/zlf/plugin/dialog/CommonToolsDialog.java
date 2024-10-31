@@ -1,6 +1,7 @@
 package pers.zlf.plugin.dialog;
 
 import pers.zlf.plugin.dialog.tool.AsciiDialog;
+import pers.zlf.plugin.dialog.tool.BinaryConversionDialog;
 import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.EncryptionAndDecryptionDialog;
 import pers.zlf.plugin.dialog.tool.QrCodeDialog;
@@ -28,6 +29,7 @@ public class CommonToolsDialog {
         tabbedPane.add("Cron表达式", new CronDialog().getContent());
         tabbedPane.add("时间戳转换", timeStampDialog.getContent());
         tabbedPane.add("加解密", new EncryptionAndDecryptionDialog().getContent());
+        tabbedPane.add("进制转换", new BinaryConversionDialog().getContent());
         tabbedPane.addChangeListener(e -> {
             if (((JTabbedPane) e.getSource()).getSelectedIndex() == 5) {
                 timeStampDialog.refresh();

@@ -44,6 +44,7 @@ public class Message {
     public static final String NOT_CRON_EXPRESSIONS = "非cron表达式";
     public static final String AES_SECRET_KEY_LENGTH_ERROR = "秘钥长度必须为16位";
     public static final String AES_IV_LENGTH_ERROR = "偏移量长度必须为16位";
+    public static final String FORMAT_ERROR = "格式错误";
 
     /** 导出 */
     public static final String TABLE_EXPORT_PATH_NOT_NULL = "文件导出路径不能为空";
