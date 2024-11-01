@@ -10,10 +10,6 @@ import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.action.export.BaseExport;
 import pers.zlf.plugin.action.export.DatabaseExport;
 import pers.zlf.plugin.action.export.TableExport;
-import pers.zlf.plugin.constant.Message;
-import pers.zlf.plugin.util.StringUtil;
-
-import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -41,11 +37,10 @@ public class ExportTableInfoAction extends BaseAction {
 
     @Override
     public void execute() {
-        String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
-        if (StringUtil.isEmpty(path)) {
-            Message.showMessage(Message.TABLE_EXPORT_PATH_NOT_NULL);
+        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
+        if (virtualFile == null){
             return;
         }
-        export.exportXlsx(path);
+        export.exportXlsx(virtualFile.getPath());
     }
 }

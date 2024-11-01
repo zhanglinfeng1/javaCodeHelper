@@ -49,7 +49,6 @@ public class Message {
     public static final String FORMAT_ERROR = "格式错误";
 
     /** 导出 */
-    public static final String TABLE_EXPORT_PATH_NOT_NULL = "文件导出路径不能为空";
     public static final String EXPORT_SUCCESS = "导出成功";
 
     /**
