@@ -195,7 +195,6 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
             methodModel.setSqlType(sqlType.orElse(Xml.SELECT));
             //生成代码
             String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));
-            code = code.replaceAll(Regex.WRAP, Common.BLANK_STRING);
             T newElement = function.apply(code);
             CodeStyleManager.getInstance(project).reformat(newElement);
             MyPsiUtil.moveToPsiElement(targetElement, -newElement.getTextLength());

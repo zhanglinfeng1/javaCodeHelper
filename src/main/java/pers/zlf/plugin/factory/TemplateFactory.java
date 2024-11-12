@@ -135,7 +135,7 @@ public class TemplateFactory {
             template.process(map, stringWriter);
         } catch (Exception ignored) {
         }
-        return Arrays.stream(stringWriter.toString().split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(System.lineSeparator()));
+        return stringWriter.toString().replaceAll(Regex.WRAP2, Common.BLANK_STRING);
     }
 
     /**

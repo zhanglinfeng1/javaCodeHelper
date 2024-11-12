@@ -44,8 +44,7 @@ public class BinaryConversionDialog {
     }
 
     private int getRadix() {
-        int selectedIndex = typeComboBox.getSelectedIndex();
-        return switch (selectedIndex) {
+        return switch (typeComboBox.getSelectedIndex()) {
             case 0 -> 2;
             case 1 -> 8;
             case 2 -> 16;

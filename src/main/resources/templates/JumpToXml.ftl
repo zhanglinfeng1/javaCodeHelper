@@ -1,20 +1,19 @@
 <#if sqlType == 'insert'>
         <insert id="${name}" useGeneratedKeys="true" keyProperty="id">
-                INSERT INTO
-                VALUES()
+                INSERT INTO xx ()
+                VALUES ()
 <#elseif sqlType == 'update'>
         <update id="${name}">
-                UPDATE
-                SET
+                UPDATE xx SET
                 <where>
 <#elseif sqlType == 'delete'>
         <delete id="${name}">
-                DELETE FROM
+                DELETE FROM xx
                 <where>
 <#else>
         <select id="${name}" <#if (returnType?? && returnType != 'void')>resultType="${returnType}"</#if>>
-                SELECT
-                FROM
+                SELECT xx
+                FROM xx
                 <where>
 </#if>
 <#if sqlType != 'insert'>
