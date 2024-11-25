@@ -25,7 +25,7 @@ public class StringUtil {
     }
 
     public static boolean isEmpty(Object obj) {
-        if (obj instanceof Collection<?> col){
+        if (obj instanceof Collection<?> col) {
             return col.isEmpty();
         }
         String str = toString(obj);
@@ -134,8 +134,8 @@ public class StringUtil {
     /**
      * 判断是否为注释行
      *
-     * @param line               待判断行
-     * @param commentFormat      注释格式
+     * @param line          待判断行
+     * @param commentFormat 注释格式
      * @return boolean
      */
     public static boolean isComment(String line, CommentFormat commentFormat) {
@@ -241,4 +241,34 @@ public class StringUtil {
         return result.toString();
     }
 
+    /**
+     * 字符串 转 ascii码
+     *
+     * @param str 字符串
+     * @return ascii码
+     */
+    public static String toAscii(String str) {
+        StringBuilder result = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            result.append((int) c).append(Common.SPACE);
+        }
+        return result.toString();
+    }
+
+    /**
+     * ascii码 转 字符串
+     *
+     * @param str ascii码
+     * @return 字符串
+     */
+    public static String asciiToString(String str) {
+        return Arrays.stream(str.split(Common.SPACE)).filter(StringUtil::isNotEmpty).map(t -> {
+            try {
+                char c = (char) Integer.parseInt(t);
+                return Character.toString(c);
+            } catch (Exception e) {
+                return t;
+            }
+        }).collect(Collectors.joining());
+    }
 }

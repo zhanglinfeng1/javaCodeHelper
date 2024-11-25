@@ -4,6 +4,7 @@ import pers.zlf.plugin.dialog.tool.AsciiDialog;
 import pers.zlf.plugin.dialog.tool.BinaryConversionDialog;
 import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.EncryptionAndDecryptionDialog;
+import pers.zlf.plugin.dialog.tool.EscapeDialog;
 import pers.zlf.plugin.dialog.tool.QrCodeDialog;
 import pers.zlf.plugin.dialog.tool.TimeStampDialog;
 import pers.zlf.plugin.dialog.tool.UnicodeDialog;
@@ -24,6 +25,7 @@ public class CommonToolsDialog {
         TimeStampDialog timeStampDialog = new TimeStampDialog();
         tabbedPane.add("Unicode", new UnicodeDialog().getContent());
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
+        tabbedPane.add("Escape", new EscapeDialog().getContent());
         tabbedPane.add("Ascii码", new AsciiDialog().getContent());
         tabbedPane.add("二维码", new QrCodeDialog().getContent());
         tabbedPane.add("Cron表达式", new CronDialog().getContent());
