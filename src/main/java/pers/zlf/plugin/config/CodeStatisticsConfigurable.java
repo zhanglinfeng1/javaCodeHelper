@@ -1,10 +1,7 @@
 package pers.zlf.plugin.config;
 
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
@@ -12,29 +9,17 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 
-import javax.swing.JComponent;
-
 /**
  * @author zhanglinfeng
  * @date create in 2023/2/13 10:36
  */
-public class CodeStatisticsConfigurable implements Configurable {
+public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsDialog> {
     /** 配置参数 */
     private final CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
-    /** 配置界面 */
-    private final CodeStatisticsDialog dialog = new CodeStatisticsDialog();
 
-    @Nls(capitalization = Nls.Capitalization.Title)
-    @Override
-    public String getDisplayName() {
-        return Common.CODE_STATISTICS;
-    }
-
-    @Nullable
-    @Override
-    public JComponent createComponent() {
-        dialog.reset();
-        return dialog.getComponent();
+    public CodeStatisticsConfigurable() {
+        dialog = new CodeStatisticsDialog();
+        displayName = Common.CODE_STATISTICS;
     }
 
     @Override
@@ -68,8 +53,4 @@ public class CodeStatisticsConfigurable implements Configurable {
         }
     }
 
-    @Override
-    public void reset() {
-        dialog.reset();
-    }
 }

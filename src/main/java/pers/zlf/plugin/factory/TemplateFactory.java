@@ -9,7 +9,6 @@ import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.TableInfo;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.JsonUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
 import java.io.BufferedWriter;
@@ -25,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author zhanglinfeng
@@ -151,6 +149,7 @@ public class TemplateFactory {
                 template = configuration.getTemplate(templateName);
             } catch (IOException ignored) {
             }
+            //TODO 替换getRootTreeNode方法
             map.put(templateName, template.getRootTreeNode().toString());
         }
         return map;

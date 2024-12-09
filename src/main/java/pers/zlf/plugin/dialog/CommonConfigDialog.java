@@ -15,7 +15,8 @@ import java.util.Optional;
  * @author zhanglinfeng
  * @date create in 2022/10/4 14:03
  */
-public class CommonConfigDialog {
+public class CommonConfigDialog extends BaseDialog{
+    /** ui组件 */
     private JPanel panel;
     private JTextField appIdTextField;
     private JTextField securityKeyTextField;
@@ -32,6 +33,7 @@ public class CommonConfigDialog {
     public CommonConfigDialog() {
     }
 
+    @Override
     public void reset() {
         CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(config.getAppId());
@@ -47,6 +49,7 @@ public class CommonConfigDialog {
         angleBracketCheckBox.setSelected(config.isOpenAngleBracket());
     }
 
+    @Override
     public JComponent getComponent() {
         return panel;
     }
@@ -74,7 +77,6 @@ public class CommonConfigDialog {
     public Integer getMaxCodeCompletionLength() {
         return Integer.parseInt(maxCodeCompletionLengthTextField.getText());
     }
-
 
     public boolean isOpenAngleBracket() {
         return angleBracketCheckBox.isSelected();

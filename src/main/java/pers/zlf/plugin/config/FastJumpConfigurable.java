@@ -1,37 +1,22 @@
 package pers.zlf.plugin.config;
 
-import com.intellij.openapi.options.Configurable;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 
-import javax.swing.JComponent;
-
 /**
  * @author zhanglinfeng
  * @date create in 2023/2/13 10:36
  */
-public class FastJumpConfigurable implements Configurable {
+public class FastJumpConfigurable extends BaseConfigurable<FastJumpConfigDialog> {
     /** 配置参数 */
     private final FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
-    /** 配置界面 */
-    private final FastJumpConfigDialog dialog = new FastJumpConfigDialog();
 
-    @Nls(capitalization = Nls.Capitalization.Title)
-    @Override
-    public String getDisplayName() {
-        return Common.FAST_JUMP;
-    }
-
-    @Nullable
-    @Override
-    public JComponent createComponent() {
-        dialog.reset();
-        return dialog.getComponent();
+    public FastJumpConfigurable() {
+        dialog = new FastJumpConfigDialog();
+        displayName = Common.FAST_JUMP;
     }
 
     @Override
@@ -53,8 +38,4 @@ public class FastJumpConfigurable implements Configurable {
         ConfigFactory.getInstance().setFastJumpConfig(config);
     }
 
-    @Override
-    public void reset() {
-        dialog.reset();
-    }
 }

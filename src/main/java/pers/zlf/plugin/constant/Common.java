@@ -43,10 +43,6 @@ public class Common {
     public static final String MODEL = "Model";
     public static final String ID = "id";
 
-    /** 占位符 */
-    public static final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";
-    public static final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
-
     /** 配置相关 */
     public static final String JAVA_CODE_HELPER = "JavaCodeHelper";
     public static final String FAST_JUMP = "快捷跳转";
@@ -67,18 +63,10 @@ public class Common {
     public static final String PARENTH_COLOR_TAG_NAME = "XKH";
     public static final String BRACKET_COLOR_TAG_NAME = "ZKH";
     public static final String BRACE_COLOR_TAG_NAME = "DKH";
-    /** 表头 */
-    public static final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
-    public static final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
-    public static final String[] QUERY_COLUMN_TABLE_HEADER = {"字段名", "别名", "查询方式"};
-    public static final String[] DB_TABLE_HEADER = {"字段名", "别名", "类型", "java数据类型", "备注"};
-    /** 查询方式下拉选项 */
-    public static final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
-    public static final String[] DATA_TYPE_OPTIONS = {"String", "int", "Integer", "double", "Double", "Date", "Timestamp", "LocalDateTime"};
+
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;
-    public static final String BAIDU_TRANSLATE_CHINESE = "百度翻译";
-    public static final String BAIDU_TRANSLATE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
+
     /** 接口文档Api */
     public static final Integer SWAGGER2_API = 0;
     public static final Integer SWAGGER3_API = 1;
@@ -106,15 +94,6 @@ public class Common {
     public static final String MAP_STR = ".map";
     public static final String IF_PRESENT_STR = ".ifPresent";
     public static final String COLOR_TAG_STR = "<%s>%s </%s>";
-    /** 构造方法补全提示 */
-    public static final String FILL_CONSTRUCTOR = "补全构造方法";
-
-    /** 注释前缀、后缀 */
-    public static final List<String> JAVA_COMMENT = List.of("//");
-    public static final List<String> JAVA_COMMENT_PREFIX = List.of("/*");
-    public static final List<String> JAVA_COMMENT_SUFFIX = List.of("*/");
-    public static final List<String> XML_COMMENT_PREFIX = List.of("<!--", "<![CDATA[");
-    public static final List<String> XML_COMMENT_SUFFIX = List.of("-->", "]]>");
 
     /** 目录名 */
     public static final String JAVA = "java";

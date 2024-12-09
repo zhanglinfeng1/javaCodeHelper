@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  * @date create in 2022/10/14 14:18
  */
 public class ConstructorCompletionContributor extends BaseCompletionContributor {
+    private final String FILL_CONSTRUCTOR = "补全构造方法";
     /** 当前方法 */
     private PsiMethod currentMethod;
     /** 当前方法所在类 */
@@ -82,7 +83,7 @@ public class ConstructorCompletionContributor extends BaseCompletionContributor 
             }
         }
         if (StringUtil.isNotEmpty(fillStr)) {
-            addCompletionResult(fillStr.toString(), Common.FILL_CONSTRUCTOR, (context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod));
+            addCompletionResult(fillStr.toString(), FILL_CONSTRUCTOR, (context, item) -> CodeStyleManager.getInstance(currentMethod.getProject()).reformat(currentMethod));
         }
     }
 

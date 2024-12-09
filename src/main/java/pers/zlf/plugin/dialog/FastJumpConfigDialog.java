@@ -32,15 +32,16 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2023/2/13 10:36
  */
-public class FastJumpConfigDialog {
+public class FastJumpConfigDialog extends BaseDialog{
+    private final Set<String> totalSelectList;
+    private final DefaultTableModel defaultTableModel;
+    /** ui组件 */
     private JPanel panel;
     private JTextField controllerTextField;
     private JTextField feignTextField;
     private JBTable moduleTable;
     private JButton addModuleButton;
     private JButton deleteModuleButton;
-    private final Set<String> totalSelectList;
-    private final DefaultTableModel defaultTableModel;
 
     public FastJumpConfigDialog() {
         totalSelectList = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());
@@ -79,6 +80,7 @@ public class FastJumpConfigDialog {
         });
     }
 
+    @Override
     public void reset() {
         FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
         controllerTextField.setText(config.getControllerFolderName());
@@ -93,6 +95,7 @@ public class FastJumpConfigDialog {
         }
     }
 
+    @Override
     public JComponent getComponent() {
         return panel;
     }

@@ -25,6 +25,11 @@ import java.util.List;
  * @date create in 2023/6/14 11:48
  */
 public class CodeLineCountAction extends BaseAction {
+    private static final List<String> JAVA_COMMENT = List.of("//");
+    private static final List<String> JAVA_COMMENT_PREFIX = List.of("/*");
+    private static final List<String> JAVA_COMMENT_SUFFIX = List.of("*/");
+    private static final List<String> XML_COMMENT_PREFIX = List.of("<!--", "<![CDATA[");
+    private static final List<String> XML_COMMENT_SUFFIX = List.of("-->", "]]>");
 
     @Override
     public boolean isVisible() {
@@ -95,8 +100,8 @@ public class CodeLineCountAction extends BaseAction {
     public static CommentFormat getCommentFormat(VirtualFile virtualFile) {
         String fileType = MyPsiUtil.getFileType(virtualFile);
         return switch (fileType) {
-            case FileType.JAVA_FILE -> new CommentFormat(FileType.JAVA_FILE, Common.JAVA_COMMENT, Common.JAVA_COMMENT_PREFIX, Common.JAVA_COMMENT_SUFFIX);
-            case FileType.XML_FILE -> new CommentFormat(FileType.XML_FILE, new ArrayList<>(), Common.XML_COMMENT_PREFIX, Common.XML_COMMENT_SUFFIX);
+            case FileType.JAVA_FILE -> new CommentFormat(FileType.JAVA_FILE, JAVA_COMMENT, JAVA_COMMENT_PREFIX, JAVA_COMMENT_SUFFIX);
+            case FileType.XML_FILE -> new CommentFormat(FileType.XML_FILE, new ArrayList<>(), XML_COMMENT_PREFIX, XML_COMMENT_SUFFIX);
             default -> new CommentFormat();
         };
     }

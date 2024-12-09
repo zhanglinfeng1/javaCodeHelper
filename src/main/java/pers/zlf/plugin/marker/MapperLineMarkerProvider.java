@@ -18,7 +18,6 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
-import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.constant.Xml;
 import pers.zlf.plugin.factory.TemplateFactory;
 import pers.zlf.plugin.pojo.psi.PsiMethodModel;

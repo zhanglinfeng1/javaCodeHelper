@@ -1,7 +1,6 @@
 package pers.zlf.plugin.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.response.BaiDuTransResult;
 import pers.zlf.plugin.util.HttpUtil;
@@ -19,6 +18,11 @@ public class BaiDuApi extends BaseApi {
     private String appid;
     private String securityKey;
 
+    public BaiDuApi() {
+        translateApiName = "百度翻译";
+        translateUrl = "https://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=%s&to=%s&salt=%s&sign=%s&appid=%s";
+    }
+
     @Override
     protected boolean checkTrans() {
         this.appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
@@ -30,14 +34,9 @@ public class BaiDuApi extends BaseApi {
     protected String requestTransApi() throws Exception {
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + text + salt + securityKey);
-        String urlStr = String.format(Common.BAIDU_TRANSLATE_URL, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);
+        String urlStr = String.format(translateUrl, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);
         BaiDuTransResult transResult = HttpUtil.get(urlStr, BaiDuTransResult.class);
         return Optional.ofNullable(transResult.getResult()).orElseThrow(() -> new Exception(transResult.getErrorMsg()));
-    }
-
-    @Override
-    public String getTranslateApiName() {
-        return Common.BAIDU_TRANSLATE_CHINESE;
     }
 
 }

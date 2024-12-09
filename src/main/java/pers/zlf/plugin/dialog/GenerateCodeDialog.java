@@ -54,6 +54,15 @@ import java.util.stream.Collectors;
  * @date create in 2022/9/8 10:33
  */
 public class GenerateCodeDialog extends DialogWrapper {
+    private final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";
+    private final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
+    private final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
+    private final String[] DATA_TYPE_OPTIONS = {"String", "int", "Integer", "double", "Double", "Date", "Timestamp", "LocalDateTime"};
+    private final TableInfo tableInfo;
+    private final DefaultTableModel columnTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "类型", "java数据类型", "备注"});
+    private final DefaultTableModel queryTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
+    private final Map<String, String> selectTemplateFileMap = new HashMap<>();
+    /** ui组件 */
     private JPanel contentPane;
     /** 第一面板 */
     private JPanel firstPanel;
@@ -73,10 +82,6 @@ public class GenerateCodeDialog extends DialogWrapper {
     private JPanel templateFilePanel;
 
     private String[] columnArr;
-    private final TableInfo tableInfo;
-    private final DefaultTableModel columnTableModel = new DefaultTableModel(null, Common.DB_TABLE_HEADER);
-    private final DefaultTableModel queryTableModel = new DefaultTableModel(null, Common.QUERY_COLUMN_TABLE_HEADER);
-    private final Map<String, String> selectTemplateFileMap = new HashMap<>();
 
     public GenerateCodeDialog(Project project, DbTable dbTable) {
         super(project);
@@ -87,7 +92,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         for (DasColumn column : DasUtil.getColumns(dbTable)) {
             String sqlColumn = column.getName();
             String dataType = column.getDasType().toDataType().typeName;
-            columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, Common.DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
+            columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
         }
         JTextField textField = new JTextField();
         textField.setEnabled(false);
@@ -96,12 +101,12 @@ public class GenerateCodeDialog extends DialogWrapper {
         columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
         columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
         columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
-        columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.DATA_TYPE_OPTIONS)));
+        columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(DATA_TYPE_OPTIONS)));
         columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
         //文本框初始化
         fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
-        SwingUtil.addFocusListener(fullPathField.getTextField(), Common.FULL_PATH_INPUT_PLACEHOLDER);
-        SwingUtil.addFocusListener(packagePathField, Common.PACKAGR_PATH_INPUT_PLACEHOLDER);
+        SwingUtil.addFocusListener(fullPathField.getTextField(), FULL_PATH_INPUT_PLACEHOLDER);
+        SwingUtil.addFocusListener(packagePathField, PACKAGR_PATH_INPUT_PLACEHOLDER);
         //表格初始化
         queryTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         queryTable.setModel(queryTableModel);
@@ -172,10 +177,10 @@ public class GenerateCodeDialog extends DialogWrapper {
         //添加
         addButton.addActionListener(e -> {
             SwingUtil.addMouseListener(deleteButton, IconEnum.REMOVE);
-            queryTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), Common.SELECT_OPTIONS[0]});
+            queryTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), SELECT_OPTIONS[0]});
             queryTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             queryTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-            queryTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(Common.SELECT_OPTIONS)));
+            queryTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(SELECT_OPTIONS)));
         });
         //删除
         deleteButton.addActionListener(e -> Equals.of(queryTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
@@ -188,9 +193,9 @@ public class GenerateCodeDialog extends DialogWrapper {
         //生成代码
         submitButton.addActionListener(e -> {
             try {
-                String fullPath = Equals.of(fullPathField.getText()).and(Common.FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                String fullPath = Equals.of(fullPathField.getText()).and(FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
-                String packagePath = Equals.of(packagePathField.getText()).and(Common.PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
+                String packagePath = Equals.of(packagePathField.getText()).and(PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
                 String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
                 if (StringUtil.isEmpty(author)) {
@@ -212,7 +217,7 @@ public class GenerateCodeDialog extends DialogWrapper {
 
         Runnable runnable = () -> {
             String text = fullPathField.getText();
-            if (Common.FULL_PATH_INPUT_PLACEHOLDER.equals(text)) {
+            if (FULL_PATH_INPUT_PLACEHOLDER.equals(text)) {
                 fullPathField.getTextField().setForeground(JBColor.GRAY);
             } else {
                 fullPathField.getTextField().setForeground(JBColor.BLACK);

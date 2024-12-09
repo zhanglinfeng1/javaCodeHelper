@@ -46,9 +46,9 @@ public class AddApiAnnotationAction extends BaseAction {
     /** 需要添加的类 */
     private Map<PsiModifierList, String> annotationMap;
     /** 鼠标选中的起始位置 */
-    int selectionStart;
+    private int selectionStart;
     /** 鼠标选中的末尾位置 */
-    int selectionEnd;
+    private int selectionEnd;
 
     @Override
     public boolean isVisible() {

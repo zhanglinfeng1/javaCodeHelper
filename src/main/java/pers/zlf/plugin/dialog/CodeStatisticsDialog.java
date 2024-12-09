@@ -23,7 +23,12 @@ import java.util.List;
  * @author zhanglinfeng
  * @date create in 2023/6/15 15:16
  */
-public class CodeStatisticsDialog {
+public class CodeStatisticsDialog extends BaseDialog{
+    private final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
+    private final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
+    private final DefaultTableModel gitEmailTableModel;
+    private final DefaultTableModel defaultTableModel;
+    /** ui组件 */
     private JPanel panel;
     private JBTable fileTypeTable;
     private JButton deleteFileTypeButton;
@@ -34,20 +39,20 @@ public class CodeStatisticsDialog {
     private JCheckBox countEmptyLineCheckBox;
     private JCheckBox countCommentCheckBox;
     private JCheckBox countKeywordCheckBox;
-    private final DefaultTableModel gitEmailTableModel;
-    private final DefaultTableModel defaultTableModel;
+
 
     public CodeStatisticsDialog() {
         //文件类型
-        defaultTableModel = new DefaultTableModel(null, new String[]{Common.FILE_TYPE_TABLE_HEADER});
+        defaultTableModel = new DefaultTableModel(null, new String[]{FILE_TYPE_TABLE_HEADER});
         initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
         //git账号
-        gitEmailTableModel = new DefaultTableModel(null, new String[]{Common.GIT_EMAIL_TABLE_HEADER});
+        gitEmailTableModel = new DefaultTableModel(null, new String[]{GIT_EMAIL_TABLE_HEADER});
         initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
         //初始化按钮背景色
         SwingUtil.initButtonBackground(addFileTypeButton, deleteFileTypeButton, addGitEmailButton, deleteGitEmailButton);
     }
 
+    @Override
     public void reset() {
         CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
         List<String> fileTypeList = config.getFileTypeList();
@@ -74,6 +79,7 @@ public class CodeStatisticsDialog {
         }
     }
 
+    @Override
     public JComponent getComponent() {
         return panel;
     }

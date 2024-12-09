@@ -40,7 +40,10 @@ import java.util.Set;
  * @author zhanglinfeng
  * @date create in 2024/4/8 15:02
  */
-public class TemplateConfigDialog {
+public class TemplateConfigDialog extends BaseDialog{
+    /** 模版 */
+    private Map<String, Map<String, String>> totalTemplateMap;
+    /** ui组件 */
     private JPanel panel;
     private JTextField authorField;
     private JTabbedPane templatePane;
@@ -51,7 +54,6 @@ public class TemplateConfigDialog {
     private JButton addTemplateButton;
     private JButton editTemplateButton;
     private JButton deleteTemplateButton;
-    private Map<String, Map<String, String>> totalTemplateMap;
 
     public TemplateConfigDialog() {
         //初始化按钮背景色
@@ -144,12 +146,14 @@ public class TemplateConfigDialog {
         });
     }
 
+    @Override
     public void reset() {
         TemplateConfig templateConfig = ConfigFactory.getInstance().getTemplateConfig();
         authorField.setText(templateConfig.getAuthor());
         initTemplateComboBox();
     }
 
+    @Override
     public JComponent getComponent() {
         return panel;
     }
