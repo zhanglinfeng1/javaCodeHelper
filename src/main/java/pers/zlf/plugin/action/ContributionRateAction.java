@@ -32,6 +32,9 @@ import java.util.List;
  * @date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BaseAction {
+    private final String USER = "user";
+    private final String EMAIL = "email";
+    private final String DOT_GIT = ".git";
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -48,7 +51,7 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     public boolean isExecute() {
-        if (CodeLinesCountDecorator.contributionRateExecute){
+        if (CodeLinesCountDecorator.isRunning){
             Message.showMessage(Message.STATISTICS_IN_PROGRESS);
             return false;
         }
@@ -80,14 +83,14 @@ public class ContributionRateAction extends BaseAction {
                 bathPath = Paths.get(projectPath, moduleName);
                 //默认当前分支
                 try {
-                    String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
+                    String gitPath = Paths.get(bathPath.toString(), DOT_GIT).toString();
                     repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
                 } catch (IOException e) {
                     continue;
                 }
                 //没有配置取当前邮箱
                 if (CollectionUtil.isEmpty(myEmailList)) {
-                    myEmailList = Empty.of(repository.getConfig().getString(Common.USER, null, Common.EMAIL)).map(List::of).orElse(new ArrayList<>());
+                    myEmailList = Empty.of(repository.getConfig().getString(USER, null, EMAIL)).map(List::of).orElse(new ArrayList<>());
                     if (CollectionUtil.isEmpty(myEmailList)) {
                         continue;
                     }
@@ -99,7 +102,7 @@ public class ContributionRateAction extends BaseAction {
                     CodeLinesCountDecorator.updateNode();
                 }
             }
-            CodeLinesCountDecorator.contributionRateExecute = false;
+            CodeLinesCountDecorator.isRunning = false;
         });
     }
 

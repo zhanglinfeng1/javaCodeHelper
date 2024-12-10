@@ -98,13 +98,8 @@ public class Common {
     /** 目录名 */
     public static final String JAVA = "java";
     public static final String RESOURCES = "resources";
-    public static final String DOT_GIT = ".git";
     public static final String SRC = "src";
     public static final String SRC_MAIN_JAVA = "src%smain%sjava";
-
-    /** git配置参数 */
-    public static final String USER = "user";
-    public static final String EMAIL = "email";
 
     /** 常用加解密方式 */
     public static final String BASE64 = "BASE64";

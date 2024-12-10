@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 public class XmlLineMarkerProvider extends BaseLineMarkerProvider<XmlFile> {
 
     @Override
-    public boolean checkPsiElement(PsiElement element) {
+    protected boolean checkPsiElement(PsiElement element) {
         return element instanceof XmlFile;
     }
 
     @Override
-    public void dealPsiElement() {
+    protected void dealPsiElement() {
         // 判断是否是mapper.xml
         XmlTag mapperTag = XmlUtil.getRootTagByName(currentElement, Xml.MAPPER);
         if (null == mapperTag){

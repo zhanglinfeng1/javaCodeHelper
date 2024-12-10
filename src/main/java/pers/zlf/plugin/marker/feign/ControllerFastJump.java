@@ -18,17 +18,17 @@ public class ControllerFastJump extends BaseFastJump {
     }
 
     @Override
-    public boolean jump(Project project, VirtualFile virtualFile) {
+    protected boolean jump(Project project, VirtualFile virtualFile) {
         return true;
     }
 
     @Override
-    public boolean checkTargetClass(PsiClass psiClass) {
+    protected boolean checkTargetClass(PsiClass psiClass) {
         return MyPsiUtil.isFeign(psiClass);
     }
 
     @Override
-    public String getClassUrl(PsiClass psiClass) {
+    protected String getClassUrl(PsiClass psiClass) {
         return Common.BLANK_STRING;
     }
 }

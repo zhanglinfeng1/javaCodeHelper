@@ -32,7 +32,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     /** 代码统计Map */
     private static final Map<String, CodeStatisticsInfo> STATISTICS_MAP = new HashMap<>();
     /** 执行中 */
-    public static boolean contributionRateExecute = false;
+    public static boolean isRunning = false;
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {
@@ -101,7 +101,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
      * @param projectName 项目名
      */
     public static void clearContributionRate(String projectName) {
-        contributionRateExecute = true;
+        isRunning = true;
         STATISTICS_MAP.values().stream().filter(t -> projectName.equals(t.getProjectName())).forEach(t -> {
             t.setTotalGitLineCount(0);
             t.setMyGitLineCount(0);

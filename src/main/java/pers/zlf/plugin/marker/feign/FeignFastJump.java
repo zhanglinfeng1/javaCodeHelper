@@ -20,19 +20,19 @@ public class FeignFastJump extends BaseFastJump {
     }
 
     @Override
-    public boolean jump(Project project, VirtualFile virtualFile) {
+    protected boolean jump(Project project, VirtualFile virtualFile) {
         String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
         List<String> gatewayModuleNameList = ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList();
         return gatewayModuleNameList.stream().noneMatch(moduleName::equals);
     }
 
     @Override
-    public boolean checkTargetClass(PsiClass psiClass) {
+    protected boolean checkTargetClass(PsiClass psiClass) {
         return MyPsiUtil.isController(psiClass);
     }
 
     @Override
-    public String getClassUrl(PsiClass psiClass) {
+    protected String getClassUrl(PsiClass psiClass) {
         return getMappingUrl(psiClass.getAnnotation(Annotation.REQUEST_MAPPING));
     }
 }

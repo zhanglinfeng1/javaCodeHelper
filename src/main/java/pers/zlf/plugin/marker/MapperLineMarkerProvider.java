@@ -62,7 +62,7 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
     private String templateName;
 
     @Override
-    public boolean checkPsiElement(PsiElement element) {
+    protected boolean checkPsiElement(PsiElement element) {
         if (element instanceof PsiClass psiClass) {
             return !psiClass.isAnnotationType() && psiClass.isInterface() && psiClass.getMethods().length != 0;
         }
@@ -70,7 +70,7 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
     }
 
     @Override
-    public void dealPsiElement() {
+    protected void dealPsiElement() {
         project = currentElement.getProject();
         templateName = null;
         // 注解方式跳转,跳转至对应方法
