@@ -5,66 +5,19 @@ import com.intellij.psi.PsiMethod;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @param url           请求路径
+ * @param method        get、post、put、delete
+ * @param psiAnnotation 跳转注解
+ * @param targetList    跳转目标
  * @author zhanglinfeng
  * @date create in 2022/9/28 10:42
  */
-public class MappingAnnotation {
-    /** 请求路径 */
-    private String url;
-    /** get、post、put、delete */
-    private String method;
-    /** 跳转注解 */
-    private PsiAnnotation psiAnnotation;
-    /** 跳转目标 */
-    private List<PsiMethod> targetList;
-
-    public MappingAnnotation() {
-    }
-
-    public MappingAnnotation(PsiAnnotation psiAnnotation, String url, String method) {
-        this.psiAnnotation = psiAnnotation;
-        this.url = url;
-        this.method = method;
-        this.targetList = new ArrayList<>();
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public PsiAnnotation getPsiAnnotation() {
-        return psiAnnotation;
-    }
-
-    public void setPsiAnnotation(PsiAnnotation psiAnnotation) {
-        this.psiAnnotation = psiAnnotation;
-    }
-
-    public List<PsiMethod> getTargetList() {
-        return targetList;
-    }
-
-    public void setTargetList(List<PsiMethod> targetList) {
-        this.targetList = targetList;
-    }
+public record MappingAnnotation(String url, String method, PsiAnnotation psiAnnotation, List<PsiMethod> targetList) {
 
     @Override
     public String toString() {

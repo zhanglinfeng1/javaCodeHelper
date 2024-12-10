@@ -18,12 +18,12 @@ import java.util.Map;
 public class FeignLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
 
     @Override
-    public boolean checkPsiElement(PsiElement element) {
+    protected boolean checkPsiElement(PsiElement element) {
         return element instanceof PsiClass;
     }
 
     @Override
-    public void dealPsiElement() {
+    protected void dealPsiElement() {
         //只处理controller和feign类
         BaseFastJump baseFastJump;
         if (MyPsiUtil.isFeign(currentElement)) {
@@ -35,7 +35,7 @@ public class FeignLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
         }
         //绑定跳转
         Map<String, MappingAnnotation> lineMarkerMap = baseFastJump.getLineMarkerMap(currentElement);
-        lineMarkerMap.values().stream().filter(t -> !t.getTargetList().isEmpty()).forEach(t -> addLineMarker(t.getPsiAnnotation(), t.getTargetList()));
+        lineMarkerMap.values().stream().filter(t -> !t.targetList().isEmpty()).forEach(t -> addLineMarker(t.psiAnnotation(), t.targetList()));
     }
 
 }

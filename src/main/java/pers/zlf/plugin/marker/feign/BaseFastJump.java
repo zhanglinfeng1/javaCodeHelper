@@ -19,6 +19,7 @@ import pers.zlf.plugin.util.PathUtil;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ public abstract class BaseFastJump {
         return map;
     }
 
-    public String getMappingUrl(PsiAnnotation annotation) {
+    protected String getMappingUrl(PsiAnnotation annotation) {
         if (null == annotation) {
             return Common.BLANK_STRING;
         }
@@ -94,7 +95,7 @@ public abstract class BaseFastJump {
      * @param virtualFile VirtualFile文件
      * @return boolean
      */
-    public abstract boolean jump(Project project, VirtualFile virtualFile);
+    protected abstract boolean jump(Project project, VirtualFile virtualFile);
 
     /**
      * 校验类是否符合跳转要求
@@ -102,7 +103,7 @@ public abstract class BaseFastJump {
      * @param psiClass psiClass
      * @return boolean
      */
-    public abstract boolean checkTargetClass(PsiClass psiClass);
+    protected abstract boolean checkTargetClass(PsiClass psiClass);
 
     /**
      * 获取类注解上的请求路径
@@ -110,7 +111,7 @@ public abstract class BaseFastJump {
      * @param psiClass psiClass
      * @return String
      */
-    public abstract String getClassUrl(PsiClass psiClass);
+    protected abstract String getClassUrl(PsiClass psiClass);
 
     private void dealDirectory(PsiDirectory psiDirectory) {
         //处理文件夹
@@ -134,7 +135,7 @@ public abstract class BaseFastJump {
                 if (null == mappingAnnotation) {
                     continue;
                 }
-                Optional.ofNullable(map.get(mappingAnnotation.toString())).ifPresent(t -> t.getTargetList().add(method));
+                Optional.ofNullable(map.get(mappingAnnotation.toString())).ifPresent(t -> t.targetList().add(method));
             }
         }
     }
@@ -156,7 +157,7 @@ public abstract class BaseFastJump {
         if (StringUtil.isNotEmpty(method)) {
             //请求路径
             String methodUrl = getMappingUrl(psiAnnotation);
-            return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(psiAnnotation, classUrl + Common.SLASH + methodUrl, method) : null;
+            return StringUtil.isNotEmpty(methodUrl) ? new MappingAnnotation(classUrl + Common.SLASH + methodUrl, method, psiAnnotation, new ArrayList<>()) : null;
         }
         return null;
     }
