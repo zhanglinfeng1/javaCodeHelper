@@ -82,10 +82,10 @@ public abstract class BaseExport {
             ExcelUtil.createCell(row, 3, Optional.ofNullable(column.getComment()).orElse(Common.BLANK_STRING), commonStyle);
             DataType dataType = column.getDasType().toDataType();
             String type = dataType.typeName;
-            if (dataType.getPrecision() > 0) {
-                type = type + Common.LEFT_PARENTHESES + dataType.getPrecision();
-                if (dataType.getScale() > 0) {
-                    type = type + Common.COMMA + dataType.getScale();
+            if (dataType.size > 0) {
+                type = type + Common.LEFT_PARENTHESES + dataType.size;
+                if (dataType.scale > 0) {
+                    type = type + Common.COMMA + dataType.scale;
                 }
                 type = type + Common.RIGHT_PARENTHESES;
             }
