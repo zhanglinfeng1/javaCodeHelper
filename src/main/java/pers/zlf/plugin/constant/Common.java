@@ -75,6 +75,7 @@ public class Common {
     /** 用于拼接的字符串 */
     public static final String GET = "get";
     public static final String SET = "set";
+    public static final String IS = "is";
     public static final String EQ_STR = " = ";
     public static final String END_STR = "(%s);";
     public static final String FILLING_STR = "(%s = \"%s\")";

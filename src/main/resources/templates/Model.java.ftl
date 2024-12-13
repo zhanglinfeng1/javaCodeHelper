@@ -1,9 +1,11 @@
 package ${packagePath};
 
 import ${packagePath}.${tableName}VO;
+import java.math.BigDecimal;
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * ${tableComment}
@@ -21,17 +23,17 @@ public class ${tableName}{
 <#assign noSyncField = ["id", "createTime"]>
 <#list columnList as fields>
     <#if !noSyncField?seq_contains(fields.columnName)>
-        this.${fields.columnName} = obj.get${fields.firstUpperColumnName}();
+        this.${fields.columnName} = obj.${fields.columnGetMethod}();
     </#if>
 </#list>
     }
 
 <#list columnList as fields>
-    public void set${fields.firstUpperColumnName}(${fields.columnType} ${fields.columnName}) {
+    public void ${fields.columnSetMethod}(${fields.columnType} ${fields.columnName}) {
         this.${fields.columnName} = ${fields.columnName};
     }
 
-    public ${fields.columnType} get${fields.firstUpperColumnName}() {
+    public ${fields.columnType} ${fields.columnGetMethod}() {
         return ${fields.columnName};
     }
 

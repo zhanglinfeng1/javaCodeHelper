@@ -55,7 +55,7 @@ public class GenerateCodeDialog {
     private final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";
     private final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
     private final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
-    private final String[] DATA_TYPE_OPTIONS = {"String", "int", "Integer", "double", "Double", "Date", "Timestamp", "LocalDateTime"};
+    private final String[] DATA_TYPE_OPTIONS = {"String", "boolean", "Boolean", "int", "Integer", "double", "Double", "BigDecimal", "Date", "Time", "Timestamp", "LocalDateTime"};
     private final DefaultTableModel columnTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "类型", "java数据类型", "备注"});
     private final DefaultTableModel queryTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
     private final Map<String, String> selectTemplateFileMap = new HashMap<>();

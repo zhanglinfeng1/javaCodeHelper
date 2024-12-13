@@ -78,6 +78,8 @@ Database中右击选中<br />![image](src/main/resources/example/generateCode.pn
     ${columnList}                   字段信息List
         ${sqlColumnName}            sql原始字段名
         ${columnName}               java规范字段名
+        ${columnSetMethod}          set方法名
+        ${columnGetMethod}          get方法名
         ${firstUpperColumnName}     首字母大写的字段名
         ${underlineUpperColumnName} 下划线格式、全小写的字段名
         ${sqlColumnType}            sql字段类型

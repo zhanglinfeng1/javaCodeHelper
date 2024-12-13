@@ -1,5 +1,7 @@
 package pers.zlf.plugin.pojo;
 
+import pers.zlf.plugin.constant.ClassType;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
 /**
@@ -11,6 +13,10 @@ public class ColumnInfo {
     private String sqlColumnName;
     /** 字段名 */
     private String columnName;
+    /** 字段set方法 */
+    private String columnSetMethod;
+    /** 字段get方法 */
+    private String columnGetMethod;
     /** 首字母大写的字段名 */
     private String firstUpperColumnName;
     /** 下划线格式字段名 */
@@ -34,6 +40,12 @@ public class ColumnInfo {
         this.columnType = columnType;
         this.columnComment = columnComment;
         this.firstUpperColumnName = StringUtil.toUpperCaseFirst(this.columnName);
+        this.columnSetMethod = Common.SET + this.firstUpperColumnName;
+        if (columnType.equals(ClassType.BOOLEAN) || columnType.equals(ClassType.BOOLEAN_WRAPPER)) {
+            this.columnGetMethod = Common.IS + this.firstUpperColumnName;
+        } else {
+            this.columnGetMethod = Common.GET + this.firstUpperColumnName;
+        }
         this.underlineUpperColumnName = StringUtil.toUnderlineStyle(this.columnName);
     }
 
@@ -58,6 +70,22 @@ public class ColumnInfo {
 
     public void setColumnName(String columnName) {
         this.columnName = columnName;
+    }
+
+    public String getColumnSetMethod() {
+        return columnSetMethod;
+    }
+
+    public void setColumnSetMethod(String columnSetMethod) {
+        this.columnSetMethod = columnSetMethod;
+    }
+
+    public String getColumnGetMethod() {
+        return columnGetMethod;
+    }
+
+    public void setColumnGetMethod(String columnGetMethod) {
+        this.columnGetMethod = columnGetMethod;
     }
 
     public String getFirstUpperColumnName() {
