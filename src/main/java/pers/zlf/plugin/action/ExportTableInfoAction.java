@@ -1,15 +1,14 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.database.psi.DbNamespace;
-import com.intellij.database.psi.DbTable;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.database.model.DasNamespace;
+import com.intellij.database.model.DasTable;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
 import pers.zlf.plugin.action.export.BaseExport;
 import pers.zlf.plugin.action.export.DatabaseExport;
 import pers.zlf.plugin.action.export.TableExport;
+import pers.zlf.plugin.constant.MyDataKeys;
 
 /**
  * @author zhanglinfeng
@@ -20,16 +19,20 @@ public class ExportTableInfoAction extends BaseAction {
 
     @Override
     public boolean isVisible() {
-        //获取选中的PSI元素
-        PsiElement psiElement = event.getData(LangDataKeys.PSI_ELEMENT);
+        //获取选中的元素
+        Object[] data = event.getData(MyDataKeys.DATABASE_NODES);
+        if (data == null || data.length == 0) {
+            return false;
+        }
         //选中的是单张表
-        if (psiElement instanceof DbTable dbTable) {
-            export = new TableExport(dbTable);
+        if (data[0] instanceof DasTable dasTable) {
+            export = new TableExport(dasTable);
             return true;
         }
+
         //选中的是单个库
-        if (psiElement instanceof DbNamespace dbNamespace) {
-            export = new DatabaseExport(dbNamespace);
+        if (data[0] instanceof DasNamespace dasNamespace) {
+            export = new DatabaseExport(dasNamespace);
             return true;
         }
         return false;
@@ -38,7 +41,7 @@ public class ExportTableInfoAction extends BaseAction {
     @Override
     public void execute() {
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
-        if (virtualFile == null){
+        if (virtualFile == null) {
             return;
         }
         export.exportXlsx(virtualFile.getPath());

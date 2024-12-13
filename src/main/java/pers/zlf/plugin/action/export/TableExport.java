@@ -1,6 +1,6 @@
 package pers.zlf.plugin.action.export;
 
-import com.intellij.database.psi.DbTable;
+import com.intellij.database.model.DasTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -8,16 +8,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @date create in 2024/9/10 18:44
  */
 public class TableExport extends BaseExport {
-    private final DbTable dbTable;
+    private final DasTable dasTable;
 
-    public TableExport(DbTable dbTable) {
-        this.dbTable = dbTable;
+    public TableExport(DasTable dasTable) {
+        this.dasTable = dasTable;
     }
 
     @Override
     protected String dealWorkbook(XSSFWorkbook workbook) {
-        createSheet(workbook, dbTable);
-        return dbTable.getName();
+        createSheet(workbook, dasTable);
+        return dasTable.getName();
     }
 
 }

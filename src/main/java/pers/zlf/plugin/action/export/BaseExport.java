@@ -59,9 +59,9 @@ public abstract class BaseExport {
      * @param workbook excel
      * @param dbTable  待处理的表
      */
-    protected void createSheet(XSSFWorkbook workbook, DasObject dbTable) {
-        String title = dbTable.getName() + Empty.of(dbTable.getComment()).map(t -> Common.LEFT_PARENTHESES + t + Common.RIGHT_PARENTHESES).orElse(Common.BLANK_STRING);
-        Sheet sheet = workbook.createSheet(dbTable.getName());
+    protected void createSheet(XSSFWorkbook workbook, DasObject dasTable) {
+        String title = dasTable.getName() + Empty.of(dasTable.getComment()).map(t -> Common.LEFT_PARENTHESES + t + Common.RIGHT_PARENTHESES).orElse(Common.BLANK_STRING);
+        Sheet sheet = workbook.createSheet(dasTable.getName());
         int rowNum = 0;
         //插入标题数据
         Row titleRow = sheet.createRow(rowNum++);
@@ -74,7 +74,7 @@ public abstract class BaseExport {
         //插入主体数据
         CellStyle commonStyle = ExcelUtil.contentCellStyle(workbook);
         int serialNumber = 0;
-        for (DasColumn column : DasUtil.getColumns(dbTable)) {
+        for (DasColumn column : DasUtil.getColumns(dasTable)) {
             Row row = sheet.createRow(rowNum++);
             ExcelUtil.createCell(row, 0, String.valueOf(serialNumber++), commonStyle);
             ExcelUtil.createCell(row, 1, DasUtil.isPrimary(column) ? Common.HOOK_UP : Common.BLANK_STRING, commonStyle);

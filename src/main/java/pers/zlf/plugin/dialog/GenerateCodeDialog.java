@@ -1,17 +1,17 @@
 package pers.zlf.plugin.dialog;
 
 import com.intellij.database.model.DasColumn;
-import com.intellij.database.psi.DbTable;
+import com.intellij.database.model.DasTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.IconEnum;
@@ -25,12 +25,10 @@ import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
-import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -53,17 +51,19 @@ import java.util.stream.Collectors;
  * @author zhanglinfeng
  * @date create in 2022/9/8 10:33
  */
-public class GenerateCodeDialog extends DialogWrapper {
+public class GenerateCodeDialog {
     private final String FULL_PATH_INPUT_PLACEHOLDER = "C:\\workspace\\javaCodeHelper\\src\\main\\java\\pers\\zlf\\plugin";
     private final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
     private final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
     private final String[] DATA_TYPE_OPTIONS = {"String", "int", "Integer", "double", "Double", "Date", "Timestamp", "LocalDateTime"};
-    private final TableInfo tableInfo;
     private final DefaultTableModel columnTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "类型", "java数据类型", "备注"});
     private final DefaultTableModel queryTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
     private final Map<String, String> selectTemplateFileMap = new HashMap<>();
+    private final Project project;
+    private TableInfo tableInfo;
+    private String[] columnArr;
     /** ui组件 */
-    private JPanel contentPane;
+    private JPanel contentPanel;
     /** 第一面板 */
     private JPanel firstPanel;
     private JBTable columnTable;
@@ -81,15 +81,13 @@ public class GenerateCodeDialog extends DialogWrapper {
     private JComboBox<String> templateComboBox;
     private JPanel templateFilePanel;
 
-    private String[] columnArr;
-
-    public GenerateCodeDialog(Project project, DbTable dbTable) {
-        super(project);
+    public GenerateCodeDialog(Project project, DasTable dasTable) {
+        this.project = project;
         //解析表结构
-        tableInfo = new TableInfo(dbTable.getName(), dbTable.getComment());
+        tableInfo = new TableInfo(dasTable.getName(), dasTable.getComment());
         columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         columnTable.setModel(columnTableModel);
-        for (DasColumn column : DasUtil.getColumns(dbTable)) {
+        for (DasColumn column : DasUtil.getColumns(dasTable)) {
             String sqlColumn = column.getName();
             String dataType = column.getDasType().toDataType().typeName;
             columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
@@ -125,20 +123,7 @@ public class GenerateCodeDialog extends DialogWrapper {
         });
         //初始化按钮
         initButtonListener();
-        String title = Empty.of(dbTable.getComment()).map(t -> t + Common.SPACE).orElse(Common.BLANK_STRING) + dbTable.getName();
-        this.setTitle(title);
         showFirstPanel();
-        super.init();
-    }
-
-    @Override
-    protected Action @NotNull [] createActions() {
-        return new Action[0];
-    }
-
-    @Override
-    protected @Nullable JComponent createCenterPanel() {
-        return contentPane;
     }
 
     private void showFirstPanel() {
@@ -208,6 +193,11 @@ public class GenerateCodeDialog extends DialogWrapper {
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
                 Message.showMessage(Message.GENERATE_CODE_SUCCESS);
+                ToolWindowManager.getInstance(project).invokeLater(() -> {
+                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.JAVA_CODE_HELPER);
+                    ContentManager contentManager = toolWindow.getContentManager();
+                    contentManager.removeContent(contentManager.getSelectedContent(),true);
+                });
             } catch (Exception ex) {
                 Message.showMessage(ex.getMessage());
             }
@@ -314,4 +304,9 @@ public class GenerateCodeDialog extends DialogWrapper {
         }
         return map;
     }
+
+    public JPanel getContent() {
+        return this.contentPanel;
+    }
+
 }

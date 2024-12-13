@@ -1,8 +1,8 @@
 package pers.zlf.plugin.action.export;
 
+import com.intellij.database.model.DasNamespace;
+import com.intellij.database.model.DasObject;
 import com.intellij.database.model.ObjectKind;
-import com.intellij.database.model.basic.BasicElement;
-import com.intellij.database.psi.DbNamespace;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -10,19 +10,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @date create in 2024/9/10 18:46
  */
 public class DatabaseExport extends BaseExport {
-    private final DbNamespace dbNamespace;
+    private final DasNamespace dasNamespace;
 
-    public DatabaseExport(DbNamespace dbNamespace) {
-        this.dbNamespace = dbNamespace;
+    public DatabaseExport(DasNamespace dasNamespace) {
+        this.dasNamespace = dasNamespace;
     }
 
     @Override
     protected String dealWorkbook(XSSFWorkbook workbook) {
-        if (dbNamespace.getDelegate() instanceof BasicElement basicElement) {
-            for (BasicElement dbTable : basicElement.getDasChildren(ObjectKind.TABLE)) {
-                createSheet(workbook, dbTable);
-            }
+        for (DasObject dasTable : dasNamespace.getDasChildren(ObjectKind.TABLE)) {
+            createSheet(workbook, dasTable);
         }
-        return dbNamespace.getName();
+        return dasNamespace.getName();
     }
 }
