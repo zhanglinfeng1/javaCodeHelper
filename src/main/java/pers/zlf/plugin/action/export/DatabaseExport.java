@@ -17,7 +17,7 @@ public class DatabaseExport extends BaseExport {
     }
 
     @Override
-    public String dealWorkbook(XSSFWorkbook workbook) {
+    protected String dealWorkbook(XSSFWorkbook workbook) {
         if (dbNamespace.getDelegate() instanceof BasicElement basicElement) {
             for (BasicElement dbTable : basicElement.getDasChildren(ObjectKind.TABLE)) {
                 createSheet(workbook, dbTable);

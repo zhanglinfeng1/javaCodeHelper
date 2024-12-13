@@ -15,7 +15,7 @@ public class TableExport extends BaseExport {
     }
 
     @Override
-    public String dealWorkbook(XSSFWorkbook workbook) {
+    protected String dealWorkbook(XSSFWorkbook workbook) {
         createSheet(workbook, dbTable);
         return dbTable.getName();
     }

@@ -100,6 +100,7 @@ public class Common {
     public static final String RESOURCES = "resources";
     public static final String SRC = "src";
     public static final String SRC_MAIN_JAVA = "src%smain%sjava";
+    public static final String DOT_GIT = ".git";
 
     /** 常用加解密方式 */
     public static final String BASE64 = "BASE64";

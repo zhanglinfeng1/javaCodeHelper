@@ -24,7 +24,7 @@ import java.util.List;
  * @date create in 2023/6/15 15:16
  */
 public class CodeStatisticsDialog extends BaseDialog{
-    private final String FILE_TYPE_TABLE_HEADER = "参与统计的文件类型(文件后缀，例如：.java)";
+    private final String FILE_TYPE_TABLE_HEADER = "参与统计的文件后缀(例如：.java)";
     private final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
     private final DefaultTableModel gitEmailTableModel;
     private final DefaultTableModel defaultTableModel;

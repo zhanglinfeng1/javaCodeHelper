@@ -51,15 +51,14 @@ Database中右击选中 <br />
 选中的是单个库，则导出库中所有表的结构 <br />
 ![image](src/main/resources/example/exportTableInfo.png)<br />
 
-
 ## 代码检查
 具体见 File > Setting > Editor > Inspections > JavaCodeHelp<br />
 ![image](src/main/resources/example/codeCheck.png)<br />
 
 ## 代码统计
 先配置统计的文件类型（例：.java）。配置路径：File > Setting > Other Settings > JavaCodeHelp > 代码统计<br />
-右击项目视图任意区域，选择'统计代码行数'，会统计每个模块的总代码行数<br />
-右击项目视图任意区域，选择'统计贡献率'，会统计每个模块的代码贡献率（未提交的代码不算做自己的），时间较长，耐心等待 (っ °Д °;)っ<br />
+右击项目视图任意区域，选择'统计行数'，统计选中模块的总代码行数<br />
+右击项目视图任意区域，选择'统计贡献率'，统计选中模块的代码贡献率（未提交的代码不算做自己的），时间较长，耐心等待 (っ °Д °;)っ<br />
 目前注释判断仅支持.java、.xml文件<br />
 ![image](src/main/resources/example/codeStatistics.png)<br />
 

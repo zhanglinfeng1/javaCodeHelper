@@ -1,6 +1,8 @@
 package pers.zlf.plugin.util;
 
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
+import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.lambda.Empty;
 
@@ -151,6 +153,20 @@ public class StringUtil {
         }
         // 在段落注释中间 、 单行注释
         return commentFormat.isParagraphComment() || (CollectionUtil.isNotEmpty(commentFormat.getCommentList()) && commentFormat.getCommentList().stream().anyMatch(line::startsWith));
+    }
+
+    /**
+     * 判断是否为关键字
+     *
+     * @param fileType 文件类型
+     * @param line     待判断行
+     * @return boolean
+     */
+    public static boolean isKeyWord(String fileType, String line) {
+        if (FileType.JAVA_FILE.equals(fileType)) {
+            return line.startsWith(Keyword.JAVA_PACKAGE + Common.SPACE) || line.startsWith(Keyword.JAVA_IMPORT + Common.SPACE);
+        }
+        return false;
     }
 
     /**

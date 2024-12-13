@@ -34,15 +34,18 @@ import java.util.List;
 public class ContributionRateAction extends BaseAction {
     private final String USER = "user";
     private final String EMAIL = "email";
-    private final String DOT_GIT = ".git";
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
     private Repository repository;
     /** 总行数 */
-    private int totalLineCount = 0;
+    private int totalLineCount;
     /** 我的行数 */
-    private int myLineCount = 0;
+    private int myLineCount;
+    /** 参与统计的文件类型 */
+    private List<String> fileTypeList;
+    /** 参与统计的git账号 */
+    private List<String> emailList;
 
     @Override
     public boolean isVisible() {
@@ -51,7 +54,7 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     public boolean isExecute() {
-        if (CodeLinesCountDecorator.isRunning){
+        if (CodeLinesCountDecorator.contributionRateIsRunning) {
             Message.showMessage(Message.STATISTICS_IN_PROGRESS);
             return false;
         }
@@ -65,16 +68,17 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     public void execute() {
-        //获取配置
-        List<String> fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         //获取项目路径
         String projectPath = Empty.of(project.getBasePath()).map(Paths::get).map(Path::getParent).map(Path::toString).orElse(null);
         if (StringUtil.isEmpty(projectPath)) {
             return;
         }
+        //获取配置
+        fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
+        emailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
         CodeLinesCountDecorator.clearContributionRate(project.getName());
         ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
-            List<String> myEmailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
+            CodeLinesCountDecorator.contributionRateIsRunning = true;
             for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
                 totalLineCount = 0;
                 myLineCount = 0;
@@ -83,33 +87,33 @@ public class ContributionRateAction extends BaseAction {
                 bathPath = Paths.get(projectPath, moduleName);
                 //默认当前分支
                 try {
-                    String gitPath = Paths.get(bathPath.toString(), DOT_GIT).toString();
+                    String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
                     repository = new FileRepositoryBuilder().setGitDir(new File(gitPath)).build();
                 } catch (IOException e) {
                     continue;
                 }
                 //没有配置取当前邮箱
-                if (CollectionUtil.isEmpty(myEmailList)) {
-                    myEmailList = Empty.of(repository.getConfig().getString(USER, null, EMAIL)).map(List::of).orElse(new ArrayList<>());
-                    if (CollectionUtil.isEmpty(myEmailList)) {
+                if (CollectionUtil.isEmpty(emailList)) {
+                    emailList = Empty.of(repository.getConfig().getString(USER, null, EMAIL)).map(List::of).orElse(new ArrayList<>());
+                    if (CollectionUtil.isEmpty(emailList)) {
                         continue;
                     }
                 }
-                this.dealDirectory(virtualFile, fileTypeList, myEmailList);
+                this.dealDirectory(virtualFile);
                 if (totalLineCount != 0) {
                     CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
                     //更新贡献率行数
                     CodeLinesCountDecorator.updateNode();
                 }
             }
-            CodeLinesCountDecorator.isRunning = false;
+            CodeLinesCountDecorator.contributionRateIsRunning = false;
         });
     }
 
-    private void dealDirectory(VirtualFile virtualFile, List<String> fileTypeList, List<String> myEmailList) {
+    private void dealDirectory(VirtualFile virtualFile) {
         //处理文件夹
         if (virtualFile.isDirectory()) {
-            Arrays.stream(virtualFile.getChildren()).forEach(subFile -> this.dealDirectory(subFile, fileTypeList, myEmailList));
+            Arrays.stream(virtualFile.getChildren()).forEach(this::dealDirectory);
             return;
         }
         //判断文件类型
@@ -132,7 +136,7 @@ public class ContributionRateAction extends BaseAction {
             for (int i = 0; i < length; i++) {
                 if (CodeLineCountAction.count(rawText.getString(i), commentFormat)) {
                     totalLineCount++;
-                    if (myEmailList.contains(result.getSourceAuthor(i).getEmailAddress())) {
+                    if (emailList.contains(result.getSourceAuthor(i).getEmailAddress())) {
                         //自己提交的
                         myLineCount++;
                     }
