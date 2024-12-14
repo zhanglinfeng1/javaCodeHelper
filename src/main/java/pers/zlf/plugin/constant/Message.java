@@ -20,6 +20,7 @@ public class Message {
     public static final String CODE_STATISTICAL_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 代码统计 > 参与统计的文件类型";
     public static final String TEMPLATE_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 自定义模版配置";
     public static final String TEMPLATE_AUTHOR_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 作者";
+    public static final String DATE_FORMAT_ERROR = "日期格式错误";
 
     /** 代码统计 */
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";

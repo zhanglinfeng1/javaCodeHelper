@@ -14,7 +14,9 @@ public class CodeStatisticsConfig {
     private boolean countComment = true;
     /** 统计关键字 */
     private boolean countKeyword = true;
-    /** 参与代码行数统计的文件类型 */
+    /** 参与统计的日期 */
+    private String countDate;
+    /** 参与统计的文件类型 */
     private List<String> fileTypeList = new ArrayList<>();
     /** 参与统计的git邮箱 */
     private List<String> gitEmailList = new ArrayList<>();
@@ -41,6 +43,14 @@ public class CodeStatisticsConfig {
 
     public void setCountKeyword(boolean countKeyword) {
         this.countKeyword = countKeyword;
+    }
+
+    public String getCountDate() {
+        return countDate;
+    }
+
+    public void setCountDate(String countDate) {
+        this.countDate = countDate;
     }
 
     public List<String> getFileTypeList() {

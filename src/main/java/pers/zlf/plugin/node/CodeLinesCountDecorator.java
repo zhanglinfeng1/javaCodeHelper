@@ -33,6 +33,8 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
     private static final Map<String, CodeStatisticsInfo> STATISTICS_MAP = new HashMap<>();
     /** 统计贡献率正在执行中 */
     public static boolean contributionRateIsRunning = false;
+    /** 统计贡献详情正在执行中 */
+    public static boolean contributionDetailIsRunning = false;
 
     @Override
     public void decorate(ProjectViewNode node, PresentationData data) {

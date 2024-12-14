@@ -54,6 +54,13 @@ public class ExcelUtil {
         cell.setCellValue(cellValue);
     }
 
+    public static Cell createCell(Row row, int cellNum, int cellValue, CellStyle cellStyle) {
+        Cell cell = row.createCell(cellNum);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue(cellValue);
+        return cell;
+    }
+
     public static void addMergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
         CellRangeAddress cra = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
         RegionUtil.setBorderBottom(BorderStyle.THIN, cra, sheet);

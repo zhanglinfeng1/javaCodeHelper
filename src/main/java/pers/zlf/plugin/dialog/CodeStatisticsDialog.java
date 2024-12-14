@@ -6,6 +6,7 @@ import pers.zlf.plugin.constant.IconEnum;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Equals;
 
@@ -18,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -39,7 +41,8 @@ public class CodeStatisticsDialog extends BaseDialog{
     private JCheckBox countEmptyLineCheckBox;
     private JCheckBox countCommentCheckBox;
     private JCheckBox countKeywordCheckBox;
-
+    private JCheckBox countDateCheckBox;
+    private JTextField countDateTextField;
 
     public CodeStatisticsDialog() {
         //文件类型
@@ -60,6 +63,14 @@ public class CodeStatisticsDialog extends BaseDialog{
         countEmptyLineCheckBox.setSelected(config.isCountEmptyLine());
         countCommentCheckBox.setSelected(config.isCountComment());
         countKeywordCheckBox.setSelected(config.isCountKeyword());
+        String countDate = config.getCountDate();
+        if (StringUtil.isEmpty(countDate)) {
+            countDateCheckBox.setSelected(false);
+            countDateTextField.setText(null);
+        } else {
+            countDateCheckBox.setSelected(true);
+            countDateTextField.setText(countDate);
+        }
 
         defaultTableModel.getDataVector().clear();
         gitEmailTableModel.getDataVector().clear();
@@ -102,6 +113,14 @@ public class CodeStatisticsDialog extends BaseDialog{
 
     public List<String> getGitEmailList() {
         return SwingUtil.getTableContentList(gitEmailTableModel, 0);
+    }
+
+    public String getCountDate() {
+        if (!countDateCheckBox.isSelected()) {
+            return Common.BLANK_STRING;
+        } else {
+            return Optional.ofNullable(countDateTextField.getText()).orElse(Common.BLANK_STRING);
+        }
     }
 
     private void initTable(DefaultTableModel tableModel, JBTable jbTable, JButton addButton, JButton deleteButton) {

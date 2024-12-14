@@ -45,6 +45,7 @@ public class Common {
 
     /** 配置相关 */
     public static final String JAVA_CODE_HELPER = "JavaCodeHelper";
+    public static final String CODE_STATISTICS_DETAILS = "Code statistics details";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
     public static final String SELECT_MODULE = "选择模块";

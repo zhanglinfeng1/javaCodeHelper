@@ -4,10 +4,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.DateUtil;
+import pers.zlf.plugin.util.StringUtil;
 
 /**
  * @author zhanglinfeng
@@ -36,6 +39,9 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
         if (dialog.isCountKeyword() != config.isCountKeyword()) {
             return true;
         }
+        if (!dialog.getCountDate().equals(config.getCountDate())) {
+            return true;
+        }
         return dialog.isCountComment() != config.isCountComment();
     }
 
@@ -46,6 +52,14 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
         config.setCountComment(dialog.isCountComment());
         config.setCountEmptyLine(dialog.isCountEmptyLine());
         config.setCountKeyword(dialog.isCountKeyword());
+        String countDate = dialog.getCountDate();
+        if (StringUtil.isNotEmpty(countDate)) {
+            if (null == DateUtil.parse(countDate, DateUtil.YYYY_MM_DD)) {
+                Message.showMessage(Message.DATE_FORMAT_ERROR);
+                return;
+            }
+        }
+        config.setCountDate(dialog.getCountDate());
         ConfigFactory.getInstance().setCodeStatisticsConfig(config);
         // 重新统计
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
