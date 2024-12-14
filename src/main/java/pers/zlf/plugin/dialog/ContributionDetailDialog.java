@@ -61,6 +61,7 @@ public class ContributionDetailDialog {
     }
 
     private void init() {
+        //TODO 合并表头
         int columnCount = headerList.size();
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, headerList.toArray()) {
             @Override
