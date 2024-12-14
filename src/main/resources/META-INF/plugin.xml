@@ -44,7 +44,7 @@
         <codeInsight.lineMarkerProvider language="XML" implementationClass="pers.zlf.plugin.marker.XmlLineMarkerProvider"/>
         <psi.referenceContributor language="XML" implementation="pers.zlf.plugin.reference.XmlReferenceContributor"/>
         <!-- 工具窗口 -->
-        <toolWindow id="JavaCodeHelper" secondary="true" anchor="right" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.CodeToolWindow"/>
+        <toolWindow id="JavaCodeHelper" secondary="true" anchor="right" canCloseContents="true" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.CodeToolWindow"/>
         <!-- 代码统计详情窗口 -->
         <toolWindow id="Code statistics details" secondary="true" anchor="bottom" canCloseContents="true" icon="/icon/logo.svg" factoryClass="pers.zlf.plugin.window.ContributionDetailWindow"/>
         <!-- 配置持久化 -->

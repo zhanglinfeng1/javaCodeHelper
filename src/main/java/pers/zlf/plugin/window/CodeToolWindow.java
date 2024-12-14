@@ -20,6 +20,7 @@ public class CodeToolWindow implements ToolWindowFactory {
         ContentManager contentManager = toolWindow.getContentManager();
         //常用工具窗口
         Content commonToolsContent = contentManager.getFactory().createContent(new CommonToolsDialog().getContent(), Common.COMMON_TOOLS, false);
+        commonToolsContent.setCloseable(false);
         contentManager.addContent(commonToolsContent);
     }
 
