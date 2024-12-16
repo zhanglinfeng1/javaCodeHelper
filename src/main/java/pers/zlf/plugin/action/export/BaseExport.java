@@ -4,6 +4,7 @@ import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasObject;
 import com.intellij.database.model.DataType;
 import com.intellij.database.util.DasUtil;
+import com.intellij.openapi.project.Project;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -30,20 +31,20 @@ public abstract class BaseExport {
     /**
      * 导出文件
      *
-     * @param path 文件路径
+     * @param project 项目
+     * @param path    文件路径
      */
-    public void exportXlsx(String path) {
+    public void exportXlsx(Project project, String path) {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            String fileName = dealWorkbook(workbook);
-            try (FileOutputStream outputStream = new FileOutputStream(Path.of(path, fileName + FileType.XLSX_FILE).toString())) {
+            String fileFullPath = Path.of(path, dealWorkbook(workbook) + FileType.XLSX_FILE).toString();
+            try (FileOutputStream outputStream = new FileOutputStream(fileFullPath)) {
                 workbook.write(outputStream);
             }
-            Message.showMessage(Message.EXPORT_SUCCESS);
+            Message.notifyInfo(project, Message.EXPORT_SUCCESS + fileFullPath);
         } catch (Exception e) {
-            Message.showMessage(e.getMessage());
+            Message.notifyError(project, Message.EXPORT_DATABASE_TABLE_STRUCTURE_FAILED + e.getMessage());
         }
     }
-
 
     /**
      * 处理workbook

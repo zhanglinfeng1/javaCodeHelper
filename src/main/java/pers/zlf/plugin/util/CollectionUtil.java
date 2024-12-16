@@ -16,10 +16,15 @@ public class CollectionUtil {
      * @return boolean
      */
     public static <T> boolean equals(Collection<T> collection1, Collection<T> collection2) {
-        if (null == collection1 || null == collection2) {
+        if (isEmpty(collection1) && isEmpty(collection2)) {
+            return true;
+        } else if (isNotEmpty(collection1) && isEmpty(collection2)) {
             return false;
+        } else if (isEmpty(collection1) && isNotEmpty(collection2)) {
+            return false;
+        } else {
+            return collection1.size() == collection2.size() && collection1.containsAll(collection2);
         }
-        return collection1.size() == collection2.size() && collection1.containsAll(collection2);
     }
 
     /**

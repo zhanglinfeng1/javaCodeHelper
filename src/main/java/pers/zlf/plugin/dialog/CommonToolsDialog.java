@@ -22,21 +22,15 @@ public class CommonToolsDialog {
     private JTabbedPane tabbedPane;
 
     public CommonToolsDialog() {
-        TimeStampDialog timeStampDialog = new TimeStampDialog();
         tabbedPane.add("Unicode", new UnicodeDialog().getContent());
         tabbedPane.add("UrlEncode", new UrlEncodeDialog().getContent());
         tabbedPane.add("Escape", new EscapeDialog().getContent());
         tabbedPane.add("Ascii码", new AsciiDialog().getContent());
         tabbedPane.add("二维码", new QrCodeDialog().getContent());
         tabbedPane.add("Cron表达式", new CronDialog().getContent());
-        tabbedPane.add("时间戳转换", timeStampDialog.getContent());
+        tabbedPane.add("时间戳转换", new TimeStampDialog().getContent());
         tabbedPane.add("加解密", new EncryptionAndDecryptionDialog().getContent());
         tabbedPane.add("进制转换", new BinaryConversionDialog().getContent());
-        tabbedPane.addChangeListener(e -> {
-            if (((JTabbedPane) e.getSource()).getSelectedIndex() == 5) {
-                timeStampDialog.refresh();
-            }
-        });
     }
 
     public JPanel getContent() {

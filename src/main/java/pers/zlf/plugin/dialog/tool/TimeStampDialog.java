@@ -51,9 +51,4 @@ public class TimeStampDialog {
         return this.contentPanel;
     }
 
-    public void refresh() {
-        String milliseconds = String.valueOf(System.currentTimeMillis());
-        upTextArea.setText(milliseconds);
-        downTextArea.setText(DateUtil.millisecondsToString(Long.parseLong(milliseconds), DateUtil.YYYY_MM_DDHHMMSS_SSS));
-    }
 }

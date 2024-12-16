@@ -87,14 +87,14 @@ public class EncryptionAndDecryptionDialog {
                 try {
                     return AESUtil.encrypt(str, secretKeyTextField.getText());
                 } catch (Exception e) {
-                    Message.showMessage(e.getMessage());
+                    Message.notifyError(Common.AES_ECB + Message.ENCRYPT_FAILED + e.getMessage());
                     return Common.BLANK_STRING;
                 }
             case Common.AES_CBC:
                 try {
                     return AESUtil.encrypt(str, secretKeyTextField.getText(), ivTextField.getText());
                 } catch (Exception e) {
-                    Message.showMessage(e.getMessage());
+                    Message.notifyError(Common.AES_CBC + Message.ENCRYPT_FAILED + e.getMessage());
                     return Common.BLANK_STRING;
                 }
             default:
@@ -110,14 +110,14 @@ public class EncryptionAndDecryptionDialog {
                 try {
                     return AESUtil.decrypt(str, secretKeyTextField.getText());
                 } catch (Exception e) {
-                    Message.showMessage(e.getMessage());
+                    Message.notifyError(Common.AES_ECB + Message.DECRYPT_FAILED + e.getMessage());
                     return Common.BLANK_STRING;
                 }
             case Common.AES_CBC:
                 try {
                     return AESUtil.decrypt(str, secretKeyTextField.getText(), ivTextField.getText());
                 } catch (Exception e) {
-                    Message.showMessage(e.getMessage());
+                    Message.notifyError(Common.AES_CBC + Message.DECRYPT_FAILED + e.getMessage());
                     return Common.BLANK_STRING;
                 }
             default:

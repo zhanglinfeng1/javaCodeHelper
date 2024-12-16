@@ -70,7 +70,7 @@ public class TemplateConfigDialog extends BaseDialog{
             if (StringUtil.isNotEmpty(title)) {
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 if (templateNameList.contains(title)) {
-                    Message.showMessage(Message.TEMPLATE_EXISTING);
+                    Message.notifyError(Message.TEMPLATE_EXISTING);
                     return;
                 }
                 templateComboBox.addItem(title);
@@ -99,7 +99,7 @@ public class TemplateConfigDialog extends BaseDialog{
                 Set<String> templateNameList = totalTemplateMap.keySet();
                 templateNameList.remove(oldName);
                 if (templateNameList.contains(newName)) {
-                    Message.showMessage(Message.TEMPLATE_EXISTING);
+                    Message.notifyError(Message.TEMPLATE_EXISTING);
                     return;
                 }
                 templateComboBox.removeItem(oldName);
@@ -115,7 +115,7 @@ public class TemplateConfigDialog extends BaseDialog{
                 String selectedTitle = templateComboBox.getSelectedItem().toString();
                 Set<String> templateFileNameList = totalTemplateMap.get(selectedTitle).keySet();
                 if (templateFileNameList.contains(title)) {
-                    Message.showMessage(Message.TEMPLATE_FILE_EXISTING);
+                    Message.notifyError(Message.TEMPLATE_FILE_EXISTING);
                     return;
                 }
                 templatePane.addTab(title, createTemplateJPanel(Common.BLANK_STRING));

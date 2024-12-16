@@ -287,4 +287,21 @@ public class StringUtil {
             }
         }).collect(Collectors.joining());
     }
+
+    /**
+     * 比较2个字符串是否相等，都为空时，返回true
+     *
+     * @param value1 字符串1
+     * @param value2 字符串2
+     * @return boolean
+     */
+    public static boolean equals(String value1, String value2) {
+        if (isEmpty(value1) && isEmpty(value2)) {
+            return true;
+        } else if (isEmpty(value1)) {
+            return value2.equals(value1);
+        } else {
+            return value1.equals(value2);
+        }
+    }
 }

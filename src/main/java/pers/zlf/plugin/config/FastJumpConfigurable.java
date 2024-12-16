@@ -5,6 +5,7 @@ import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.FastJumpConfig;
 import pers.zlf.plugin.util.CollectionUtil;
+import pers.zlf.plugin.util.StringUtil;
 
 /**
  * @author zhanglinfeng
@@ -21,10 +22,10 @@ public class FastJumpConfigurable extends BaseConfigurable<FastJumpConfigDialog>
 
     @Override
     public boolean isModified() {
-        if (!dialog.getControllerFolderName().equals(config.getControllerFolderName())) {
+        if (!StringUtil.equals(dialog.getControllerFolderName(), config.getControllerFolderName())) {
             return true;
         }
-        if (!dialog.getFeignFolderName().equals(config.getFeignFolderName())) {
+        if (!StringUtil.equals(dialog.getFeignFolderName(), config.getFeignFolderName())) {
             return true;
         }
         return !CollectionUtil.equals(dialog.getModuleNameList(), config.getModuleNameList());

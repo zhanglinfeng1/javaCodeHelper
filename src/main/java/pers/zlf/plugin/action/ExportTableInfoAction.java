@@ -44,6 +44,6 @@ public class ExportTableInfoAction extends BaseAction {
         if (virtualFile == null) {
             return;
         }
-        export.exportXlsx(virtualFile.getPath());
+        export.exportXlsx(project, virtualFile.getPath());
     }
 }

@@ -4,6 +4,7 @@ import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
+import pers.zlf.plugin.util.StringUtil;
 
 /**
  * @author zhanglinfeng
@@ -23,10 +24,10 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (!dialog.getTranslateApi().equals(config.getTranslateApi())) {
             return true;
         }
-        if (!dialog.getAppId().equals(config.getAppId())) {
+        if (!StringUtil.equals(dialog.getAppId(), config.getAppId())) {
             return true;
         }
-        if (!dialog.getSecurityKey().equals(config.getSecretKey())) {
+        if (!StringUtil.equals(dialog.getSecurityKey(), config.getSecretKey())) {
             return true;
         }
         if (!dialog.getApiTool().equals(config.getApiTool())) {

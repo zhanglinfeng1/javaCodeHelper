@@ -1,6 +1,18 @@
 package pers.zlf.plugin.constant;
 
-import com.intellij.openapi.ui.Messages;
+import com.intellij.ide.DataManager;
+import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationAction;
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.util.StringUtil;
+
+import java.util.Optional;
 
 /**
  * 弹窗提示文本
@@ -16,10 +28,11 @@ public class Message {
     public static final String OPTIONAL_FIX_NAME = "Replace with Optional.ofNullable()";
 
     /** 配置 */
-    public static final String TRANSLATION_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 翻译配置";
-    public static final String CODE_STATISTICAL_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 代码统计 > 参与统计的文件类型";
-    public static final String TEMPLATE_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 自定义模版配置";
-    public static final String TEMPLATE_AUTHOR_CONFIGURATION = "请先配置 : File > Setting > Other Settings > JavaCodeHelp > 模版配置 > 作者";
+    public static final String TO_CONFIGURE = "去配置";
+    public static final String PLEASE_CONFIGURE_AUTHOR_FIRST = "请先配置作者";
+    public static final String PLEASE_CONFIGURE_TEMPLATE_FIRST = "请先配置模版";
+    public static final String PLEASE_CONFIGURE_TRANSLATE_FIRST = "请先配置翻译";
+    public static final String PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST = "请先配置参与统计的文件";
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
 
     /** 代码统计 */
@@ -40,6 +53,7 @@ public class Message {
     public static final String TEMPLATE_FILE_NAME = "模版文件名称";
     public static final String UPDATE_TEMPLATE_NAME = "修改模版名称";
     public static final String RESET_TEMPLATE = "将当前模版的所有文件重置为默认的模版文件";
+    public static final String GENERATE_CODE_FAILED = "代码生成失败：";
 
     /** 工具 */
     public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
@@ -48,16 +62,77 @@ public class Message {
     public static final String AES_SECRET_KEY_LENGTH_ERROR = "秘钥长度必须为16位";
     public static final String AES_IV_LENGTH_ERROR = "偏移量长度必须为16位";
     public static final String FORMAT_ERROR = "格式错误";
+    public static final String ENCRYPT_FAILED = "加密失败：";
+    public static final String DECRYPT_FAILED = "解密失败：";
+    public static final String TRANSLATE_FAILED = "翻译失败：";
+    public static final String EXPORT_CONTRIBUTION_DETAILS_FAILED = "导出贡献详情失败：";
+    public static final String EXPORT_SUCCESS = "导出成功，文件目录：";
+    public static final String EXPORT_DATABASE_TABLE_STRUCTURE_FAILED = "导出数据库表结构失败：";
+    public static final String GENERATE_QR_CODE_FAILED = "生成二维码失败：";
+    public static final String DOWNLOAD_QR_CODE_SUCCESS = "下载维码成功，文件目录：";
+    public static final String DOWNLOAD_QR_CODE_FAILED = "下载维码失败：";
+    public static final String ANALYSIS_QR_CODE_FAILED = "解析维码失败：";
+    public static final String UPLOAD_QR_CODE_FAILED = "上传维码失败：";
 
-    /** 导出 */
-    public static final String EXPORT_SUCCESS = "导出成功";
+    /** 通知组ID */
+    private static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper Notification";
 
     /**
-     * 弹窗展示
+     * info消息
      *
-     * @param message 展示信息
+     * @param content 消息文本
      */
-    public static void showMessage(String message) {
-        Messages.showMessageDialog(message, Common.BLANK_STRING, MyIcon.LOGO);
+    public static void notifyInfo(String content) {
+        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(t -> notifyInfo(t, content)));
+    }
+
+    /**
+     * info消息
+     *
+     * @param project 消息展示的项目
+     * @param content 消息文本
+     */
+    public static void notifyInfo(@NotNull Project project, String content) {
+        NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, NotificationType.INFORMATION).notify(project);
+    }
+
+    /**
+     * error消息
+     *
+     * @param content 消息文本
+     */
+    public static void notifyError(String content) {
+        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(t -> notifyError(t, content, null, null)));
+    }
+
+    /**
+     * error消息
+     *
+     * @param project 消息展示的项目
+     * @param content 消息文本
+     */
+    public static void notifyError(@NotNull Project project, String content) {
+        notifyError(project, content, null, null);
+    }
+
+    /**
+     * error消息
+     *
+     * @param project                   消息展示的项目
+     * @param content                   消息文本
+     * @param linkText                  链接id
+     * @param applicationConfigurableId 配置页id
+     */
+    public static void notifyError(@NotNull Project project, String content, String linkText, String applicationConfigurableId) {
+        Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, NotificationType.ERROR);
+        if (StringUtil.isNotEmpty(linkText)) {
+            notification.addAction(new NotificationAction(linkText) {
+                @Override
+                public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+                    ShowSettingsUtilImpl.showSettingsDialog(project, applicationConfigurableId, Common.BLANK_STRING);
+                }
+            });
+        }
+        notification.notify(project);
     }
 }

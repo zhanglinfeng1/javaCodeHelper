@@ -2,6 +2,7 @@ package pers.zlf.plugin.dialog;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.table.JBTable;
 import org.apache.poi.ss.usermodel.Cell;
@@ -40,6 +41,7 @@ public class ContributionDetailDialog {
     private final String COMMENT_COUNT = "注释";
     private final String EMPTY_LINE_COUNT = "空行";
     private final String KEYWORD_COUNT = "关键字";
+    private final Project project;
 
     /** 统计数据 */
     private final Map<String, Map<String, ContributionDetail>> totalContributionDetailMap;
@@ -52,7 +54,8 @@ public class ContributionDetailDialog {
     private JBTable contributionDetailTable;
     private JButton exportButton;
 
-    public ContributionDetailDialog(Map<String, Map<String, ContributionDetail>> totalContributionDetailMap) {
+    public ContributionDetailDialog(Project project, Map<String, Map<String, ContributionDetail>> totalContributionDetailMap) {
+        this.project = project;
         this.totalContributionDetailMap = totalContributionDetailMap;
         totalContributionDetailMap.values().forEach(t -> t.values().forEach(v -> gitMap.put(v.getEmail(), v.getEmailAndUser())));
         headerList = getHeaderList(gitMap);
@@ -183,12 +186,13 @@ public class ContributionDetailDialog {
             for (int i = 0; i < headerList.size(); i++) {
                 sheet.autoSizeColumn(i);
             }
-            try (FileOutputStream outputStream = new FileOutputStream(Path.of(path, Common.CODE_STATISTICS + FileType.XLSX_FILE).toString())) {
+            String fileFullPath = Path.of(path, Common.CODE_STATISTICS + FileType.XLSX_FILE).toString();
+            try (FileOutputStream outputStream = new FileOutputStream(fileFullPath)) {
                 workbook.write(outputStream);
             }
-            Message.showMessage(Message.EXPORT_SUCCESS);
+            Message.notifyInfo(project, Message.EXPORT_SUCCESS + fileFullPath);
         } catch (Exception e) {
-            Message.showMessage(e.getMessage());
+            Message.notifyError(project, Message.EXPORT_CONTRIBUTION_DETAILS_FAILED + e.getMessage());
         }
     }
 }

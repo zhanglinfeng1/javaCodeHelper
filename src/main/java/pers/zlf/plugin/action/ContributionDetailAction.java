@@ -61,12 +61,12 @@ public class ContributionDetailAction extends BaseAction {
     @Override
     public boolean isExecute() {
         if (CodeLinesCountDecorator.contributionDetailIsRunning) {
-            Message.showMessage(Message.STATISTICS_IN_PROGRESS);
+            Message.notifyError(project, Message.STATISTICS_IN_PROGRESS);
             return false;
         }
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Message.showMessage(Message.CODE_STATISTICAL_CONFIGURATION);
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_CODE_STATISTICS_ID);
             return false;
         }
         return true;
@@ -103,7 +103,7 @@ public class ContributionDetailAction extends BaseAction {
                 ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.CODE_STATISTICS_DETAILS);
                 ContentManager contentManager = toolWindow.getContentManager();
                 contentManager.removeAllContents( true);
-                Content content = contentManager.getFactory().createContent(new ContributionDetailDialog(totalContributionDetailMap).getContent(), Common.BLANK_STRING, false);
+                Content content = contentManager.getFactory().createContent(new ContributionDetailDialog(project, totalContributionDetailMap).getContent(), Common.BLANK_STRING, false);
                 content.setCloseable(true);
                 contentManager.addContent(content);
                 contentManager.setSelectedContent(content);

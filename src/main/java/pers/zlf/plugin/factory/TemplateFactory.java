@@ -89,9 +89,6 @@ public class TemplateFactory {
     private void createTemporaryFile(String selectedTemplate, String filePath) throws Exception {
         Equals.of(new File(filePath)).and(File::exists).or(File::mkdirs);
         Map<String, String> templateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().get(selectedTemplate);
-        if (templateMap == null || templateMap.isEmpty()) {
-            throw new Exception(Message.TEMPLATE_CONFIGURATION);
-        }
         for (Map.Entry<String, String> templateEntry : templateMap.entrySet()) {
             FileWriter file = new FileWriter(Path.of(filePath, templateEntry.getKey() + FileType.FREEMARKER_FILE).toString(), true);
             file.append(templateEntry.getValue());

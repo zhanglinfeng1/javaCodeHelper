@@ -59,7 +59,11 @@ public class TranslateAction extends BaseAction {
                             .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
-                ApplicationManager.getApplication().invokeLater(() -> Message.showMessage(e.getMessage()));
+                if (Message.PLEASE_CONFIGURE_TRANSLATE_FIRST.equals(e.getMessage())) {
+                    Message.notifyError(project, Message.PLEASE_CONFIGURE_TRANSLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_JAVA_CODE_HELPER_ID);
+                } else {
+                    Message.notifyError(project, Message.TRANSLATE_FAILED + e.getMessage());
+                }
             }
         });
     }

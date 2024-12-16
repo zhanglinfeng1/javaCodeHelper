@@ -37,7 +37,7 @@ public class GenerateCodeAction extends BaseAction {
         //生成代码的窗口
         Map<String, Map<String, String>> totalTemplateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap();
         if (totalTemplateMap == null || totalTemplateMap.isEmpty()) {
-            Message.showMessage(Message.TEMPLATE_CONFIGURATION);
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_TEMPLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_TEMPLATE_ID);
             return;
         }
         ToolWindowManager.getInstance(project).invokeLater(() -> {

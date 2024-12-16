@@ -6,6 +6,7 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.TemplateConfig;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MapUtil;
+import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class TemplateConfigurable extends BaseConfigurable<TemplateConfigDialog>
 
     @Override
     public boolean isModified() {
-        if (!dialog.getAuthor().equals(config.getAuthor())) {
+        if (!StringUtil.equals(dialog.getAuthor(), config.getAuthor())) {
             return true;
         }
         Map<String, Map<String, String>> dialogTemplateMap = dialog.getTotalTemplateMap();

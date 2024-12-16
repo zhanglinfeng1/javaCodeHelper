@@ -55,12 +55,12 @@ public class ContributionRateAction extends BaseAction {
     @Override
     public boolean isExecute() {
         if (CodeLinesCountDecorator.contributionRateIsRunning) {
-            Message.showMessage(Message.STATISTICS_IN_PROGRESS);
+            Message.notifyError(project, Message.STATISTICS_IN_PROGRESS);
             return false;
         }
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Message.showMessage(Message.CODE_STATISTICAL_CONFIGURATION);
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_CODE_STATISTICS_ID);
             return false;
         }
         return true;

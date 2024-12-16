@@ -39,7 +39,7 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
         if (dialog.isCountKeyword() != config.isCountKeyword()) {
             return true;
         }
-        if (!dialog.getCountDate().equals(config.getCountDate())) {
+        if (!StringUtil.equals(dialog.getCountDate(), config.getCountDate())) {
             return true;
         }
         return dialog.isCountComment() != config.isCountComment();
@@ -47,18 +47,18 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
 
     @Override
     public void apply() {
+        String countDate = dialog.getCountDate();
+        if (StringUtil.isNotEmpty(countDate)) {
+            if (null == DateUtil.parse(countDate, DateUtil.YYYY_MM_DD)) {
+                Message.notifyError(Message.DATE_FORMAT_ERROR);
+                return;
+            }
+        }
         config.setFileTypeList(dialog.getFileTypeList());
         config.setGitEmailList(dialog.getGitEmailList());
         config.setCountComment(dialog.isCountComment());
         config.setCountEmptyLine(dialog.isCountEmptyLine());
         config.setCountKeyword(dialog.isCountKeyword());
-        String countDate = dialog.getCountDate();
-        if (StringUtil.isNotEmpty(countDate)) {
-            if (null == DateUtil.parse(countDate, DateUtil.YYYY_MM_DD)) {
-                Message.showMessage(Message.DATE_FORMAT_ERROR);
-                return;
-            }
-        }
         config.setCountDate(dialog.getCountDate());
         ConfigFactory.getInstance().setCodeStatisticsConfig(config);
         // 重新统计

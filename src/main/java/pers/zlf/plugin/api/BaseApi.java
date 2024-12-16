@@ -1,7 +1,5 @@
 package pers.zlf.plugin.api;
 
-import com.intellij.openapi.application.ApplicationManager;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -34,8 +32,7 @@ public abstract class BaseApi {
         if (checkTrans()) {
             return requestTransApi();
         }
-        ApplicationManager.getApplication().invokeLater(() -> Message.showMessage(Message.TRANSLATION_CONFIGURATION));
-        return Common.BLANK_STRING;
+        throw new Exception(Message.PLEASE_CONFIGURE_TRANSLATE_FIRST);
     }
 
     protected abstract boolean checkTrans();

@@ -3,6 +3,7 @@ package pers.zlf.plugin.action;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -38,7 +39,7 @@ public class CodeLineCountAction extends BaseAction {
     public boolean isExecute() {
         //配置校验
         if (CollectionUtil.isEmpty(ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList())) {
-            Message.showMessage(Message.CODE_STATISTICAL_CONFIGURATION);
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_CODE_STATISTICS_ID);
             return false;
         }
         return true;

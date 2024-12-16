@@ -177,29 +177,30 @@ public class GenerateCodeDialog {
         }));
         //生成代码
         submitButton.addActionListener(e -> {
+            String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
+            if (StringUtil.isEmpty(author)) {
+                Message.notifyError(project, Message.PLEASE_CONFIGURE_AUTHOR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_TEMPLATE_ID);
+                return;
+            }
             try {
                 String fullPath = Equals.of(fullPathField.getText()).and(FULL_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
                 String packagePath = Equals.of(packagePathField.getText()).and(PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-                String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
-                if (StringUtil.isEmpty(author)) {
-                    throw new Exception(Message.TEMPLATE_AUTHOR_CONFIGURATION);
-                }
                 tableInfo.setAuthor(author);
                 tableInfo.setPackagePath(packagePath);
                 tableInfo.setQueryColumnList(getQueryColumnList());
                 //生成文件
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
-                Message.showMessage(Message.GENERATE_CODE_SUCCESS);
+                Message.notifyInfo(project, Message.GENERATE_CODE_SUCCESS);
                 ToolWindowManager.getInstance(project).invokeLater(() -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.JAVA_CODE_HELPER);
                     ContentManager contentManager = toolWindow.getContentManager();
-                    contentManager.removeContent(contentManager.getSelectedContent(),true);
+                    contentManager.removeContent(contentManager.getSelectedContent(), true);
                 });
             } catch (Exception ex) {
-                Message.showMessage(ex.getMessage());
+                Message.notifyError(project, Message.GENERATE_CODE_FAILED + ex.getMessage());
             }
         });
         SwingUtil.addMouseListener(addButton, IconEnum.ADD);

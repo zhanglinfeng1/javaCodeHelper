@@ -53,14 +53,14 @@ public class QrCodeDialog {
                 qrCodeImage = QRCodeUtil.generateQRCode(content, logoTextField.getText());
                 qrCodeLabel.setIcon(new ImageIcon(qrCodeImage));
             } catch (Exception ex) {
-                Message.showMessage(ex.getMessage());
+                Message.notifyError(Message.GENERATE_QR_CODE_FAILED + ex.getMessage());
             }
         });
 
         //下载
         downloadButton.addActionListener(e -> {
             if (qrCodeImage == null) {
-                Message.showMessage(Message.GENERATE_QR_CODE_FIRST);
+                Message.notifyError(Message.GENERATE_QR_CODE_FIRST);
                 return;
             }
             String path = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
@@ -71,8 +71,9 @@ public class QrCodeDialog {
             try {
                 ImageIO.write(qrCodeImage, Common.IMAGE_JPG, new File(fileName));
                 uploadFilePath = null;
+                Message.notifyInfo(Message.DOWNLOAD_QR_CODE_SUCCESS + fileName);
             } catch (IOException ex) {
-                Message.showMessage(ex.getMessage());
+                Message.notifyError(Message.DOWNLOAD_QR_CODE_FAILED + ex.getMessage());
             }
         });
 
@@ -86,7 +87,7 @@ public class QrCodeDialog {
                         qrCodeLabel.setIcon(new ImageIcon(QRCodeUtil.compress(uploadFilePath)));
                         qrCodeImage = null;
                     } catch (Exception ex) {
-                        throw new RuntimeException(ex);
+                        Message.notifyError(Message.UPLOAD_QR_CODE_FAILED + ex.getMessage());
                     }
                 }
             }
@@ -95,13 +96,13 @@ public class QrCodeDialog {
         //解析
         upButton.addActionListener(e -> {
             if (StringUtil.isEmpty(uploadFilePath)) {
-                Message.showMessage(Message.UPLOAD_QR_CODE_FIRST);
+                Message.notifyError(Message.UPLOAD_QR_CODE_FIRST);
                 return;
             }
             try {
                 upTextArea.setText(QRCodeUtil.analysisQRCode(uploadFilePath));
             } catch (Exception ex) {
-                Message.showMessage(ex.getMessage());
+                Message.notifyError(Message.ANALYSIS_QR_CODE_FAILED + ex.getMessage());
             }
         });
     }

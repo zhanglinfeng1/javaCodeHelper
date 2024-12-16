@@ -25,7 +25,7 @@ public class BinaryConversionDialog {
             try {
                 num = Integer.parseInt(upTextArea.getText());
             } catch (Exception ex) {
-                Message.showMessage(Message.FORMAT_ERROR);
+                Message.notifyError(Message.FORMAT_ERROR);
                 return;
             }
             downTextArea.setText(Integer.toString(num, getRadix()));
@@ -34,7 +34,7 @@ public class BinaryConversionDialog {
             try {
                 upTextArea.setText(String.valueOf(Integer.parseInt(downTextArea.getText(), getRadix())));
             } catch (Exception ex) {
-                Message.showMessage(Message.FORMAT_ERROR);
+                Message.notifyError(Message.FORMAT_ERROR);
             }
         });
     }
