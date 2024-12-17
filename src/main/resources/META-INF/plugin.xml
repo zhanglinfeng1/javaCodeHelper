@@ -26,6 +26,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>[优化]弹窗消息改为idea的通知</li>
+            <li>[优化]按模块统计</li>
         </ul>
     ]]>
     </change-notes>
