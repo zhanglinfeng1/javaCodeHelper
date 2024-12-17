@@ -123,6 +123,10 @@ public class CodeStatisticsDialog extends BaseDialog{
         }
     }
 
+    public void clearCountDate() {
+        countDateTextField.setText(Common.BLANK_STRING);
+    }
+
     private void initTable(DefaultTableModel tableModel, JBTable jbTable, JButton addButton, JButton deleteButton) {
         jbTable.setModel(tableModel);
         jbTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

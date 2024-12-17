@@ -50,6 +50,7 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
         String countDate = dialog.getCountDate();
         if (StringUtil.isNotEmpty(countDate)) {
             if (null == DateUtil.parse(countDate, DateUtil.YYYY_MM_DD)) {
+                dialog.clearCountDate();
                 Message.notifyError(Message.DATE_FORMAT_ERROR);
                 return;
             }

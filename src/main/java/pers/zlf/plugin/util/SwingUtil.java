@@ -4,16 +4,24 @@ import com.intellij.ide.ClipboardSynchronizer;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.ColorUtil;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
+import kotlin.Unit;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.IconEnum;
+import pers.zlf.plugin.constant.MyIcon;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonListener;
@@ -30,6 +38,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * swing 工具类
@@ -207,6 +217,74 @@ public class SwingUtil {
             public void mouseExited(MouseEvent e) {
                 button.setBackground(container.getBackground());
             }
+        });
+    }
+
+    /**
+     * 注册 ToolWindow 组件
+     *
+     * @param project     项目
+     * @param id          id
+     * @param panel       组件
+     * @param displayName 组件名
+     */
+    public static void registerToolWindow(Project project, String id, JPanel panel, String displayName) {
+        Supplier<ToolWindow> supplier = () -> Optional.ofNullable(ToolWindowManager.getInstance(project).getToolWindow(id)).orElse(ToolWindowManager.getInstance(project).registerToolWindow(id, builder -> {
+            builder.icon = MyIcon.LOGO;
+            builder.canCloseContent = true;
+            return Unit.INSTANCE;
+        }));
+        showToolWindow(supplier, project, panel, displayName);
+    }
+
+    /**
+     * 显示 ToolWindow 组件
+     *
+     * @param project     项目
+     * @param id          id
+     * @param panel       组件
+     * @param displayName 组件名
+     */
+    public static void showToolWindow(Project project, String id, JPanel panel, String displayName) {
+        Supplier<ToolWindow> supplier = () -> ToolWindowManager.getInstance(project).getToolWindow(id);
+        showToolWindow(supplier, project, panel, displayName);
+    }
+
+    /**
+     * 显示 ToolWindow 组件
+     *
+     * @param project 项目
+     * @param id      id
+     */
+    public static void closeToolWindowSelectedContent(Project project, String id) {
+        ToolWindowManager.getInstance(project).invokeLater(() -> {
+            ContentManager contentManager = ToolWindowManager.getInstance(project).getToolWindow(id).getContentManager();
+            contentManager.removeContent(contentManager.getSelectedContent(), true);
+        });
+    }
+
+    /**
+     * 显示 ToolWindow 组件
+     *
+     * @param toolWindow  ToolWindow
+     * @param project     项目
+     * @param panel       组件
+     * @param displayName 组件名
+     */
+    private static void showToolWindow(Supplier<ToolWindow> supplier, Project project, JPanel panel, String displayName) {
+        ToolWindowManager.getInstance(project).invokeLater(() -> {
+            ToolWindow toolWindow = supplier.get();
+            ContentManager contentManager = toolWindow.getContentManager();
+            for (Content content : contentManager.getContents()) {
+                if (displayName.equals(content.getDisplayName())) {
+                    contentManager.removeContent(content, true);
+                }
+            }
+            Content content = contentManager.getFactory().createContent(panel, displayName, false);
+            content.setCloseable(true);
+            contentManager.addContent(content);
+            contentManager.setSelectedContent(content);
+            toolWindow.show();
         });
     }
 }

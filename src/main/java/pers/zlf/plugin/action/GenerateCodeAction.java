@@ -1,15 +1,12 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.database.model.DasTable;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.constant.MyDataKeys;
 import pers.zlf.plugin.dialog.GenerateCodeDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
+import pers.zlf.plugin.util.SwingUtil;
 
 import java.util.Map;
 
@@ -40,21 +37,7 @@ public class GenerateCodeAction extends BaseAction {
             Message.notifyError(project, Message.PLEASE_CONFIGURE_TEMPLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_TEMPLATE_ID);
             return;
         }
-        ToolWindowManager.getInstance(project).invokeLater(() -> {
-            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.JAVA_CODE_HELPER);
-            ContentManager contentManager = toolWindow.getContentManager();
-            for (Content content : contentManager.getContents()) {
-                if (!Common.COMMON_TOOLS.equals(content.getDisplayName())) {
-                    contentManager.removeContent(content, true);
-                }
-            }
-            String displayName = selectDasTable.getName() + Common.SPACE + Common.GENERATE_CODE;
-            Content content = contentManager.getFactory().createContent(new GenerateCodeDialog(project, selectDasTable).getContent(), displayName, false);
-            content.setCloseable(true);
-            contentManager.addContent(content);
-            contentManager.setSelectedContent(content);
-            toolWindow.show();
-        });
+        SwingUtil.showToolWindow(project, Common.JAVA_CODE_HELPER, new GenerateCodeDialog(project, selectDasTable).getContent(), selectDasTable.getName() + Common.SPACE + Common.GENERATE_CODE);
     }
 
 }

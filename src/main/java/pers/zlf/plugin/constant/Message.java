@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 弹窗提示文本
@@ -83,7 +84,7 @@ public class Message {
      * @param content 消息文本
      */
     public static void notifyInfo(String content) {
-        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(t -> notifyInfo(t, content)));
+        getCurrentProject(project -> notifyInfo(project, content));
     }
 
     /**
@@ -102,7 +103,7 @@ public class Message {
      * @param content 消息文本
      */
     public static void notifyError(String content) {
-        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(t -> notifyError(t, content, null, null)));
+        getCurrentProject(project -> notifyError(project, content, null, null));
     }
 
     /**
@@ -134,5 +135,9 @@ public class Message {
             });
         }
         notification.notify(project);
+    }
+
+    private static void getCurrentProject(Consumer<Project> consumer) {
+        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(consumer));
     }
 }

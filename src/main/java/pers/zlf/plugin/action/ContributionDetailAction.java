@@ -2,10 +2,6 @@ package pers.zlf.plugin.action;
 
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.RawText;
@@ -25,6 +21,7 @@ import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
+import pers.zlf.plugin.util.SwingUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.io.File;
@@ -99,16 +96,7 @@ public class ContributionDetailAction extends BaseAction {
                 this.dealDirectory(virtualFile);
             }
             CodeLinesCountDecorator.contributionDetailIsRunning = false;
-            ToolWindowManager.getInstance(project).invokeLater(() -> {
-                ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.CODE_STATISTICS_DETAILS);
-                ContentManager contentManager = toolWindow.getContentManager();
-                contentManager.removeAllContents( true);
-                Content content = contentManager.getFactory().createContent(new ContributionDetailDialog(project, totalContributionDetailMap).getContent(), Common.BLANK_STRING, false);
-                content.setCloseable(true);
-                contentManager.addContent(content);
-                contentManager.setSelectedContent(content);
-                toolWindow.show();
-            });
+            SwingUtil.registerToolWindow(project, Common.CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, totalContributionDetailMap).getContent(), Common.BLANK_STRING);
         });
     }
 

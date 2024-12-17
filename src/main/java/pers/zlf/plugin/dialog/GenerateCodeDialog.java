@@ -7,10 +7,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.JBColor;
-import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.table.JBTable;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
@@ -194,11 +191,7 @@ public class GenerateCodeDialog {
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
                 TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
                 Message.notifyInfo(project, Message.GENERATE_CODE_SUCCESS);
-                ToolWindowManager.getInstance(project).invokeLater(() -> {
-                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(Common.JAVA_CODE_HELPER);
-                    ContentManager contentManager = toolWindow.getContentManager();
-                    contentManager.removeContent(contentManager.getSelectedContent(), true);
-                });
+                SwingUtil.closeToolWindowSelectedContent(project, Common.JAVA_CODE_HELPER);
             } catch (Exception ex) {
                 Message.notifyError(project, Message.GENERATE_CODE_FAILED + ex.getMessage());
             }
