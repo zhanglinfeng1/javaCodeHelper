@@ -42,7 +42,7 @@ public class ContributionDetailDialog {
     private final String EMPTY_LINE_COUNT = "空行";
     private final String KEYWORD_COUNT = "关键字";
     private final Project project;
-
+    private final String moduleName;
     /** 统计数据 */
     private final Map<String, Map<String, ContributionDetail>> totalContributionDetailMap;
     /** git账号 */
@@ -54,8 +54,9 @@ public class ContributionDetailDialog {
     private JBTable contributionDetailTable;
     private JButton exportButton;
 
-    public ContributionDetailDialog(Project project, Map<String, Map<String, ContributionDetail>> totalContributionDetailMap) {
+    public ContributionDetailDialog(Project project, String moduleName, Map<String, Map<String, ContributionDetail>> totalContributionDetailMap) {
         this.project = project;
+        this.moduleName = moduleName;
         this.totalContributionDetailMap = totalContributionDetailMap;
         totalContributionDetailMap.values().forEach(t -> t.values().forEach(v -> gitMap.put(v.getEmail(), v.getEmailAndUser())));
         headerList = getHeaderList(gitMap);
@@ -125,7 +126,7 @@ public class ContributionDetailDialog {
 
     private void export(String path) {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet(Common.CODE_STATISTICS);
+            Sheet sheet = workbook.createSheet(moduleName);
             int rowNum = 0;
             //插入表头
             Row firstHeaderRow = sheet.createRow(rowNum++);

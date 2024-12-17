@@ -92,7 +92,7 @@ public class ContributionDetailAction extends BaseAction {
                 this.dealDirectory(virtualFile);
             }
             CodeLinesCountDecorator.contributionDetailIsRunning = false;
-            SwingUtil.registerToolWindow(project, Common.CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, totalContributionDetailMap).getContent(), Common.BLANK_STRING);
+            SwingUtil.registerToolWindow(project, Common.CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, module.getName(), totalContributionDetailMap).getContent(), module.getName());
         });
     }
 
