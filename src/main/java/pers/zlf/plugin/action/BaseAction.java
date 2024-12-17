@@ -4,8 +4,10 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.util.lambda.Equals;
@@ -18,6 +20,7 @@ public abstract class BaseAction extends AnAction {
     protected AnActionEvent event;
     protected Editor editor;
     protected Project project;
+    protected Module module;
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
@@ -30,6 +33,7 @@ public abstract class BaseAction extends AnAction {
         this.event = event;
         this.editor = event.getData(PlatformDataKeys.EDITOR);
         this.project = event.getData(CommonDataKeys.PROJECT);
+        this.module = event.getData(PlatformCoreDataKeys.MODULE);
         event.getPresentation().setVisible(isVisible());
     }
 
@@ -43,7 +47,7 @@ public abstract class BaseAction extends AnAction {
      *
      * @return boolean
      */
-    public boolean isVisible() {
+    protected boolean isVisible() {
         return true;
     }
 
@@ -52,13 +56,13 @@ public abstract class BaseAction extends AnAction {
      *
      * @return boolean
      */
-    public boolean isExecute() {
+    protected boolean isExecute() {
         return true;
     }
 
     /**
      * 具体执行内容
      */
-    public abstract void execute();
+    protected abstract void execute();
 
 }

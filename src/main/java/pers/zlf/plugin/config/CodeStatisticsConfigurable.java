@@ -2,12 +2,12 @@ package pers.zlf.plugin.config;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.util.CodeCountUtil;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -64,7 +64,7 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
         ConfigFactory.getInstance().setCodeStatisticsConfig(config);
         // 重新统计
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            CodeLineCountAction.countCodeLines(project);
+            CodeCountUtil.countCodeLines(project);
         }
     }
 

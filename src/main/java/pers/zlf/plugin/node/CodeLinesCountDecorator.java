@@ -7,11 +7,11 @@ import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import pers.zlf.plugin.action.CodeLineCountAction;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.CodeStatisticsInfo;
 import pers.zlf.plugin.pojo.config.CodeStatisticsConfig;
+import pers.zlf.plugin.util.CodeCountUtil;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MathUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -61,7 +61,7 @@ public class CodeLinesCountDecorator implements ProjectViewNodeDecorator {
                 for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
                     String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
                     if (moduleName.startsWith(directoryModuleName)) {
-                        count = count + CodeLineCountAction.getLineCount(virtualFile);
+                        count = count + CodeCountUtil.getLineCount(virtualFile);
                     }
                 }
                 codeStatisticsInfo.setLineCount(count);

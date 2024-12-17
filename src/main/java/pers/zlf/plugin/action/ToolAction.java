@@ -33,7 +33,7 @@ public class ToolAction extends BaseAction {
     private String selectionText;
 
     @Override
-    public boolean isVisible() {
+    protected boolean isVisible() {
         this.selectionModel = editor.getSelectionModel();
         this.selectionText = selectionModel.getSelectedText();
         PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
@@ -41,7 +41,7 @@ public class ToolAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(UPPER_CASE, LOWER_CASE, HUMP, LOWERCASE_UNDERLINE)).setMovable(true)
                 .setItemChosenCallback(value -> {
                     String result = functionMap.get(value).apply(selectionText);

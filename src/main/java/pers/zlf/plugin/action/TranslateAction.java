@@ -31,14 +31,14 @@ public class TranslateAction extends BaseAction {
     }};
 
     @Override
-    public boolean isVisible() {
+    protected boolean isVisible() {
         //获取选择内容
         this.selectionText = editor.getSelectionModel().getSelectedText();
         return null != editor && StringUtil.isNotEmpty(selectionText);
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         Integer translateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
         BaseApi baseApi = translateApiMap.get(translateApi);
         ThreadPoolFactory.TRANS_POOL.execute(() -> {

@@ -1,5 +1,6 @@
 package pers.zlf.plugin.action;
 
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.eclipse.jgit.api.BlameCommand;
@@ -17,6 +18,7 @@ import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.pojo.ContributionDetail;
+import pers.zlf.plugin.util.CodeCountUtil;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.DateUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
@@ -51,12 +53,12 @@ public class ContributionDetailAction extends BaseAction {
     private final Map<String, Map<String, ContributionDetail>> totalContributionDetailMap = new HashMap<>();
 
     @Override
-    public boolean isVisible() {
-        return null != project;
+    protected boolean isVisible() {
+        return null != module;
     }
 
     @Override
-    public boolean isExecute() {
+    protected boolean isExecute() {
         if (CodeLinesCountDecorator.contributionDetailIsRunning) {
             Message.notifyError(project, Message.STATISTICS_IN_PROGRESS);
             return false;
@@ -70,22 +72,16 @@ public class ContributionDetailAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
-        //获取项目路径
-        String projectPath = Empty.of(project.getBasePath()).map(Paths::get).map(Path::getParent).map(Path::toString).orElse(null);
-        if (StringUtil.isEmpty(projectPath)) {
-            return;
-        }
+    protected void execute() {
         //获取配置
         fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         countDate = Empty.of(ConfigFactory.getInstance().getCodeStatisticsConfig().getCountDate()).map(t -> DateUtil.parse(t, DateUtil.YYYY_MM_DD)).orElse(null);
         totalContributionDetailMap.clear();
         ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
             CodeLinesCountDecorator.contributionDetailIsRunning = true;
-            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
-                //项目路径
-                String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-                bathPath = Paths.get(projectPath, moduleName);
+            for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
+                //模块路径
+                bathPath = Paths.get(virtualFile.getPath());
                 //默认当前分支
                 try {
                     String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
@@ -117,8 +113,7 @@ public class ContributionDetailAction extends BaseAction {
             String filePath = bathPath.relativize(Paths.get(virtualFile.getPath())).toString();
             String fileName = virtualFile.getName();
             String fileFullName = filePath.replaceAll(Regex.BACKSLASH, Common.DOT) + fileName;
-            filePath = filePath.replaceAll(Regex.BACKSLASH, Common.SLASH);
-            BlameResult result = new BlameCommand(repository).setFilePath(filePath).call();
+            BlameResult result = new BlameCommand(repository).setFilePath(filePath.replaceAll(Regex.BACKSLASH, Common.SLASH)).call();
             if (null == result) {
                 return;
             }
@@ -137,7 +132,7 @@ public class ContributionDetailAction extends BaseAction {
 
     private Map<String, ContributionDetail> statistics(BlameResult result, VirtualFile virtualFile) {
         Map<String, ContributionDetail> contributionDetailMap = new HashMap<>();
-        CommentFormat commentFormat = CodeLineCountAction.getCommentFormat(virtualFile);
+        CommentFormat commentFormat = CodeCountUtil.getCommentFormat(virtualFile);
         RawText rawText = result.getResultContents();
         int length = rawText.size();
         for (int i = 0; i < length; i++) {

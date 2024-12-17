@@ -1,6 +1,6 @@
 package pers.zlf.plugin.action;
 
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
@@ -14,9 +14,9 @@ import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.factory.ThreadPoolFactory;
 import pers.zlf.plugin.node.CodeLinesCountDecorator;
 import pers.zlf.plugin.pojo.CommentFormat;
+import pers.zlf.plugin.util.CodeCountUtil;
 import pers.zlf.plugin.util.CollectionUtil;
 import pers.zlf.plugin.util.MyPsiUtil;
-import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 
 import java.io.File;
@@ -48,12 +48,12 @@ public class ContributionRateAction extends BaseAction {
     private List<String> emailList;
 
     @Override
-    public boolean isVisible() {
-        return null != project;
+    protected boolean isVisible() {
+        return null != module;
     }
 
     @Override
-    public boolean isExecute() {
+    protected boolean isExecute() {
         if (CodeLinesCountDecorator.contributionRateIsRunning) {
             Message.notifyError(project, Message.STATISTICS_IN_PROGRESS);
             return false;
@@ -67,24 +67,18 @@ public class ContributionRateAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
-        //获取项目路径
-        String projectPath = Empty.of(project.getBasePath()).map(Paths::get).map(Path::getParent).map(Path::toString).orElse(null);
-        if (StringUtil.isEmpty(projectPath)) {
-            return;
-        }
+    protected void execute() {
         //获取配置
         fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         emailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
         CodeLinesCountDecorator.clearContributionRate(project.getName());
         ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
             CodeLinesCountDecorator.contributionRateIsRunning = true;
-            for (VirtualFile virtualFile : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+            for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
                 totalLineCount = 0;
                 myLineCount = 0;
-                //项目路径
-                String moduleName = MyPsiUtil.getModuleName(virtualFile, project);
-                bathPath = Paths.get(projectPath, moduleName);
+                //模块路径
+                bathPath = Paths.get(virtualFile.getPath());
                 //默认当前分支
                 try {
                     String gitPath = Paths.get(bathPath.toString(), Common.DOT_GIT).toString();
@@ -101,7 +95,7 @@ public class ContributionRateAction extends BaseAction {
                 }
                 this.dealDirectory(virtualFile);
                 if (totalLineCount != 0) {
-                    CodeLinesCountDecorator.updateContributionRate(moduleName, totalLineCount, myLineCount);
+                    CodeLinesCountDecorator.updateContributionRate(module.getName(), totalLineCount, myLineCount);
                     //更新贡献率行数
                     CodeLinesCountDecorator.updateNode();
                 }
@@ -125,16 +119,15 @@ public class ContributionRateAction extends BaseAction {
         try {
             //相对路径
             String filePath = bathPath.relativize(Paths.get(virtualFile.getPath())).toString();
-            filePath = filePath.replaceAll(Regex.BACKSLASH, Common.SLASH);
-            BlameResult result = new BlameCommand(repository).setFilePath(filePath).call();
+            BlameResult result = new BlameCommand(repository).setFilePath(filePath.replaceAll(Regex.BACKSLASH, Common.SLASH)).call();
             if (null == result) {
                 return;
             }
-            CommentFormat commentFormat = CodeLineCountAction.getCommentFormat(virtualFile);
+            CommentFormat commentFormat = CodeCountUtil.getCommentFormat(virtualFile);
             RawText rawText = result.getResultContents();
             int length = rawText.size();
             for (int i = 0; i < length; i++) {
-                if (CodeLineCountAction.count(rawText.getString(i), commentFormat)) {
+                if (CodeCountUtil.count(rawText.getString(i), commentFormat)) {
                     totalLineCount++;
                     if (emailList.contains(result.getSourceAuthor(i).getEmailAddress())) {
                         //自己提交的

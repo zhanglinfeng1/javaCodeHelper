@@ -51,7 +51,7 @@ public class AddApiAnnotationAction extends BaseAction {
     private int selectionEnd;
 
     @Override
-    public boolean isVisible() {
+    protected boolean isVisible() {
         if (null == project) {
             return false;
         }
@@ -66,7 +66,7 @@ public class AddApiAnnotationAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         selectionStart = editor.getSelectionModel().getSelectionStart();
         selectionEnd = editor.getSelectionModel().getSelectionEnd();
         importClassSet = new HashSet<>(2);

@@ -19,7 +19,7 @@ public class GenerateCodeAction extends BaseAction {
     private DasTable selectDasTable;
 
     @Override
-    public boolean isVisible() {
+    protected boolean isVisible() {
         //获取选中的元素
         Object[] data = event.getData(MyDataKeys.DATABASE_NODES);
         if (data != null && data.length > 0 && data[0] instanceof DasTable dasTable) {
@@ -30,7 +30,7 @@ public class GenerateCodeAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         //生成代码的窗口
         Map<String, Map<String, String>> totalTemplateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap();
         if (totalTemplateMap == null || totalTemplateMap.isEmpty()) {

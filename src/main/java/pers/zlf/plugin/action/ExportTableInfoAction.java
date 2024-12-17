@@ -18,7 +18,7 @@ public class ExportTableInfoAction extends BaseAction {
     private BaseExport export;
 
     @Override
-    public boolean isVisible() {
+    protected boolean isVisible() {
         //获取选中的元素
         Object[] data = event.getData(MyDataKeys.DATABASE_NODES);
         if (data == null || data.length == 0) {
@@ -39,7 +39,7 @@ public class ExportTableInfoAction extends BaseAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
         if (virtualFile == null) {
             return;

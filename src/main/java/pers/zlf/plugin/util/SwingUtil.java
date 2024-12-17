@@ -229,11 +229,17 @@ public class SwingUtil {
      * @param displayName 组件名
      */
     public static void registerToolWindow(Project project, String id, JPanel panel, String displayName) {
-        Supplier<ToolWindow> supplier = () -> Optional.ofNullable(ToolWindowManager.getInstance(project).getToolWindow(id)).orElse(ToolWindowManager.getInstance(project).registerToolWindow(id, builder -> {
-            builder.icon = MyIcon.LOGO;
-            builder.canCloseContent = true;
-            return Unit.INSTANCE;
-        }));
+        Supplier<ToolWindow> supplier = () -> {
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(id);
+            if (toolWindow == null) {
+                toolWindow = ToolWindowManager.getInstance(project).registerToolWindow(id, builder -> {
+                    builder.icon = MyIcon.LOGO;
+                    builder.canCloseContent = true;
+                    return Unit.INSTANCE;
+                });
+            }
+            return toolWindow;
+        };
         showToolWindow(supplier, project, panel, displayName);
     }
 
