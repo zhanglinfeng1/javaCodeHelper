@@ -1,5 +1,7 @@
 package pers.zlf.plugin.util;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -48,6 +50,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -492,4 +495,14 @@ public class MyPsiUtil {
         }
         return nextElement;
     }
+
+    /**
+     * 获取当前项目
+     *
+     * @param consumer 获取到后的执行逻辑
+     */
+    public static void getCurrentProject(Consumer<Project> consumer) {
+        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(consumer));
+    }
+
 }

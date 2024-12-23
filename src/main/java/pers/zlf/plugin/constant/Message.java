@@ -1,19 +1,15 @@
 package pers.zlf.plugin.constant;
 
-import com.intellij.ide.DataManager;
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
+import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * 弹窗提示文本
@@ -84,7 +80,7 @@ public class Message {
      * @param content 消息文本
      */
     public static void notifyInfo(String content) {
-        getCurrentProject(project -> notifyInfo(project, content));
+        MyPsiUtil.getCurrentProject(project -> notifyInfo(project, content));
     }
 
     /**
@@ -103,7 +99,7 @@ public class Message {
      * @param content 消息文本
      */
     public static void notifyError(String content) {
-        getCurrentProject(project -> notifyError(project, content, null, null));
+        MyPsiUtil.getCurrentProject(project -> notifyError(project, content, null, null));
     }
 
     /**
@@ -137,7 +133,4 @@ public class Message {
         notification.notify(project);
     }
 
-    private static void getCurrentProject(Consumer<Project> consumer) {
-        DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(context -> Optional.ofNullable(context).map(t -> t.getData(CommonDataKeys.PROJECT)).ifPresent(consumer));
-    }
 }
