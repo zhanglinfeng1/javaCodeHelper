@@ -49,7 +49,6 @@ public class Common {
     public static final String APPLICATION_CONFIGURABLE_TEMPLATE_ID = "pers.zlf.plugin.TemplateConfigurable";
 
     public static final String JAVA_CODE_HELPER = "JavaCodeHelper";
-    public static final String CODE_STATISTICS_DETAILS = "Code statistics details";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
     public static final String SELECT_MODULE = "选择模块";
@@ -69,6 +68,11 @@ public class Common {
     public static final String PARENTH_COLOR_TAG_NAME = "XKH";
     public static final String BRACKET_COLOR_TAG_NAME = "ZKH";
     public static final String BRACE_COLOR_TAG_NAME = "DKH";
+
+    /** 工具窗ID */
+    public static final String TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS = "Code statistics details";
+    //TODO 获取官方常量
+    public static final String TOOL_WINDOW_PANEL_ID_LOG = "Log";
 
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;

@@ -281,11 +281,7 @@ public class SwingUtil {
         ToolWindowManager.getInstance(project).invokeLater(() -> {
             ToolWindow toolWindow = supplier.get();
             ContentManager contentManager = toolWindow.getContentManager();
-            for (Content content : contentManager.getContents()) {
-                if (displayName.equals(content.getDisplayName())) {
-                    contentManager.removeContent(content, true);
-                }
-            }
+            Optional.ofNullable(contentManager.findContent(displayName)).ifPresent(t -> contentManager.removeContent(t, true));
             Content content = contentManager.getFactory().createContent(panel, displayName, false);
             content.setCloseable(true);
             contentManager.addContent(content);

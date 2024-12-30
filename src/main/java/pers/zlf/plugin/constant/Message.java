@@ -5,11 +5,14 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
+
+import java.util.Optional;
 
 /**
  * 弹窗提示文本
@@ -31,6 +34,7 @@ public class Message {
     public static final String PLEASE_CONFIGURE_TRANSLATE_FIRST = "请先配置翻译";
     public static final String PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST = "请先配置参与统计的文件";
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
+    public static final String CANNOT_BE_ZERO = "不能为0";
 
     /** 代码统计 */
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";
@@ -71,8 +75,12 @@ public class Message {
     public static final String ANALYSIS_QR_CODE_FAILED = "解析维码失败：";
     public static final String UPLOAD_QR_CODE_FAILED = "上传维码失败：";
 
+    public static final String NEW_CODE_EXISTS = "当前分支存在新代码，请及时拉取";
+    public static final String GO_GET_NEW_CODE = "去拉取";
+    public static final String DO_NOT_SHOW_AGAIN = "Don't show again";
+
     /** 通知组ID */
-    private static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper Notification";
+    public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper Notification";
 
     /**
      * info消息
@@ -90,8 +98,20 @@ public class Message {
      * @param content 消息文本
      */
     public static void notifyInfo(@NotNull Project project, String content) {
-        NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, NotificationType.INFORMATION).notify(project);
+        notifyInfo(project, content, null);
     }
+
+    /**
+     * info消息
+     *
+     * @param project 消息展示的项目
+     * @param content 消息文本
+     * @param action  执行动作
+     */
+    public static void notifyInfo(@NotNull Project project, String content, AnAction action) {
+        notify(project, content, NotificationType.INFORMATION, action);
+    }
+
 
     /**
      * error消息
@@ -121,15 +141,35 @@ public class Message {
      * @param applicationConfigurableId 配置页id
      */
     public static void notifyError(@NotNull Project project, String content, String linkText, String applicationConfigurableId) {
-        Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, NotificationType.ERROR);
+        AnAction anAction = null;
         if (StringUtil.isNotEmpty(linkText)) {
-            notification.addAction(new NotificationAction(linkText) {
+            anAction = new NotificationAction(linkText) {
                 @Override
                 public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
                     ShowSettingsUtilImpl.showSettingsDialog(project, applicationConfigurableId, Common.BLANK_STRING);
                 }
-            });
+            };
         }
+        notify(project, content, NotificationType.ERROR, anAction);
+    }
+
+    /**
+     * 通知
+     *
+     * @param project          消息展示的项目
+     * @param content          消息文本
+     * @param notificationType 消息类型
+     * @param action           执行动作
+     */
+    private static void notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
+        Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, notificationType).setIcon(MyIcon.LOGO).setSuggestionType(true);
+        Optional.ofNullable(action).ifPresent(notification::addAction);
+        notification.addAction(new NotificationAction(Message.DO_NOT_SHOW_AGAIN) {
+            @Override
+            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+                notification.expire();
+            }
+        });
         notification.notify(project);
     }
 

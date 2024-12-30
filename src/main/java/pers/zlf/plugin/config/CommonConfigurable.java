@@ -1,8 +1,10 @@
 package pers.zlf.plugin.config;
 
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
+import pers.zlf.plugin.listener.NewCodeRemindListener;
 import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -21,7 +23,11 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
 
     @Override
     public boolean isModified() {
-        if (!dialog.getTranslateApi().equals(config.getTranslateApi())) {
+        if (dialog.getCodeRemindMinute() == 0 || dialog.getMaxCodeCompletionLength() == 0) {
+            Message.notifyError(Message.CANNOT_BE_ZERO);
+            return false;
+        }
+        if (dialog.getTranslateApi() != config.getTranslateApi()) {
             return true;
         }
         if (!StringUtil.equals(dialog.getAppId(), config.getAppId())) {
@@ -30,7 +36,7 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (!StringUtil.equals(dialog.getSecurityKey(), config.getSecretKey())) {
             return true;
         }
-        if (!dialog.getApiTool().equals(config.getApiTool())) {
+        if (dialog.getApiTool() != config.getApiTool()) {
             return true;
         }
         if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
@@ -48,7 +54,13 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (dialog.isOpenParenth() != config.isOpenParenth()) {
             return true;
         }
-        return !dialog.getMaxCodeCompletionLength().equals(config.getMaxCodeCompletionLength());
+        if (dialog.isOpenCodeRemind() != config.isOpenCodeRemind()) {
+            return true;
+        }
+        if (dialog.getCodeRemindMinute() != config.getCodeRemindMinute()) {
+            return true;
+        }
+        return dialog.getMaxCodeCompletionLength() != config.getMaxCodeCompletionLength();
     }
 
     @Override
@@ -62,6 +74,13 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         config.setOpenBrace(dialog.isOpenBrace());
         config.setOpenBracket(dialog.isOpenBracket());
         config.setOpenParenth(dialog.isOpenParenth());
+        config.setOpenCodeRemind(dialog.isOpenCodeRemind());
+        config.setCodeRemindMinute(dialog.getCodeRemindMinute());
+        if (config.isOpenCodeRemind()){
+            NewCodeRemindListener.rerun(config.getCodeRemindMinute());
+        }else {
+            NewCodeRemindListener.shutdownNow();
+        }
         ConfigFactory.getInstance().setCommonConfig(config);
     }
 

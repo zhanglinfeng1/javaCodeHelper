@@ -1,7 +1,6 @@
 package pers.zlf.plugin.action;
 
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.blame.BlameResult;
@@ -92,7 +91,7 @@ public class ContributionDetailAction extends BaseAction {
                 this.dealDirectory(virtualFile);
             }
             CodeLinesCountDecorator.contributionDetailIsRunning = false;
-            SwingUtil.registerToolWindow(project, Common.CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, module.getName(), totalContributionDetailMap).getContent(), module.getName());
+            SwingUtil.registerToolWindow(project, Common.TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, module.getName(), totalContributionDetailMap).getContent(), module.getName());
         });
     }
 

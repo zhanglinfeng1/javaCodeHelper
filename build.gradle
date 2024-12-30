@@ -12,7 +12,7 @@ java {
 intellij {
     version = '2022.3'
     type = 'IU'
-    plugins = ['java','DatabaseTools']
+    plugins = ['java', 'DatabaseTools', 'Git4Idea']
     updateSinceUntilBuild = false
 }
 

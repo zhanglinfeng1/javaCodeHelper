@@ -1,5 +1,6 @@
 package pers.zlf.plugin.dialog;
 
+import com.intellij.ui.components.fields.IntegerField;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
 
@@ -7,9 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -22,13 +21,14 @@ public class CommonConfigDialog extends BaseDialog{
     private JTextField securityKeyTextField;
     private JComboBox<String> translateApiComboBox;
     private JComboBox<String> apiToolComboBox;
-    private JRadioButton codeCompletionEnableButton;
-    private JRadioButton codeCompletionDisabledButton;
-    private JTextField maxCodeCompletionLengthTextField;
+    private IntegerField maxCodeCompletionLengthTextField;
     private JCheckBox braceCheckBox;
     private JCheckBox parenthCheckBox;
     private JCheckBox bracketCheckBox;
     private JCheckBox angleBracketCheckBox;
+    private JCheckBox codeCompletionEnableCheckBox;
+    private JCheckBox codeRemindCheckBox;
+    private IntegerField codeRemindMinuteTextField;
 
     public CommonConfigDialog() {
     }
@@ -38,15 +38,18 @@ public class CommonConfigDialog extends BaseDialog{
         CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
         appIdTextField.setText(config.getAppId());
         securityKeyTextField.setText(config.getSecretKey());
-        maxCodeCompletionLengthTextField.setText(String.valueOf(config.getMaxCodeCompletionLength()));
+        maxCodeCompletionLengthTextField.setValue(config.getMaxCodeCompletionLength());
+        codeRemindMinuteTextField.setValue(config.getCodeRemindMinute());
 
-        Optional.ofNullable(config.getTranslateApi()).ifPresent(translateApiComboBox::setSelectedIndex);
-        Optional.ofNullable(config.getApiTool()).ifPresent(apiToolComboBox::setSelectedIndex);
+        translateApiComboBox.setSelectedIndex(config.getTranslateApi());
+        apiToolComboBox.setSelectedIndex(config.getApiTool());
 
         braceCheckBox.setSelected(config.isOpenBrace());
         parenthCheckBox.setSelected(config.isOpenParenth());
         bracketCheckBox.setSelected(config.isOpenBracket());
         angleBracketCheckBox.setSelected(config.isOpenAngleBracket());
+        codeCompletionEnableCheckBox.setSelected(config.isEnableCodeCompletion());
+        codeRemindCheckBox.setSelected(config.isOpenCodeRemind());
     }
 
     @Override
@@ -62,20 +65,20 @@ public class CommonConfigDialog extends BaseDialog{
         return securityKeyTextField.getText();
     }
 
-    public Integer getTranslateApi() {
+    public int getTranslateApi() {
         return translateApiComboBox.getSelectedIndex();
     }
 
-    public Integer getApiTool() {
+    public int getApiTool() {
         return apiToolComboBox.getSelectedIndex();
     }
 
     public boolean isEnableCodeCompletion() {
-        return codeCompletionEnableButton.isSelected();
+        return codeCompletionEnableCheckBox.isSelected();
     }
 
-    public Integer getMaxCodeCompletionLength() {
-        return Integer.parseInt(maxCodeCompletionLengthTextField.getText());
+    public int getMaxCodeCompletionLength() {
+        return maxCodeCompletionLengthTextField.getValue();
     }
 
     public boolean isOpenAngleBracket() {
@@ -92,5 +95,13 @@ public class CommonConfigDialog extends BaseDialog{
 
     public boolean isOpenBrace() {
         return braceCheckBox.isSelected();
+    }
+
+    public boolean isOpenCodeRemind() {
+        return codeRemindCheckBox.isSelected();
+    }
+
+    public int getCodeRemindMinute() {
+        return codeRemindMinuteTextField.getValue();
     }
 }

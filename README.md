@@ -1,9 +1,17 @@
-# 功能简介
+<div align="center">
+
+# Java Code Helper
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
-版本要求：2022.3.1 ~ 最新<br />
-[![](https://img.shields.io/badge/Github-blue?logo=github)](https://github.com/zhanglinfeng1/javaCodeHelper)
-[![](https://img.shields.io/badge/Gitee-blue?logo=gitee)](https://gitee.com/zlfzh/javaCodeHelper)
-[![](https://img.shields.io/jetbrains/plugin/d/19944?color=blue&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)
+![](https://img.shields.io/badge/IDEA-2022.3.1+-pink.svg?labelColor=blue)<br />
+<a href='https://gitee.com/zlfzh/javaCodeHelper'><img src='https://gitee.com/zlfzh/javaCodeHelper/badge/star.svg?theme=dark' alt='star'></img></a>
+[![](https://img.shields.io/github/stars/zhanglinfeng1/javaCodeHelper?style=square&logo=GitHub&color=pink&labelColor=blue)](https://gitee.com/zlfzh/javaCodeHelper)
+[![](https://img.shields.io/jetbrains/plugin/d/19944?color=pink&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)<br />
+</div>
+
+## 新代码提醒
+仅对使用git的项目有效<br />
+当前分支存在新代码时将在通知中提醒<br />
+默认轮询时间10分钟，可配置：File > Setting > Other Settings > JavaCodeHelp
 
 ## 彩虹括号
 <>、()、[]、{} 同对颜色一致<br />
