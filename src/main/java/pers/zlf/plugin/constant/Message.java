@@ -80,7 +80,7 @@ public class Message {
     public static final String DO_NOT_SHOW_AGAIN = "Don't show again";
 
     /** 通知组ID */
-    public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper Notification";
+    public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper";
 
     /**
      * info消息
