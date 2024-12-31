@@ -22,9 +22,9 @@ import java.util.Optional;
  */
 public class Message {
     /** 代码检查 */
-    public static final String UNUSED_METHOD = "(JavaCodeHelp) Method %s is never used";
-    public static final String SUGGESTED_USE = "(JavaCodeHelp) 推荐使用";
-    public static final String OPTIONAL = "(JavaCodeHelp) 推荐使用 Optional.ofNullable()";
+    public static final String UNUSED_METHOD = "(javaCodeHelper) Method %s is never used";
+    public static final String SUGGESTED_USE = "(javaCodeHelper) 推荐使用";
+    public static final String OPTIONAL = "(javaCodeHelper) 推荐使用 Optional.ofNullable()";
     public static final String OPTIONAL_FIX_NAME = "Replace with Optional.ofNullable()";
 
     /** 配置 */

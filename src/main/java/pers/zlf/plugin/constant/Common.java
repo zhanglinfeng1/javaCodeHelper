@@ -55,7 +55,7 @@ public class Common {
     public static final String TEMPLATE_CONFIG = "模版配置";
     public static final String COMMON_TOOLS = "常用工具";
     public static final String GENERATE_CODE = "生成代码";
-    public static final String RAINBOW_BRACKET = "彩虹括号";
+    public static final String RAINBOW_BRACKET = "彩虹括号(JavaCodeHelper)";
     public static final String ANGLE_BRACKET_COLOR_KEY = "JAVA_CODE_HELPER_ANGLE_BRACKET_COLOR";
     public static final String PARENTH_COLOR_KEY = "JAVA_CODE_HELPER_PARENTH_COLOR";
     public static final String BRACKET_COLOR_KEY = "JAVA_CODE_HELPER_BRACKET_COLOR";
