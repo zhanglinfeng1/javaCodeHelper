@@ -72,6 +72,7 @@ public class ContributionDetailAction extends BaseAction {
 
     @Override
     protected void execute() {
+        //TODO 改用官方git4idea实现
         //获取配置
         fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         countDate = Empty.of(ConfigFactory.getInstance().getCodeStatisticsConfig().getCountDate()).map(t -> DateUtil.parse(t, DateUtil.YYYY_MM_DD)).orElse(null);

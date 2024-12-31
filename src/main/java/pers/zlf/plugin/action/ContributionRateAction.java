@@ -68,6 +68,7 @@ public class ContributionRateAction extends BaseAction {
 
     @Override
     protected void execute() {
+        //TODO 改用官方git4idea实现
         //获取配置
         fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         emailList = ConfigFactory.getInstance().getCodeStatisticsConfig().getGitEmailList();
