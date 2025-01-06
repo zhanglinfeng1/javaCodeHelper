@@ -49,6 +49,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 
     unicode：unicode与字符串的互相转换
     urlEncode：url的encode和decode
+    escape：escape转义
     ascii码：ascii码与字符串的互相转换
     二维码：二维码的生成与解析
     cron表达式：解析cron表达式，展示最近的5次执行时间
@@ -56,7 +57,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     加解密：一些常用的加解密方式
     进制转换：数字值转换
 
-## 数据库表结构导出成文档
+## 导出表结构
 Database中右击选中 <br />
 选中的是单张表，则导出单张表的结构 <br />
 选中的是单个库，则导出库中所有表的结构 <br />

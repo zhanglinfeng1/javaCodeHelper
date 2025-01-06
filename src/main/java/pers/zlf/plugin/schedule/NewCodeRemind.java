@@ -1,7 +1,5 @@
 package pers.zlf.plugin.schedule;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
@@ -55,6 +53,9 @@ public class NewCodeRemind implements Runnable {
                     continue;
                 }
                 GitRemoteBranch remoteBranch = localBranch.findTrackedBranch(repository);
+                if (remoteBranch == null) {
+                    continue;
+                }
                 try {
                     //TODO 替换getFilePath方法
                     VcsRevisionNumber localLastCommit = GitHistoryUtils.getCurrentRevision(repository.getProject(), VcsUtil.getFilePath(virtualFile.getPath()), localBranch.getName());
@@ -74,9 +75,9 @@ public class NewCodeRemind implements Runnable {
     }
 
     private void notification(Project project) {
-        AnAction anAction = new NotificationAction(Message.GO_GET_NEW_CODE) {
+        AnAction anAction = new AnAction(Message.GO_GET_NEW_CODE) {
             @Override
-            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+            public void actionPerformed(@NotNull AnActionEvent e) {
                 ToolWindowManager.getInstance(project).invokeLater(() -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
                     ContentManager contentManager = toolWindow.getContentManager();

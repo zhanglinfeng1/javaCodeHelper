@@ -2,6 +2,7 @@ package pers.zlf.plugin.completion;
 
 import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
@@ -236,7 +237,7 @@ public class MethodCompletionContributor extends BaseCompletionContributor {
                 //数组类型
                 if (typeList.contains(currentMethodVariableTypeName.split(Regex.LEFT_BRACKETS)[0])) {
                     String completionText = startCode + String.format(Common.ARRAYS_STREAM_STR, currentMethodVariableName) + endCode;
-                    InsertHandler<LookupElement> insertHandler = (context, item) -> MyPsiUtil.importClass(currentMethodClass.getContainingFile(), ClassType.ARRAYS_PATH, ClassType.COLLECTORS);
+                    InsertHandler<LookupElement> insertHandler = (context, item) -> MyPsiUtil.importClass(currentMethodClass.getContainingFile(), CommonClassNames.JAVA_UTIL_ARRAYS, CommonClassNames.JAVA_UTIL_STREAM_COLLECTORS);
                     addCompletionResult(completionText, completionText, insertHandler);
                     completionLength--;
                 }

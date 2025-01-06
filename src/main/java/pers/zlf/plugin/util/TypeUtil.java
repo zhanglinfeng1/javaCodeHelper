@@ -1,5 +1,6 @@
 package pers.zlf.plugin.util;
 
+import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
 import pers.zlf.plugin.constant.ClassType;
@@ -20,7 +21,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isList(PsiClass psiClass) {
-        return judgmentType(psiClass, ClassType.LIST);
+        return judgmentType(psiClass, CommonClassNames.JAVA_UTIL_LIST, CommonClassNames.JAVA_UTIL_ARRAY_LIST, CommonClassNames.JAVA_UTIL_LINKED_LIST);
     }
 
     /**
@@ -30,7 +31,7 @@ public class TypeUtil {
      * @return boolean
      */
     public static boolean isSet(PsiClass psiClass) {
-        return judgmentType(psiClass, ClassType.SET);
+        return judgmentType(psiClass, CommonClassNames.JAVA_UTIL_SET, CommonClassNames.JAVA_UTIL_HASH_SET, CommonClassNames.JAVA_UTIL_LINKED_HASH_SET, CommonClassNames.JAVA_UTIL_SORTED_SET);
     }
 
     /**
@@ -52,14 +53,11 @@ public class TypeUtil {
      * @param typeName 类型名
      * @return boolean
      */
-    public static boolean judgmentType(PsiClass psiClass, String typeName) {
+    public static boolean judgmentType(PsiClass psiClass, String... typeNames) {
         if (psiClass == null) {
             return false;
         }
-        if (typeName.equals(psiClass.getName())) {
-            return true;
-        }
-        return Arrays.stream(psiClass.getImplementsListTypes()).anyMatch(t -> typeName.equals(t.getName()));
+        return Arrays.stream(typeNames).allMatch(t->t.equals(psiClass.getQualifiedName()));
     }
 
     /**

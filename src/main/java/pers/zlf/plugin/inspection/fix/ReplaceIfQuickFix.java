@@ -3,6 +3,7 @@ package pers.zlf.plugin.inspection.fix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiBinaryExpression;
 import com.intellij.psi.PsiBlockStatement;
@@ -16,7 +17,6 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.tree.IElementType;
 import com.siyeh.ig.psiutils.CommentTracker;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.constant.Message;
@@ -108,7 +108,7 @@ public class ReplaceIfQuickFix implements LocalQuickFix {
         PsiElement newElement = new CommentTracker().replaceAndRestoreComments(ifStatement, text);
         CodeStyleManager.getInstance(project).reformat(newElement);
         //导入java.util.Optional
-        MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL);
+        MyPsiUtil.importClass(psiFile, CommonClassNames.JAVA_UTIL_OPTIONAL);
         runnableList.forEach(Runnable::run);
     }
 

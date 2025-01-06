@@ -3,13 +3,13 @@ package pers.zlf.plugin.inspection.fix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiConditionalExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.siyeh.ig.psiutils.CommentTracker;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.ClassType;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.MyPsiUtil;
 
@@ -45,7 +45,7 @@ public class ReplaceTernaryExpressionQuickFix implements LocalQuickFix {
         PsiElement newElement = new CommentTracker().replaceAndRestoreComments(conditionalExpression, replaceText);
         CodeStyleManager.getInstance(project).reformat(newElement);
         //导入java.util.Optional
-        MyPsiUtil.importClass(psiFile, ClassType.OPTIONAL);
+        MyPsiUtil.importClass(psiFile, CommonClassNames.JAVA_UTIL_OPTIONAL);
     }
 
 }

@@ -2,7 +2,6 @@ package pers.zlf.plugin.constant;
 
 import com.intellij.ide.actions.ShowSettingsUtilImpl;
 import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -143,9 +142,9 @@ public class Message {
     public static void notifyError(@NotNull Project project, String content, String linkText, String applicationConfigurableId) {
         AnAction anAction = null;
         if (StringUtil.isNotEmpty(linkText)) {
-            anAction = new NotificationAction(linkText) {
+            anAction = new AnAction(linkText) {
                 @Override
-                public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+                public void actionPerformed(@NotNull AnActionEvent e) {
                     ShowSettingsUtilImpl.showSettingsDialog(project, applicationConfigurableId, Common.BLANK_STRING);
                 }
             };
@@ -164,9 +163,9 @@ public class Message {
     private static void notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
         Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, notificationType).setIcon(MyIcon.LOGO).setSuggestionType(true);
         Optional.ofNullable(action).ifPresent(notification::addAction);
-        notification.addAction(new NotificationAction(Message.DO_NOT_SHOW_AGAIN) {
+        notification.addAction(new AnAction(Message.DO_NOT_SHOW_AGAIN) {
             @Override
-            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+            public void actionPerformed(@NotNull AnActionEvent e) {
                 notification.expire();
             }
         });
