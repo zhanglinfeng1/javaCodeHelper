@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class JsonUtil {
     private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson FORMAT_GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static Map<String, Object> toMap(Object obj) {
         return toMap(GSON.toJson(obj));
@@ -24,4 +25,7 @@ public class JsonUtil {
         return GSON.fromJson(jsonString, cls);
     }
 
+    public static String format(Object obj) {
+        return FORMAT_GSON.toJson(obj);
+    }
 }

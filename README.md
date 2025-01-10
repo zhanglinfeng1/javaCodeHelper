@@ -38,6 +38,9 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 在idea中配置账号后，选中待翻译文本，右击选择“翻译”<br />
 配置路径：File > Setting > Other Settings > javaCodeHelper
 
+## 对象转json
+选中字段、参数、变量、类，右击选择“转json”<br />
+
 ## 一键添加api注解
 可根据注释一键添加Api注解。目前仅支持swagger2、swagger3<br />
 选中需要添加注解的代码块，右击选择“添加接口文档注解”<br />

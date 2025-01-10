@@ -9,8 +9,6 @@ public class Regex {
     public static final String DOUBLE_QUOTES = "\"";
     public static final String WRAP = "[\n\r*]";
     public static final String WRAP2 = "[\r*]";
-    public static final String ANGLE_BRACKETS = "<(.*?)>";
-    public static final String LEFT_BRACKETS = "\\[";
     public static final String BACKSLASH = "\\\\";
 
 }

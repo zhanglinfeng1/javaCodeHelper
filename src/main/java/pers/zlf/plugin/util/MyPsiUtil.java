@@ -10,11 +10,14 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
+import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiBlockStatement;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -33,6 +36,7 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.InheritanceUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import pers.zlf.plugin.constant.Annotation;
@@ -146,12 +150,15 @@ public class MyPsiUtil {
     public static String dealVariableName(String variableName, PsiType psiType, List<String> variableNameList) {
         String basicTypeName = psiType.getPresentableText();
         String suggestedVariableName = Common.BLANK_STRING;
-        if (basicTypeName.contains(Common.LEFT_ANGLE_BRACKET)) {
-            String[] suggestedVariableNames = StringUtil.getFirstMatcher(basicTypeName, Regex.ANGLE_BRACKETS).split(Common.COMMA);
-            suggestedVariableName = suggestedVariableNames[suggestedVariableNames.length - 1].trim();
-            basicTypeName = basicTypeName.split(Common.LEFT_ANGLE_BRACKET)[0];
-        } else if (basicTypeName.contains(Common.LEFT_BRACKETS)) {
-            suggestedVariableName = basicTypeName.split(Regex.LEFT_BRACKETS)[0];
+        if (InheritanceUtil.isInheritor(psiType, CommonClassNames.JAVA_UTIL_COLLECTION)) {
+            //集合
+            if (psiType instanceof PsiClassType classType) {
+                basicTypeName = classType.getName();
+            }
+            suggestedVariableName = PsiUtil.extractIterableTypeParameter(psiType, false).getPresentableText();
+        } else if (psiType instanceof PsiArrayType) {
+            //数组
+            suggestedVariableName = psiType.getDeepComponentType().getPresentableText();
             basicTypeName = Common.S_STR;
         } else if (TypeUtil.isSimpleType(basicTypeName)) {
             basicTypeName = Common.BLANK_STRING;

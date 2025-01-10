@@ -47,7 +47,6 @@ public class Common {
     public static final String APPLICATION_CONFIGURABLE_JAVA_CODE_HELPER_ID = "pers.zlf.plugin.JavaCodeHelpConfigurable";
     public static final String APPLICATION_CONFIGURABLE_CODE_STATISTICS_ID = "pers.zlf.plugin.CodeStatisticsConfigurable";
     public static final String APPLICATION_CONFIGURABLE_TEMPLATE_ID = "pers.zlf.plugin.TemplateConfigurable";
-
     public static final String JAVA_CODE_HELPER = "JavaCodeHelper";
     public static final String FAST_JUMP = "快捷跳转";
     public static final String CODE_STATISTICS = "代码统计";
