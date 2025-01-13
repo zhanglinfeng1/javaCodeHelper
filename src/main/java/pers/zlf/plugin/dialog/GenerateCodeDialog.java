@@ -176,7 +176,7 @@ public class GenerateCodeDialog {
         submitButton.addActionListener(e -> {
             String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
             if (StringUtil.isEmpty(author)) {
-                Message.notifyError(project, Message.PLEASE_CONFIGURE_AUTHOR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_TEMPLATE_ID);
+                Message.notifyError(project, Message.PLEASE_CONFIGURE_AUTHOR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_TEMPLATE);
                 return;
             }
             try {

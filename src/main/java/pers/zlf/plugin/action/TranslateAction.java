@@ -60,7 +60,7 @@ public class TranslateAction extends BaseAction {
                 }
             } catch (Exception e) {
                 if (Message.PLEASE_CONFIGURE_TRANSLATE_FIRST.equals(e.getMessage())) {
-                    Message.notifyError(project, Message.PLEASE_CONFIGURE_TRANSLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_JAVA_CODE_HELPER_ID);
+                    Message.notifyError(project, Message.PLEASE_CONFIGURE_TRANSLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER);
                 } else {
                     Message.notifyError(project, Message.TRANSLATE_FAILED + e.getMessage());
                 }

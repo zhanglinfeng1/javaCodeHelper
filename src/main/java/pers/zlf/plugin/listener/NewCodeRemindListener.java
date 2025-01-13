@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
  * @date create in 2024/12/20 23:58
  */
 public class NewCodeRemindListener implements StartupActivity {
-
-    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private static NewCodeRemind newCodeRemind;
+
     @Override
     public void runActivity(@NotNull Project project) {
         newCodeRemind = new NewCodeRemind(project);
@@ -33,7 +33,9 @@ public class NewCodeRemindListener implements StartupActivity {
      * 立即关闭
      */
     public static void shutdownNow() {
-        executorService.shutdownNow();
+        if (executorService.isShutdown()) {
+            executorService.shutdownNow();
+        }
     }
 
     /**
@@ -42,7 +44,17 @@ public class NewCodeRemindListener implements StartupActivity {
      * @param minute 间隔分钟
      */
     public static void rerun(int minute) {
-        executorService.shutdownNow();
-        executorService.scheduleAtFixedRate(newCodeRemind, 10, minute * 60L, TimeUnit.SECONDS);
+        shutdownNow();
+        executorService = Executors.newScheduledThreadPool(1);
+        executorService.scheduleWithFixedDelay(newCodeRemind, 10, minute * 60L, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 启动完成
+     *
+     * @return boolean
+     */
+    public static boolean isStartupCompleted() {
+        return newCodeRemind != null;
     }
 }

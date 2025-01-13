@@ -65,6 +65,11 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
 
     @Override
     public void apply() {
+        // 项目还没启动好
+        if (!NewCodeRemindListener.isStartupCompleted()) {
+            Message.notifyError(Message.PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING);
+            return;
+        }
         config.setTranslateApi(dialog.getTranslateApi());
         config.setAppId(dialog.getAppId());
         config.setSecretKey(dialog.getSecurityKey());

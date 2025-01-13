@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>2.9.0</version>
+    <version>2.9.1</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="223.7571.182"/>
     <description><![CDATA[
@@ -27,8 +27,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[NEW]对象转json</li>
-            <li>代码优化</li>
+            <li>[BUG]代码提醒配置报错</li>
         </ul>
     ]]>
     </change-notes>

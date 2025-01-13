@@ -34,7 +34,7 @@ public class GenerateCodeAction extends BaseAction {
         //生成代码的窗口
         Map<String, Map<String, String>> totalTemplateMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap();
         if (totalTemplateMap == null || totalTemplateMap.isEmpty()) {
-            Message.notifyError(project, Message.PLEASE_CONFIGURE_TEMPLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_TEMPLATE_ID);
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_TEMPLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_TEMPLATE);
             return;
         }
         SwingUtil.showToolWindow(project, Common.JAVA_CODE_HELPER, new GenerateCodeDialog(project, selectDasTable).getContent(), selectDasTable.getName() + Common.SPACE + Common.GENERATE_CODE);

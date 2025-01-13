@@ -34,6 +34,7 @@ public class Message {
     public static final String PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST = "请先配置参与统计的文件";
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
     public static final String CANNOT_BE_ZERO = "不能为0";
+    public static final String PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING = "请等待项目加载完后再改动";
 
     /** 代码统计 */
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";
@@ -107,10 +108,9 @@ public class Message {
      * @param content 消息文本
      * @param action  执行动作
      */
-    public static void notifyInfo(@NotNull Project project, String content, AnAction action) {
-        notify(project, content, NotificationType.INFORMATION, action);
+    public static Notification notifyInfo(@NotNull Project project, String content, AnAction action) {
+        return notify(project, content, NotificationType.INFORMATION, action);
     }
-
 
     /**
      * error消息
@@ -160,7 +160,7 @@ public class Message {
      * @param notificationType 消息类型
      * @param action           执行动作
      */
-    private static void notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
+    private static Notification notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
         Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, notificationType).setIcon(MyIcon.LOGO).setSuggestionType(true);
         Optional.ofNullable(action).ifPresent(notification::addAction);
         notification.addAction(new AnAction(Message.DO_NOT_SHOW_AGAIN) {
@@ -170,6 +170,7 @@ public class Message {
             }
         });
         notification.notify(project);
+        return notification;
     }
 
 }

@@ -1,5 +1,6 @@
 package pers.zlf.plugin.schedule;
 
+import com.intellij.notification.Notification;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
@@ -34,6 +35,7 @@ import java.util.Optional;
  */
 public class NewCodeRemind implements Runnable {
     private final Project project;
+    private Notification notification;
 
     public NewCodeRemind(Project project) {
         this.project = project;
@@ -71,10 +73,10 @@ public class NewCodeRemind implements Runnable {
                 }
             }
         }
-
     }
 
     private void notification(Project project) {
+        Optional.ofNullable(notification).ifPresent(Notification::expire);
         AnAction anAction = new AnAction(Message.GO_GET_NEW_CODE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
@@ -86,6 +88,6 @@ public class NewCodeRemind implements Runnable {
                 });
             }
         };
-        Message.notifyInfo(project, Message.NEW_CODE_EXISTS, anAction);
+        notification = Message.notifyInfo(project, Message.NEW_CODE_EXISTS, anAction);
     }
 }
