@@ -133,7 +133,7 @@ public class MyExpressionUtil {
             simplifyReturnText = simplifyMethodCall((PsiMethodCallExpression) expression, variableName);
         }
         if (StringUtil.isNotEmpty(simplifyReturnText)) {
-            simplifyReturnText = Common.MAP_STR + simplifyReturnText;
+            simplifyReturnText = Common.DOT + Common.MAP_STR + simplifyReturnText;
         }
         if (simplifyReturnText != null) {
             simplifyInfo.setSimplifyReturn(true);

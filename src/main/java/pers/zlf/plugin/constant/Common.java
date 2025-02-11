@@ -70,8 +70,6 @@ public class Common {
 
     /** 工具窗ID */
     public static final String TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS = "Code statistics details";
-    //TODO 获取官方常量
-    public static final String TOOL_WINDOW_PANEL_ID_LOG = "Log";
 
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;
@@ -101,7 +99,7 @@ public class Common {
     public static final String OPTIONAL_ELSE = ".orElse(%s)";
     public static final String LAMBDA_STR = "(%s -> %s)";
     public static final String LAMBDA_SIMPLIFY_STR = "(%s::%s)";
-    public static final String MAP_STR = ".map";
+    public static final String MAP_STR = "map";
     public static final String IF_PRESENT_STR = ".ifPresent";
     public static final String COLOR_TAG_STR = "<%s>%s </%s>";
 

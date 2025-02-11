@@ -14,6 +14,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.ContentManager;
+import com.intellij.vcs.log.impl.VcsLogContentProvider;
 import com.intellij.vcsUtil.VcsUtil;
 import git4idea.GitLocalBranch;
 import git4idea.GitRemoteBranch;
@@ -23,7 +24,6 @@ import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import org.jetbrains.annotations.NotNull;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class NewCodeRemind implements Runnable {
                 ToolWindowManager.getInstance(project).invokeLater(() -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
                     ContentManager contentManager = toolWindow.getContentManager();
-                    Optional.ofNullable(contentManager.findContent(Common.TOOL_WINDOW_PANEL_ID_LOG)).ifPresent(contentManager::setSelectedContent);
+                    Optional.ofNullable(contentManager.findContent(VcsLogContentProvider.TAB_NAME)).ifPresent(contentManager::setSelectedContent);
                     toolWindow.show();
                 });
             }

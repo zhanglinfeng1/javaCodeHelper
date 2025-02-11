@@ -54,7 +54,7 @@ public class HttpUtil {
     }
 
     private static HttpURLConnection getConnection(String urlStr) throws Exception {
-        //TODO 替换new URL(urlStr)方法
+        //TODO  JDK21  URI.toURL
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         if (conn instanceof HttpsURLConnection) {
