@@ -10,5 +10,6 @@ public class Regex {
     public static final String WRAP = "[\n\r*]";
     public static final String WRAP2 = "[\r*]";
     public static final String BACKSLASH = "\\\\";
+    public static final String ANGLE_BRACKET = "<[^>]*>";
 
 }

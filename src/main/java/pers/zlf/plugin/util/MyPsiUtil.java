@@ -160,12 +160,10 @@ public class MyPsiUtil {
             //数组
             suggestedVariableName = psiType.getDeepComponentType().getPresentableText();
             basicTypeName = Common.S_STR;
-        } else if (InheritanceUtil.isInheritor(psiType, CommonClassNames.JAVA_UTIL_MAP)) {
-            //map
-            basicTypeName = Common.MAP_STR;
-        } else if (TypeUtil.isSimpleType(basicTypeName)) {
+        }else if (TypeUtil.isSimpleType(basicTypeName)) {
             basicTypeName = Common.BLANK_STRING;
         }
+        basicTypeName = basicTypeName.replaceAll(Regex.ANGLE_BRACKET, Common.BLANK_STRING);
         suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? Common.BLANK_STRING : StringUtil.toLowerCaseFirst(suggestedVariableName)) + basicTypeName;
         if (suggestedVariableName.contains(variableName)) {
             variableName = suggestedVariableName;
