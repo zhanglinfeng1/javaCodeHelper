@@ -77,7 +77,7 @@ public class Message {
 
     public static final String NEW_CODE_EXISTS = "当前分支存在新代码，请及时拉取";
     public static final String GO_GET_NEW_CODE = "去拉取";
-    public static final String DO_NOT_SHOW_AGAIN = "Don't show again";
+    public static final String CLOSE = "Close";
 
     /** 通知组ID */
     public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper";
@@ -163,7 +163,7 @@ public class Message {
     private static Notification notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
         Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, notificationType).setIcon(MyIcon.LOGO).setSuggestionType(true);
         Optional.ofNullable(action).ifPresent(notification::addAction);
-        notification.addAction(new AnAction(Message.DO_NOT_SHOW_AGAIN) {
+        notification.addAction(new AnAction(Message.CLOSE) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 notification.expire();
