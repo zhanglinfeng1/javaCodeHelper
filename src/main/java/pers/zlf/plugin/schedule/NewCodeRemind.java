@@ -60,8 +60,8 @@ public class NewCodeRemind implements Runnable {
                 }
                 try {
                     //TODO 替换getFilePath方法
-                    VcsRevisionNumber localLastCommit = GitHistoryUtils.getCurrentRevision(repository.getProject(), VcsUtil.getFilePath(virtualFile.getPath()), localBranch.getName());
-                    VcsRevisionNumber remoteLastCommit = GitHistoryUtils.getCurrentRevision(repository.getProject(), VcsUtil.getFilePath(virtualFile.getPath()), remoteBranch.getName());
+                    VcsRevisionNumber localLastCommit = GitHistoryUtils.getCurrentRevision(repository.getProject(), VcsUtil.getFilePath(virtualFile), localBranch.getName());
+                    VcsRevisionNumber remoteLastCommit = GitHistoryUtils.getCurrentRevision(repository.getProject(), VcsUtil.getFilePath(virtualFile), remoteBranch.getName());
                     if (localLastCommit == null || remoteLastCommit == null) {
                         continue;
                     }
