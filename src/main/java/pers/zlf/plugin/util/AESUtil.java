@@ -26,9 +26,7 @@ public class AESUtil {
      * @throws Exception 异常
      */
     public static String encrypt(String text, String secretKey) throws Exception {
-        if (StringUtil.isEmpty(secretKey) || secretKey.length() != 16) {
-            throw new Exception(Message.AES_SECRET_KEY_LENGTH_ERROR);
-        }
+        checkSecretKey(secretKey);
         byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKeyBytes, Common.AES);
         Cipher cipher = Cipher.getInstance(AES_ECB);
@@ -47,9 +45,7 @@ public class AESUtil {
      * @throws Exception 异常
      */
     public static String encrypt(String text, String secretKey, String iv) throws Exception {
-        if (StringUtil.isEmpty(secretKey) || secretKey.length() != 16) {
-            throw new Exception(Message.AES_SECRET_KEY_LENGTH_ERROR);
-        }
+        checkSecretKey(secretKey);
         if (StringUtil.isEmpty(iv) || iv.length() != 16) {
             throw new Exception(Message.AES_IV_LENGTH_ERROR);
         }
@@ -77,9 +73,7 @@ public class AESUtil {
      * @throws Exception 异常
      */
     public static String decrypt(String text, String secretKey) throws Exception {
-        if (StringUtil.isEmpty(secretKey) || secretKey.length() != 16) {
-            throw new Exception(Message.AES_SECRET_KEY_LENGTH_ERROR);
-        }
+        checkSecretKey(secretKey);
         byte[] raw = secretKey.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, Common.AES);
         Cipher cipher = Cipher.getInstance(AES_ECB);
@@ -98,9 +92,7 @@ public class AESUtil {
      * @throws Exception 异常
      */
     public static String decrypt(String text, String secretKey, String iv) throws Exception {
-        if (StringUtil.isEmpty(secretKey) || secretKey.length() != 16) {
-            throw new Exception(Message.AES_SECRET_KEY_LENGTH_ERROR);
-        }
+        checkSecretKey(secretKey);
         if (StringUtil.isEmpty(iv) || iv.length() != 16) {
             throw new Exception(Message.AES_IV_LENGTH_ERROR);
         }
@@ -112,4 +104,9 @@ public class AESUtil {
         return new String(cipher.doFinal(encrypted1), StandardCharsets.UTF_8).trim();
     }
 
+    private static void checkSecretKey(String secretKey) throws Exception {
+        if (StringUtil.isEmpty(secretKey) || secretKey.length() != 16) {
+            throw new Exception(Message.AES_SECRET_KEY_LENGTH_ERROR);
+        }
+    }
 }

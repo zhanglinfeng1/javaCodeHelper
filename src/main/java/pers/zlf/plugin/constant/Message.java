@@ -35,6 +35,7 @@ public class Message {
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
     public static final String CANNOT_BE_ZERO = "不能为0";
     public static final String PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING = "请等待项目加载完后再改动";
+    public static final String PLEASE_CONFIGURE_OCR_FIRST = "请先配置文字识别";
 
     /** 代码统计 */
     public static final String STATISTICS_IN_PROGRESS = "正在统计中...";
@@ -74,10 +75,12 @@ public class Message {
     public static final String DOWNLOAD_QR_CODE_FAILED = "下载维码失败：";
     public static final String ANALYSIS_QR_CODE_FAILED = "解析维码失败：";
     public static final String UPLOAD_QR_CODE_FAILED = "上传维码失败：";
-
     public static final String NEW_CODE_EXISTS = "当前分支存在新代码，请及时拉取";
     public static final String GO_GET_NEW_CODE = "去拉取";
     public static final String CLOSE = "Close";
+    public static final String OCR_PDF_FILE_NUM_EMPTY = "待识别的pdf页面码不能为空";
+    public static final String OCR_FAILED = "识别失败：";
+    public static final String OCR_FILE_EMPTY = "待识别文件不能为空";
 
     /** 通知组ID */
     public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper";
@@ -129,6 +132,17 @@ public class Message {
      */
     public static void notifyError(@NotNull Project project, String content) {
         notifyError(project, content, null, null);
+    }
+
+    /**
+     * error消息
+     *
+     * @param content                   消息文本
+     * @param linkText                  链接id
+     * @param applicationConfigurableId 配置页id
+     */
+    public static void notifyError(String content, String linkText, String applicationConfigurableId) {
+        MyPsiUtil.getCurrentProject(project -> notifyError(project, content, linkText, applicationConfigurableId));
     }
 
     /**

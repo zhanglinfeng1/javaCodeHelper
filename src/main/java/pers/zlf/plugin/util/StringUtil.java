@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -74,18 +72,6 @@ public class StringUtil {
 
     public static boolean isEnglish(String text) {
         return text.getBytes().length == text.length();
-    }
-
-    /**
-     * 正则获取首个匹配的字符串
-     *
-     * @param str   待处理字符串
-     * @param regex 正则表达式
-     * @return String
-     */
-    public static String getFirstMatcher(String str, String regex) {
-        Matcher m = Pattern.compile(regex).matcher(str);
-        return m.find() ? m.group(1) : Common.BLANK_STRING;
     }
 
     /**

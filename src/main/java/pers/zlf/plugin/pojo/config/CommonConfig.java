@@ -13,6 +13,12 @@ public class CommonConfig {
     private String appId;
     /** 翻译api secretKey */
     private String secretKey;
+    /** 翻译api */
+    private int ocrApi = Common.BAIDU_OCR;
+    /** ocr ApiKey */
+    private String ocrApiKey;
+    /** ocr SecurityKey */
+    private String ocrSecurityKey;
     /** api工具 */
     private int apiTool = Common.SWAGGER2_API;
     /** 开启代码补全 */
@@ -126,5 +132,29 @@ public class CommonConfig {
 
     public void setCodeRemindMinute(int codeRemindMinute) {
         this.codeRemindMinute = codeRemindMinute;
+    }
+
+    public int getOcrApi() {
+        return ocrApi;
+    }
+
+    public void setOcrApi(int ocrApi) {
+        this.ocrApi = ocrApi;
+    }
+
+    public String getOcrApiKey() {
+        return ocrApiKey;
+    }
+
+    public void setOcrApiKey(String ocrApiKey) {
+        this.ocrApiKey = ocrApiKey;
+    }
+
+    public String getOcrSecurityKey() {
+        return ocrSecurityKey;
+    }
+
+    public void setOcrSecurityKey(String ocrSecurityKey) {
+        this.ocrSecurityKey = ocrSecurityKey;
     }
 }

@@ -10,8 +10,10 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.stream.Collectors;
 
@@ -39,18 +41,23 @@ public class HttpUtil {
     };
 
     public static <T extends ResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
-        String result = Common.BLANK_STRING;
         HttpURLConnection conn = getConnection(urlStr);
         conn.setRequestMethod(Request.GET);
-        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            result = br.lines().collect(Collectors.joining());
-            br.close();
+        return getResult(conn, cls);
+    }
+
+    public static <T extends ResponseResult> T post(String urlStr, String output, Class<T> cls) throws Exception {
+        HttpURLConnection conn = getConnection(urlStr);
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setRequestMethod(Request.POST);
+        if (StringUtil.isNotEmpty(output)) {
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(output.getBytes(StandardCharsets.UTF_8));
+            outputStream.close();
         }
-        conn.disconnect();
-        T t = JsonUtil.toObject(result, cls);
-        t.setResponseCode(conn.getResponseCode());
-        return t;
+        return getResult(conn, cls);
     }
 
     private static HttpURLConnection getConnection(String urlStr) throws Exception {
@@ -64,5 +71,18 @@ public class HttpUtil {
         }
         conn.setConnectTimeout(Request.SOCKET_TIMEOUT);
         return conn;
+    }
+
+    private static <T extends ResponseResult> T getResult(HttpURLConnection conn, Class<T> cls) throws Exception {
+        String result = Common.BLANK_STRING;
+        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            result = br.lines().collect(Collectors.joining());
+            br.close();
+        }
+        conn.disconnect();
+        T t = JsonUtil.toObject(result, cls);
+        t.setResponseCode(conn.getResponseCode());
+        return t;
     }
 }

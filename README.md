@@ -32,6 +32,11 @@ sql与java的快捷跳转<br />
 点击![image](src/main/resources/icon/logoGrey.svg)即可生成简易的sql代码<br />
 xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
 
+## 文字识别
+目前仅支持百度ocr<br />
+在idea中配置账号后，在“常用工具”可使用<br />
+配置路径：File > Setting > Other Settings > javaCodeHelper
+
 ## 翻译
 目前仅支持中译英，英译中<br />
 目前仅支持百度翻译<br />
@@ -59,6 +64,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     时间戳转换：时间戳与字符串的互相转换
     加解密：一些常用的加解密方式
     进制转换：数字值转换
+    文字识别：识别图片或者pdf文件中的文字
 
 ## 导出表结构
 Database中右击选中 <br />

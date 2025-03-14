@@ -33,6 +33,7 @@ public class Common {
     public static final String HOOK_UP = "√";
     public static final String FONT_WRYH = "微软雅黑";
     public static final String LINE_BREAK = "\n";
+    public static final String COLON = ":";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
@@ -73,6 +74,9 @@ public class Common {
 
     /** 翻译 */
     public static final Integer BAIDU_TRANSLATE = 0;
+
+    /** 文字识别 */
+    public static final Integer BAIDU_OCR = 0;
 
     /** 接口文档Api */
     public static final Integer SWAGGER2_API = 0;

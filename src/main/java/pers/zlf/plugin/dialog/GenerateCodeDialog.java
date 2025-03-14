@@ -57,7 +57,7 @@ public class GenerateCodeDialog {
     private final DefaultTableModel queryTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
     private final Map<String, String> selectTemplateFileMap = new HashMap<>();
     private final Project project;
-    private TableInfo tableInfo;
+    private final TableInfo tableInfo;
     private String[] columnArr;
     /** ui组件 */
     private JPanel contentPanel;

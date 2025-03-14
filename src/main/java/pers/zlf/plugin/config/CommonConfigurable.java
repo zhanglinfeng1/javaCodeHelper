@@ -60,6 +60,15 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (dialog.getCodeRemindMinute() != config.getCodeRemindMinute()) {
             return true;
         }
+        if (dialog.getOcrApi() != config.getOcrApi()) {
+            return true;
+        }
+        if (!StringUtil.equals(dialog.getOcrApiKey(), config.getOcrApiKey())) {
+            return true;
+        }
+        if (!StringUtil.equals(dialog.getOcrSecurityKey(), config.getOcrSecurityKey())) {
+            return true;
+        }
         return dialog.getMaxCodeCompletionLength() != config.getMaxCodeCompletionLength();
     }
 
@@ -73,6 +82,9 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         config.setTranslateApi(dialog.getTranslateApi());
         config.setAppId(dialog.getAppId());
         config.setSecretKey(dialog.getSecurityKey());
+        config.setOcrApi(dialog.getOcrApi());
+        config.setOcrApiKey(dialog.getOcrApiKey());
+        config.setOcrSecurityKey(dialog.getOcrSecurityKey());
         config.setApiTool(dialog.getApiTool());
         config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
         config.setOpenAngleBracket(dialog.isOpenAngleBracket());
