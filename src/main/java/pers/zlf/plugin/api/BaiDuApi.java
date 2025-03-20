@@ -34,9 +34,6 @@ public class BaiDuApi extends BaseApi {
     protected String requestTransApi() throws Exception {
         String appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
         String securityKey = ConfigFactory.getInstance().getCommonConfig().getSecretKey();
-        if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
-            throw new Exception(Message.PLEASE_CONFIGURE_TRANSLATE_FIRST);
-        }
         String salt = String.valueOf(System.currentTimeMillis());
         String sign = DigestUtils.md5Hex(appid + text + salt + securityKey);
         String urlStr = String.format(TRANSLATE_URL, URLEncoder.encode(text, StandardCharsets.UTF_8), sourceLanguage, targetLanguage, salt, sign, appid);

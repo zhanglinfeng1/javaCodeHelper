@@ -41,17 +41,13 @@ public class HttpUtil {
     };
 
     public static <T extends ResponseResult> T get(String urlStr, Class<T> cls) throws Exception {
-        HttpURLConnection conn = getConnection(urlStr);
-        conn.setRequestMethod(Request.GET);
-        return getResult(conn, cls);
+        return getResult(getConnection(urlStr, Request.GET), cls);
     }
 
     public static <T extends ResponseResult> T post(String urlStr, String output, Class<T> cls) throws Exception {
-        HttpURLConnection conn = getConnection(urlStr);
+        HttpURLConnection conn = getConnection(urlStr, Request.POST);
         conn.setDoOutput(true);
-        conn.setDoInput(true);
         conn.setUseCaches(false);
-        conn.setRequestMethod(Request.POST);
         if (StringUtil.isNotEmpty(output)) {
             OutputStream outputStream = conn.getOutputStream();
             outputStream.write(output.getBytes(StandardCharsets.UTF_8));
@@ -60,10 +56,11 @@ public class HttpUtil {
         return getResult(conn, cls);
     }
 
-    private static HttpURLConnection getConnection(String urlStr) throws Exception {
+    private static HttpURLConnection getConnection(String urlStr, String method) throws Exception {
         //TODO  JDK21  URI.toURL
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod(method);
         if (conn instanceof HttpsURLConnection) {
             SSLContext sslcontext = SSLContext.getInstance(TLS);
             sslcontext.init(null, new TrustManager[]{HttpUtil.X_509_TRUST_MANAGER}, null);

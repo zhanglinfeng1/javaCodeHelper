@@ -32,6 +32,11 @@ public class TranslateAction extends BaseAction {
 
     @Override
     protected boolean isVisible() {
+        String appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
+        String securityKey = ConfigFactory.getInstance().getCommonConfig().getSecretKey();
+        if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
+            return false;
+        }
         //获取选择内容
         this.selectionText = editor.getSelectionModel().getSelectedText();
         return null != editor && StringUtil.isNotEmpty(selectionText);
@@ -59,11 +64,7 @@ public class TranslateAction extends BaseAction {
                             .setTitle(baseApi.getTranslateApiName()).setClickHandler(actionListener, false).createBalloon().show(jbPopupFactory.guessBestPopupLocation(editor), Balloon.Position.below));
                 }
             } catch (Exception e) {
-                if (Message.PLEASE_CONFIGURE_TRANSLATE_FIRST.equals(e.getMessage())) {
-                    Message.notifyError(project, Message.PLEASE_CONFIGURE_TRANSLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER);
-                } else {
-                    Message.notifyError(project, Message.TRANSLATE_FAILED + e.getMessage());
-                }
+                Message.notifyError(project, Message.TRANSLATE_FAILED + e.getMessage());
             }
         });
     }

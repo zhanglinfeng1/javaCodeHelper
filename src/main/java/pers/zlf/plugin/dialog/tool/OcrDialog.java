@@ -42,7 +42,7 @@ public class OcrDialog {
                 downTextArea.setText(String.join(System.lineSeparator(), ocrResult));
             } catch (Exception ex) {
                 if (Message.PLEASE_CONFIGURE_OCR_FIRST.equals(ex.getMessage())) {
-                    Message.notifyError(Message.PLEASE_CONFIGURE_TRANSLATE_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER);
+                    Message.notifyError(Message.PLEASE_CONFIGURE_OCR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER);
                 } else {
                     Message.notifyError(Message.OCR_FAILED + ex.getMessage());
                 }
