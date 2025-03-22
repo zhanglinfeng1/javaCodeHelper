@@ -69,6 +69,15 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (!StringUtil.equals(dialog.getOcrSecurityKey(), config.getOcrSecurityKey())) {
             return true;
         }
+        if (!StringUtil.equals(dialog.getZenTaoUrl(), config.getZenTaoUrl())) {
+            return true;
+        }
+        if (!StringUtil.equals(dialog.getZenTaoAccount(), config.getZenTaoAccount())) {
+            return true;
+        }
+        if (!StringUtil.equals(dialog.getZenTaoPassword(), config.getZenTaoPassword())) {
+            return true;
+        }
         return dialog.getMaxCodeCompletionLength() != config.getMaxCodeCompletionLength();
     }
 
@@ -93,9 +102,12 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         config.setOpenParenth(dialog.isOpenParenth());
         config.setOpenCodeRemind(dialog.isOpenCodeRemind());
         config.setCodeRemindMinute(dialog.getCodeRemindMinute());
-        if (config.isOpenCodeRemind()){
+        config.setZenTaoUrl(dialog.getZenTaoUrl());
+        config.setZenTaoAccount(dialog.getZenTaoAccount());
+        config.setZenTaoPassword(dialog.getZenTaoPassword());
+        if (config.isOpenCodeRemind()) {
             NewCodeRemindListener.rerun(config.getCodeRemindMinute());
-        }else {
+        } else {
             NewCodeRemindListener.shutdownNow();
         }
         ConfigFactory.getInstance().setCommonConfig(config);

@@ -37,6 +37,12 @@ public class CommonConfig {
     private boolean openCodeRemind = true;
     /** 轮询时间（分钟） */
     private int codeRemindMinute = 10;
+    /** 禅道地址 */
+    private String zenTaoUrl;
+    /** 禅道账号 */
+    private String zenTaoAccount;
+    /** 禅道密码 */
+    private String zenTaoPassword;
 
     public int getTranslateApi() {
         return translateApi;
@@ -156,5 +162,29 @@ public class CommonConfig {
 
     public void setOcrSecurityKey(String ocrSecurityKey) {
         this.ocrSecurityKey = ocrSecurityKey;
+    }
+
+    public String getZenTaoUrl() {
+        return zenTaoUrl;
+    }
+
+    public void setZenTaoUrl(String zenTaoUrl) {
+        this.zenTaoUrl = zenTaoUrl;
+    }
+
+    public String getZenTaoAccount() {
+        return zenTaoAccount;
+    }
+
+    public void setZenTaoAccount(String zenTaoAccount) {
+        this.zenTaoAccount = zenTaoAccount;
+    }
+
+    public String getZenTaoPassword() {
+        return zenTaoPassword;
+    }
+
+    public void setZenTaoPassword(String zenTaoPassword) {
+        this.zenTaoPassword = zenTaoPassword;
     }
 }

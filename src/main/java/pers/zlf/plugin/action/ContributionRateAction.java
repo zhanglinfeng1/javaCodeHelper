@@ -32,8 +32,6 @@ import java.util.List;
  * @date create in 2023/6/14 11:48
  */
 public class ContributionRateAction extends BaseAction {
-    private final String USER = "user";
-    private final String EMAIL = "email";
     /** 项目路径 */
     private Path bathPath;
     /** Git repository */
@@ -89,7 +87,7 @@ public class ContributionRateAction extends BaseAction {
                 }
                 //没有配置取当前邮箱
                 if (CollectionUtil.isEmpty(emailList)) {
-                    emailList = Empty.of(repository.getConfig().getString(USER, null, EMAIL)).map(List::of).orElse(new ArrayList<>());
+                    emailList = Empty.of(repository.getConfig().getString("user", null, "email")).map(List::of).orElse(new ArrayList<>());
                     if (CollectionUtil.isEmpty(emailList)) {
                         continue;
                     }

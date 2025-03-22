@@ -84,6 +84,10 @@ Database中右击选中 <br />
 目前注释判断仅支持.java、.xml文件<br />
 ![image](src/main/resources/example/codeStatistics.png)<br />
 
+## 禅道任务、bug信息
+进行git提交时，点击![image](src/main/resources/icon/logo.svg)，选择BUG或者任务<br />
+![image](src/main/resources/example/gitMessage.png)
+
 ## 自定义模版生成代码
 主要用于学习插件开发，功能比较单一，建议使用其他更完善的插件去生成代码<br />
 Database中右击选中<br />![image](src/main/resources/example/generateCode.png)<br />

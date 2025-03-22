@@ -2,7 +2,7 @@
     <!-- o(╥﹏╥)o 写的时候id不规范，现在改不了 pers.zlf.plugin.JavaCodeHelper -->
     <id>com.zlf.java-code-helper.plugin</id>
     <name>Java Code Helper</name>
-    <version>2.10.0</version>
+    <version>2.11.0</version>
     <vendor>zhanglinfeng</vendor>
     <idea-version since-build="223.7571.182"/>
     <description><![CDATA[
@@ -11,6 +11,7 @@
         <p>目前有以下功能，详情见 <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
         <ul>
             <li>git仓库新代码提醒</li>
+            <li>禅道任务、bug信息</li>
             <li>彩虹括号</li>
             <li>代码补全</li>
             <li>快捷跳转</li>
@@ -28,7 +29,7 @@
     </description>
     <change-notes><![CDATA[
         <ul>
-            <li>[NEW]文字识别：识别图片或者pdf文件中的文字</li>
+            <li>[NEW]git提交时选择禅道任务、bug信息</li>
         </ul>
     ]]>
     </change-notes>
@@ -116,6 +117,10 @@
         <!-- 根据表结构生成代码-->
         <action id="pers.zlf.plugin.GenerateCodeAction" class="pers.zlf.plugin.action.GenerateCodeAction" text="生成代码" icon="/icon/logo.svg">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.ExportTableInfoAction"/>
+        </action>
+        <!-- 禅道任务、bug列表-->
+        <action id="pers.zlf.plugin.ZenTaoAction" class="pers.zlf.plugin.action.ZenTaoAction" text="禅道任务、BUG" icon="/icon/logo.svg">
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="after" relative-to-action="Vcs.ShowMessageHistory"/>
         </action>
     </actions>
 

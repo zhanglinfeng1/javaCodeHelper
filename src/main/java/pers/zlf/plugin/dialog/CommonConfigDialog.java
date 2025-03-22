@@ -32,6 +32,9 @@ public class CommonConfigDialog extends BaseDialog{
     private JComboBox<String> ocrApiComboBox;
     private JTextField ocrAppKeyTextField;
     private JTextField ocrSecurityKeyKeyTextField;
+    private JTextField zenTaoUrlTextField;
+    private JTextField zenTaoAccountTextField;
+    private JTextField zenTaoPasswordTextField;
 
     public CommonConfigDialog() {
     }
@@ -60,6 +63,10 @@ public class CommonConfigDialog extends BaseDialog{
         //git代码提醒
         codeRemindCheckBox.setSelected(config.isOpenCodeRemind());
         codeRemindMinuteTextField.setValue(config.getCodeRemindMinute());
+        //禅道配置
+        zenTaoUrlTextField.setText(config.getZenTaoUrl());
+        zenTaoAccountTextField.setText(config.getZenTaoAccount());
+        zenTaoPasswordTextField.setText(config.getZenTaoPassword());
     }
 
     @Override
@@ -126,4 +133,17 @@ public class CommonConfigDialog extends BaseDialog{
     public String getOcrSecurityKey() {
         return ocrSecurityKeyKeyTextField.getText();
     }
+
+    public String getZenTaoUrl() {
+        return zenTaoUrlTextField.getText();
+    }
+
+    public String getZenTaoAccount() {
+        return zenTaoAccountTextField.getText();
+    }
+
+    public String getZenTaoPassword() {
+        return zenTaoPasswordTextField.getText();
+    }
+
 }

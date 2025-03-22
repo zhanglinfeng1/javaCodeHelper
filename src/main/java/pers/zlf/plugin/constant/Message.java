@@ -80,6 +80,10 @@ public class Message {
     public static final String OCR_PDF_FILE_NUM_EMPTY = "待识别的pdf页面码不能为空";
     public static final String OCR_FAILED = "识别失败：";
     public static final String OCR_FILE_EMPTY = "待识别文件不能为空";
+    public static final String ZENTAO_REQUEST_SESSION_FAILED = "获取禅道session失败：";
+    public static final String ZENTAO_REQUEST_BUG_FAILED = "获取禅道bug失败：";
+    public static final String ZENTAO_REQUEST_TASK_FAILED = "获取禅道任务失败：";
+    public static final String ZENTAO_LOGIN_FAILED = "禅道登录失败：";
 
     /** 通知组ID */
     public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper";

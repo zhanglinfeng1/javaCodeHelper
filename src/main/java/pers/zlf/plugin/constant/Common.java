@@ -34,6 +34,8 @@ public class Common {
     public static final String FONT_WRYH = "微软雅黑";
     public static final String LINE_BREAK = "\n";
     public static final String COLON = ":";
+    public static final String EQUAL_SIGN = "=";
+    public static final String SUCCESS = "success";
 
     /** FreeMark模板 */
     public static final String TEMPLATE_PATH = "templates";
