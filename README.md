@@ -4,7 +4,7 @@
 intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG<br />
 ![](https://img.shields.io/badge/IDEA-2022.3.1+-pink.svg?labelColor=blue)<br />
 <a href='https://gitee.com/zlfzh/javaCodeHelper'><img src='https://gitee.com/zlfzh/javaCodeHelper/badge/star.svg?theme=dark' alt='star'></img></a>
-[![](https://img.shields.io/github/stars/zhanglinfeng1/javaCodeHelper?style=flat&logo=GitHub&color=pink&labelColor=blue)](https://gitee.com/zlfzh/javaCodeHelper)
+[![](https://img.shields.io/github/stars/zhanglinfeng1/javaCodeHelper?style=flat&logo=GitHub&color=pink&labelColor=blue)](https://github.com/zhanglinfeng1/javaCodeHelper)
 [![](https://img.shields.io/jetbrains/plugin/d/19944?color=pink&labelColor=blue&logo=jetbrains)](https://plugins.jetbrains.com/plugin/19944-java-code-helper)<br />
 </div>
 
