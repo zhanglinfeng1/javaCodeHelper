@@ -165,9 +165,9 @@ public class MyPsiUtil {
         }
         basicTypeName = basicTypeName.replaceAll(Regex.ANGLE_BRACKET, Common.BLANK_STRING);
         suggestedVariableName = (TypeUtil.isSimpleType(suggestedVariableName) ? Common.BLANK_STRING : StringUtil.toLowerCaseFirst(suggestedVariableName)) + basicTypeName;
-        if (suggestedVariableName.contains(variableName)) {
+        if (suggestedVariableName.toLowerCase().contains(variableName.toLowerCase())) {
             variableName = suggestedVariableName;
-        } else if (StringUtil.toLowerCaseFirst(basicTypeName).contains(variableName)) {
+        } else if (basicTypeName.toLowerCase().contains(variableName.toLowerCase())) {
             variableName = basicTypeName;
         } else {
             variableName = variableName + basicTypeName;

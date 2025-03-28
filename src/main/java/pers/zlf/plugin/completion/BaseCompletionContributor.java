@@ -81,7 +81,7 @@ public abstract class BaseCompletionContributor extends CompletionContributor {
     }
 
     protected void addCompletionResult(String completionText, String presentableText, InsertHandler<LookupElement> insertHandler) {
-        LookupElementBuilder builder = LookupElementBuilder.create(completionText).withPresentableText(presentableText).withIcon(MyIcon.LOGO).withCaseSensitivity(true);
+        LookupElementBuilder builder = LookupElementBuilder.create(completionText).withPresentableText(presentableText).withIcon(MyIcon.LOGO).withCaseSensitivity(false);
         result.addElement(Optional.ofNullable(insertHandler).map(builder::withInsertHandler).orElse(builder));
     }
 }
