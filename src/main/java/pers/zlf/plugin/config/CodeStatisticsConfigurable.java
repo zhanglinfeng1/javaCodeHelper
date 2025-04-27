@@ -18,7 +18,7 @@ import pers.zlf.plugin.util.StringUtil;
  */
 public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsDialog> {
     /** 配置参数 */
-    private final CodeStatisticsConfig config = ConfigFactory.getInstance().getCodeStatisticsConfig();
+    private final CodeStatisticsConfig CONFIG = ConfigFactory.getInstance().getCodeStatisticsConfig();
 
     public CodeStatisticsConfigurable() {
         dialog = new CodeStatisticsDialog();
@@ -27,22 +27,22 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
 
     @Override
     public boolean isModified() {
-        if (!CollectionUtil.equals(dialog.getFileTypeList(), config.getFileTypeList())) {
+        if (!CollectionUtil.equals(dialog.getFileTypeList(), CONFIG.getFileTypeList())) {
             return true;
         }
-        if (!CollectionUtil.equals(dialog.getGitEmailList(), config.getGitEmailList())) {
+        if (!CollectionUtil.equals(dialog.getGitEmailList(), CONFIG.getGitEmailList())) {
             return true;
         }
-        if (dialog.isCountEmptyLine() != config.isCountEmptyLine()) {
+        if (dialog.isCountEmptyLine() != CONFIG.isCountEmptyLine()) {
             return true;
         }
-        if (dialog.isCountKeyword() != config.isCountKeyword()) {
+        if (dialog.isCountKeyword() != CONFIG.isCountKeyword()) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getCountDate(), config.getCountDate())) {
+        if (!StringUtil.equals(dialog.getCountDate(), CONFIG.getCountDate())) {
             return true;
         }
-        return dialog.isCountComment() != config.isCountComment();
+        return dialog.isCountComment() != CONFIG.isCountComment();
     }
 
     @Override
@@ -55,13 +55,13 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
                 return;
             }
         }
-        config.setFileTypeList(dialog.getFileTypeList());
-        config.setGitEmailList(dialog.getGitEmailList());
-        config.setCountComment(dialog.isCountComment());
-        config.setCountEmptyLine(dialog.isCountEmptyLine());
-        config.setCountKeyword(dialog.isCountKeyword());
-        config.setCountDate(dialog.getCountDate());
-        ConfigFactory.getInstance().setCodeStatisticsConfig(config);
+        CONFIG.setFileTypeList(dialog.getFileTypeList());
+        CONFIG.setGitEmailList(dialog.getGitEmailList());
+        CONFIG.setCountComment(dialog.isCountComment());
+        CONFIG.setCountEmptyLine(dialog.isCountEmptyLine());
+        CONFIG.setCountKeyword(dialog.isCountKeyword());
+        CONFIG.setCountDate(dialog.getCountDate());
+        ConfigFactory.getInstance().setCodeStatisticsConfig(CONFIG);
         // 重新统计
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             CodeCountUtil.countCodeLines(project);

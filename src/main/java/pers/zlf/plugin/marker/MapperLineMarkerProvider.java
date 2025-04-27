@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  */
 public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
     /** sql语句类型 */
-    private final Map<String, String> sqlTypeMap = new HashMap<>() {{
+    private final Map<String, String> SQL_TYPE_MAP = new HashMap<>() {{
         put("add", "insert");
         put("insert", "insert");
         put("update", "update");
@@ -50,6 +50,9 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
         put("delete", "delete");
         put("remove", "delete");
     }};
+    private final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
+    private final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
+
     /** 类全名 */
     private String classFullName;
     /** 类中的方法map */
@@ -102,7 +105,7 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
                 addLineMarkerBoth(targetMethod.get().getNameIdentifier(), annotation);
             } else {
                 //生成代码
-                templateName = Common.JUMP_TO_METHOD_TEMPLATE;
+                templateName = JUMP_TO_METHOD_TEMPLATE;
                 Function<String, PsiMethod> function = code -> {
                     PsiMethod method = JavaPsiFacade.getInstance(project).getElementFactory().createMethodFromText(code, targetClass);
                     targetClass.add(method);
@@ -114,10 +117,10 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
     }
 
     private void jumpToXml() {
-        if (Common.JUMP_TO_METHOD_TEMPLATE.equals(templateName)) {
+        if (JUMP_TO_METHOD_TEMPLATE.equals(templateName)) {
             return;
         }
-        templateName = Common.JUMP_TO_XML_TEMPLATE;
+        templateName = JUMP_TO_XML_TEMPLATE;
         //排除用注解实现的
         List<String> ibatisList = List.of(Annotation.IBATIS_SELECT, Annotation.IBATIS_INSERT, Annotation.IBATIS_UPDATE, Annotation.IBATIS_DELETE,
                 Annotation.IBATIS_SELECT_PROVIDER, Annotation.IBATIS_INSERT_PROVIDER, Annotation.IBATIS_UPDATE_PROVIDER, Annotation.IBATIS_DELETE_PROVIDER);
@@ -190,7 +193,7 @@ public class MapperLineMarkerProvider extends BaseLineMarkerProvider<PsiClass> {
             PsiMethodModel methodModel = new PsiMethodModel(methodName, psiMethod.getReturnType());
             List<PsiParameterModel> modelList = Arrays.stream(psiMethod.getParameterList().getParameters()).map(PsiParameterModel::new).collect(Collectors.toList());
             methodModel.setParameterModelList(modelList);
-            Optional<String> sqlType = sqlTypeMap.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
+            Optional<String> sqlType = SQL_TYPE_MAP.entrySet().stream().filter(t -> methodName.startsWith(t.getKey())).map(Map.Entry::getValue).findAny();
             methodModel.setSqlType(sqlType.orElse(Xml.SELECT));
             //生成代码
             String code = TemplateFactory.getInstance().getTemplateContent(templateName, JsonUtil.toMap(methodModel));

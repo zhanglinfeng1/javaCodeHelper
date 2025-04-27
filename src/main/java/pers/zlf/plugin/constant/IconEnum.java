@@ -16,21 +16,13 @@ public enum IconEnum {
     //重置按钮图标
     RESET(MyIcon.RESET, MyIcon.RESET_DARK);
 
-    private final Icon brightIcon;
+    public final Icon BRIGHT_ICON;
 
-    private final Icon darkIcon;
+    public final Icon DARKI_CON;
 
     IconEnum(Icon brightIcon, Icon darkIcon) {
-        this.brightIcon = brightIcon;
-        this.darkIcon = darkIcon;
-    }
-
-    public Icon getBrightIcon() {
-        return brightIcon;
-    }
-
-    public Icon getDarkIcon() {
-        return darkIcon;
+        this.BRIGHT_ICON = brightIcon;
+        this.DARKI_CON = darkIcon;
     }
 
 }

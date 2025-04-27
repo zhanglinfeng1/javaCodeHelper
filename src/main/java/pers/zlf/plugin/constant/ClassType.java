@@ -16,7 +16,7 @@ public class ClassType {
     public static final String BOOLEAN = "boolean";
     public static final List<String> BASIC_TYPE_LIST = List.of("int", "short", "long", "byte", "float", "double", "boolean", "char", "Integer", "Short", "Long", "Byte", "Float",
             "Double", "Boolean", "Character", "String", "Date", "Timestamp");
-    public static final Map<String, Object> defaultValueMap = new HashMap<>(16) {{
+    public static final Map<String, Object> DEFAULT_VALUE_MAP = new HashMap<>(16) {{
         put(CommonClassNames.JAVA_LANG_OBJECT, null);
         put(CommonClassNames.JAVA_UTIL_DATE, null);
         put(CommonClassNames.JAVA_LANG_STRING, Common.BLANK_STRING);

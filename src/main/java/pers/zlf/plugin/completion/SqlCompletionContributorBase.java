@@ -7,7 +7,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.sql.psi.impl.SqlTokenElement;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Xml;
 import pers.zlf.plugin.util.StringUtil;
 import pers.zlf.plugin.util.XmlUtil;
@@ -17,11 +16,12 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
- *
  * @author zhanglinfeng
  * @date create in 2023/8/7 15:05
  */
 public class SqlCompletionContributorBase extends BaseMyBatisCompletionContributor {
+    private final String HASH_LEFT_BRACE = "#{";
+    private final String DOLLAR_LEFT_BRACE = "${";
 
     @Override
     protected boolean check() {
@@ -29,7 +29,7 @@ public class SqlCompletionContributorBase extends BaseMyBatisCompletionContribut
             return false;
         }
         String text = currentElement.getParent().getText();
-        if (StringUtil.isNotEmpty(text) && (text.startsWith(Common.HASH_LEFT_BRACE) || text.startsWith(Common.DOLLAR_LEFT_BRACE))) {
+        if (StringUtil.isNotEmpty(text) && (text.startsWith(HASH_LEFT_BRACE) || text.startsWith(DOLLAR_LEFT_BRACE))) {
             InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(currentElement.getProject());
             PsiElement position = parameters.getOriginalPosition();
             PsiFile file = Optional.ofNullable(position).map(injectedLanguageManager::getTopLevelFile).orElse(null);

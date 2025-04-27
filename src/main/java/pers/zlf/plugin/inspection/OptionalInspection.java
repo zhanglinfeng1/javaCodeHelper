@@ -99,7 +99,7 @@ public class OptionalInspection extends AbstractBaseJavaLocalInspectionTool {
                     String variable = expression.getText();
                     String replaceText = String.format(Common.OPTIONAL, variable);
                     if (!variable.equals(notNullText)) {
-                        replaceText = replaceText + Common.DOT + Common.MAP_STR + String.format(Common.LAMBDA_STR, Common.T, notNullText);
+                        replaceText = replaceText + Common.MAP_STR + String.format(Common.LAMBDA_STR, Common.T, notNullText);
                     }
                     replaceText = replaceText + String.format(Common.OPTIONAL_ELSE, nullText);
                     holder.registerProblem(conditionalExpression, Message.OPTIONAL, ProblemHighlightType.WARNING, new ReplaceTernaryExpressionQuickFix(replaceText));

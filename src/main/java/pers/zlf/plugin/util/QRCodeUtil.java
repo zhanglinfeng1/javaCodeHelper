@@ -12,7 +12,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.intellij.util.ui.UIUtil;
-import pers.zlf.plugin.constant.Common;
 
 import javax.imageio.ImageIO;
 import java.awt.BasicStroke;
@@ -22,6 +21,7 @@ import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 
 /**
@@ -51,7 +51,7 @@ public class QRCodeUtil {
     public static BufferedImage generateQRCode(String content, String logoPath) throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-        hints.put(EncodeHintType.CHARACTER_SET, Common.CHARSET_UTF_8);
+        hints.put(EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8.name());
         hints.put(EncodeHintType.MARGIN, 1);
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
         int width = bitMatrix.getWidth();
@@ -85,7 +85,7 @@ public class QRCodeUtil {
         BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(image);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         Hashtable<DecodeHintType, String> hints = new Hashtable<>();
-        hints.put(DecodeHintType.CHARACTER_SET, Common.CHARSET_UTF_8);
+        hints.put(DecodeHintType.CHARACTER_SET, StandardCharsets.UTF_8.name());
         Result result = new MultiFormatReader().decode(bitmap, hints);
         return result.getText();
     }

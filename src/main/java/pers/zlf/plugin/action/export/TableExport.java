@@ -8,16 +8,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @date create in 2024/9/10 18:44
  */
 public class TableExport extends BaseExport {
-    private final DasTable dasTable;
+    private final DasTable DAS_TABLE;
 
     public TableExport(DasTable dasTable) {
-        this.dasTable = dasTable;
+        this.DAS_TABLE = dasTable;
     }
 
     @Override
     protected String dealWorkbook(XSSFWorkbook workbook) {
-        createSheet(workbook, dasTable);
-        return dasTable.getName();
+        createSheet(workbook, DAS_TABLE);
+        return DAS_TABLE.getName();
     }
 
 }

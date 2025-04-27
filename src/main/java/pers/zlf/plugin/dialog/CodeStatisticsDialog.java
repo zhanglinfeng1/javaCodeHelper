@@ -28,8 +28,8 @@ import java.util.Optional;
 public class CodeStatisticsDialog extends BaseDialog{
     private final String FILE_TYPE_TABLE_HEADER = "参与统计的文件后缀(例如：.java)";
     private final String GIT_EMAIL_TABLE_HEADER = "参与统计贡献率的git邮箱(默认当前邮箱)";
-    private final DefaultTableModel gitEmailTableModel;
-    private final DefaultTableModel defaultTableModel;
+    private final DefaultTableModel GIT_EMAIL_TABLE_MODEL;
+    private final DefaultTableModel DEFAULT_TABLE_MODEL;
     /** ui组件 */
     private JPanel panel;
     private JBTable fileTypeTable;
@@ -46,11 +46,11 @@ public class CodeStatisticsDialog extends BaseDialog{
 
     public CodeStatisticsDialog() {
         //文件类型
-        defaultTableModel = new DefaultTableModel(null, new String[]{FILE_TYPE_TABLE_HEADER});
-        initTable(defaultTableModel, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
+        DEFAULT_TABLE_MODEL = new DefaultTableModel(null, new String[]{FILE_TYPE_TABLE_HEADER});
+        initTable(DEFAULT_TABLE_MODEL, fileTypeTable, addFileTypeButton, deleteFileTypeButton);
         //git账号
-        gitEmailTableModel = new DefaultTableModel(null, new String[]{GIT_EMAIL_TABLE_HEADER});
-        initTable(gitEmailTableModel, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
+        GIT_EMAIL_TABLE_MODEL = new DefaultTableModel(null, new String[]{GIT_EMAIL_TABLE_HEADER});
+        initTable(GIT_EMAIL_TABLE_MODEL, gitEmailTable, addGitEmailButton, deleteGitEmailButton);
         //初始化按钮背景色
         SwingUtil.initButtonBackground(addFileTypeButton, deleteFileTypeButton, addGitEmailButton, deleteGitEmailButton);
     }
@@ -72,20 +72,20 @@ public class CodeStatisticsDialog extends BaseDialog{
             countDateTextField.setText(countDate);
         }
 
-        defaultTableModel.getDataVector().clear();
-        gitEmailTableModel.getDataVector().clear();
+        DEFAULT_TABLE_MODEL.getDataVector().clear();
+        GIT_EMAIL_TABLE_MODEL.getDataVector().clear();
         SwingUtil.addMouseListener(addFileTypeButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(fileTypeList)) {
             SwingUtil.removeMouseListener(deleteFileTypeButton, IconEnum.REMOVE);
         } else {
-            fileTypeList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
+            fileTypeList.forEach(value -> DEFAULT_TABLE_MODEL.addRow(new String[]{value}));
             SwingUtil.addMouseListener(deleteFileTypeButton, IconEnum.REMOVE);
         }
         SwingUtil.addMouseListener(addGitEmailButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(gitEmailList)) {
             SwingUtil.removeMouseListener(deleteGitEmailButton, IconEnum.REMOVE);
         } else {
-            gitEmailList.forEach(value -> gitEmailTableModel.addRow(new String[]{value}));
+            gitEmailList.forEach(value -> GIT_EMAIL_TABLE_MODEL.addRow(new String[]{value}));
             SwingUtil.addMouseListener(deleteGitEmailButton, IconEnum.REMOVE);
         }
     }
@@ -108,11 +108,11 @@ public class CodeStatisticsDialog extends BaseDialog{
     }
 
     public List<String> getFileTypeList() {
-        return SwingUtil.getTableContentList(defaultTableModel, 0);
+        return SwingUtil.getTableContentList(DEFAULT_TABLE_MODEL, 0);
     }
 
     public List<String> getGitEmailList() {
-        return SwingUtil.getTableContentList(gitEmailTableModel, 0);
+        return SwingUtil.getTableContentList(GIT_EMAIL_TABLE_MODEL, 0);
     }
 
     public String getCountDate() {

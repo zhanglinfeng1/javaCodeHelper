@@ -8,9 +8,9 @@ import pers.zlf.plugin.constant.Common;
  */
 public class AngleBracket extends BaseBrackets{
     public AngleBracket() {
-        this.displayName = Common.ANGLE_BRACKET_COLOR_DISPLAY_NAME;
+        this.displayName = "尖括号//颜色";
         this.externalName = Common.ANGLE_BRACKET_COLOR_KEY;
-        this.tagName = Common.ANGLE_BRACKET_COLOR_TAG_NAME;
+        this.tagName = "JKH";
         this.LBrackets = Common.LEFT_ANGLE_BRACKET;
         this.RBrackets = Common.RIGHT_ANGLE_BRACKET;
     }

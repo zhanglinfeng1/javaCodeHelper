@@ -8,9 +8,9 @@ import pers.zlf.plugin.constant.Common;
  */
 public class Parenth extends BaseBrackets{
     public Parenth() {
-        this.displayName = Common.PARENTH_COLOR_DISPLAY_NAME;
+        this.displayName = "小括号//颜色";
         this.externalName = Common.PARENTH_COLOR_KEY;
-        this.tagName = Common.PARENTH_COLOR_TAG_NAME;
+        this.tagName = "XKH";
         this.LBrackets = Common.LEFT_PARENTHESES;
         this.RBrackets = Common.RIGHT_PARENTHESES;
     }

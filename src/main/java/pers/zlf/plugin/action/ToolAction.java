@@ -21,7 +21,7 @@ public class ToolAction extends BaseAction {
     private final String LOWER_CASE = "小写";
     private final String HUMP = "转驼峰";
     private final String LOWERCASE_UNDERLINE = "转小写下划线";
-    private final Map<String, Function<String, String>> functionMap = new HashMap<>() {{
+    private final Map<String, Function<String, String>> FUNCTION_MAP = new HashMap<>() {{
         put(UPPER_CASE, String::toUpperCase);
         put(LOWER_CASE, String::toLowerCase);
         put(HUMP, StringUtil::toHumpStyle);
@@ -44,7 +44,7 @@ public class ToolAction extends BaseAction {
     protected void execute() {
         JBPopupFactory.getInstance().createPopupChooserBuilder(List.of(UPPER_CASE, LOWER_CASE, HUMP, LOWERCASE_UNDERLINE)).setMovable(true)
                 .setItemChosenCallback(value -> {
-                    String result = functionMap.get(value).apply(selectionText);
+                    String result = FUNCTION_MAP.get(value).apply(selectionText);
                     WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), result));
                 }).createPopup().showInBestPositionFor(editor);
     }

@@ -28,14 +28,14 @@ public class OcrDialog {
     private JPanel contentPanel;
     private TextFieldWithBrowseButton localFileField;
     private JTextField fileUrlTextField;
-    private final Map<Integer, BaseApi> ocrApiMap = new HashMap<>() {{
+    private final Map<Integer, BaseApi> OCR_API_MAP = new HashMap<>() {{
         put(Common.BAIDU_OCR, new BaiDuApi());
     }};
 
     public OcrDialog() {
         localFileField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(true, false, false, false, false, false)));
         Integer translateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
-        BaseApi baseApi = ocrApiMap.get(translateApi);
+        BaseApi baseApi = OCR_API_MAP.get(translateApi);
         downButton.addActionListener(e -> {
             try {
                 List<String> ocrResult = baseApi.ocr(localFileField.getText(), fileUrlTextField.getText(), pdfFileNumTextField.getText());

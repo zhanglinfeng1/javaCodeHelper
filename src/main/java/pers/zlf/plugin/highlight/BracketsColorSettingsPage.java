@@ -28,11 +28,11 @@ import java.util.function.BiConsumer;
  * @date create in 2024/9/20 17:32
  */
 public class BracketsColorSettingsPage implements ColorSettingsPage {
-    private static final AttributesDescriptor[] descriptorArr = new AttributesDescriptor[28];
+    private static final AttributesDescriptor[] DESCRIPTOR_ARR = new AttributesDescriptor[28];
 
-    private static final Map<String, TextAttributesKey> tagMap = new HashMap<>();
+    private static final Map<String, TextAttributesKey> TAG_MAP = new HashMap<>();
 
-    private static final StringBuilder demoText = new StringBuilder();
+    private static final StringBuilder DEMO_TEXT = new StringBuilder();
 
     public BracketsColorSettingsPage() {
         BiConsumer<BaseBrackets, Integer> consumer = (brackets, length) -> {
@@ -42,13 +42,13 @@ public class BracketsColorSettingsPage implements ColorSettingsPage {
             for (int i = length - 7; i < length; i++) {
                 num = i % 7 + 1;
                 TextAttributesKey colorKey = TextAttributesKey.createTextAttributesKey(brackets.getExternalName() + num);
-                descriptorArr[i] = new AttributesDescriptor(brackets.getDisplayName() + num, colorKey);
+                DESCRIPTOR_ARR[i] = new AttributesDescriptor(brackets.getDisplayName() + num, colorKey);
                 String tagName = brackets.getTagName() + num;
-                tagMap.put(tagName, colorKey);
+                TAG_MAP.put(tagName, colorKey);
                 frontText.append(String.format(Common.COLOR_TAG_STR, tagName, brackets.getLBrackets(), tagName));
                 afterText.insert(0, String.format(Common.COLOR_TAG_STR, tagName, brackets.getRBrackets(), tagName));
             }
-            demoText.append(frontText).append(afterText).append(Common.LINE_BREAK);
+            DEMO_TEXT.append(frontText).append(afterText).append(Common.LINE_BREAK);
         };
         consumer.accept(new AngleBracket(), 7);
         consumer.accept(new Parenth(), 14);
@@ -68,17 +68,17 @@ public class BracketsColorSettingsPage implements ColorSettingsPage {
 
     @Override
     public @NonNls @NotNull String getDemoText() {
-        return demoText.toString();
+        return DEMO_TEXT.toString();
     }
 
     @Override
     public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-        return tagMap;
+        return TAG_MAP;
     }
 
     @Override
     public AttributesDescriptor @NotNull [] getAttributeDescriptors() {
-        return descriptorArr;
+        return DESCRIPTOR_ARR;
     }
 
     @Override

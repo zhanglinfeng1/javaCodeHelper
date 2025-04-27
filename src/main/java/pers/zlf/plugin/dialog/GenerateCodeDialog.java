@@ -53,11 +53,13 @@ public class GenerateCodeDialog {
     private final String PACKAGR_PATH_INPUT_PLACEHOLDER = "pers.zlf.plugin";
     private final String[] SELECT_OPTIONS = {"=", ">", ">=", "<", "<=", "in", "not in", "like", "not like"};
     private final String[] DATA_TYPE_OPTIONS = {"String", "boolean", "Boolean", "int", "Integer", "double", "Double", "BigDecimal", "Date", "Time", "Timestamp", "LocalDateTime"};
-    private final DefaultTableModel columnTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "类型", "java数据类型", "备注"});
-    private final DefaultTableModel queryTableModel = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
-    private final Map<String, String> selectTemplateFileMap = new HashMap<>();
-    private final Project project;
-    private final TableInfo tableInfo;
+    private final DefaultTableModel COLUMN_TABLE_MODEL = new DefaultTableModel(null, new String[]{"字段名", "别名", "类型", "java数据类型", "备注"});
+    private final DefaultTableModel QUERY_TABLE_MODEL = new DefaultTableModel(null, new String[]{"字段名", "别名", "查询方式"});
+    private final String MODEL = "Model";
+    private final String ID = "id";
+    private final Map<String, String> SELECT_TEMPLATE_FILE_MAP = new HashMap<>();
+    private final Project PROJECT;
+    private final TableInfo TABLEINFO;
     private String[] columnArr;
     /** ui组件 */
     private JPanel contentPanel;
@@ -79,40 +81,40 @@ public class GenerateCodeDialog {
     private JPanel templateFilePanel;
 
     public GenerateCodeDialog(Project project, DasTable dasTable) {
-        this.project = project;
+        this.PROJECT = project;
         //解析表结构
-        tableInfo = new TableInfo(dasTable.getName(), dasTable.getComment());
-        columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        columnTable.setModel(columnTableModel);
+        this.TABLEINFO = new TableInfo(dasTable.getName(), dasTable.getComment());
+        this.columnTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.columnTable.setModel(COLUMN_TABLE_MODEL);
         for (DasColumn column : DasUtil.getColumns(dasTable)) {
             String sqlColumn = column.getName();
             String dataType = column.getDasType().toDataType().typeName;
-            columnTableModel.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
+            COLUMN_TABLE_MODEL.addRow(new String[]{sqlColumn, StringUtil.toHumpStyle(sqlColumn), dataType, DATA_TYPE_OPTIONS[0], Empty.of(column.getComment()).orElse(Common.BLANK_STRING)});
         }
         JTextField textField = new JTextField();
         textField.setEnabled(false);
         JTextField textField2 = new JTextField();
         textField2.setEnabled(false);
-        columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
-        columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
-        columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
-        columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(DATA_TYPE_OPTIONS)));
-        columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
+        this.columnTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(textField));
+        this.columnTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
+        this.columnTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(textField2));
+        this.columnTable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JComboBox<>(DATA_TYPE_OPTIONS)));
+        this.columnTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JTextField()));
         //文本框初始化
-        fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
+        this.fullPathField.addBrowseFolderListener(new TextBrowseFolderListener(new FileChooserDescriptor(false, true, false, false, false, false)));
         SwingUtil.addFocusListener(fullPathField.getTextField(), FULL_PATH_INPUT_PLACEHOLDER);
         SwingUtil.addFocusListener(packagePathField, PACKAGR_PATH_INPUT_PLACEHOLDER);
         //表格初始化
-        queryTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        queryTable.setModel(queryTableModel);
-        queryTable.getModel().addTableModelListener(e -> {
+        this.queryTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.queryTable.setModel(QUERY_TABLE_MODEL);
+        this.queryTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) {
-                String value = StringUtil.toHumpStyle(queryTableModel.getValueAt(e.getFirstRow(), 0).toString());
-                queryTableModel.setValueAt(value, e.getFirstRow(), 1);
+                String value = StringUtil.toHumpStyle(QUERY_TABLE_MODEL.getValueAt(e.getFirstRow(), 0).toString());
+                QUERY_TABLE_MODEL.setValueAt(value, e.getFirstRow(), 1);
             }
         });
         ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().keySet().forEach(templateComboBox::addItem);
-        templateComboBox.addItemListener(e -> {
+        this.templateComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 resetTemplateFilePanel();
                 templateComboBox.revalidate();
@@ -131,19 +133,19 @@ public class GenerateCodeDialog {
     private void showSecondPanel() {
         firstPanel.setVisible(false);
         secondPanel.setVisible(true);
-        int rowCount = columnTableModel.getRowCount();
+        int rowCount = COLUMN_TABLE_MODEL.getRowCount();
         if (rowCount > 0) {
             List<ColumnInfo> columnList = new ArrayList<>();
             for (int i = 0; i < rowCount; i++) {
                 int row = i;
-                Function<Integer, String> function = column -> StringUtil.toString(columnTableModel.getValueAt(row, column));
+                Function<Integer, String> function = column -> StringUtil.toString(COLUMN_TABLE_MODEL.getValueAt(row, column));
                 ColumnInfo columnInfo = new ColumnInfo(function.apply(0), function.apply(1), function.apply(2), function.apply(3), function.apply(4));
                 columnList.add(columnInfo);
-                if (Common.ID.equals(columnInfo.getColumnName())) {
-                    tableInfo.setIdColumnType(columnInfo.getColumnType());
+                if (ID.equals(columnInfo.getColumnName())) {
+                    this.TABLEINFO.setIdColumnType(columnInfo.getColumnType());
                 }
             }
-            tableInfo.setColumnList(columnList);
+            this.TABLEINFO.setColumnList(columnList);
             columnArr = columnList.stream().map(ColumnInfo::getSqlColumnName).toArray(String[]::new);
         }
         resetTemplateFilePanel();
@@ -159,7 +161,7 @@ public class GenerateCodeDialog {
         //添加
         addButton.addActionListener(e -> {
             SwingUtil.addMouseListener(deleteButton, IconEnum.REMOVE);
-            queryTableModel.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), SELECT_OPTIONS[0]});
+            QUERY_TABLE_MODEL.addRow(new String[]{columnArr[0], StringUtil.toHumpStyle(columnArr[0]), SELECT_OPTIONS[0]});
             queryTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JComboBox<>(columnArr)));
             queryTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
             queryTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(SELECT_OPTIONS)));
@@ -167,7 +169,7 @@ public class GenerateCodeDialog {
         //删除
         deleteButton.addActionListener(e -> Equals.of(queryTable.getSelectedRow()).and(rowNum -> rowNum >= 0).ifTrue(rowNum -> {
             //TODO 点击下拉后未选择，再点删除，有BUG
-            queryTableModel.removeRow(rowNum);
+            QUERY_TABLE_MODEL.removeRow(rowNum);
             if (queryTable.getRowCount() == 0) {
                 SwingUtil.removeMouseListener(deleteButton, IconEnum.REMOVE);
             }
@@ -176,7 +178,7 @@ public class GenerateCodeDialog {
         submitButton.addActionListener(e -> {
             String author = ConfigFactory.getInstance().getTemplateConfig().getAuthor();
             if (StringUtil.isEmpty(author)) {
-                Message.notifyError(project, Message.PLEASE_CONFIGURE_AUTHOR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_TEMPLATE);
+                Message.notifyError(PROJECT, Message.PLEASE_CONFIGURE_AUTHOR_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_TEMPLATE);
                 return;
             }
             try {
@@ -184,16 +186,16 @@ public class GenerateCodeDialog {
                         .ifTrueThrow(() -> new Exception(Message.FULL_PATH_NOT_NULL));
                 String packagePath = Equals.of(packagePathField.getText()).and(PACKAGR_PATH_INPUT_PLACEHOLDER::equals).or(StringUtil::isEmpty)
                         .ifTrueThrow(() -> new Exception(Message.PACKAGE_PATH_NOT_NULL));
-                tableInfo.setAuthor(author);
-                tableInfo.setPackagePath(packagePath);
-                tableInfo.setQueryColumnList(getQueryColumnList());
+                TABLEINFO.setAuthor(author);
+                TABLEINFO.setPackagePath(packagePath);
+                TABLEINFO.setQueryColumnList(getQueryColumnList());
                 //生成文件
                 String selectedTemplate = templateComboBox.getSelectedItem().toString();
-                TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, tableInfo);
-                Message.notifyInfo(project, Message.GENERATE_CODE_SUCCESS);
-                SwingUtil.closeToolWindowSelectedContent(project, Common.JAVA_CODE_HELPER);
+                TemplateFactory.getInstance().create(selectedTemplate, getSelectedTemplateFile(), fullPath, TABLEINFO);
+                Message.notifyInfo(PROJECT, Message.GENERATE_CODE_SUCCESS);
+                SwingUtil.closeToolWindowSelectedContent(PROJECT, Common.JAVA_CODE_HELPER);
             } catch (Exception ex) {
-                Message.notifyError(project, Message.GENERATE_CODE_FAILED + ex.getMessage());
+                Message.notifyError(PROJECT, Message.GENERATE_CODE_FAILED + ex.getMessage());
             }
         });
         SwingUtil.addMouseListener(addButton, IconEnum.ADD);
@@ -240,12 +242,12 @@ public class GenerateCodeDialog {
 
     private List<ColumnInfo> getQueryColumnList() {
         List<ColumnInfo> queryColumnList = new ArrayList<>();
-        int rowCount = queryTableModel.getRowCount();
+        int rowCount = QUERY_TABLE_MODEL.getRowCount();
         if (rowCount > 0) {
-            Map<String, ColumnInfo> columnInfoMap = tableInfo.getColumnList().stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
+            Map<String, ColumnInfo> columnInfoMap = TABLEINFO.getColumnList().stream().collect(Collectors.toMap(ColumnInfo::getSqlColumnName, Function.identity()));
             for (int i = 0; i < rowCount; i++) {
-                String columnName = StringUtil.toString(queryTableModel.getValueAt(i, 0));
-                ColumnInfo queryColumnInfo = new ColumnInfo(columnName, queryTableModel.getValueAt(i, 1), queryTableModel.getValueAt(i, 2));
+                String columnName = StringUtil.toString(QUERY_TABLE_MODEL.getValueAt(i, 0));
+                ColumnInfo queryColumnInfo = new ColumnInfo(columnName, QUERY_TABLE_MODEL.getValueAt(i, 1), QUERY_TABLE_MODEL.getValueAt(i, 2));
                 Optional.ofNullable(columnInfoMap.get(columnName)).ifPresent(t -> {
                     queryColumnInfo.setSqlColumnType(t.getSqlColumnType());
                     queryColumnInfo.setColumnType(t.getColumnType());
@@ -258,7 +260,7 @@ public class GenerateCodeDialog {
 
     private void resetTemplateFilePanel() {
         String tableNamePrefix = tableNamePrefixField.getText();
-        tableInfo.dealTableName(tableNamePrefix);
+        TABLEINFO.dealTableName(tableNamePrefix);
         String templateName = templateComboBox.getSelectedItem().toString();
         Map<String, String> templateFileMap = ConfigFactory.getInstance().getTemplateConfig().getTotalTemplateMap().get(templateName);
         List<String> templateFileNameList = templateFileMap.keySet().stream().toList();
@@ -266,21 +268,21 @@ public class GenerateCodeDialog {
         int rowCount = length / 3;
         templateFilePanel.removeAll();
         templateFilePanel.setLayout(new GridLayout(rowCount + 1, 3));
-        selectTemplateFileMap.clear();
+        SELECT_TEMPLATE_FILE_MAP.clear();
         for (int i = 0; i < length; i++) {
             String templateFileName = templateFileNameList.get(i);
             String fileName = getFileName(templateFileName);
             templateFilePanel.add(new JCheckBox(fileName, true));
-            selectTemplateFileMap.put(fileName, templateFileName);
+            SELECT_TEMPLATE_FILE_MAP.put(fileName, templateFileName);
         }
     }
 
     private String getFileName(String templateName) {
         String fileName = templateName.replaceAll(FileType.FREEMARKER_FILE, Common.BLANK_STRING);
-        if ((Common.MODEL + FileType.JAVA_FILE).equals(fileName) || Common.MODEL.equals(fileName)) {
-            fileName = tableInfo.getTableName();
+        if ((MODEL + FileType.JAVA_FILE).equals(fileName) || MODEL.equals(fileName)) {
+            fileName = TABLEINFO.getTableName();
         } else {
-            fileName = tableInfo.getTableName() + fileName;
+            fileName = TABLEINFO.getTableName() + fileName;
         }
         if (!fileName.contains(Common.DOT)) {
             fileName = fileName + FileType.JAVA_FILE;
@@ -293,7 +295,7 @@ public class GenerateCodeDialog {
         for (Component component : templateFilePanel.getComponents()) {
             if (component instanceof JCheckBox checkBox && checkBox.isSelected()) {
                 String fileName = checkBox.getText();
-                map.put(fileName, selectTemplateFileMap.get(fileName));
+                map.put(fileName, SELECT_TEMPLATE_FILE_MAP.get(fileName));
             }
         }
         return map;

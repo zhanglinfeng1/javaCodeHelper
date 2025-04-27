@@ -10,7 +10,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
-import pers.zlf.plugin.constant.Common;
 
 /**
  * excel样式工具类
@@ -19,6 +18,7 @@ import pers.zlf.plugin.constant.Common;
  * @date create in 2023/6/5 10:20
  */
 public class ExcelUtil {
+    private static final String FONT_WRYH = "微软雅黑";
 
     public static CellStyle titleCellStyle(Workbook wb) {
         return defaultCellStyle(wb, (short) 14);
@@ -41,7 +41,7 @@ public class ExcelUtil {
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setWrapText(true);
         Font basicFont = wb.createFont();
-        basicFont.setFontName(Common.FONT_WRYH);
+        basicFont.setFontName(FONT_WRYH);
         basicFont.setBold(true);
         basicFont.setFontHeightInPoints(size);
         cellStyle.setFont(basicFont);

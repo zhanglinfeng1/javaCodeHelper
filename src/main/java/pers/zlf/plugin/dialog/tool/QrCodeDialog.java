@@ -6,7 +6,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
-import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.QRCodeUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -67,9 +67,9 @@ public class QrCodeDialog {
             if (StringUtil.isEmpty(path)) {
                 return;
             }
-            String fileName = path + File.separator + UUID.randomUUID() + Common.DOT + Common.IMAGE_JPG;
+            String fileName = path + File.separator + UUID.randomUUID() + FileType.JPG_FILE;
             try {
-                ImageIO.write(qrCodeImage, Common.IMAGE_JPG, new File(fileName));
+                ImageIO.write(qrCodeImage, FileType.JPG_FILE.substring(1), new File(fileName));
                 uploadFilePath = null;
                 Message.notifyInfo(Message.DOWNLOAD_QR_CODE_SUCCESS + fileName);
             } catch (IOException ex) {

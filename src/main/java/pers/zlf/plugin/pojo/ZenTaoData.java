@@ -1,5 +1,6 @@
 package pers.zlf.plugin.pojo;
 
+import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.CollectionUtil;
 
 import java.util.ArrayList;
@@ -34,10 +35,10 @@ public class ZenTaoData {
     public List<String> getMessageList() {
         List<String> list = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(bugs)) {
-            bugs.forEach(t -> list.add("BUG：" + t.getId() + " " + t.getTitle()));
+            bugs.forEach(t -> list.add("BUG：" + t.getId() + Common.SPACE + t.getTitle()));
         }
         if (CollectionUtil.isNotEmpty(tasks)) {
-            tasks.forEach(t -> list.add("TASK：" + t.getId() + " " + t.getName()));
+            tasks.forEach(t -> list.add("TASK：" + t.getId() + Common.SPACE + t.getName()));
         }
         return list;
     }

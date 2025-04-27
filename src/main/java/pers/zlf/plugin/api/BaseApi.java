@@ -11,6 +11,11 @@ import java.util.List;
  * @date create in 2023/7/4 11:43
  */
 public abstract class BaseApi {
+    /** 英文 */
+    private final String EN = "en";
+    /** 英文 */
+    private final String ZH = "zh";
+    /** api名 */
     protected String translateApiName;
     /** 原文 */
     protected String text;
@@ -18,10 +23,6 @@ public abstract class BaseApi {
     protected String sourceLanguage;
     /** 译文语言 */
     protected String targetLanguage;
-    /** 英文 */
-    private final String EN = "en";
-    /** 英文 */
-    private final String ZH = "zh";
     /** 本地文件路径 */
     protected String filePath;
     /** 网络文件路径 */

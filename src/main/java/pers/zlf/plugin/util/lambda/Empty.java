@@ -13,10 +13,10 @@ import java.util.function.Supplier;
  * @date create in 2023/1/30 14:17
  */
 public final class Empty<T> {
-    private final T value;
+    private final T VALUE;
 
     private Empty(T value) {
-        this.value = StringUtil.isEmpty(value) ? null : value;
+        this.VALUE = StringUtil.isEmpty(value) ? null : value;
     }
 
     public static <T> Empty<T> of(T value) {
@@ -28,31 +28,31 @@ public final class Empty<T> {
         if (!ifPresent()) {
             return new Empty<>(null);
         } else {
-            return Empty.of(mapper.apply(value));
+            return Empty.of(mapper.apply(VALUE));
         }
     }
 
     public boolean ifPresent() {
-        return value != null;
+        return VALUE != null;
     }
 
     public void ifPresent(Consumer<? super T> action) {
-        Optional.ofNullable(value).ifPresent(action);
+        Optional.ofNullable(VALUE).ifPresent(action);
     }
 
     public void ifPresent(Runnable runnable) {
-        Optional.ofNullable(value).ifPresent(y -> runnable.run());
+        Optional.ofNullable(VALUE).ifPresent(y -> runnable.run());
     }
 
     public <X extends Throwable> T ifEmptyThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        return Optional.ofNullable(value).orElseThrow(exceptionSupplier);
+        return Optional.ofNullable(VALUE).orElseThrow(exceptionSupplier);
     }
 
     public T orElse(T other) {
-        return value != null ? value : other;
+        return VALUE != null ? VALUE : other;
     }
 
     public T get() {
-        return value;
+        return VALUE;
     }
 }

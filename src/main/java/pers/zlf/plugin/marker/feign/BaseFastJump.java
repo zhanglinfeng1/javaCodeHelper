@@ -37,9 +37,9 @@ public abstract class BaseFastJump {
     /** 处理结果 */
     private Map<String, MappingAnnotation> map;
     /** 过滤的文件名 */
-    private final String filterFolderName;
+    private final String FILTER_FOLDER_NAME;
     /** 请求方式 */
-    private final Map<String, String> requestTypeMap = new HashMap<>() {{
+    private final Map<String, String> REQUEST_TYPE_MAP = new HashMap<>() {{
         put(Annotation.POST_MAPPING, Request.POST);
         put(Annotation.PUT_MAPPING, Request.PUT);
         put(Annotation.GET_MAPPING, Request.GET);
@@ -48,7 +48,7 @@ public abstract class BaseFastJump {
     }};
 
     public BaseFastJump(String filterFolderName) {
-        this.filterFolderName = filterFolderName;
+        this.FILTER_FOLDER_NAME = filterFolderName;
     }
 
     public Map<String, MappingAnnotation> getLineMarkerMap(PsiClass psiClass) {
@@ -117,7 +117,7 @@ public abstract class BaseFastJump {
         //处理文件夹
         Arrays.stream(psiDirectory.getSubdirectories()).forEach(this::dealDirectory);
         //只处理符合的文件夹名下的文件
-        if (StringUtil.isNotEmpty(filterFolderName) && !psiDirectory.getName().contains(filterFolderName)) {
+        if (StringUtil.isNotEmpty(FILTER_FOLDER_NAME) && !psiDirectory.getName().contains(FILTER_FOLDER_NAME)) {
             return;
         }
         //筛选不存在内部类的java文件
@@ -149,7 +149,7 @@ public abstract class BaseFastJump {
         }
         String annotationName = psiAnnotation.getQualifiedName();
         //请求方式
-        String method = Empty.of(requestTypeMap.get(annotationName)).orElse(Common.BLANK_STRING);
+        String method = Empty.of(REQUEST_TYPE_MAP.get(annotationName)).orElse(Common.BLANK_STRING);
         if (StringUtil.isEmpty(method)) {
             method = MyPsiUtil.getAnnotationValue(psiAnnotation, Annotation.METHOD).toUpperCase();
         }

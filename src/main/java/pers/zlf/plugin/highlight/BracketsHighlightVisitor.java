@@ -21,13 +21,13 @@ import java.util.Stack;
  */
 public class BracketsHighlightVisitor extends BaseVisitor {
     /** () */
-    private final Stack<TextAttributesKey> parenthColorStack = new Stack<>();
+    private final Stack<TextAttributesKey> PARENTH_COLOR_STACK = new Stack<>();
     /** [] */
-    private final Stack<TextAttributesKey> bracketColorStack = new Stack<>();
+    private final Stack<TextAttributesKey> BRACKET_COLOR_STACK = new Stack<>();
     /** {} */
-    private final Stack<TextAttributesKey> braceColorStack = new Stack<>();
+    private final Stack<TextAttributesKey> BRACE_COLOR_STACK = new Stack<>();
     /** <> */
-    private final Stack<TextAttributesKey> angleBracketColorStack = new Stack<>();
+    private final Stack<TextAttributesKey> ANGLE_BRACKET_COLOR_STACK = new Stack<>();
 
     @NotNull
     @Override
@@ -39,10 +39,10 @@ public class BracketsHighlightVisitor extends BaseVisitor {
     public boolean suitableForFile(@NotNull PsiFile file) {
         boolean suitable = file instanceof PsiImportHolder && !InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file);
         if (suitable) {
-            parenthColorStack.clear();
-            bracketColorStack.clear();
-            braceColorStack.clear();
-            angleBracketColorStack.clear();
+            PARENTH_COLOR_STACK.clear();
+            BRACKET_COLOR_STACK.clear();
+            BRACE_COLOR_STACK.clear();
+            ANGLE_BRACKET_COLOR_STACK.clear();
         }
         return suitable;
     }
@@ -63,21 +63,21 @@ public class BracketsHighlightVisitor extends BaseVisitor {
         };
 
         if (tokenType == JavaTokenType.LBRACKET && config.isOpenBracket()) {
-            triConsumer.accept(JavaTokenType.RBRACKET, bracketColorStack, Common.BRACKET_COLOR_KEY);
+            triConsumer.accept(JavaTokenType.RBRACKET, BRACKET_COLOR_STACK, Common.BRACKET_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RBRACKET && config.isOpenBracket()) {
-            addHighlightInfo(bracketColorStack, token);
+            addHighlightInfo(BRACKET_COLOR_STACK, token);
         } else if (tokenType == JavaTokenType.LPARENTH && config.isOpenParenth()) {
-            triConsumer.accept(JavaTokenType.RPARENTH, parenthColorStack, Common.PARENTH_COLOR_KEY);
+            triConsumer.accept(JavaTokenType.RPARENTH, PARENTH_COLOR_STACK, Common.PARENTH_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RPARENTH && config.isOpenParenth()) {
-            addHighlightInfo(parenthColorStack, token);
+            addHighlightInfo(PARENTH_COLOR_STACK, token);
         } else if (tokenType == JavaTokenType.LBRACE && config.isOpenBrace()) {
-            triConsumer.accept(JavaTokenType.RBRACE, braceColorStack, Common.BRACE_COLOR_KEY);
+            triConsumer.accept(JavaTokenType.RBRACE, BRACE_COLOR_STACK, Common.BRACE_COLOR_KEY);
         } else if (tokenType == JavaTokenType.RBRACE && config.isOpenBrace()) {
-            addHighlightInfo(braceColorStack, token);
+            addHighlightInfo(BRACE_COLOR_STACK, token);
         } else if (tokenType == JavaTokenType.LT && config.isOpenAngleBracket()) {
-            triConsumer.accept(JavaTokenType.GT, angleBracketColorStack, Common.ANGLE_BRACKET_COLOR_KEY);
+            triConsumer.accept(JavaTokenType.GT, ANGLE_BRACKET_COLOR_STACK, Common.ANGLE_BRACKET_COLOR_KEY);
         } else if (tokenType == JavaTokenType.GT && config.isOpenAngleBracket()) {
-            addHighlightInfo(angleBracketColorStack, token);
+            addHighlightInfo(ANGLE_BRACKET_COLOR_STACK, token);
         }
     }
 }

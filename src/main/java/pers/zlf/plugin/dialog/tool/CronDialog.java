@@ -23,7 +23,7 @@ public class CronDialog {
     private JButton downButton;
     private JTextArea downTextArea;
     private JComboBox<String> cronTypeComboBox;
-    private final Map<String, CronType> cronTypeMap = new HashMap<>() {{
+    private final Map<String, CronType> CRON_TYPE_MAP = new HashMap<>() {{
         put("CRON4J", CronType.CRON4J);
         put("QUARTZ", CronType.QUARTZ);
         put("UNIX", CronType.UNIX);
@@ -38,7 +38,7 @@ public class CronDialog {
                 return;
             }
             String downText = Message.NOT_CRON_EXPRESSIONS;
-            CronType cronType = cronTypeMap.get(cronTypeComboBox.getSelectedItem().toString());
+            CronType cronType = CRON_TYPE_MAP.get(cronTypeComboBox.getSelectedItem().toString());
             if (CronUtil.isCron(cronStr, cronType)) {
                 downText = CronUtil.getExecutionTimeList(cronStr, cronType, 5).stream().collect(Collectors.joining(System.lineSeparator()));
             }

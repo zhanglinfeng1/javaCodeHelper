@@ -1,7 +1,5 @@
 package pers.zlf.plugin.constant;
 
-import java.util.List;
-
 /**
  * @author zhanglinfeng
  * @date create in 2022/9/8 17:52
@@ -25,26 +23,14 @@ public class Common {
     public static final String UNDERLINE = "_";
     public static final String SPACE = " ";
     public static final String PERCENT_SIGN = "%";
-    public static final String HASH_LEFT_BRACE = "#{";
-    public static final String DOLLAR_LEFT_BRACE = "${";
     public static final String T = "t";
-    public static final String CHARSET_UTF_8 = "utf-8";
-    public static final String IMAGE_JPG = "JPG";
-    public static final String HOOK_UP = "√";
-    public static final String FONT_WRYH = "微软雅黑";
     public static final String LINE_BREAK = "\n";
     public static final String COLON = ":";
     public static final String EQUAL_SIGN = "=";
     public static final String SUCCESS = "success";
 
     /** FreeMark模板 */
-    public static final String TEMPLATE_PATH = "templates";
-    public static final String JUMP_TO_METHOD_TEMPLATE = "JumpToMethod.ftl";
-    public static final String JUMP_TO_XML_TEMPLATE = "JumpToXml.ftl";
-    public static final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
     public static final String DEFAULT_TEMPLATE = "默认模版";
-    public static final String MODEL = "Model";
-    public static final String ID = "id";
 
     /** 配置相关 */
     public static final String APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER = "pers.zlf.plugin.JavaCodeHelpConfigurable";
@@ -62,14 +48,6 @@ public class Common {
     public static final String PARENTH_COLOR_KEY = "JAVA_CODE_HELPER_PARENTH_COLOR";
     public static final String BRACKET_COLOR_KEY = "JAVA_CODE_HELPER_BRACKET_COLOR";
     public static final String BRACE_COLOR_KEY = "JAVA_CODE_HELPER_BRACE_COLOR";
-    public static final String ANGLE_BRACKET_COLOR_DISPLAY_NAME = "尖括号//颜色";
-    public static final String PARENTH_COLOR_DISPLAY_NAME = "小括号//颜色";
-    public static final String BRACKET_COLOR_DISPLAY_NAME = "中括号//颜色";
-    public static final String BRACE_COLOR_DISPLAY_NAME = "大括号//颜色";
-    public static final String ANGLE_BRACKET_COLOR_TAG_NAME = "JKH";
-    public static final String PARENTH_COLOR_TAG_NAME = "XKH";
-    public static final String BRACKET_COLOR_TAG_NAME = "ZKH";
-    public static final String BRACE_COLOR_TAG_NAME = "DKH";
 
     /** 工具窗ID */
     public static final String TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS = "Code statistics details";
@@ -105,7 +83,7 @@ public class Common {
     public static final String OPTIONAL_ELSE = ".orElse(%s)";
     public static final String LAMBDA_STR = "(%s -> %s)";
     public static final String LAMBDA_SIMPLIFY_STR = "(%s::%s)";
-    public static final String MAP_STR = "map";
+    public static final String MAP_STR = ".map";
     public static final String IF_PRESENT_STR = ".ifPresent";
     public static final String COLOR_TAG_STR = "<%s>%s </%s>";
 

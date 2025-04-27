@@ -10,4 +10,6 @@ public class FileType {
     public static final String FREEMARKER_FILE = ".ftl";
     public static final String XLSX_FILE = ".xlsx";
     public static final String PDF_FILE = ".pdf";
+    public static final String JPG_FILE = ".JPG";
+
 }

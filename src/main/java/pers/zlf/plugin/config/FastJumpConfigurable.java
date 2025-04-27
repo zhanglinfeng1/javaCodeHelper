@@ -13,7 +13,7 @@ import pers.zlf.plugin.util.StringUtil;
  */
 public class FastJumpConfigurable extends BaseConfigurable<FastJumpConfigDialog> {
     /** 配置参数 */
-    private final FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
+    private final FastJumpConfig CONFIG = ConfigFactory.getInstance().getFastJumpConfig();
 
     public FastJumpConfigurable() {
         dialog = new FastJumpConfigDialog();
@@ -22,21 +22,21 @@ public class FastJumpConfigurable extends BaseConfigurable<FastJumpConfigDialog>
 
     @Override
     public boolean isModified() {
-        if (!StringUtil.equals(dialog.getControllerFolderName(), config.getControllerFolderName())) {
+        if (!StringUtil.equals(dialog.getControllerFolderName(), CONFIG.getControllerFolderName())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getFeignFolderName(), config.getFeignFolderName())) {
+        if (!StringUtil.equals(dialog.getFeignFolderName(), CONFIG.getFeignFolderName())) {
             return true;
         }
-        return !CollectionUtil.equals(dialog.getModuleNameList(), config.getModuleNameList());
+        return !CollectionUtil.equals(dialog.getModuleNameList(), CONFIG.getModuleNameList());
     }
 
     @Override
     public void apply() {
-        config.setControllerFolderName(dialog.getControllerFolderName());
-        config.setFeignFolderName(dialog.getFeignFolderName());
-        config.setModuleNameList(dialog.getModuleNameList());
-        ConfigFactory.getInstance().setFastJumpConfig(config);
+        CONFIG.setControllerFolderName(dialog.getControllerFolderName());
+        CONFIG.setFeignFolderName(dialog.getFeignFolderName());
+        CONFIG.setModuleNameList(dialog.getModuleNameList());
+        ConfigFactory.getInstance().setFastJumpConfig(CONFIG);
     }
 
 }

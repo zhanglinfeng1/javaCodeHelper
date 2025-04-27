@@ -11,15 +11,15 @@ import org.jetbrains.annotations.Nullable;
  * @date create in 2024/3/7 17:02
  */
 public class XmlReference<T extends PsiElement, R extends PsiElement> extends PsiReferenceBase<R> {
-    private final T targetElement;
+    private final T TARGET_ELEMENT;
 
     public XmlReference(@NotNull R element, TextRange rangeInElement, T targetElement) {
         super(element, rangeInElement);
-        this.targetElement = targetElement;
+        this.TARGET_ELEMENT = targetElement;
     }
 
     @Override
     public @Nullable PsiElement resolve() {
-        return targetElement;
+        return TARGET_ELEMENT;
     }
 }

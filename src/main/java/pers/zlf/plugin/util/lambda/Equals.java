@@ -10,11 +10,11 @@ import java.util.function.Supplier;
  */
 public final class Equals<T> {
     private Boolean run;
-    private final T obj;
+    private final T OBJ;
 
     private Equals(Boolean run, T obj) {
         this.run = run;
-        this.obj = obj;
+        this.OBJ = obj;
     }
 
     public static <T> Equals<T> of(boolean run) {
@@ -26,7 +26,7 @@ public final class Equals<T> {
     }
 
     public Equals<T> and(Predicate<? super T> predicate) {
-        this.run = null == run ? predicate.test(obj) : (run && predicate.test(obj));
+        this.run = null == run ? predicate.test(OBJ) : (run && predicate.test(OBJ));
         return this;
     }
 
@@ -36,7 +36,7 @@ public final class Equals<T> {
     }
 
     public Equals<T> or(Predicate<? super T> predicate) {
-        this.run = null == run ? predicate.test(obj) : (run || predicate.test(obj));
+        this.run = null == run ? predicate.test(OBJ) : (run || predicate.test(OBJ));
         return this;
     }
 
@@ -53,7 +53,7 @@ public final class Equals<T> {
 
     public void ifTrue(Consumer<? super T> action) {
         if (run) {
-            action.accept(obj);
+            action.accept(OBJ);
         }
     }
 
@@ -61,7 +61,7 @@ public final class Equals<T> {
         if (run) {
             throw exceptionSupplier.get();
         }
-        return obj;
+        return OBJ;
     }
 
     public void ifFalse(Runnable runnable) {
@@ -72,7 +72,7 @@ public final class Equals<T> {
 
     public void ifFalse(Consumer<? super T> action) {
         if (!run) {
-            action.accept(obj);
+            action.accept(OBJ);
         }
     }
 
@@ -80,14 +80,14 @@ public final class Equals<T> {
         if (!run) {
             throw exceptionSupplier.get();
         }
-        return obj;
+        return OBJ;
     }
 
     public void then(Consumer<? super T> trueAction, Consumer<? super T> falseAction) {
         if (run) {
-            trueAction.accept(obj);
+            trueAction.accept(OBJ);
         } else {
-            falseAction.accept(obj);
+            falseAction.accept(OBJ);
         }
     }
 }

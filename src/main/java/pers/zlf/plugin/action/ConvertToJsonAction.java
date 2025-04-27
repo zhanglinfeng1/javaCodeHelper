@@ -98,9 +98,9 @@ public class ConvertToJsonAction extends BaseAction {
         // 基本类型
         if (fieldType instanceof PsiPrimitiveType) {
             return Optional.ofNullable(PsiTypesUtil.getDefaultValue(fieldType)).orElse(Common.BLANK_STRING);
-        } else if (ClassType.defaultValueMap.containsKey(fieldTypeName)) {
+        } else if (ClassType.DEFAULT_VALUE_MAP.containsKey(fieldTypeName)) {
             //指定类型的默认值
-            return Optional.ofNullable(ClassType.defaultValueMap.get(fieldTypeName)).orElse(Common.BLANK_STRING);
+            return Optional.ofNullable(ClassType.DEFAULT_VALUE_MAP.get(fieldTypeName)).orElse(Common.BLANK_STRING);
         } else if (fieldType instanceof PsiArrayType) {
             //数组
             List<Object> list = new ArrayList<>();

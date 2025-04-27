@@ -14,7 +14,7 @@ import pers.zlf.plugin.util.StringUtil;
  */
 public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
     /** 配置参数 */
-    private final CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
+    private final CommonConfig CONFIG = ConfigFactory.getInstance().getCommonConfig();
 
     public CommonConfigurable() {
         dialog = new CommonConfigDialog();
@@ -27,58 +27,58 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
             Message.notifyError(Message.CANNOT_BE_ZERO);
             return false;
         }
-        if (dialog.getTranslateApi() != config.getTranslateApi()) {
+        if (dialog.getTranslateApi() != CONFIG.getTranslateApi()) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getAppId(), config.getAppId())) {
+        if (!StringUtil.equals(dialog.getAppId(), CONFIG.getAppId())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getSecurityKey(), config.getSecretKey())) {
+        if (!StringUtil.equals(dialog.getSecurityKey(), CONFIG.getSecretKey())) {
             return true;
         }
-        if (dialog.getApiTool() != config.getApiTool()) {
+        if (dialog.getApiTool() != CONFIG.getApiTool()) {
             return true;
         }
-        if (dialog.isEnableCodeCompletion() != config.isEnableCodeCompletion()) {
+        if (dialog.isEnableCodeCompletion() != CONFIG.isEnableCodeCompletion()) {
             return true;
         }
-        if (dialog.isOpenAngleBracket() != config.isOpenAngleBracket()) {
+        if (dialog.isOpenAngleBracket() != CONFIG.isOpenAngleBracket()) {
             return true;
         }
-        if (dialog.isOpenBrace() != config.isOpenBrace()) {
+        if (dialog.isOpenBrace() != CONFIG.isOpenBrace()) {
             return true;
         }
-        if (dialog.isOpenBracket() != config.isOpenBracket()) {
+        if (dialog.isOpenBracket() != CONFIG.isOpenBracket()) {
             return true;
         }
-        if (dialog.isOpenParenth() != config.isOpenParenth()) {
+        if (dialog.isOpenParenth() != CONFIG.isOpenParenth()) {
             return true;
         }
-        if (dialog.isOpenCodeRemind() != config.isOpenCodeRemind()) {
+        if (dialog.isOpenCodeRemind() != CONFIG.isOpenCodeRemind()) {
             return true;
         }
-        if (dialog.getCodeRemindMinute() != config.getCodeRemindMinute()) {
+        if (dialog.getCodeRemindMinute() != CONFIG.getCodeRemindMinute()) {
             return true;
         }
-        if (dialog.getOcrApi() != config.getOcrApi()) {
+        if (dialog.getOcrApi() != CONFIG.getOcrApi()) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getOcrApiKey(), config.getOcrApiKey())) {
+        if (!StringUtil.equals(dialog.getOcrApiKey(), CONFIG.getOcrApiKey())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getOcrSecurityKey(), config.getOcrSecurityKey())) {
+        if (!StringUtil.equals(dialog.getOcrSecurityKey(), CONFIG.getOcrSecurityKey())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getZenTaoUrl(), config.getZenTaoUrl())) {
+        if (!StringUtil.equals(dialog.getZenTaoUrl(), CONFIG.getZenTaoUrl())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getZenTaoAccount(), config.getZenTaoAccount())) {
+        if (!StringUtil.equals(dialog.getZenTaoAccount(), CONFIG.getZenTaoAccount())) {
             return true;
         }
-        if (!StringUtil.equals(dialog.getZenTaoPassword(), config.getZenTaoPassword())) {
+        if (!StringUtil.equals(dialog.getZenTaoPassword(), CONFIG.getZenTaoPassword())) {
             return true;
         }
-        return dialog.getMaxCodeCompletionLength() != config.getMaxCodeCompletionLength();
+        return dialog.getMaxCodeCompletionLength() != CONFIG.getMaxCodeCompletionLength();
     }
 
     @Override
@@ -88,29 +88,29 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
             Message.notifyError(Message.PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING);
             return;
         }
-        config.setTranslateApi(dialog.getTranslateApi());
-        config.setAppId(dialog.getAppId());
-        config.setSecretKey(dialog.getSecurityKey());
-        config.setOcrApi(dialog.getOcrApi());
-        config.setOcrApiKey(dialog.getOcrApiKey());
-        config.setOcrSecurityKey(dialog.getOcrSecurityKey());
-        config.setApiTool(dialog.getApiTool());
-        config.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
-        config.setOpenAngleBracket(dialog.isOpenAngleBracket());
-        config.setOpenBrace(dialog.isOpenBrace());
-        config.setOpenBracket(dialog.isOpenBracket());
-        config.setOpenParenth(dialog.isOpenParenth());
-        config.setOpenCodeRemind(dialog.isOpenCodeRemind());
-        config.setCodeRemindMinute(dialog.getCodeRemindMinute());
-        config.setZenTaoUrl(dialog.getZenTaoUrl());
-        config.setZenTaoAccount(dialog.getZenTaoAccount());
-        config.setZenTaoPassword(dialog.getZenTaoPassword());
-        if (config.isOpenCodeRemind()) {
-            NewCodeRemindListener.rerun(config.getCodeRemindMinute());
+        CONFIG.setTranslateApi(dialog.getTranslateApi());
+        CONFIG.setAppId(dialog.getAppId());
+        CONFIG.setSecretKey(dialog.getSecurityKey());
+        CONFIG.setOcrApi(dialog.getOcrApi());
+        CONFIG.setOcrApiKey(dialog.getOcrApiKey());
+        CONFIG.setOcrSecurityKey(dialog.getOcrSecurityKey());
+        CONFIG.setApiTool(dialog.getApiTool());
+        CONFIG.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
+        CONFIG.setOpenAngleBracket(dialog.isOpenAngleBracket());
+        CONFIG.setOpenBrace(dialog.isOpenBrace());
+        CONFIG.setOpenBracket(dialog.isOpenBracket());
+        CONFIG.setOpenParenth(dialog.isOpenParenth());
+        CONFIG.setOpenCodeRemind(dialog.isOpenCodeRemind());
+        CONFIG.setCodeRemindMinute(dialog.getCodeRemindMinute());
+        CONFIG.setZenTaoUrl(dialog.getZenTaoUrl());
+        CONFIG.setZenTaoAccount(dialog.getZenTaoAccount());
+        CONFIG.setZenTaoPassword(dialog.getZenTaoPassword());
+        if (CONFIG.isOpenCodeRemind()) {
+            NewCodeRemindListener.rerun(CONFIG.getCodeRemindMinute());
         } else {
             NewCodeRemindListener.shutdownNow();
         }
-        ConfigFactory.getInstance().setCommonConfig(config);
+        ConfigFactory.getInstance().setCommonConfig(CONFIG);
     }
 
 }

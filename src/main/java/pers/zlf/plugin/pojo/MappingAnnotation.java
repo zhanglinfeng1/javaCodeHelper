@@ -2,6 +2,7 @@ package pers.zlf.plugin.pojo;
 
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMethod;
+import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public record MappingAnnotation(String url, String method, PsiAnnotation psiAnnotation, List<PsiMethod> targetList) {
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return Arrays.stream(this.url.split(Common.SLASH)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SLASH)) + Common.UNDERLINE + this.method;
     }
 }

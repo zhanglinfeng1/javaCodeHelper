@@ -107,7 +107,7 @@ public class SwingUtil {
      */
     public static void addMouseListener(JButton button, IconEnum iconEnum) {
         if (iconEnum != null) {
-            button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.getDarkIcon() : iconEnum.getBrightIcon());
+            button.setIcon(ColorUtil.isDark(button.getParent().getBackground()) ? iconEnum.DARKI_CON : iconEnum.BRIGHT_ICON);
         }
         if (button.getMouseListeners().length <= 1) {
             addMouseListener(button);
@@ -124,7 +124,7 @@ public class SwingUtil {
     public static void removeMouseListener(JButton button, IconEnum iconEnum) {
         Container container = button.getParent();
         if (iconEnum != null) {
-            button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.getBrightIcon() : iconEnum.getDarkIcon());
+            button.setIcon(ColorUtil.isDark(container.getBackground()) ? iconEnum.BRIGHT_ICON : iconEnum.DARKI_CON);
         }
         button.setBackground(container.getBackground());
         Arrays.stream(button.getMouseListeners()).filter(m -> !(m instanceof BasicButtonListener)).findAny().ifPresent(button::removeMouseListener);

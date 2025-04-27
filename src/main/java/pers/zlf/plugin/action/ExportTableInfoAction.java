@@ -4,11 +4,12 @@ import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasTable;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.vfs.VirtualFile;
 import pers.zlf.plugin.action.export.BaseExport;
 import pers.zlf.plugin.action.export.DatabaseExport;
 import pers.zlf.plugin.action.export.TableExport;
 import pers.zlf.plugin.constant.MyDataKeys;
+
+import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -29,7 +30,6 @@ public class ExportTableInfoAction extends BaseAction {
             export = new TableExport(dasTable);
             return true;
         }
-
         //选中的是单个库
         if (data[0] instanceof DasNamespace dasNamespace) {
             export = new DatabaseExport(dasNamespace);
@@ -40,10 +40,6 @@ public class ExportTableInfoAction extends BaseAction {
 
     @Override
     protected void execute() {
-        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null);
-        if (virtualFile == null) {
-            return;
-        }
-        export.exportXlsx(project, virtualFile.getPath());
+        Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), null, null)).ifPresent(t -> export.exportXlsx(project, t.getPath()));
     }
 }

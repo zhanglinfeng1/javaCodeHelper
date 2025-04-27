@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,11 +33,13 @@ import java.util.Optional;
 public class TemplateFactory {
     private static volatile TemplateFactory templateFactory;
     /** freemarker版本 */
-    private final Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
+    private final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_23);
+    private final String TEMPLATE_PATH = "templates";
+    private final List<String> TEMPLATE_LIST = List.of("Model.java.ftl", "VO.java.ftl", "Mapper.java.ftl", "Mapper.xml.ftl", "Service.java.ftl", "ServiceImpl.java.ftl", "Controller.java.ftl");
 
     private TemplateFactory() {
-        configuration.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-        configuration.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), Common.TEMPLATE_PATH);
+        CONFIGURATION.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
+        CONFIGURATION.setClassLoaderForTemplateLoading(TemplateFactory.class.getClassLoader(), TEMPLATE_PATH);
     }
 
     public static TemplateFactory getInstance() {
@@ -67,11 +70,11 @@ public class TemplateFactory {
         try {
             createTemporaryFile(selectedTemplate, temporaryFilePath);
             //添加自定义模板
-            configuration.setDirectoryForTemplateLoading(file);
+            CONFIGURATION.setDirectoryForTemplateLoading(file);
             for (Map.Entry<String, String> entry : selectedTemplateMap.entrySet()) {
                 String fileName = entry.getKey();
                 String templateFileName = entry.getValue() + FileType.FREEMARKER_FILE;
-                create(filePath, fileName, configuration.getTemplate(templateFileName), map);
+                create(filePath, fileName, CONFIGURATION.getTemplate(templateFileName), map);
             }
         } finally {
             //删除临时模版文件
@@ -126,7 +129,7 @@ public class TemplateFactory {
         // 接收处理后的模版内容
         StringWriter stringWriter = new StringWriter();
         try {
-            Template template = configuration.getTemplate(templateName);
+            Template template = CONFIGURATION.getTemplate(templateName);
             template.process(map, stringWriter);
         } catch (Exception ignored) {
         }
@@ -140,10 +143,10 @@ public class TemplateFactory {
      */
     public Map<String, String> getAllDefaultTemplate() {
         Map<String, String> map = new HashMap<>();
-        for (String templateName : Common.TEMPLATE_LIST) {
+        for (String templateName : TEMPLATE_LIST) {
             Template template = null;
             try {
-                template = configuration.getTemplate(templateName);
+                template = CONFIGURATION.getTemplate(templateName);
             } catch (IOException ignored) {
             }
             //TODO 替换getRootTreeNode方法

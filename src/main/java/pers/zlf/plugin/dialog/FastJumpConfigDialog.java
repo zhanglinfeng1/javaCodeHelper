@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * @date create in 2023/2/13 10:36
  */
 public class FastJumpConfigDialog extends BaseDialog{
-    private final Set<String> totalSelectList;
-    private final DefaultTableModel defaultTableModel;
+    private final Set<String> TOTAL_SELECT_LIST;
+    private final DefaultTableModel DEFAULT_TABLE_MODEL;
     /** ui组件 */
     private JPanel panel;
     private JTextField controllerTextField;
@@ -44,37 +44,37 @@ public class FastJumpConfigDialog extends BaseDialog{
     private JButton deleteModuleButton;
 
     public FastJumpConfigDialog() {
-        totalSelectList = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());
+        this.TOTAL_SELECT_LIST = new HashSet<>(ConfigFactory.getInstance().getFastJumpConfig().getModuleNameList());
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             Module[] modules = ModuleManager.getInstance(project).getModules();
             for (Module module : modules) {
                 VirtualFile[] virtualFiles = ModuleRootManager.getInstance(module).getContentRoots();
                 if (virtualFiles.length > 0) {
-                    totalSelectList.add(MyPsiUtil.getModuleName(virtualFiles[0], project));
+                    this.TOTAL_SELECT_LIST.add(MyPsiUtil.getModuleName(virtualFiles[0], project));
                 }
             }
         }
-        defaultTableModel = new DefaultTableModel(null, new String[]{Common.BLANK_STRING}) {
+        this.DEFAULT_TABLE_MODEL = new DefaultTableModel(null, new String[]{Common.BLANK_STRING}) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        moduleTable.setModel(defaultTableModel);
-        moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.moduleTable.setModel(this.DEFAULT_TABLE_MODEL);
+        this.moduleTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //初始化按钮背景色
-        SwingUtil.initButtonBackground(addModuleButton, deleteModuleButton);
+        SwingUtil.initButtonBackground(this.addModuleButton, this.deleteModuleButton);
 
-        addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(Common.SELECT_MODULE)
-                .setMovable(true).setItemChosenCallback(value -> this.addCallback(List.of(value))).createPopup().showUnderneathOf(addModuleButton)));
+        this.addModuleButton.addActionListener(e -> Empty.of(getOptionalList()).ifPresent(list -> JBPopupFactory.getInstance().createPopupChooserBuilder(list).setTitle(Common.SELECT_MODULE)
+                .setMovable(true).setItemChosenCallback(value -> this.addCallback(List.of(value))).createPopup().showUnderneathOf(this.addModuleButton)));
 
-        deleteModuleButton.addActionListener(e -> {
+        this.deleteModuleButton.addActionListener(e -> {
             int rowNum = moduleTable.getSelectedRow();
             if (rowNum >= 0) {
-                defaultTableModel.removeRow(rowNum);
-                SwingUtil.addMouseListener(addModuleButton, IconEnum.ADD);
-                if (moduleTable.getRowCount() == 0) {
-                    SwingUtil.removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
+                this.DEFAULT_TABLE_MODEL.removeRow(rowNum);
+                SwingUtil.addMouseListener(this.addModuleButton, IconEnum.ADD);
+                if (this.moduleTable.getRowCount() == 0) {
+                    SwingUtil.removeMouseListener(this.deleteModuleButton, IconEnum.REMOVE);
                 }
             }
         });
@@ -83,13 +83,13 @@ public class FastJumpConfigDialog extends BaseDialog{
     @Override
     public void reset() {
         FastJumpConfig config = ConfigFactory.getInstance().getFastJumpConfig();
-        controllerTextField.setText(config.getControllerFolderName());
-        feignTextField.setText(config.getFeignFolderName());
-        defaultTableModel.getDataVector().clear();
+        this.controllerTextField.setText(config.getControllerFolderName());
+        this.feignTextField.setText(config.getFeignFolderName());
+        this.DEFAULT_TABLE_MODEL.getDataVector().clear();
         List<String> selectModuleList = config.getModuleNameList().stream().sorted().collect(Collectors.toList());
-        SwingUtil.addMouseListener(addModuleButton, IconEnum.ADD);
+        SwingUtil.addMouseListener(this.addModuleButton, IconEnum.ADD);
         if (CollectionUtil.isEmpty(selectModuleList)) {
-            SwingUtil.removeMouseListener(deleteModuleButton, IconEnum.REMOVE);
+            SwingUtil.removeMouseListener(this.deleteModuleButton, IconEnum.REMOVE);
         } else {
             this.addCallback(selectModuleList);
         }
@@ -109,17 +109,17 @@ public class FastJumpConfigDialog extends BaseDialog{
     }
 
     public List<String> getModuleNameList(){
-        return SwingUtil.getTableContentList(defaultTableModel, 0);
+        return SwingUtil.getTableContentList(this.DEFAULT_TABLE_MODEL, 0);
     }
 
     private List<String> getOptionalList() {
-        List<String> list = totalSelectList.stream().sorted().collect(Collectors.toList());
+        List<String> list = this.TOTAL_SELECT_LIST.stream().sorted().collect(Collectors.toList());
         list.removeAll(getModuleNameList());
         return list;
     }
 
     private void addCallback(List<String> valueList) {
-        valueList.forEach(value -> defaultTableModel.addRow(new String[]{value}));
+        valueList.forEach(value -> this.DEFAULT_TABLE_MODEL.addRow(new String[]{value}));
         SwingUtil.addMouseListener(deleteModuleButton, IconEnum.REMOVE);
         if (CollectionUtil.isEmpty(getOptionalList())) {
             SwingUtil.removeMouseListener(addModuleButton, IconEnum.ADD);

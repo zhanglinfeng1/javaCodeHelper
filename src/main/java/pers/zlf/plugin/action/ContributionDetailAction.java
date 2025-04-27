@@ -49,7 +49,7 @@ public class ContributionDetailAction extends BaseAction {
     /** 参与统计的日期 */
     private Date countDate;
     /** key:文件名   value{key:git邮箱  value：详情} */
-    private final Map<String, Map<String, ContributionDetail>> totalContributionDetailMap = new HashMap<>();
+    private final Map<String, Map<String, ContributionDetail>> TOTAL_CONTRIBUTION_DETAIL_MAP = new HashMap<>();
 
     @Override
     protected boolean isVisible() {
@@ -76,7 +76,7 @@ public class ContributionDetailAction extends BaseAction {
         //获取配置
         fileTypeList = ConfigFactory.getInstance().getCodeStatisticsConfig().getFileTypeList();
         countDate = Empty.of(ConfigFactory.getInstance().getCodeStatisticsConfig().getCountDate()).map(t -> DateUtil.parse(t, DateUtil.YYYY_MM_DD)).orElse(null);
-        totalContributionDetailMap.clear();
+        TOTAL_CONTRIBUTION_DETAIL_MAP.clear();
         ThreadPoolFactory.CODE_STATISTICS_POOL.execute(() -> {
             CodeLinesCountDecorator.contributionDetailIsRunning = true;
             for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
@@ -92,7 +92,7 @@ public class ContributionDetailAction extends BaseAction {
                 this.dealDirectory(virtualFile);
             }
             CodeLinesCountDecorator.contributionDetailIsRunning = false;
-            SwingUtil.registerToolWindow(project, Common.TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, module.getName(), totalContributionDetailMap).getContent(), module.getName());
+            SwingUtil.registerToolWindow(project, Common.TOOL_WINDOW_ID_CODE_STATISTICS_DETAILS, new ContributionDetailDialog(project, module.getName(), TOTAL_CONTRIBUTION_DETAIL_MAP).getContent(), module.getName());
         });
     }
 
@@ -121,10 +121,10 @@ public class ContributionDetailAction extends BaseAction {
             if (contributionDetailMap.isEmpty()){
                 return;
             }
-            if (totalContributionDetailMap.containsKey(fileName)) {
-                totalContributionDetailMap.put(fileFullName, contributionDetailMap);
+            if (TOTAL_CONTRIBUTION_DETAIL_MAP.containsKey(fileName)) {
+                TOTAL_CONTRIBUTION_DETAIL_MAP.put(fileFullName, contributionDetailMap);
             } else {
-                totalContributionDetailMap.put(fileName, contributionDetailMap);
+                TOTAL_CONTRIBUTION_DETAIL_MAP.put(fileName, contributionDetailMap);
             }
         } catch (Exception ignored) {
         }

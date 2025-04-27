@@ -8,9 +8,9 @@ import pers.zlf.plugin.constant.Common;
  */
 public class Bracket extends BaseBrackets{
     public Bracket() {
-        this.displayName = Common.BRACKET_COLOR_DISPLAY_NAME;
+        this.displayName = "中括号//颜色";
         this.externalName = Common.BRACKET_COLOR_KEY;
-        this.tagName = Common.BRACKET_COLOR_TAG_NAME;
+        this.tagName = "ZKH";
         this.LBrackets = Common.LEFT_BRACKETS;
         this.RBrackets = Common.RIGHT_BRACKETS;
     }

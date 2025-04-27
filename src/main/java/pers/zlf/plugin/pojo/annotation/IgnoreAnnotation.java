@@ -21,11 +21,11 @@ public class IgnoreAnnotation extends BaseAnnotation {
 
     @Override
     protected String getSwagger2Text() {
-        return name;
+        return this.NAME;
     }
 
     @Override
     protected String getSwagger3Text() {
-        return this.name + String.format(Common.FILLING_STR3, Annotation.HIDDEN, true);
+        return this.NAME + String.format(Common.FILLING_STR3, Annotation.HIDDEN, true);
     }
 }

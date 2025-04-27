@@ -19,10 +19,10 @@ import pers.zlf.plugin.util.MyPsiUtil;
  */
 public class ReplaceTernaryExpressionQuickFix implements LocalQuickFix {
     /** 替换文本 */
-    private final String replaceText;
+    private final String REPLACE_TEXT;
 
     public ReplaceTernaryExpressionQuickFix(String replaceText) {
-        this.replaceText = replaceText;
+        this.REPLACE_TEXT = replaceText;
     }
 
     @NotNull
@@ -42,7 +42,7 @@ public class ReplaceTernaryExpressionQuickFix implements LocalQuickFix {
         PsiConditionalExpression conditionalExpression = (PsiConditionalExpression) descriptor.getPsiElement();
         PsiFile psiFile = conditionalExpression.getContainingFile();
         //替换
-        PsiElement newElement = new CommentTracker().replaceAndRestoreComments(conditionalExpression, replaceText);
+        PsiElement newElement = new CommentTracker().replaceAndRestoreComments(conditionalExpression, REPLACE_TEXT);
         CodeStyleManager.getInstance(project).reformat(newElement);
         //导入java.util.Optional
         MyPsiUtil.importClass(psiFile, CommonClassNames.JAVA_UTIL_OPTIONAL);

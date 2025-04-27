@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class TemplateConfigurable extends BaseConfigurable<TemplateConfigDialog> {
     /** 配置参数 */
-    private final TemplateConfig config = ConfigFactory.getInstance().getTemplateConfig();
+    private final TemplateConfig CONFIG = ConfigFactory.getInstance().getTemplateConfig();
 
     public TemplateConfigurable() {
         dialog = new TemplateConfigDialog();
@@ -26,11 +26,11 @@ public class TemplateConfigurable extends BaseConfigurable<TemplateConfigDialog>
 
     @Override
     public boolean isModified() {
-        if (!StringUtil.equals(dialog.getAuthor(), config.getAuthor())) {
+        if (!StringUtil.equals(dialog.getAuthor(), CONFIG.getAuthor())) {
             return true;
         }
         Map<String, Map<String, String>> dialogTemplateMap = dialog.getTotalTemplateMap();
-        Map<String, Map<String, String>> configTemplateMap = config.getTotalTemplateMap();
+        Map<String, Map<String, String>> configTemplateMap = CONFIG.getTotalTemplateMap();
         Set<String> dialogKeySet = dialogTemplateMap.keySet();
         Set<String> configKeySet = configTemplateMap.keySet();
         if (!CollectionUtil.equals(dialogKeySet, configKeySet)) {
@@ -48,10 +48,10 @@ public class TemplateConfigurable extends BaseConfigurable<TemplateConfigDialog>
 
     @Override
     public void apply() {
-        config.setAuthor(dialog.getAuthor());
-        config.setTotalTemplateMap(dialog.getTotalTemplateMap());
-        config.setSelectedTemplate(dialog.getSelectedTemplate());
-        ConfigFactory.getInstance().setTemplateConfig(config);
+        CONFIG.setAuthor(dialog.getAuthor());
+        CONFIG.setTotalTemplateMap(dialog.getTotalTemplateMap());
+        CONFIG.setSelectedTemplate(dialog.getSelectedTemplate());
+        ConfigFactory.getInstance().setTemplateConfig(CONFIG);
     }
 
 }

@@ -11,7 +11,7 @@ import pers.zlf.plugin.factory.ConfigFactory;
  */
 public abstract class BaseAnnotation {
     /** 注解名称 */
-    protected final String name;
+    protected final String NAME;
     /** 注解路径 */
     private String qualifiedName;
     /** 注释 */
@@ -22,12 +22,12 @@ public abstract class BaseAnnotation {
     public BaseAnnotation() {
         Integer apiTool = ConfigFactory.getInstance().getCommonConfig().getApiTool();
         if (Common.SWAGGER2_API.equals(apiTool)) {
-            qualifiedName = getSwagger2Api();
+            this.qualifiedName = getSwagger2Api();
         }else if (Common.SWAGGER3_API.equals(apiTool)){
-            qualifiedName = getSwagger3Api();
+            this.qualifiedName = getSwagger3Api();
         }
         String[] annotationPathArr = this.qualifiedName.split(Regex.DOT);
-        this.name = annotationPathArr[annotationPathArr.length - 1];
+        this.NAME = annotationPathArr[annotationPathArr.length - 1];
     }
 
     /**
@@ -81,9 +81,9 @@ public abstract class BaseAnnotation {
 
     private String getSwaggerText(String attributeName) {
         if (required) {
-            return this.name + String.format(Common.FILLING_STR2, attributeName, value, Annotation.REQUIRED, true);
+            return this.NAME + String.format(Common.FILLING_STR2, attributeName, value, Annotation.REQUIRED, true);
         } else {
-            return this.name + String.format(Common.FILLING_STR, attributeName, value);
+            return this.NAME + String.format(Common.FILLING_STR, attributeName, value);
         }
     }
 }

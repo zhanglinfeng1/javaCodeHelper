@@ -34,20 +34,20 @@ import java.util.Optional;
  * @date create in 2024/12/20 22:51
  */
 public class NewCodeRemind implements Runnable {
-    private final Project project;
+    private final Project PROJECT;
     private Notification notification;
 
     public NewCodeRemind(Project project) {
-        this.project = project;
+        this.PROJECT = project;
     }
 
     @Override
     public void run() {
-        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
+        GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(PROJECT);
         List<GitRepository> repositories = repositoryManager.getRepositories();
         //执行fetch
-        GitFetchSupport.fetchSupport(project).fetchAllRemotes(repositories);
-        for (Module module : ModuleManager.getInstance(project).getModules()) {
+        GitFetchSupport.fetchSupport(PROJECT).fetchAllRemotes(repositories);
+        for (Module module : ModuleManager.getInstance(PROJECT).getModules()) {
             for (VirtualFile virtualFile : ModuleRootManager.getInstance(module).getContentRoots()) {
                 GitRepository repository = repositories.get(0);
                 GitLocalBranch localBranch = repository.getCurrentBranch();
@@ -65,7 +65,7 @@ public class NewCodeRemind implements Runnable {
                         continue;
                     }
                     if (!localLastCommit.asString().equals(remoteLastCommit.asString())) {
-                        notification(project);
+                        notification(PROJECT);
                         return;
                     }
                 } catch (VcsException ignored) {

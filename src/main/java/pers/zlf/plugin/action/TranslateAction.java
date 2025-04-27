@@ -26,7 +26,7 @@ public class TranslateAction extends BaseAction {
     /** 选中的文本 */
     private String selectionText;
     /** 翻译API */
-    private final Map<Integer, BaseApi> translateApiMap = new HashMap<>() {{
+    private final Map<Integer, BaseApi> TRANSLATE_API_MAP = new HashMap<>() {{
         put(Common.BAIDU_TRANSLATE, new BaiDuApi());
     }};
 
@@ -45,7 +45,7 @@ public class TranslateAction extends BaseAction {
     @Override
     protected void execute() {
         Integer translateApi = ConfigFactory.getInstance().getCommonConfig().getTranslateApi();
-        BaseApi baseApi = translateApiMap.get(translateApi);
+        BaseApi baseApi = TRANSLATE_API_MAP.get(translateApi);
         ThreadPoolFactory.TRANS_POOL.execute(() -> {
             //请求翻译API
             try {
