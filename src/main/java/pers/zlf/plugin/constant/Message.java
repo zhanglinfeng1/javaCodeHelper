@@ -57,8 +57,6 @@ public class Message {
     public static final String GENERATE_CODE_FAILED = "代码生成失败：";
 
     /** 工具 */
-    public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
-    public static final String UPLOAD_QR_CODE_FIRST = "请先上传二维码";
     public static final String NOT_CRON_EXPRESSIONS = "非cron表达式";
     public static final String AES_SECRET_KEY_LENGTH_ERROR = "秘钥长度必须为16位";
     public static final String AES_IV_LENGTH_ERROR = "偏移量长度必须为16位";
@@ -69,11 +67,12 @@ public class Message {
     public static final String EXPORT_CONTRIBUTION_DETAILS_FAILED = "导出贡献详情失败：";
     public static final String EXPORT_SUCCESS = "导出成功，文件目录：";
     public static final String EXPORT_DATABASE_TABLE_STRUCTURE_FAILED = "导出数据库表结构失败：";
+    public static final String GENERATE_QR_CODE_FIRST = "请先生成二维码";
+    public static final String UPLOAD_FIRST = "请先上传";
     public static final String GENERATE_QR_CODE_FAILED = "生成二维码失败：";
-    public static final String DOWNLOAD_QR_CODE_SUCCESS = "下载维码成功，文件目录：";
-    public static final String DOWNLOAD_QR_CODE_FAILED = "下载维码失败：";
-    public static final String ANALYSIS_QR_CODE_FAILED = "解析维码失败：";
-    public static final String UPLOAD_QR_CODE_FAILED = "上传维码失败：";
+    public static final String DOWNLOAD_FAILED = "保存失败：";
+    public static final String ANALYSIS_QR_CODE_FAILED = "解析二维码失败：";
+    public static final String UPLOAD_FAILED = "上传失败：";
     public static final String NEW_CODE_EXISTS = "当前分支存在新代码，请及时拉取";
     public static final String GO_GET_NEW_CODE = "去拉取";
     public static final String CLOSE = "Close";
@@ -84,6 +83,10 @@ public class Message {
     public static final String ZENTAO_REQUEST_BUG_FAILED = "获取禅道bug失败：";
     public static final String ZENTAO_REQUEST_TASK_FAILED = "获取禅道任务失败：";
     public static final String ZENTAO_LOGIN_FAILED = "禅道登录失败：";
+    public static final String PIC_TO_BASE64_FAILED = "图片转Base64失败：";
+    public static final String FILE_SUFFIX_NOT_NULL = "图片后缀不能为空";
+    public static final String BASE64_TO_PIC_FAILED = "Base64转图片失败：";
+    public static final String BASE64_TO_PIC_FIRST = "请先Base64转图片";
 
     /** 通知组ID */
     public static final String NOTIFICATION_GROUP_ID = "JavaCodeHelper";

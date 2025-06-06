@@ -6,6 +6,7 @@ import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.EncryptionAndDecryptionDialog;
 import pers.zlf.plugin.dialog.tool.EscapeDialog;
 import pers.zlf.plugin.dialog.tool.OcrDialog;
+import pers.zlf.plugin.dialog.tool.PicToBase64Dialog;
 import pers.zlf.plugin.dialog.tool.QrCodeDialog;
 import pers.zlf.plugin.dialog.tool.TimeStampDialog;
 import pers.zlf.plugin.dialog.tool.UnicodeDialog;
@@ -33,6 +34,7 @@ public class CommonToolsDialog {
         tabbedPane.add("加解密", new EncryptionAndDecryptionDialog().getContent());
         tabbedPane.add("进制转换", new BinaryConversionDialog().getContent());
         tabbedPane.add("Escape", new EscapeDialog().getContent());
+        tabbedPane.add("图片转Base64", new PicToBase64Dialog().getContent());
     }
 
     public JPanel getContent() {

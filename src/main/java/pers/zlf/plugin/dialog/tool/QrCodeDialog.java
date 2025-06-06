@@ -52,6 +52,7 @@ public class QrCodeDialog {
             try {
                 qrCodeImage = QRCodeUtil.generateQRCode(content, logoTextField.getText());
                 qrCodeLabel.setIcon(new ImageIcon(qrCodeImage));
+                uploadFilePath = null;
             } catch (Exception ex) {
                 Message.notifyError(Message.GENERATE_QR_CODE_FAILED + ex.getMessage());
             }
@@ -70,10 +71,8 @@ public class QrCodeDialog {
             String fileName = path + File.separator + UUID.randomUUID() + FileType.JPG_FILE;
             try {
                 ImageIO.write(qrCodeImage, FileType.JPG_FILE.substring(1), new File(fileName));
-                uploadFilePath = null;
-                Message.notifyInfo(Message.DOWNLOAD_QR_CODE_SUCCESS + fileName);
             } catch (IOException ex) {
-                Message.notifyError(Message.DOWNLOAD_QR_CODE_FAILED + ex.getMessage());
+                Message.notifyError(Message.DOWNLOAD_FAILED + ex.getMessage());
             }
         });
 
@@ -81,13 +80,14 @@ public class QrCodeDialog {
         qrCodeLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                uploadFilePath = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
-                if (StringUtil.isNotEmpty(uploadFilePath)) {
+                String filePath = Optional.ofNullable(FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), null, null)).map(VirtualFile::getPath).orElse(null);
+                if (StringUtil.isNotEmpty(filePath)) {
                     try {
                         qrCodeLabel.setIcon(new ImageIcon(QRCodeUtil.compress(uploadFilePath)));
+                        uploadFilePath = filePath;
                         qrCodeImage = null;
                     } catch (Exception ex) {
-                        Message.notifyError(Message.UPLOAD_QR_CODE_FAILED + ex.getMessage());
+                        Message.notifyError(Message.UPLOAD_FAILED + ex.getMessage());
                     }
                 }
             }
@@ -96,11 +96,12 @@ public class QrCodeDialog {
         //解析
         upButton.addActionListener(e -> {
             if (StringUtil.isEmpty(uploadFilePath)) {
-                Message.notifyError(Message.UPLOAD_QR_CODE_FIRST);
+                Message.notifyError(Message.UPLOAD_FIRST);
                 return;
             }
             try {
                 upTextArea.setText(QRCodeUtil.analysisQRCode(uploadFilePath));
+                uploadFilePath = null;
             } catch (Exception ex) {
                 Message.notifyError(Message.ANALYSIS_QR_CODE_FAILED + ex.getMessage());
             }
