@@ -14,13 +14,11 @@ import javax.swing.JComponent;
 public abstract class BaseConfigurable<T extends BaseDialog> implements Configurable {
     /** 配置界面 */
     protected T dialog;
-    /** 菜单名 */
-    protected String displayName;
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return displayName;
+        return null;
     }
 
     @Nullable

@@ -63,8 +63,4 @@ public class Annotation {
     public static final String REQUEST_ATTRIBUTE = "org.springframework.web.bind.annotation.RequestAttribute";
     public static final String REQUEST_HEADER = "org.springframework.web.bind.annotation.RequestHeader";
 
-    /** bean注入 */
-    public static final String RESOURCE = "javax.annotation.Resource";
-    public static final String AUTOWIRED = "org.springframework.beans.factory.annotation.Autowired";
-
 }

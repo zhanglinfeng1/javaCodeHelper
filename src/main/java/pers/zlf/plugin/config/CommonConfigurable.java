@@ -1,6 +1,5 @@
 package pers.zlf.plugin.config;
 
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -18,7 +17,6 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
 
     public CommonConfigurable() {
         dialog = new CommonConfigDialog();
-        displayName = Common.JAVA_CODE_HELPER;
     }
 
     @Override

@@ -2,8 +2,10 @@ package pers.zlf.plugin.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import pers.zlf.plugin.constant.Common;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author zhanglinfeng
@@ -26,6 +28,10 @@ public class JsonUtil {
     }
 
     public static String format(Object obj) {
-        return FORMAT_GSON.toJson(obj);
+        return Optional.ofNullable(obj).map(FORMAT_GSON::toJson).orElse(Common.BLANK_STRING);
+    }
+
+    public static String toString(Object obj) {
+        return GSON.toJson(obj);
     }
 }

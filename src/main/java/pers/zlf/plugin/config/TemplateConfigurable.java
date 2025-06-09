@@ -1,6 +1,5 @@
 package pers.zlf.plugin.config;
 
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.TemplateConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.TemplateConfig;
@@ -21,7 +20,6 @@ public class TemplateConfigurable extends BaseConfigurable<TemplateConfigDialog>
 
     public TemplateConfigurable() {
         dialog = new TemplateConfigDialog();
-        displayName = Common.TEMPLATE_CONFIG;
     }
 
     @Override

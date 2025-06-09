@@ -1,6 +1,5 @@
 package pers.zlf.plugin.config;
 
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.dialog.FastJumpConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.config.FastJumpConfig;
@@ -17,7 +16,6 @@ public class FastJumpConfigurable extends BaseConfigurable<FastJumpConfigDialog>
 
     public FastJumpConfigurable() {
         dialog = new FastJumpConfigDialog();
-        displayName = Common.FAST_JUMP;
     }
 
     @Override

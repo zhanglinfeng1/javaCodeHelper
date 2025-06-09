@@ -2,7 +2,6 @@ package pers.zlf.plugin.config;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CodeStatisticsDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
@@ -22,7 +21,6 @@ public class CodeStatisticsConfigurable extends BaseConfigurable<CodeStatisticsD
 
     public CodeStatisticsConfigurable() {
         dialog = new CodeStatisticsDialog();
-        displayName = Common.CODE_STATISTICS;
     }
 
     @Override

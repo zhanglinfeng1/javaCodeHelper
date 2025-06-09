@@ -30,6 +30,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>[NEW]图片转Base64</li>
+            <li>[DELETE]对象转json</li>
         </ul>
     ]]>
     </change-notes>
@@ -94,10 +95,6 @@
         <action id="pers.zlf.plugin.AddApiAnnotationAction" class="pers.zlf.plugin.action.AddApiAnnotationAction" text="添加接口文档注解" icon="/icon/logo.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.TranslateAction"/>
         </action>
-        <!-- json化-->
-        <action id="pers.zlf.plugin.ConvertToJsonAction" class="pers.zlf.plugin.action.ConvertToJsonAction" text="转json" icon="/icon/logo.svg">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="pers.zlf.plugin.AddApiAnnotationAction"/>
-        </action>
         <!-- 统计代码行数 -->
         <action id="pers.zlf.plugin.CodeLineCountAction" class="pers.zlf.plugin.action.CodeLineCountAction" text="统计行数" icon="/icon/logo.svg">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
@@ -123,9 +120,4 @@
             <add-to-group group-id="Vcs.MessageActionGroup" anchor="after" relative-to-action="Vcs.ShowMessageHistory"/>
         </action>
     </actions>
-
-    <!-- 项目启动监听-->
-<!--    <projectListeners>-->
-<!--        <listener class="pers.zlf.plugin.listener.NewCodeRemindListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
-<!--    </projectListeners>-->
 </idea-plugin>
