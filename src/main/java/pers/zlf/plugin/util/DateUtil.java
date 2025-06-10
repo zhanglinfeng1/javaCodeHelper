@@ -1,5 +1,7 @@
 package pers.zlf.plugin.util;
 
+import pers.zlf.plugin.constant.Common;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -27,6 +29,22 @@ public class DateUtil {
      */
     public static String nowStr(String formatType) {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(formatType));
+    }
+
+    /**
+     * 时间戳转字符串
+     *
+     * @param timestampStr 时间戳
+     * @return String
+     */
+    public static String toString(String timestampStr) {
+        long timestamp = Long.parseLong(timestampStr);
+        if (timestampStr.length() == 10) {
+            return secondsToString(timestamp, DateUtil.YYYY_MM_DDHHMMSS);
+        } else if (timestampStr.length() == 13) {
+            return millisecondsToString(timestamp, DateUtil.YYYY_MM_DDHHMMSS_SSS);
+        }
+        return Common.BLANK_STRING;
     }
 
     /**
@@ -62,6 +80,9 @@ public class DateUtil {
      * @return String
      */
     public static String stringToMilliseconds(String timestamp) {
+        if (StringUtil.isEmpty(timestamp)) {
+            return Common.BLANK_STRING;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         char[] chars = timestamp.trim().toCharArray();
         for (char c : chars) {

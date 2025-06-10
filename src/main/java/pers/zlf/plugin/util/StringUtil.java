@@ -6,6 +6,9 @@ import pers.zlf.plugin.constant.Keyword;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.lambda.Empty;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -289,5 +292,25 @@ public class StringUtil {
         } else {
             return value1.equals(value2);
         }
+    }
+
+    /**
+     * url encode
+     *
+     * @param value 待处理字符串
+     * @return String
+     */
+    public static String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * url decode
+     *
+     * @param value 待处理字符串
+     * @return String
+     */
+    public static String urlDecode(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 }
