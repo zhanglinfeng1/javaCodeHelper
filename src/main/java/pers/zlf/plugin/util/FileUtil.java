@@ -5,6 +5,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import pers.zlf.plugin.pojo.ImageSize;
 
 import javax.imageio.ImageIO;
 import java.awt.Image;
@@ -16,8 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -69,28 +68,30 @@ public class FileUtil {
     }
 
     /**
-     * 按目标宽度，等比压缩图片
+     * 按容器宽高，调整图片至合适大小
      *
-     * @param filePath    文件路径
-     * @param targetWidth 目标宽度
+     * @param filePath 文件路径
+     * @param width    宽
+     * @param height   高
      * @return Image
      * @throws IOException 异常
      */
-    public static Image compressPicByWidth(String filePath, int targetWidth) throws IOException {
+    public static Image compressPic(String filePath, int width, int height) throws IOException {
         BufferedImage bufferedImage = ImageIO.read(new FileInputStream(filePath));
-        return compressPicByWidth(bufferedImage, targetWidth);
+        return compressPic(bufferedImage, width, height);
     }
 
     /**
-     * 按目标宽度，等比压缩图片
+     * 按容器宽高，调整图片至合适大小
      *
      * @param bufferedImage BufferedImage
-     * @param targetWidth   目标宽度
+     * @param width         宽
+     * @param height        高
      * @return Image
      */
-    public static Image compressPicByWidth(BufferedImage bufferedImage, int targetWidth) {
-        int targetHeight = new BigDecimal(targetWidth).multiply(new BigDecimal(bufferedImage.getHeight())).divide(new BigDecimal(bufferedImage.getWidth()), 0, RoundingMode.HALF_UP).intValue();
-        return bufferedImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+    public static Image compressPic(BufferedImage bufferedImage, int width, int height) {
+        ImageSize imageSize = getTheAppropriateSize(bufferedImage.getWidth(), bufferedImage.getHeight(), width, height);
+        return bufferedImage.getScaledInstance((int) imageSize.getWidth(), (int) imageSize.getHeight(), Image.SCALE_SMOOTH);
     }
 
     /**
@@ -144,18 +145,28 @@ public class FileUtil {
         PDPage pdPage = new PDPage(PDRectangle.A4);
         document.addPage(pdPage);
         PDPageContentStream stream = new PDPageContentStream(document, pdPage);
-        float imageWidth = pdImageXObject.getWidth();
-        float imageHeight = pdImageXObject.getHeight();
         float pageWidth = pdPage.getMediaBox().getWidth();
         float pageHeight = pdPage.getMediaBox().getHeight();
-        float scale = Math.min(pageWidth / imageWidth, pageHeight / imageHeight);
-        imageWidth *= scale;
-        imageHeight *= scale;
-        float x = (pageWidth - imageWidth) / 2;
-        float y = (pageHeight - imageHeight) / 2;
-        stream.drawImage(pdImageXObject, x, y, imageWidth, imageHeight);
+        ImageSize imageSize = getTheAppropriateSize(pdImageXObject.getWidth(), pdImageXObject.getHeight(), pageWidth, pageHeight);
+        float x = (pageWidth - imageSize.getWidth()) / 2;
+        float y = (pageHeight - imageSize.getHeight()) / 2;
+        stream.drawImage(pdImageXObject, x, y, imageSize.getWidth(), imageSize.getHeight());
         stream.close();
         document.save(pdfFilePath);
         document.close();
+    }
+
+    /**
+     * 调整图片长宽
+     *
+     * @param imageWidth  图片宽
+     * @param imageHeight 图片高
+     * @param pageWidth   容器宽
+     * @param pageHeight  容器高
+     * @return ImageSize
+     */
+    public static ImageSize getTheAppropriateSize(float imageWidth, float imageHeight, float pageWidth, float pageHeight) {
+        float scale = Math.min(pageWidth / imageWidth, pageHeight / imageHeight);
+        return new ImageSize(imageWidth * scale, imageHeight * scale);
     }
 }

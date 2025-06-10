@@ -49,8 +49,8 @@ public class PicToBase64Dialog {
                     return;
                 }
                 try {
-                    Image logo = FileUtil.compressPicByWidth(filePath, picLabel.getHeight());
-                    picLabel.setIcon(new ImageIcon(logo));
+                    Image pic = FileUtil.compressPic(filePath, picLabel.getWidth(), picLabel.getHeight());
+                    picLabel.setIcon(new ImageIcon(pic));
                     uploadFilePath = filePath;
                     picImage = null;
                 } catch (Exception ex) {
@@ -80,7 +80,7 @@ public class PicToBase64Dialog {
             }
             try {
                 picImage = FileUtil.base64ToPic(content);
-                picLabel.setIcon(new ImageIcon(FileUtil.compressPicByWidth(picImage, picLabel.getHeight())));
+                picLabel.setIcon(new ImageIcon(FileUtil.compressPic(picImage, picLabel.getWidth(), picLabel.getHeight())));
                 uploadFilePath = null;
             } catch (Exception ex) {
                 picImage = null;

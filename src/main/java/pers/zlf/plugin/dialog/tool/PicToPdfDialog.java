@@ -38,8 +38,8 @@ public class PicToPdfDialog {
                     return;
                 }
                 try {
-                    Image logo = FileUtil.compressPicByWidth(filePath, picLabel.getHeight());
-                    picLabel.setIcon(new ImageIcon(logo));
+                    Image pic = FileUtil.compressPic(filePath, picLabel.getWidth(), picLabel.getHeight());
+                    picLabel.setIcon(new ImageIcon(pic));
                     uploadFilePath = filePath;
                 } catch (Exception ex) {
                     Message.notifyError(Message.UPLOAD_FAILED + ex.getMessage());
