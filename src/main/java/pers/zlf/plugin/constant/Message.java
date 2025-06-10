@@ -84,6 +84,8 @@ public class Message {
     public static final String ZENTAO_REQUEST_TASK_FAILED = "获取禅道任务失败：";
     public static final String ZENTAO_LOGIN_FAILED = "禅道登录失败：";
     public static final String PIC_TO_BASE64_FAILED = "图片转Base64失败：";
+    public static final String PIC_TO_PDF_FAILED = "图片转PDF失败：";
+    public static final String PIC_TO_PDF_SUCCESS = "图片转PDF成功，文件目录：";
     public static final String FILE_SUFFIX_NOT_NULL = "图片后缀不能为空";
     public static final String BASE64_TO_PIC_FAILED = "Base64转图片失败：";
     public static final String BASE64_TO_PIC_FIRST = "请先Base64转图片";

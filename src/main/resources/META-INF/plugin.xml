@@ -30,6 +30,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>[NEW]图片转Base64</li>
+            <li>[NEW]图片转pdf</li>
             <li>[DELETE]对象转json</li>
         </ul>
     ]]>

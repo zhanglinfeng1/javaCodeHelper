@@ -32,4 +32,5 @@ dependencies {
     }
     implementation 'org.apache.poi:poi:5.2.2'
     implementation 'org.apache.poi:poi-ooxml:5.4.0'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.34'
 }

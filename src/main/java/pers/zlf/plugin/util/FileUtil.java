@@ -1,5 +1,11 @@
 package pers.zlf.plugin.util;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
 import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -124,5 +130,32 @@ public class FileUtil {
         inputStream.close();
         outputStream.close();
         return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    }
+
+    /**
+     * 图片转pdf
+     *
+     * @param picFilePath 图片路径
+     * @param pdfFilePath pdf文路径
+     */
+    public static void picToPdf(String picFilePath, String pdfFilePath) throws IOException {
+        PDDocument document = new PDDocument();
+        PDImageXObject pdImageXObject = PDImageXObject.createFromFile(picFilePath, document);
+        PDPage pdPage = new PDPage(PDRectangle.A4);
+        document.addPage(pdPage);
+        PDPageContentStream stream = new PDPageContentStream(document, pdPage);
+        float imageWidth = pdImageXObject.getWidth();
+        float imageHeight = pdImageXObject.getHeight();
+        float pageWidth = pdPage.getMediaBox().getWidth();
+        float pageHeight = pdPage.getMediaBox().getHeight();
+        float scale = Math.min(pageWidth / imageWidth, pageHeight / imageHeight);
+        imageWidth *= scale;
+        imageHeight *= scale;
+        float x = (pageWidth - imageWidth) / 2;
+        float y = (pageHeight - imageHeight) / 2;
+        stream.drawImage(pdImageXObject, x, y, imageWidth, imageHeight);
+        stream.close();
+        document.save(pdfFilePath);
+        document.close();
     }
 }
