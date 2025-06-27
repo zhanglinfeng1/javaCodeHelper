@@ -35,8 +35,12 @@ public class CommonConfig {
     private boolean openBrace = true;
     /** 开启git代码拉取提醒 */
     private boolean openCodeRemind = true;
-    /** 轮询时间（分钟） */
+    /** git轮询时间（分钟） */
     private int codeRemindMinute = 10;
+    /** 开启禅道新任务、新BUG提醒 */
+    private boolean openZenTaoRemind = true;
+    /** 禅道轮询时间（分钟） */
+    private int zenTaoRemindMinute = 10;
     /** 禅道地址 */
     private String zenTaoUrl;
     /** 禅道账号 */
@@ -186,5 +190,21 @@ public class CommonConfig {
 
     public void setZenTaoPassword(String zenTaoPassword) {
         this.zenTaoPassword = zenTaoPassword;
+    }
+
+    public boolean isOpenZenTaoRemind() {
+        return openZenTaoRemind;
+    }
+
+    public void setOpenZenTaoRemind(boolean openZenTaoRemind) {
+        this.openZenTaoRemind = openZenTaoRemind;
+    }
+
+    public int getZenTaoRemindMinute() {
+        return zenTaoRemindMinute;
+    }
+
+    public void setZenTaoRemindMinute(int zenTaoRemindMinute) {
+        this.zenTaoRemindMinute = zenTaoRemindMinute;
     }
 }

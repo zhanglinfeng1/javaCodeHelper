@@ -15,6 +15,10 @@ intellij idea 中搜索插件 Java Code Helper。 欢迎交流想法、反馈BUG
 ![image](src/main/resources/example/newCodeRemind1.png)
 ![image](src/main/resources/example/newCodeRemind2.png)
 
+## 禅道新任务、新BUG提醒
+有新任务、新BUG时将在右下角和通知中提醒<br />
+默认轮询时间10分钟，可配置：File > Setting > Other Settings > javaCodeHelper<br />
+
 ## 彩虹括号
 <>、()、[]、{} 同对颜色一致<br />
 可以自定义颜色，配置路径：File > Setting > Editor > Color Scheme > 彩虹括号(javaCodeHelper)
@@ -83,7 +87,7 @@ Database中右击选中 <br />
 目前注释判断仅支持.java、.xml文件<br />
 ![image](src/main/resources/example/codeStatistics.png)<br />
 
-## 禅道任务、bug信息
+## git提交时,展示禅道任务、bug信息
 进行git提交时，点击![image](src/main/resources/icon/logo.svg)，选择BUG或者任务<br />
 ![image](src/main/resources/example/gitMessage.png)
 

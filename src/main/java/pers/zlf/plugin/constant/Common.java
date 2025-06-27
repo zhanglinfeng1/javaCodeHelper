@@ -25,6 +25,7 @@ public class Common {
     public static final String PERCENT_SIGN = "%";
     public static final String T = "t";
     public static final String LINE_BREAK = "\n";
+    public static final String LINE_BREAK_HTML = "<br/>";
     public static final String COLON = ":";
     public static final String EQUAL_SIGN = "=";
     public static final String SUCCESS = "success";

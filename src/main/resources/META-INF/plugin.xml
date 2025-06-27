@@ -11,7 +11,8 @@
         <p>目前有以下功能，详情见 <a href="https://gitee.com/zlfzh/javaCodeHelper" target="_blank">Gitee</a> | <a href="https://github.com/zhanglinfeng1/javaCodeHelper" target="_blank">Github</a></p>
         <ul>
             <li>git仓库新代码提醒</li>
-            <li>禅道任务、bug信息</li>
+            <li>禅道新任务、新BUG提醒</li>
+            <li>git提交时,展示禅道任务、bug信息</li>
             <li>彩虹括号</li>
             <li>代码补全</li>
             <li>快捷跳转</li>
@@ -31,6 +32,7 @@
         <ul>
             <li>[NEW]图片转Base64</li>
             <li>[NEW]图片转pdf</li>
+            <li>[NEW]禅道新任务、新BUG提醒</li>
             <li>[DELETE]对象转json</li>
         </ul>
     ]]>
@@ -79,8 +81,8 @@
         <colorSettingsPage implementation="pers.zlf.plugin.highlight.BracketsColorSettingsPage"/>
         <!-- 通知组件 -->
         <notificationGroup id="JavaCodeHelper" displayType="BALLOON"/>
-        <!-- 项目启动监听-->
-        <postStartupActivity implementation="pers.zlf.plugin.listener.NewCodeRemindListener"/>
+        <!-- 定时任务-->
+        <postStartupActivity implementation="pers.zlf.plugin.listener.ScheduledTasksListener"/>
     </extensions>
 
     <actions>

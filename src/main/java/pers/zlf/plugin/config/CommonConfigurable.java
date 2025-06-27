@@ -3,7 +3,7 @@ package pers.zlf.plugin.config;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.listener.NewCodeRemindListener;
+import pers.zlf.plugin.listener.ScheduledTasksListener;
 import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -58,6 +58,12 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (dialog.getCodeRemindMinute() != CONFIG.getCodeRemindMinute()) {
             return true;
         }
+        if (dialog.isOpenZenTaoRemind() != CONFIG.isOpenZenTaoRemind()) {
+            return true;
+        }
+        if (dialog.getZenTaoRemindMinute() != CONFIG.getZenTaoRemindMinute()) {
+            return true;
+        }
         if (dialog.getOcrApi() != CONFIG.getOcrApi()) {
             return true;
         }
@@ -82,7 +88,7 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
     @Override
     public void apply() {
         // 项目还没启动好
-        if (!NewCodeRemindListener.isStartupCompleted()) {
+        if (!ScheduledTasksListener.isStartupCompleted()) {
             Message.notifyError(Message.PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING);
             return;
         }
@@ -104,9 +110,14 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         CONFIG.setZenTaoAccount(dialog.getZenTaoAccount());
         CONFIG.setZenTaoPassword(dialog.getZenTaoPassword());
         if (CONFIG.isOpenCodeRemind()) {
-            NewCodeRemindListener.rerun(CONFIG.getCodeRemindMinute());
+            ScheduledTasksListener.rerunNewCodeRemind(CONFIG.getCodeRemindMinute());
         } else {
-            NewCodeRemindListener.shutdownNow();
+            ScheduledTasksListener.shutdownNowNewCodeRemind();
+        }
+        if (CONFIG.isOpenZenTaoRemind()) {
+            ScheduledTasksListener.rerunZenTaoRemind(CONFIG.getZenTaoRemindMinute());
+        } else {
+            ScheduledTasksListener.shutdownZenTaoRemind();
         }
         ConfigFactory.getInstance().setCommonConfig(CONFIG);
     }

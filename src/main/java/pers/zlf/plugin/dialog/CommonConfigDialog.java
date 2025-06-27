@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.event.ItemEvent;
 
 /**
  * @author zhanglinfeng
@@ -29,12 +30,16 @@ public class CommonConfigDialog extends BaseDialog{
     private JCheckBox codeCompletionEnableCheckBox;
     private JCheckBox codeRemindCheckBox;
     private IntegerField codeRemindMinuteTextField;
+    private JPanel codeRemindPanel;
     private JComboBox<String> ocrApiComboBox;
     private JTextField ocrAppKeyTextField;
     private JTextField ocrSecurityKeyKeyTextField;
     private JTextField zenTaoUrlTextField;
     private JTextField zenTaoAccountTextField;
     private JTextField zenTaoPasswordTextField;
+    private JCheckBox zenTaoRemindCheckBox;
+    private IntegerField zenTaoRemindMinuteTextField;
+    private JPanel zenTaoRemindPanel;
 
     public CommonConfigDialog() {
     }
@@ -62,7 +67,34 @@ public class CommonConfigDialog extends BaseDialog{
         angleBracketCheckBox.setSelected(config.isOpenAngleBracket());
         //git代码提醒
         codeRemindCheckBox.setSelected(config.isOpenCodeRemind());
-        codeRemindMinuteTextField.setValue(config.getCodeRemindMinute());
+        if (codeRemindCheckBox.isSelected()) {
+            codeRemindPanel.setVisible(true);
+            codeRemindMinuteTextField.setValue(config.getCodeRemindMinute());
+        } else {
+            codeRemindPanel.setVisible(false);
+        }
+        codeRemindCheckBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                codeRemindPanel.setVisible(true);
+            } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                codeRemindPanel.setVisible(false);
+            }
+        });
+        //禅道新任务、新BUG提醒
+        zenTaoRemindCheckBox.setSelected(config.isOpenZenTaoRemind());
+        if (zenTaoRemindCheckBox.isSelected()) {
+            zenTaoRemindPanel.setVisible(true);
+            zenTaoRemindMinuteTextField.setValue(config.getZenTaoRemindMinute());
+        } else {
+            zenTaoRemindPanel.setVisible(false);
+        }
+        zenTaoRemindCheckBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                zenTaoRemindPanel.setVisible(true);
+            } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                zenTaoRemindPanel.setVisible(false);
+            }
+        });
         //禅道配置
         zenTaoUrlTextField.setText(config.getZenTaoUrl());
         zenTaoAccountTextField.setText(config.getZenTaoAccount());
@@ -119,7 +151,11 @@ public class CommonConfigDialog extends BaseDialog{
     }
 
     public int getCodeRemindMinute() {
-        return codeRemindMinuteTextField.getValue();
+        if (isOpenCodeRemind()) {
+            return codeRemindMinuteTextField.getValue();
+        } else {
+            return ConfigFactory.getInstance().getCommonConfig().getCodeRemindMinute();
+        }
     }
 
     public int getOcrApi() {
@@ -146,4 +182,15 @@ public class CommonConfigDialog extends BaseDialog{
         return zenTaoPasswordTextField.getText();
     }
 
+    public boolean isOpenZenTaoRemind() {
+        return zenTaoRemindCheckBox.isSelected();
+    }
+
+    public int getZenTaoRemindMinute() {
+        if (isOpenZenTaoRemind()) {
+            return zenTaoRemindMinuteTextField.getValue();
+        } else {
+            return ConfigFactory.getInstance().getCommonConfig().getZenTaoRemindMinute();
+        }
+    }
 }
