@@ -33,12 +33,11 @@ import java.util.Optional;
  * @author zhanglinfeng
  * @date create in 2024/12/20 22:51
  */
-public class NewCodeRemind implements Runnable {
-    private final Project PROJECT;
+public class NewCodeRemindSchedule extends Schedule {
     private Notification notification;
 
-    public NewCodeRemind(Project project) {
-        this.PROJECT = project;
+    public NewCodeRemindSchedule(Project project) {
+        super(project);
     }
 
     @Override

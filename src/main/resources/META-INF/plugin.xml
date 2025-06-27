@@ -81,8 +81,10 @@
         <colorSettingsPage implementation="pers.zlf.plugin.highlight.BracketsColorSettingsPage"/>
         <!-- 通知组件 -->
         <notificationGroup id="JavaCodeHelper" displayType="BALLOON"/>
-        <!-- 定时任务-->
-        <postStartupActivity implementation="pers.zlf.plugin.listener.ScheduledTasksListener"/>
+        <!-- 新代码提醒-->
+        <postStartupActivity implementation="pers.zlf.plugin.listener.NewCodeRemindListener"/>
+        <!-- 禅道新任务、新BUG提醒-->
+        <postStartupActivity implementation="pers.zlf.plugin.listener.ZenTaoRemindListener"/>
     </extensions>
 
     <actions>

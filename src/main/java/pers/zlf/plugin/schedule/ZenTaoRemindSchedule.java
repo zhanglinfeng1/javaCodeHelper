@@ -18,14 +18,13 @@ import java.util.List;
  * @author zhanglinfeng
  * @date create in 2025/6/27 15:31
  */
-public class ZenTaoRemind implements Runnable {
-    private final Project PROJECT;
+public class ZenTaoRemindSchedule extends Schedule {
     private boolean first = true;
     private List<String> bugIdList = new ArrayList<>();
     private List<String> tasksIdList = new ArrayList<>();
 
-    public ZenTaoRemind(Project project) {
-        this.PROJECT = project;
+    public ZenTaoRemindSchedule(Project project) {
+        super(project);
     }
 
     @Override
