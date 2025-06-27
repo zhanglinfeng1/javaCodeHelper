@@ -40,7 +40,7 @@ public class CommonConfig {
     /** 开启禅道新任务、新BUG提醒 */
     private boolean openZenTaoRemind = true;
     /** 禅道轮询时间（分钟） */
-    private int zenTaoRemindMinute = 10;
+    private int zenTaoRemindMinute = 5;
     /** 禅道地址 */
     private String zenTaoUrl;
     /** 禅道账号 */
