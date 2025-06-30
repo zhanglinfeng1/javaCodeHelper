@@ -33,7 +33,6 @@ public class Message {
     public static final String PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST = "请先配置参与统计的文件";
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
     public static final String CANNOT_BE_ZERO = "不能为0";
-    public static final String PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING = "请等待项目加载完后再改动";
     public static final String PLEASE_CONFIGURE_OCR_FIRST = "请先配置文字识别";
 
     /** 代码统计 */

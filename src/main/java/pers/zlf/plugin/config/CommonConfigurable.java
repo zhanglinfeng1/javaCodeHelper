@@ -88,10 +88,6 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
 
     @Override
     public void apply() {
-        if (NewCodeRemindListener.isUnCompleted() || ZenTaoRemindListener.isUnCompleted()) {
-            Message.notifyError(Message.PLEASE_WAIT_FOR_THE_PROJECT_TO_FINISH_LOADING);
-            return;
-        }
         NewCodeRemindListener.refresh(dialog.isOpenCodeRemind(), dialog.getCodeRemindMinute());
         ZenTaoRemindListener.refresh(dialog.isOpenZenTaoRemind(), dialog.getZenTaoRemindMinute());
         CONFIG.setTranslateApi(dialog.getTranslateApi());

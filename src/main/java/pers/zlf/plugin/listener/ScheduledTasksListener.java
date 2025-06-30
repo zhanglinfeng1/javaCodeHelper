@@ -36,21 +36,15 @@ public abstract class ScheduledTasksListener implements StartupActivity {
     protected abstract int getRemindMinute();
 
     /**
-     * 判断项目是否启动完成
-     *
-     * @return true 项目还没启动好
-     */
-    public static boolean isUnCompleted() {
-        return schedule == null;
-    }
-
-    /**
      * 刷新定时任务
      *
      * @param open   开启定时任务
      * @param minute 轮循序时间
      */
     public static void refresh(boolean open, int minute) {
+        if (schedule == null) {
+            return;
+        }
         if (open) {
             Optional.ofNullable(future).ifPresent(t -> future.cancel(true));
             future = SERVICE.scheduleWithFixedDelay(schedule, 10, minute * 60L, TimeUnit.SECONDS);
