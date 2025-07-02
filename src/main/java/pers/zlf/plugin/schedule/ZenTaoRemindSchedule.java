@@ -28,6 +28,16 @@ public class ZenTaoRemindSchedule extends Schedule {
     }
 
     @Override
+    protected boolean isRun() {
+        return ConfigFactory.getInstance().getCommonConfig().isOpenZenTaoRemind();
+    }
+
+    @Override
+    protected int getRemindMinute() {
+        return ConfigFactory.getInstance().getCommonConfig().getZenTaoRemindMinute();
+    }
+
+    @Override
     public void run() {
         CommonConfig commonConfig = ConfigFactory.getInstance().getCommonConfig();
         String zenTaoUrl = commonConfig.getZenTaoUrl();

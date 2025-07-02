@@ -3,8 +3,7 @@ package pers.zlf.plugin.config;
 import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.dialog.CommonConfigDialog;
 import pers.zlf.plugin.factory.ConfigFactory;
-import pers.zlf.plugin.listener.NewCodeRemindListener;
-import pers.zlf.plugin.listener.ZenTaoRemindListener;
+import pers.zlf.plugin.factory.ScheduledTasksFactory;
 import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.StringUtil;
 
@@ -88,8 +87,6 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
 
     @Override
     public void apply() {
-        NewCodeRemindListener.refresh(dialog.isOpenCodeRemind(), dialog.getCodeRemindMinute());
-        ZenTaoRemindListener.refresh(dialog.isOpenZenTaoRemind(), dialog.getZenTaoRemindMinute());
         CONFIG.setTranslateApi(dialog.getTranslateApi());
         CONFIG.setAppId(dialog.getAppId());
         CONFIG.setSecretKey(dialog.getSecurityKey());
@@ -111,6 +108,7 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         CONFIG.setZenTaoPassword(dialog.getZenTaoPassword());
         CONFIG.setMaxCodeCompletionLength(dialog.getMaxCodeCompletionLength());
         ConfigFactory.getInstance().setCommonConfig(CONFIG);
+        ScheduledTasksFactory.getInstance().refresh();
     }
 
 }

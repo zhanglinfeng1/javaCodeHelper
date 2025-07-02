@@ -25,6 +25,7 @@ import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.constant.Message;
+import pers.zlf.plugin.factory.ConfigFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,16 @@ public class NewCodeRemindSchedule extends Schedule {
 
     public NewCodeRemindSchedule(Project project) {
         super(project);
+    }
+
+    @Override
+    protected boolean isRun() {
+        return ConfigFactory.getInstance().getCommonConfig().isOpenCodeRemind();
+    }
+
+    @Override
+    protected int getRemindMinute() {
+        return ConfigFactory.getInstance().getCommonConfig().getCodeRemindMinute();
     }
 
     @Override
