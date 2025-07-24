@@ -9,10 +9,13 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.Map;
@@ -111,5 +114,28 @@ public class HttpUtil {
         T t = JsonUtil.toObject(result, cls);
         t.setResponseCode(conn.getResponseCode());
         return t;
+    }
+
+    /**
+     * 获取内网ip
+     *
+     * @return String
+     */
+    public static String getLocalIp() throws UnknownHostException {
+        InetAddress ipAddress = InetAddress.getLocalHost();
+        return ipAddress.getHostAddress();
+    }
+
+    /**
+     * 获取外网ip
+     *
+     * @return String
+     */
+    public static String getExternalIP() throws IOException {
+        URL url = new URL("http://ifconfig.me/ip");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(Request.GET);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        return reader.readLine();
     }
 }

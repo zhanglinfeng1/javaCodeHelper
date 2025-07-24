@@ -68,6 +68,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     文字识别：识别图片或者pdf文件中的文字
     图片转Base64：图片与Base64相互转换
     图片转pdf：图片转成pdf文件
+    本机IP：获取本机内网ip、外网ip
 
 ## 导出表结构
 Database中右击选中 <br />

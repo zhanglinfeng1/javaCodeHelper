@@ -4,6 +4,7 @@ import pers.zlf.plugin.constant.ToolEnum;
 import pers.zlf.plugin.dialog.tool.BinaryConversionDialog;
 import pers.zlf.plugin.dialog.tool.CronDialog;
 import pers.zlf.plugin.dialog.tool.EncryptionAndDecryptionDialog;
+import pers.zlf.plugin.dialog.tool.IpDialog;
 import pers.zlf.plugin.dialog.tool.OcrDialog;
 import pers.zlf.plugin.dialog.tool.PicToBase64Dialog;
 import pers.zlf.plugin.dialog.tool.PicToPdfDialog;
@@ -34,6 +35,7 @@ public class CommonToolsDialog {
         tabbedPane.add("Escape", new SimpleToolDialog(ToolEnum.ESCAPE).getContent());
         tabbedPane.add("图片转Base64", new PicToBase64Dialog().getContent());
         tabbedPane.add("图片转pdf", new PicToPdfDialog().getContent());
+        tabbedPane.add("本机IP", new IpDialog().getContent());
     }
 
     public JPanel getContent() {
