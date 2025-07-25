@@ -18,8 +18,8 @@ public class SimpleToolDialog {
     private JTextArea downTextArea;
 
     public SimpleToolDialog(ToolEnum toolEnum) {
-        downButton.setName(toolEnum.downButtonName);
-        upButton.setName(toolEnum.upButtonName);
+        downButton.setText(toolEnum.downButtonName);
+        upButton.setText(toolEnum.upButtonName);
         downButton.addActionListener(e -> downTextArea.setText(toolEnum.downButtonFunction.apply(upTextArea.getText())));
         upButton.addActionListener(e -> upTextArea.setText(toolEnum.upButtonFunction.apply(downTextArea.getText())));
     }
