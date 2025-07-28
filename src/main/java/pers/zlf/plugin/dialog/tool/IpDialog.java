@@ -3,8 +3,10 @@ package pers.zlf.plugin.dialog.tool;
 import pers.zlf.plugin.util.HttpUtil;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -13,29 +15,37 @@ import java.net.UnknownHostException;
  * @date create in 2025/7/24 23:33
  */
 public class IpDialog {
-    private JTextArea textArea;
     private JPanel contentPanel;
     private JButton refreshButton;
+    private JButton localIpCopyButton;
+    private JButton externalIPCopyButton;
+    private JLabel localIpLabel;
+    private JLabel externalIPLabel;
 
     public IpDialog() {
         refresh();
         refreshButton.addActionListener(e -> refresh());
+        localIpCopyButton.addActionListener(e -> {
+            StringSelection stringSelection = new StringSelection(localIpLabel.getText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+        });
+        externalIPCopyButton.addActionListener(e -> {
+            StringSelection stringSelection = new StringSelection(externalIPLabel.getText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+        });
     }
 
     public void refresh() {
-        String localIp = "内网IP:";
         try {
-            localIp = localIp + HttpUtil.getLocalIp();
+            localIpLabel.setText(HttpUtil.getLocalIp());
         } catch (UnknownHostException e) {
-            localIp = localIp + "获取异常：" + e.getMessage();
+            localIpLabel.setText("获取异常：" + e.getMessage());
         }
-        String externalIP = "外网IP:";
         try {
-            externalIP = externalIP + HttpUtil.getExternalIP();
+            externalIPLabel.setText(HttpUtil.getExternalIP());
         } catch (IOException e) {
-            externalIP = externalIP + "获取异常：" + e.getMessage();
+            externalIPLabel.setText("获取异常：" + e.getMessage());
         }
-        textArea.setText(localIp + System.lineSeparator() + externalIP);
     }
 
     public JPanel getContent() {
