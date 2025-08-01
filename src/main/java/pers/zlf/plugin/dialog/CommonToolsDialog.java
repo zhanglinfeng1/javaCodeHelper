@@ -36,6 +36,7 @@ public class CommonToolsDialog {
         tabbedPane.add("图片转Base64", new PicToBase64Dialog().getContent());
         tabbedPane.add("图片转pdf", new PicToPdfDialog().getContent());
         tabbedPane.add("本机IP", new IpDialog().getContent());
+        tabbedPane.add("去除html格式", new SimpleToolDialog(ToolEnum.REMOVE_HTML_FORMAT).getContent());
     }
 
     public JPanel getContent() {

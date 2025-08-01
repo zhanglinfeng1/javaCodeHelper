@@ -69,6 +69,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     图片转Base64：图片与Base64相互转换
     图片转pdf：图片转成pdf文件
     本机IP：获取本机内网ip、外网ip
+    去除html格式：去除标签，展示纯文本
 
 ## 导出表结构
 Database中右击选中 <br />

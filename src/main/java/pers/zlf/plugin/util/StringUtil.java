@@ -313,4 +313,14 @@ public class StringUtil {
     public static String urlDecode(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
+
+    /**
+     * 去除html格式
+     *
+     * @param text 待处理文本
+     * @return String
+     */
+    public static String removeHtmlFormat(String text) {
+        return text.replaceAll("<.*?>", "");
+    }
 }

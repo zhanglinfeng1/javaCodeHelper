@@ -1,6 +1,7 @@
 package pers.zlf.plugin.dialog.tool;
 
 import pers.zlf.plugin.constant.ToolEnum;
+import pers.zlf.plugin.util.StringUtil;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,10 +19,18 @@ public class SimpleToolDialog {
     private JTextArea downTextArea;
 
     public SimpleToolDialog(ToolEnum toolEnum) {
-        downButton.setText(toolEnum.downButtonName);
-        upButton.setText(toolEnum.upButtonName);
-        downButton.addActionListener(e -> downTextArea.setText(toolEnum.downButtonFunction.apply(upTextArea.getText())));
-        upButton.addActionListener(e -> upTextArea.setText(toolEnum.upButtonFunction.apply(downTextArea.getText())));
+        downButton.setVisible(false);
+        upButton.setVisible(false);
+        if (StringUtil.isNotEmpty(toolEnum.downButtonName)) {
+            downButton.setVisible(true);
+            downButton.setText(toolEnum.downButtonName);
+            downButton.addActionListener(e -> downTextArea.setText(toolEnum.downButtonFunction.apply(upTextArea.getText())));
+        }
+        if (StringUtil.isNotEmpty(toolEnum.upButtonName)) {
+            upButton.setVisible(true);
+            upButton.setText(toolEnum.upButtonName);
+            upButton.addActionListener(e -> upTextArea.setText(toolEnum.upButtonFunction.apply(downTextArea.getText())));
+        }
     }
 
     public JPanel getContent() {

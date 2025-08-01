@@ -15,7 +15,8 @@ public enum ToolEnum {
     URL_ENCODE("encode", "decode", StringUtil::urlEncode, StringUtil::urlDecode),
     ESCAPE("escape", "unescape", EscapeUtil::escape, EscapeUtil::unescape),
     TIMESTAMP_CONVERSION("格式化", "转时间戳(毫秒)", DateUtil::toString, DateUtil::stringToMilliseconds),
-    ASCII("转ASCII码", "转字符串", StringUtil::toAscii, StringUtil::asciiToString);
+    ASCII("转ASCII码", "转字符串", StringUtil::toAscii, StringUtil::asciiToString),
+    REMOVE_HTML_FORMAT("去除", null, StringUtil::removeHtmlFormat, null);
 
     public final String downButtonName;
     public final String upButtonName;
