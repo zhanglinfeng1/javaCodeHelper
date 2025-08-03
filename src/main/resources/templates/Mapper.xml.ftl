@@ -33,7 +33,7 @@
 <#list columnList as fields>
 <#if fields.columnName != 'id'>
         <if test="<#noparse>#{obj.</#noparse>${fields.columnName}} != null and <#noparse>#{obj.</#noparse>${fields.columnName}} != ''">
-            ${fields.sqlColumnName} = <#noparse>#{</#noparse>${fields.columnName}},
+            ${fields.sqlColumnName} = <#noparse>#{obj.</#noparse>${fields.columnName}},
         </if>
 </#if>
 </#list>
