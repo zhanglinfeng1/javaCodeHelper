@@ -44,7 +44,7 @@
         DELETE FROM ${sqlTableName} WHERE id = <#noparse>#{</#noparse>id}
     </delete>
 
-    <select id="get" resultMap="BaseResultMap">
+    <select id="getById" resultMap="BaseResultMap">
         SELECT <include refid="BaseColumn"/> FROM ${sqlTableName} WHERE id = <#noparse>#{</#noparse>id}
     </select>
 

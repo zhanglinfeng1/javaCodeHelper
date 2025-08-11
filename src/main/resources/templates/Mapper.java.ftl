@@ -18,7 +18,7 @@ public interface ${tableName}Mapper {
 
     void delete(@Param("id") ${idColumnType} id);
 
-    ${tableName} get(@Param("id") ${idColumnType} id);
+    ${tableName} getById(@Param("id") ${idColumnType} id);
 <#assign inList = ["in","not in"]>
 
     int getListCount(<#list queryColumnList as fields>@Param("${fields.columnName}") <#if inList?seq_contains(fields.queryType)>List<${fields.columnType}><#else>${fields.columnType}</#if> ${fields.columnName}<#if fields_has_next>, </#if></#list>);

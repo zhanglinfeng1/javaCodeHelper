@@ -47,8 +47,8 @@ public class ${tableName}ServiceImpl implements ${tableName}Service {
 
     @Override
     public ${tableName} get${tableName}(${idColumnType} id) {
-        //return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get(id)).orElseThrow(() -> new Exception("", ""));
-        return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.get(id)).orElse(new ${tableName}());
+        //return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.getById(id)).orElseThrow(() -> new Exception("", ""));
+        return Optional.ofNullable(id).map(t -> ${firstLowerTableName}Mapper.getById(id)).orElse(new ${tableName}());
     }
 
 <#assign inList = ["in","not in"]>
