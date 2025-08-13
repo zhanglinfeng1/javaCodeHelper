@@ -1,5 +1,6 @@
 package pers.zlf.plugin.dialog.tool;
 
+import pers.zlf.plugin.constant.Message;
 import pers.zlf.plugin.util.HttpUtil;
 
 import javax.swing.JButton;
@@ -28,10 +29,12 @@ public class IpDialog {
         localIpCopyButton.addActionListener(e -> {
             StringSelection stringSelection = new StringSelection(localIpLabel.getText());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+            Message.notifyInfo("已复制", 3000);
         });
         externalIPCopyButton.addActionListener(e -> {
             StringSelection stringSelection = new StringSelection(externalIPLabel.getText());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+            Message.notifyInfo("已复制", 3000);
         });
     }
 

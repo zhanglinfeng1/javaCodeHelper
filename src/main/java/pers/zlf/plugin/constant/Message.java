@@ -7,6 +7,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.Alarm;
 import org.jetbrains.annotations.NotNull;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.StringUtil;
@@ -104,6 +105,16 @@ public class Message {
     /**
      * info消息
      *
+     * @param content     消息文本
+     * @param delayMillis 指定时间后自动关闭
+     */
+    public static void notifyInfo(String content, Integer delayMillis) {
+        MyPsiUtil.getCurrentProject(project -> notify(project, content, NotificationType.INFORMATION, null, delayMillis));
+    }
+
+    /**
+     * info消息
+     *
      * @param project 消息展示的项目
      * @param content 消息文本
      */
@@ -119,7 +130,7 @@ public class Message {
      * @param action  执行动作
      */
     public static Notification notifyInfo(@NotNull Project project, String content, AnAction action) {
-        return notify(project, content, NotificationType.INFORMATION, action);
+        return notify(project, content, NotificationType.INFORMATION, action, null);
     }
 
     /**
@@ -170,7 +181,7 @@ public class Message {
                 }
             };
         }
-        notify(project, content, NotificationType.ERROR, anAction);
+        notify(project, content, NotificationType.ERROR, anAction, null);
     }
 
     /**
@@ -180,16 +191,21 @@ public class Message {
      * @param content          消息文本
      * @param notificationType 消息类型
      * @param action           执行动作
+     * @param delayMillis      指定时间后自动关闭
      */
-    private static Notification notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action) {
+    private static Notification notify(@NotNull Project project, String content, NotificationType notificationType, AnAction action, Integer delayMillis) {
         Notification notification = NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP_ID).createNotification(Common.JAVA_CODE_HELPER, content, notificationType).setIcon(MyIcon.LOGO).setSuggestionType(true);
         Optional.ofNullable(action).ifPresent(notification::addAction);
-        notification.addAction(new AnAction(Message.CLOSE) {
-            @Override
-            public void actionPerformed(@NotNull AnActionEvent e) {
-                notification.expire();
-            }
-        });
+        if (delayMillis == null) {
+            notification.addAction(new AnAction(Message.CLOSE) {
+                @Override
+                public void actionPerformed(@NotNull AnActionEvent e) {
+                    notification.expire();
+                }
+            });
+        } else {
+            new Alarm(Alarm.ThreadToUse.SWING_THREAD).addRequest(notification::expire, delayMillis);
+        }
         notification.notify(project);
         return notification;
     }

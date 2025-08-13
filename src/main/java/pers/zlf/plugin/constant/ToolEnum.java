@@ -1,7 +1,6 @@
 package pers.zlf.plugin.constant;
 
 import pers.zlf.plugin.util.DateUtil;
-import pers.zlf.plugin.util.EscapeUtil;
 import pers.zlf.plugin.util.StringUtil;
 
 import java.util.function.Function;
@@ -13,7 +12,7 @@ import java.util.function.Function;
 public enum ToolEnum {
     UNICODE("转unicode", "转字符串", StringUtil::unicodeEncode, StringUtil::unicodeDecode),
     URL_ENCODE("encode", "decode", StringUtil::urlEncode, StringUtil::urlDecode),
-    ESCAPE("escape", "unescape", EscapeUtil::escape, EscapeUtil::unescape),
+    ESCAPE("escape", "unescape", StringUtil::escape, StringUtil::unescape),
     TIMESTAMP_CONVERSION("格式化", "转时间戳(毫秒)", DateUtil::toString, DateUtil::stringToMilliseconds),
     ASCII("转ASCII码", "转字符串", StringUtil::toAscii, StringUtil::asciiToString),
     REMOVE_HTML_FORMAT("去除", null, StringUtil::removeHtmlFormat, null);
