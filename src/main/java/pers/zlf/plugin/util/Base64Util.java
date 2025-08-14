@@ -1,5 +1,7 @@
 package pers.zlf.plugin.util;
 
+import pers.zlf.plugin.constant.Common;
+
 /**
  * Base64 工具类
  *
@@ -53,7 +55,7 @@ public class Base64Util {
         }
         if (to.length() % 4 != 0) {
             for (i = 4 - to.length() % 4; i > 0; --i) {
-                to.append("=");
+                to.append(Common.EQUAL_SIGN);
             }
         }
         return to.toString();
