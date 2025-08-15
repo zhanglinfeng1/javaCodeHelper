@@ -420,7 +420,7 @@ public class StringUtil {
             }
         });
         Map<String, Object> map = parseToMap(propertiesMap);
-        return map2Yaml(map, 0).toString();
+        return mapToYaml(map, 0).toString();
     }
 
     /**
@@ -490,7 +490,7 @@ public class StringUtil {
         return resultMap;
     }
 
-    private static StringBuffer map2Yaml(Map<String, Object> propMap, int deep) {
+    private static StringBuffer mapToYaml(Map<String, Object> propMap, int deep) {
         StringBuffer yamlBuffer = new StringBuffer();
         if (propMap == null || propMap.isEmpty()) {
             return yamlBuffer;
@@ -505,7 +505,7 @@ public class StringUtil {
                     if (itemKey.startsWith(key.substring(0, entry.getKey().indexOf(Common.LEFT_BRACKETS)))) {
                         yamlBuffer.append(getSpace(deep + 1)).append("- ");
                         if (itemValue instanceof Map) {
-                            StringBuffer valStr = map2Yaml((Map<String, Object>) itemValue, 0);
+                            StringBuffer valStr = mapToYaml((Map<String, Object>) itemValue, 0);
                             String[] split = valStr.toString().split(Common.LINE_BREAK);
                             for (int i = 0; i < split.length; i++) {
                                 if (i > 0) {
@@ -533,7 +533,7 @@ public class StringUtil {
                 } else if (valObj instanceof Map) {
                     Map<String, Object> valMap = (Map<String, Object>) valObj;
                     yamlBuffer.append(key).append(Common.LINE_BREAK);
-                    StringBuffer valStr = map2Yaml(valMap, deep + 1);
+                    StringBuffer valStr = mapToYaml(valMap, deep + 1);
                     yamlBuffer.append(valStr);
                 } else {
                     yamlBuffer.append(key).append(Common.SPACE).append(valObj).append(Common.LINE_BREAK);
