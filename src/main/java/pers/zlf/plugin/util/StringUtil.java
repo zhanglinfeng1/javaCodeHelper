@@ -1,8 +1,10 @@
 package pers.zlf.plugin.util;
 
+import org.yaml.snakeyaml.Yaml;
 import pers.zlf.plugin.constant.Common;
 import pers.zlf.plugin.constant.FileType;
 import pers.zlf.plugin.constant.Keyword;
+import pers.zlf.plugin.constant.Regex;
 import pers.zlf.plugin.pojo.CommentFormat;
 import pers.zlf.plugin.util.lambda.Empty;
 
@@ -12,8 +14,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -398,4 +404,151 @@ public class StringUtil {
         }
         return result.toString();
     }
+
+    /**
+     * properties转yaml
+     *
+     * @param text 待处理文本
+     * @return String
+     */
+    public static String propertiesToYaml(String text) {
+        Map<String, Object> propertiesMap = new LinkedHashMap<>();
+        Arrays.stream(text.split(Common.LINE_BREAK)).filter(StringUtil::isNotEmpty).forEach(line -> {
+            Matcher matcher = Pattern.compile(Regex.KEY_VALUE).matcher(line);
+            if (matcher.matches()) {
+                propertiesMap.put(matcher.group(1), matcher.group(2));
+            }
+        });
+        Map<String, Object> map = parseToMap(propertiesMap);
+        return map2Yaml(map, 0).toString();
+    }
+
+    /**
+     * yaml转properties
+     *
+     * @param text 待处理文本
+     * @return String
+     */
+    public static String yamlToProperties(String text) {
+        Map<String, Object> propertiesMap = new LinkedHashMap<>();
+        Map<String, Object> yamlMap = new Yaml().load(text);
+        flattenMap(Common.BLANK_STRING, yamlMap, propertiesMap);
+        StringBuffer strBuff = new StringBuffer();
+        propertiesMap.forEach((key, value) -> strBuff.append(key)
+                .append(Common.EQUAL_SIGN)
+                .append(value)
+                .append(Common.LINE_BREAK));
+        return strBuff.toString();
+    }
+
+    private static void flattenMap(String prefix, Map<String, Object> yamlMap, Map<String, Object> treeMap) {
+        yamlMap.forEach((key, value) -> {
+            String fullKey = prefix + key;
+            if (value instanceof LinkedHashMap) {
+                flattenMap(fullKey + Common.DOT, (LinkedHashMap) value, treeMap);
+            } else if (value instanceof ArrayList) {
+                List values = (ArrayList) value;
+                for (int i = 0; i < values.size(); i++) {
+                    String itemKey = String.format("%s[%d]", fullKey, i);
+                    Object itemValue = values.get(i);
+                    if (itemValue instanceof String) {
+                        treeMap.put(itemKey, itemValue);
+                    } else {
+                        flattenMap(itemKey + Common.DOT, (LinkedHashMap) itemValue, treeMap);
+                    }
+                }
+            } else {
+                treeMap.put(fullKey, value.toString());
+            }
+        });
+    }
+
+    private static Map<String, Object> parseToMap(Map<String, Object> propMap) {
+        Map<String, Object> resultMap = new LinkedHashMap<>();
+        if (propMap == null || propMap.isEmpty()) {
+            return resultMap;
+        }
+        propMap.forEach((key, value) -> {
+            if (key.contains(Common.DOT)) {
+                String currentKey = key.substring(0, key.indexOf(Common.DOT));
+                if (resultMap.get(currentKey) != null) {
+                    return;
+                }
+                Map<String, Object> childMap = new LinkedHashMap<>();
+                propMap.forEach((childKey, childValue) -> {
+                    if (childKey.contains(currentKey + Common.DOT)) {
+                        childKey = childKey.substring(childKey.indexOf(Common.DOT) + 1);
+                        childMap.put(childKey, childValue);
+                    }
+                });
+                Map<String, Object> map = parseToMap(childMap);
+                resultMap.put(currentKey, map);
+            } else {
+                resultMap.put(key, value);
+            }
+        });
+        return resultMap;
+    }
+
+    private static StringBuffer map2Yaml(Map<String, Object> propMap, int deep) {
+        StringBuffer yamlBuffer = new StringBuffer();
+        if (propMap == null || propMap.isEmpty()) {
+            return yamlBuffer;
+        }
+        String space = getSpace(deep);
+        for (Map.Entry<String, Object> entry : propMap.entrySet()) {
+            Object valObj = entry.getValue();
+            if (entry.getKey().contains(Common.LEFT_BRACKETS) && entry.getKey().contains(Common.RIGHT_BRACKETS)) {
+                String key = entry.getKey().substring(0, entry.getKey().indexOf(Common.LEFT_BRACKETS)) + Common.COLON;
+                yamlBuffer.append(space).append(key).append(Common.LINE_BREAK);
+                propMap.forEach((itemKey, itemValue) -> {
+                    if (itemKey.startsWith(key.substring(0, entry.getKey().indexOf(Common.LEFT_BRACKETS)))) {
+                        yamlBuffer.append(getSpace(deep + 1)).append("- ");
+                        if (itemValue instanceof Map) {
+                            StringBuffer valStr = map2Yaml((Map<String, Object>) itemValue, 0);
+                            String[] split = valStr.toString().split(Common.LINE_BREAK);
+                            for (int i = 0; i < split.length; i++) {
+                                if (i > 0) {
+                                    yamlBuffer.append(getSpace(deep + 2));
+                                }
+                                yamlBuffer.append(split[i]).append(Common.LINE_BREAK);
+                            }
+                        } else {
+                            yamlBuffer.append(itemValue).append(Common.LINE_BREAK);
+                        }
+                    }
+                });
+                break;
+            } else {
+                String key = space + entry.getKey() + Common.COLON;
+                if (valObj instanceof String) {
+                    yamlBuffer.append(key).append(Common.SPACE).append(valObj).append(Common.LINE_BREAK);
+                } else if (valObj instanceof List) {
+                    yamlBuffer.append(key).append(Common.LINE_BREAK);
+                    List<String> list = (List<String>) entry.getValue();
+                    String lSpace = getSpace(deep + 1);
+                    for (String str : list) {
+                        yamlBuffer.append(lSpace).append("- ").append(str).append(Common.LINE_BREAK);
+                    }
+                } else if (valObj instanceof Map) {
+                    Map<String, Object> valMap = (Map<String, Object>) valObj;
+                    yamlBuffer.append(key).append(Common.LINE_BREAK);
+                    StringBuffer valStr = map2Yaml(valMap, deep + 1);
+                    yamlBuffer.append(valStr);
+                } else {
+                    yamlBuffer.append(key).append(Common.SPACE).append(valObj).append(Common.LINE_BREAK);
+                }
+            }
+
+        }
+        return yamlBuffer;
+    }
+
+    private static String getSpace(int deep) {
+        if (deep == 0) {
+            return Common.BLANK_STRING;
+        }
+        return (Common.SPACE + Common.SPACE).repeat(Math.max(0, deep));
+    }
+
 }

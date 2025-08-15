@@ -11,5 +11,5 @@ public class Regex {
     public static final String WRAP2 = "[\r*]";
     public static final String BACKSLASH = "\\\\";
     public static final String ANGLE_BRACKET = "<[^>]*>";
-
+    public static final String KEY_VALUE = "\\s*([^=\\s]*)\\s*=\\s*(.*)\\s*";
 }

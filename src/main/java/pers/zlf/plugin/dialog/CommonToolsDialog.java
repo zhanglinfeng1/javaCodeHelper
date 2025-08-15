@@ -37,6 +37,7 @@ public class CommonToolsDialog {
         tabbedPane.add("图片转pdf", new PicToPdfDialog().getContent());
         tabbedPane.add("本机IP", new IpDialog().getContent());
         tabbedPane.add("去除html格式", new SimpleToolDialog(ToolEnum.REMOVE_HTML_FORMAT).getContent());
+        tabbedPane.add("配置文件格式转换", new SimpleToolDialog(ToolEnum.SPRING_BOOT_CONFIG).getContent());
     }
 
     public JPanel getContent() {

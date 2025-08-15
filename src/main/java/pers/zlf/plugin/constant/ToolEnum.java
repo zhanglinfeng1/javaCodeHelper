@@ -15,7 +15,8 @@ public enum ToolEnum {
     ESCAPE("escape", "unescape", StringUtil::escape, StringUtil::unescape),
     TIMESTAMP_CONVERSION("格式化", "转时间戳(毫秒)", DateUtil::toString, DateUtil::stringToMilliseconds),
     ASCII("转ASCII码", "转字符串", StringUtil::toAscii, StringUtil::asciiToString),
-    REMOVE_HTML_FORMAT("去除", null, StringUtil::removeHtmlFormat, null);
+    REMOVE_HTML_FORMAT("去除", null, StringUtil::removeHtmlFormat, null),
+    SPRING_BOOT_CONFIG("转yaml", "转properties", StringUtil::propertiesToYaml, StringUtil::yamlToProperties);
 
     public final String downButtonName;
     public final String upButtonName;

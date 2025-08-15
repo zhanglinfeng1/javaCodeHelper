@@ -70,6 +70,7 @@ xml中的resultMap、refid标签跳转（ctrl+鼠标左击）
     图片转pdf：图片转成pdf文件
     本机IP：获取本机内网ip、外网ip
     去除html格式：去除标签，展示纯文本
+    配置文件格式转换：spring boot配置文件yaml和properties格式互转
 
 ## 导出表结构
 Database中右击选中 <br />
