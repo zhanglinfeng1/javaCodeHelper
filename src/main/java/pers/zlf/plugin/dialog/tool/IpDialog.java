@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.function.Consumer;
 
 /**
  * @author zhanglinfeng
@@ -26,16 +27,13 @@ public class IpDialog {
     public IpDialog() {
         refresh();
         refreshButton.addActionListener(e -> refresh());
-        localIpCopyButton.addActionListener(e -> {
-            StringSelection stringSelection = new StringSelection(localIpLabel.getText());
+        Consumer<String> copy = text -> {
+            StringSelection stringSelection = new StringSelection(text);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
             Message.notifyInfo("已复制", 3000);
-        });
-        externalIPCopyButton.addActionListener(e -> {
-            StringSelection stringSelection = new StringSelection(externalIPLabel.getText());
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
-            Message.notifyInfo("已复制", 3000);
-        });
+        };
+        localIpCopyButton.addActionListener(e -> copy.accept(localIpLabel.getText()));
+        externalIPCopyButton.addActionListener(e -> copy.accept(externalIPLabel.getText()));
     }
 
     public void refresh() {
