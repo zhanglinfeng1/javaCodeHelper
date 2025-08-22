@@ -41,7 +41,7 @@ public class EncryptionAndDecryptionDialog {
                     case Common.BASE64:
                         initButton(true, false, false, false, false);
                         break;
-                    case Common.MD5, Common.SHA1, Common.SHA256, Common.SHA512:
+                    case Common.MD2, Common.MD5, Common.SHA1, Common.SHA256, Common.SHA384, Common.SHA512:
                         initButton(false, false, false, false, false);
                         break;
                     case Common.AES_ECB:
@@ -75,13 +75,17 @@ public class EncryptionAndDecryptionDialog {
         switch (type) {
             case Common.BASE64:
                 return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+            case Common.MD2:
+                return DigestUtils.md2Hex(str);
             case Common.MD5:
                 return DigestUtils.md5Hex(str);
             case Common.SHA1:
                 return DigestUtils.sha1Hex(str);
             case Common.SHA256:
                 return DigestUtils.sha256Hex(str);
-            case  Common.SHA512:
+            case Common.SHA384:
+                return DigestUtils.sha384Hex(str);
+            case Common.SHA512:
                 return DigestUtils.sha512Hex(str);
             case Common.AES_ECB:
                 try {

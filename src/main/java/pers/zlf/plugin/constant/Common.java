@@ -97,9 +97,11 @@ public class Common {
 
     /** 常用加解密方式 */
     public static final String BASE64 = "BASE64";
+    public static final String MD2 = "MD2";
     public static final String MD5 = "MD5";
     public static final String SHA1 = "SHA1";
     public static final String SHA256 = "SHA256";
+    public static final String SHA384 = "SHA384";
     public static final String SHA512 = "SHA512";
     public static final String AES = "AES";
     public static final String AES_ECB = "AES_ECB";

@@ -113,9 +113,11 @@
             <properties>
               <model>
                 <item value="BASE64"/>
+                <item value="MD2"/>
                 <item value="MD5"/>
                 <item value="SHA1"/>
                 <item value="SHA256"/>
+                <item value="SHA384"/>
                 <item value="SHA512"/>
                 <item value="AES_ECB"/>
                 <item value="AES_CBC"/>
