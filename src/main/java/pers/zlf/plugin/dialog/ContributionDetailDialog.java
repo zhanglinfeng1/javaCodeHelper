@@ -75,6 +75,7 @@ public class ContributionDetailDialog {
         };
         Map<String, ContributionDetail> totalMap = new HashMap<>();
         Integer total = 0;
+        String str = Common.SPACE + Common.COMMA + Common.SPACE;
         for (Map.Entry<String, Map<String, ContributionDetail>> fileDetailMapEntry : TOTAL_CONTRIBUTION_DETAIL_MAP.entrySet()) {
             Map<String, ContributionDetail> detailMap = fileDetailMapEntry.getValue();
             String[] rowData = new String[columnCount];
@@ -84,7 +85,7 @@ public class ContributionDetailDialog {
             int columnNum = 2;
             for (String email : GIT_MAP.keySet()) {
                 ContributionDetail detail = detailMap.getOrDefault(email, new ContributionDetail());
-                rowData[columnNum++] = detail.getCodeCount() + Common.COMMA + detail.getCommentCount() + Common.COMMA + detail.getEmptyLineCount() + Common.COMMA + detail.getKeywordCount();
+                rowData[columnNum++] = detail.getCodeCount() + str + detail.getCommentCount() + str + detail.getEmptyLineCount() + str + detail.getKeywordCount();
                 ContributionDetail totalDetail = totalMap.getOrDefault(email, new ContributionDetail());
                 totalDetail.add(detail);
                 totalMap.putIfAbsent(email, totalDetail);
@@ -98,7 +99,7 @@ public class ContributionDetailDialog {
         int columnNum = 2;
         for (String email : GIT_MAP.keySet()) {
             ContributionDetail detail = totalMap.getOrDefault(email, new ContributionDetail());
-            totalRow[columnNum++] = detail.getCodeCount() + Common.COMMA + detail.getCommentCount() + Common.COMMA + detail.getEmptyLineCount() + Common.COMMA + detail.getKeywordCount();
+            totalRow[columnNum++] = detail.getCodeCount() + str + detail.getCommentCount() + str + detail.getEmptyLineCount() + str + detail.getKeywordCount();
         }
         defaultTableModel.addRow(totalRow);
         contributionDetailTable.setModel(defaultTableModel);
