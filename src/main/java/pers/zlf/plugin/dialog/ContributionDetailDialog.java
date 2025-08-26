@@ -59,8 +59,14 @@ public class ContributionDetailDialog {
         this.MODULE_NAME = moduleName;
         this.TOTAL_CONTRIBUTION_DETAIL_MAP = totalContributionDetailMap;
         totalContributionDetailMap.values().forEach(t -> t.values().forEach(v -> this.GIT_MAP.put(v.getEmail(), v.getEmailAndUser())));
-        this.HEADER_LIST = getHeaderList(GIT_MAP);
+        //表头
+        this.HEADER_LIST = new LinkedList<>();
+        HEADER_LIST.add(FILE_NAME);
+        HEADER_LIST.add(TOTAL_LINE_COUNT);
+        HEADER_LIST.addAll(GIT_MAP.values());
+        //展示表格
         init();
+        //按钮事件
         initButtonListener();
     }
 
@@ -75,7 +81,6 @@ public class ContributionDetailDialog {
         };
         Map<String, ContributionDetail> totalMap = new HashMap<>();
         Integer total = 0;
-        String str = Common.SPACE + Common.COMMA + Common.SPACE;
         for (Map.Entry<String, Map<String, ContributionDetail>> fileDetailMapEntry : TOTAL_CONTRIBUTION_DETAIL_MAP.entrySet()) {
             Map<String, ContributionDetail> detailMap = fileDetailMapEntry.getValue();
             String[] rowData = new String[columnCount];
@@ -85,7 +90,7 @@ public class ContributionDetailDialog {
             int columnNum = 2;
             for (String email : GIT_MAP.keySet()) {
                 ContributionDetail detail = detailMap.getOrDefault(email, new ContributionDetail());
-                rowData[columnNum++] = detail.getCodeCount() + str + detail.getCommentCount() + str + detail.getEmptyLineCount() + str + detail.getKeywordCount();
+                rowData[columnNum++] = detail.getDadaStr();
                 ContributionDetail totalDetail = totalMap.getOrDefault(email, new ContributionDetail());
                 totalDetail.add(detail);
                 totalMap.putIfAbsent(email, totalDetail);
@@ -99,7 +104,7 @@ public class ContributionDetailDialog {
         int columnNum = 2;
         for (String email : GIT_MAP.keySet()) {
             ContributionDetail detail = totalMap.getOrDefault(email, new ContributionDetail());
-            totalRow[columnNum++] = detail.getCodeCount() + str + detail.getCommentCount() + str + detail.getEmptyLineCount() + str + detail.getKeywordCount();
+            totalRow[columnNum++] = detail.getDadaStr();
         }
         defaultTableModel.addRow(totalRow);
         contributionDetailTable.setModel(defaultTableModel);
@@ -115,14 +120,6 @@ public class ContributionDetailDialog {
 
     public JPanel getContent() {
         return this.contentPanel;
-    }
-
-    private List<String> getHeaderList(Map<String, String> emailMap) {
-        List<String> headerList = new LinkedList<>();
-        headerList.add(FILE_NAME);
-        headerList.add(TOTAL_LINE_COUNT);
-        headerList.addAll(emailMap.values());
-        return headerList;
     }
 
     private void export(String path) {

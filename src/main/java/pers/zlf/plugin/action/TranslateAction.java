@@ -32,14 +32,21 @@ public class TranslateAction extends BaseAction {
 
     @Override
     protected boolean isVisible() {
-        String appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
-        String securityKey = ConfigFactory.getInstance().getCommonConfig().getSecretKey();
-        if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
-            return false;
-        }
         //获取选择内容
         this.selectionText = editor.getSelectionModel().getSelectedText();
         return null != editor && StringUtil.isNotEmpty(selectionText);
+    }
+
+    @Override
+    protected boolean isExecute() {
+        //配置校验
+        String appid = ConfigFactory.getInstance().getCommonConfig().getAppId();
+        String securityKey = ConfigFactory.getInstance().getCommonConfig().getSecretKey();
+        if (StringUtil.isEmpty(appid) || StringUtil.isEmpty(securityKey)) {
+            Message.notifyError(project, Message.PLEASE_CONFIGURE_TRANSLATE_API_FIRST, Message.TO_CONFIGURE, Common.APPLICATION_CONFIGURABLE_ID_JAVA_CODE_HELPER);
+            return false;
+        }
+        return true;
     }
 
     @Override

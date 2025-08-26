@@ -32,6 +32,7 @@ public class Message {
     public static final String PLEASE_CONFIGURE_AUTHOR_FIRST = "请先配置作者";
     public static final String PLEASE_CONFIGURE_TEMPLATE_FIRST = "请先配置模版";
     public static final String PLEASE_CONFIGURE_FILE_TYPE_LIST_FIRST = "请先配置参与统计的文件";
+    public static final String PLEASE_CONFIGURE_TRANSLATE_API_FIRST = "请先配置翻译api";
     public static final String DATE_FORMAT_ERROR = "日期格式错误";
     public static final String CANNOT_BE_ZERO = "不能为0";
     public static final String PLEASE_CONFIGURE_OCR_FIRST = "请先配置文字识别";

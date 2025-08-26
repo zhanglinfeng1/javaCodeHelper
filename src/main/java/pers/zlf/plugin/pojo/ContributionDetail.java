@@ -90,4 +90,10 @@ public class ContributionDetail {
         this.emptyLineCount = this.emptyLineCount + detail.getEmptyLineCount();
         this.keywordCount = this.keywordCount + detail.getKeywordCount();
     }
+
+    public String getDadaStr() {
+        String str = Common.SPACE + Common.COMMA + Common.SPACE;
+        return this.codeCount + str + commentCount + str + emptyLineCount + str + keywordCount;
+    }
+
 }
