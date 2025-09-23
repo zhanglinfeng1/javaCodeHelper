@@ -21,6 +21,12 @@ public class CommonConfig {
     private String ocrSecurityKey;
     /** api工具 */
     private int apiTool = Common.SWAGGER2_API;
+    /** 保留类原注释 */
+    private boolean keepClassComments = true;
+    /** 保留方法原注释 */
+    private boolean keepMethodComments = true;
+    /** 保留字段原注释 */
+    private boolean keepFieldComments = true;
     /** 开启代码补全 */
     private boolean enableCodeCompletion = true;
     /** 最大代码补全展示数量 */
@@ -206,5 +212,29 @@ public class CommonConfig {
 
     public void setZenTaoRemindMinute(int zenTaoRemindMinute) {
         this.zenTaoRemindMinute = zenTaoRemindMinute;
+    }
+
+    public boolean isKeepClassComments() {
+        return keepClassComments;
+    }
+
+    public void setKeepClassComments(boolean keepClassComments) {
+        this.keepClassComments = keepClassComments;
+    }
+
+    public boolean isKeepMethodComments() {
+        return keepMethodComments;
+    }
+
+    public void setKeepMethodComments(boolean keepMethodComments) {
+        this.keepMethodComments = keepMethodComments;
+    }
+
+    public boolean isKeepFieldComments() {
+        return keepFieldComments;
+    }
+
+    public void setKeepFieldComments(boolean keepFieldComments) {
+        this.keepFieldComments = keepFieldComments;
     }
 }

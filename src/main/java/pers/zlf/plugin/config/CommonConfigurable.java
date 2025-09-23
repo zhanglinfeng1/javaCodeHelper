@@ -37,6 +37,15 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         if (dialog.getApiTool() != CONFIG.getApiTool()) {
             return true;
         }
+        if (dialog.isKeepClassComments() != CONFIG.isKeepClassComments()) {
+            return true;
+        }
+        if (dialog.isKeepMethodComments() != CONFIG.isKeepMethodComments()) {
+            return true;
+        }
+        if (dialog.isKeepFieldComments() != CONFIG.isKeepFieldComments()) {
+            return true;
+        }
         if (dialog.isEnableCodeCompletion() != CONFIG.isEnableCodeCompletion()) {
             return true;
         }
@@ -94,6 +103,9 @@ public class CommonConfigurable extends BaseConfigurable<CommonConfigDialog> {
         CONFIG.setOcrApiKey(dialog.getOcrApiKey());
         CONFIG.setOcrSecurityKey(dialog.getOcrSecurityKey());
         CONFIG.setApiTool(dialog.getApiTool());
+        CONFIG.setKeepClassComments(dialog.isKeepClassComments());
+        CONFIG.setKeepMethodComments(dialog.isKeepMethodComments());
+        CONFIG.setKeepFieldComments(dialog.isKeepFieldComments());
         CONFIG.setEnableCodeCompletion(dialog.isEnableCodeCompletion());
         CONFIG.setOpenAngleBracket(dialog.isOpenAngleBracket());
         CONFIG.setOpenBrace(dialog.isOpenBrace());

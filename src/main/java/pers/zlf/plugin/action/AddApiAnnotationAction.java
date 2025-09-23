@@ -14,6 +14,7 @@ import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import pers.zlf.plugin.constant.Annotation;
 import pers.zlf.plugin.constant.Common;
+import pers.zlf.plugin.factory.ConfigFactory;
 import pers.zlf.plugin.pojo.annotation.BaseAnnotation;
 import pers.zlf.plugin.pojo.annotation.ControllerAnnotation;
 import pers.zlf.plugin.pojo.annotation.FieldAnnotation;
@@ -21,10 +22,12 @@ import pers.zlf.plugin.pojo.annotation.IgnoreAnnotation;
 import pers.zlf.plugin.pojo.annotation.MethodAnnotation;
 import pers.zlf.plugin.pojo.annotation.ModelAnnotation;
 import pers.zlf.plugin.pojo.annotation.ParameterAnnotation;
+import pers.zlf.plugin.pojo.config.CommonConfig;
 import pers.zlf.plugin.util.MyPsiUtil;
 import pers.zlf.plugin.util.lambda.Empty;
 import pers.zlf.plugin.util.lambda.Equals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,6 +52,12 @@ public class AddApiAnnotationAction extends BaseAction {
     private int selectionStart;
     /** 鼠标选中的末尾位置 */
     private int selectionEnd;
+    /** 待删除的类注释 */
+    private List<PsiElement> classCommentsPsiElementList;
+    /** 待删除的方法注释 */
+    private List<PsiElement> methodCommentsPsiElementList;
+    /** 待删除的字段注释 */
+    private List<PsiElement> fieldCommentsPsiElementList;
 
     @Override
     protected boolean isVisible() {
@@ -71,15 +80,31 @@ public class AddApiAnnotationAction extends BaseAction {
         selectionEnd = editor.getSelectionModel().getSelectionEnd();
         importClassSet = new HashSet<>(2);
         annotationMap = new HashMap<>(2);
+        classCommentsPsiElementList = new ArrayList<>();
+        methodCommentsPsiElementList = new ArrayList<>();
+        fieldCommentsPsiElementList = new ArrayList<>();
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             Equals.of(psiClass).and(MyPsiUtil::isController).then(this::addSwaggerForController, this::addSwaggerForModel);
             for (PsiClass innerClasses : psiClass.getAllInnerClasses()) {
                 Equals.of(innerClasses).and(MyPsiUtil::isController).ifFalse(this::addSwaggerForModel);
             }
         }
+        CommonConfig config = ConfigFactory.getInstance().getCommonConfig();
+        boolean keepClassComments = config.isKeepClassComments();
+        boolean keepMethodComments = config.isKeepMethodComments();
+        boolean keepFieldComments = config.isKeepFieldComments();
         WriteCommandAction.runWriteCommandAction(project, () -> {
             MyPsiUtil.importClass(psiJavaFile, importClassSet.toArray(new String[0]));
             annotationMap.forEach(PsiAnnotationOwner::addAnnotation);
+            if (!keepClassComments){
+                classCommentsPsiElementList.forEach(PsiElement::delete);
+            }
+            if (!keepMethodComments){
+                methodCommentsPsiElementList.forEach(PsiElement::delete);
+            }
+            if (!keepFieldComments){
+                fieldCommentsPsiElementList.forEach(PsiElement::delete);
+            }
         });
     }
 
@@ -89,7 +114,7 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param psiClass Controller类
      */
     private void addSwaggerForController(PsiClass psiClass) {
-        addApiAnnotation(new ControllerAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
+        classCommentsPsiElementList.addAll(addApiAnnotation(new ControllerAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName()));
         addSwaggerForMethod(psiClass.getMethods());
     }
 
@@ -106,7 +131,7 @@ public class AddApiAnnotationAction extends BaseAction {
             if (null == psiAnnotation) {
                 continue;
             }
-            addApiAnnotation(new MethodAnnotation(), method, method.getModifierList(), method.getName());
+            methodCommentsPsiElementList.addAll(addApiAnnotation(new MethodAnnotation(), method, method.getModifierList(), method.getName()));
             addSwaggerForParameter(method, method.getParameterList().getParameters());
         }
     }
@@ -164,9 +189,9 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param psiClass PsiClass
      */
     private void addSwaggerForModel(PsiClass psiClass) {
-        addApiAnnotation(new ModelAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName());
+        classCommentsPsiElementList.addAll(addApiAnnotation(new ModelAnnotation(), psiClass, psiClass.getModifierList(), psiClass.getName()));
         for (PsiField field : MyPsiUtil.getPsiFieldList(psiClass)) {
-            addApiAnnotation(new FieldAnnotation(), field, field.getModifierList(), field.getName());
+            fieldCommentsPsiElementList.addAll(addApiAnnotation(new FieldAnnotation(), field, field.getModifierList(), field.getName()));
         }
     }
 
@@ -177,13 +202,17 @@ public class AddApiAnnotationAction extends BaseAction {
      * @param psiElement     元素
      * @param modifierList   PsiModifierList
      * @param psiElementName 元素名
+     * @return 注释元素
      */
-    private void addApiAnnotation(BaseAnnotation baseAnnotation, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
+    private List<PsiElement> addApiAnnotation(BaseAnnotation baseAnnotation, PsiElement psiElement, PsiModifierList modifierList, String psiElementName) {
         if (needAdd(psiElement) && null != modifierList && !modifierList.hasAnnotation(baseAnnotation.getQualifiedName())) {
-            baseAnnotation.setValue(Empty.of(MyPsiUtil.getComment(psiElement)).orElse(psiElementName));
+            List<PsiElement> commentPsiElementList = MyPsiUtil.getCommentPsiElement(psiElement);
+            baseAnnotation.setValue(Empty.of(MyPsiUtil.getComment(commentPsiElementList)).orElse(psiElementName));
             importClassSet.add(baseAnnotation.getQualifiedName());
             annotationMap.put(modifierList, baseAnnotation.getText());
+            return commentPsiElementList;
         }
+        return new ArrayList<>();
     }
 
     /**

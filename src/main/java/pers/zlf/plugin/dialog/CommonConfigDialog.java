@@ -40,6 +40,9 @@ public class CommonConfigDialog extends BaseDialog{
     private JCheckBox zenTaoRemindCheckBox;
     private IntegerField zenTaoRemindMinuteTextField;
     private JPanel zenTaoRemindPanel;
+    private JCheckBox keepClassCommentsCheckBox;
+    private JCheckBox keepMethodCommentsCheckBox;
+    private JCheckBox keepFieldCommentsCheckBox;
 
     public CommonConfigDialog() {
     }
@@ -57,6 +60,9 @@ public class CommonConfigDialog extends BaseDialog{
         ocrSecurityKeyKeyTextField.setText(config.getOcrSecurityKey());
         //接口文档注解
         apiToolComboBox.setSelectedIndex(config.getApiTool());
+        keepClassCommentsCheckBox.setSelected(config.isKeepClassComments());
+        keepMethodCommentsCheckBox.setSelected(config.isKeepMethodComments());
+        keepFieldCommentsCheckBox.setSelected(config.isKeepFieldComments());
         //代码补全
         codeCompletionEnableCheckBox.setSelected(config.isEnableCodeCompletion());
         maxCodeCompletionLengthTextField.setValue(config.getMaxCodeCompletionLength());
@@ -120,6 +126,18 @@ public class CommonConfigDialog extends BaseDialog{
 
     public int getApiTool() {
         return apiToolComboBox.getSelectedIndex();
+    }
+
+    public boolean isKeepClassComments() {
+        return keepClassCommentsCheckBox.isSelected();
+    }
+
+    public boolean isKeepMethodComments() {
+        return keepMethodCommentsCheckBox.isSelected();
+    }
+
+    public boolean isKeepFieldComments() {
+        return keepFieldCommentsCheckBox.isSelected();
     }
 
     public boolean isEnableCodeCompletion() {

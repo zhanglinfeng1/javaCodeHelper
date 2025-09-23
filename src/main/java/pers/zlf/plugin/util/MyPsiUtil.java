@@ -324,14 +324,32 @@ public class MyPsiUtil {
     }
 
     /**
-     * 获取元素的注释
+     * 获取元素的注释元素
      *
      * @param element 元素
-     * @return 注释
+     * @return 注释元素
      */
-    public static String getComment(PsiElement element) {
-        StringBuilder comment = new StringBuilder(Common.BLANK_STRING);
+    public static List<PsiElement> getCommentPsiElement(PsiElement element) {
+        List<PsiElement> elementList = new ArrayList<>();
         for (PsiElement childrenElement : element.getChildren()) {
+            if (childrenElement instanceof PsiDocComment) {
+                elementList.add(childrenElement);
+            } else if (childrenElement instanceof PsiComment) {
+                elementList.add(childrenElement);
+            }
+        }
+        return elementList;
+    }
+
+    /**
+     * 获取元素的注释文本
+     *
+     * @param elementList 注释元素
+     * @return 注释文本
+     */
+    public static String getComment(List<PsiElement> elementList) {
+        StringBuilder comment = new StringBuilder(Common.BLANK_STRING);
+        for (PsiElement childrenElement : elementList) {
             if (childrenElement instanceof PsiDocComment docComment) {
                 String value = Arrays.stream(docComment.getDescriptionElements()).map(PsiElement::getText).collect(Collectors.joining());
                 value = Arrays.stream(value.split(Regex.WRAP)).filter(StringUtil::isNotEmpty).collect(Collectors.joining(Common.SPACE));
