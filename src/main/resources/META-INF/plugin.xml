@@ -31,6 +31,7 @@
     <change-notes><![CDATA[
         <ul>
             <li>[BUG]修复一些BUG</li>
+            <li>[NEW]生成api注解时，可选择删除原注释</li>
             <li>[NEW]本机IP</li>
             <li>[NEW]spring boot配置文件yaml和properties格式互转</li>
         </ul>
